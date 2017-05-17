@@ -84,20 +84,22 @@ class Project extends crm_controller {
 		$from_date			= '';
 		$to_date  			= '';
 		$divisions  		= '';
+		$customer_type  	= '';
 		$data['val_export'] = 'no_search';
 
 		if($search_type == 'search' && $search_id == false) {
 			$inputData = real_escape_array($this->input->post());			
 			// echo "<pre>"; print_r($inputData); exit;
-			$pjtstage 	= $inputData['pjtstage'];
-			$cust     	= $inputData['customer'];
-			$service 	= $inputData['service'];
-			$practice 	= $inputData['practice'];
-			$keyword  	= $inputData['keyword'];
-			$datefilter = $inputData['datefilter'];
-			$from_date	= $inputData['from_date'];
-			$to_date  	= $inputData['to_date'];
-			$divisions  = $inputData['divisions'];
+			$pjtstage 		= $inputData['pjtstage'];
+			$cust     		= $inputData['customer'];
+			$service 		= $inputData['service'];
+			$practice 		= $inputData['practice'];
+			$keyword  		= $inputData['keyword'];
+			$datefilter 	= $inputData['datefilter'];
+			$from_date		= $inputData['from_date'];
+			$to_date  		= $inputData['to_date'];
+			$divisions  	= $inputData['divisions'];
+			$customer_type  = $inputData['customer_type'];
 			
 			$data['val_export']  = 'search';
 			
@@ -128,35 +130,46 @@ class Project extends crm_controller {
 				$data['val_export'] = $search_id;
 				$inputData	  = real_escape_array($get_rec);
 				
-				$pjtstage 	= $inputData['pjtstage'];
-				$cust     	= $inputData['customer'];
-				$service 	= $inputData['service'];
-				$practice 	= $inputData['practice'];
-				$datefilter = $inputData['datefilter'];
-				$from_date	= $inputData['from_date'];
-				$to_date  	= $inputData['to_date'];
-				$divisions  = $inputData['divisions'];
+				$pjtstage 		= $inputData['pjtstage'];
+				$cust     		= $inputData['customer'];
+				$service 		= $inputData['service'];
+				$practice 		= $inputData['practice'];
+				$datefilter 	= $inputData['datefilter'];
+				$from_date		= $inputData['from_date'];
+				$to_date  		= $inputData['to_date'];
+				$divisions  	= $inputData['divisions'];
+				$customer_type  = $inputData['customer_type'];
 				
-				if(!empty($pjtstage) && $pjtstage!='null')
-				$pjtstage = @explode(",",$pjtstage);
-				else
-				$pjtstage = '';
-				if(!empty($cust) && $cust!='null')
-				$cust = @explode(",",$cust);
-				else
-				$cust = '';
-				if(!empty($service) && $service!='null')
-				$service = @explode(",",$service);
-				else
-				$service = '';
-				if(!empty($practice) && $practice!='null')
-				$practice = @explode(",",$practice);
-				else
-				$practice = '';
-				if(!empty($divisions) && $divisions!='null')
-				$divisions = @explode(",",$divisions);
-				else
-				$divisions = '';
+				if(!empty($pjtstage) && $pjtstage!='null') {
+					$pjtstage = @explode(",",$pjtstage);
+				} else {
+					$pjtstage = '';
+				}
+				if(!empty($cust) && $cust!='null') {
+					$cust = @explode(",",$cust);
+				} else {
+					$cust = '';
+				}
+				if(!empty($service) && $service!='null') {
+					$service = @explode(",",$service);
+				} else {
+					$service = '';
+				}
+				if(!empty($practice) && $practice!='null') {
+					$practice = @explode(",",$practice);
+				} else {
+					$practice = '';
+				}
+				if(!empty($divisions) && $divisions!='null') {
+					$divisions = @explode(",",$divisions);
+				} else {
+					$divisions = '';
+				}
+				if(!empty($customer_type) && $customer_type!='null') {
+					$customer_type = @explode(",",$customer_type);
+				} else {
+					$customer_type = '';
+				}
 			}
 		} else {
 			$wh_condn = array('search_for'=>2, 'user_id'=>$this->userdata['userid'], 'is_default'=>1);
@@ -183,35 +196,46 @@ class Project extends crm_controller {
 				unset($get_rec['month_year_to_date']);
 				$inputData = real_escape_array($get_rec);
 				
-				$pjtstage 	= $inputData['pjtstage'];
-				$cust     	= $inputData['customer'];
-				$service 	= $inputData['service'];
-				$practice 	= $inputData['practice'];
-				$datefilter = $inputData['datefilter'];
-				$from_date	= $inputData['from_date'];
-				$to_date  	= $inputData['to_date'];
-				$divisions  = $inputData['divisions'];
+				$pjtstage 		= $inputData['pjtstage'];
+				$cust     		= $inputData['customer'];
+				$service 		= $inputData['service'];
+				$practice 		= $inputData['practice'];
+				$datefilter 	= $inputData['datefilter'];
+				$from_date		= $inputData['from_date'];
+				$to_date  		= $inputData['to_date'];
+				$divisions  	= $inputData['divisions'];
+				$customer_type  = $inputData['customer_type'];
 				
-				if(!empty($pjtstage) && $pjtstage!='null')
-				$pjtstage = @explode(",",$pjtstage);
-				else
-				$pjtstage = '';
-				if(!empty($cust) && $cust!='null')
-				$cust = @explode(",",$cust);
-				else
-				$cust = '';
-				if(!empty($service) && $service!='null')
-				$service = @explode(",",$service);
-				else
-				$service = '';
-				if(!empty($practice) && $practice!='null')
-				$practice = @explode(",",$practice);
-				else
-				$practice = '';
-				if(!empty($divisions) && $divisions!='null')
-				$divisions = @explode(",",$divisions);
-				else
-				$divisions = '';
+				if(!empty($pjtstage) && $pjtstage!='null') {
+					$pjtstage = @explode(",",$pjtstage);
+				} else {
+					$pjtstage = '';
+				}
+				if(!empty($cust) && $cust!='null') {
+					$cust = @explode(",",$cust);
+				} else {
+					$cust = '';
+				}
+				if(!empty($service) && $service!='null') {
+					$service = @explode(",",$service);
+				} else {
+					$service = '';
+				}
+				if(!empty($practice) && $practice!='null') {
+					$practice = @explode(",",$practice);
+				} else {
+					$practice = '';
+				}
+				if(!empty($divisions) && $divisions!='null') {
+					$divisions = @explode(",",$divisions);
+				} else {
+					$divisions = '';
+				}
+				if(!empty($customer_type) && $customer_type!='null') {
+					$customer_type = @explode(",",$customer_type);
+				} else {
+					$customer_type = '';
+				}
 			}
 		}
 
@@ -221,7 +245,7 @@ class Project extends crm_controller {
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions);
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions,$customer_type);
 		
 		// echo $this->db->last_query(); die;
 
@@ -5237,7 +5261,6 @@ HDOC;
 	public function save_search($type)
 	{
 		$post_data = real_escape_array($this->input->post());
-		// echo "<pre>"; print_r($post_data); exit;
 		$ins = array();
 		
 		$ins['search_for']   = $type;
@@ -5248,6 +5271,7 @@ HDOC;
 		$ins['customer']	 = $post_data['customer'];
 		$ins['service']		 = $post_data['service'];
 		$ins['divisions']	 = $post_data['divisions'];
+		$ins['customer_type']= $post_data['customer_type'];
 		$ins['practice']     = $post_data['practice'];
 		$ins['datefilter']   = $post_data['datefilter'];
 		$ins['from_date'] 	 = $post_data['from_date'];

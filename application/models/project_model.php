@@ -27,7 +27,7 @@ class Project_model extends crm_model
 	}
 
 	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false,$divisions=false) {
+	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false,$divisions=false,$customer_type=false) {
 		
 		$userdata   = $this->session->userdata('logged_in_user');
 		
@@ -86,7 +86,9 @@ class Project_model extends crm_model
 			if(!empty($billing_type)) {
 				$this->db->where("j.billing_type", $billing_type);
 			}
-			
+			if(!empty($customer_type) && $customer_type!='null'){		
+				$this->db->where_in('j.customer_type', $customer_type);
+			}
 			if(!empty($from_date)) {
 				switch($datefilter) {
 					case 1:
@@ -188,6 +190,9 @@ class Project_model extends crm_model
 			if(!empty($billing_type)) {
 				$this->db->where("j.billing_type", $billing_type);
 			}
+			if(!empty($customer_type) && $customer_type!='null'){		
+				$this->db->where_in('j.customer_type',$customer_type);
+			}
 			
 			if(!empty($from_date)) {
 				switch($datefilter) {
@@ -226,11 +231,9 @@ class Project_model extends crm_model
 		}
 		
 		$this->db->order_by("j.lead_id", "desc");
-		// $this->db->limit(5);
 		$query = $this->db->get();
-		//echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$pjts =  $query->result_array();
-		//echo '<pre>';print_r($pjts);exit;
 		return $pjts;
 	}
 	

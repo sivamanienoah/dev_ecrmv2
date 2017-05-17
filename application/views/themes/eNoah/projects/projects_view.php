@@ -1,6 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <?php
-$this->load->helper('custom_helper');
+$this->load->helper('custom');
 if (get_default_currency()) {
 	$default_currency = get_default_currency();
 	$default_cur_id   = $default_currency['expect_worth_id'];
@@ -136,8 +136,8 @@ if (get_default_currency()) {
 					</tbody>
 						<thead>
 							<tr>
-							<th >By Entity</th>
-								<th></th>
+								<th>By Entity</th>
+								<th>By Customer Type</th>
 								<th></th>
 								<th></th>
 								<th></th>
@@ -145,11 +145,19 @@ if (get_default_currency()) {
 						</thead>
 					<tbody>
 						<tr>
-							<td colspan="6">
+							<td>
 								<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter" style="width:210px;">
-									<?php foreach ($sales_divisions as $division) { ?>
-										<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
+									<?php if(!empty($sales_divisions) && count($sales_divisions)>0) { ?>
+										<?php foreach ($sales_divisions as $division) { ?>
+											<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
+										<?php } ?>
 									<?php } ?>
+								</select> 
+							</td>
+							<td colspan="5">
+								<select multiple="multiple" id="customer_type" name="customer_type[]" class="advfilter" style="width:140px;">
+									<option value="0">Internal</option>
+									<option value="1">External</option>
 								</select> 
 							</td>
 						</tr>
