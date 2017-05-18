@@ -3602,8 +3602,6 @@ class Dashboard extends crm_controller
 		
 		//get other costs
 		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
-		
-		echo "<pre>"; print_R($data['other_cost_arr']); die;
 
 		//for practices		
 		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date);
