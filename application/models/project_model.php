@@ -1195,7 +1195,7 @@ class Project_model extends crm_model
 	public function sent_stake_holder_email($mail, $first_name, $mail_type, $lead_id)
 	{
 		$project_name = $this->project_model->get_lead_det($lead_id);
-		$project_name['lead_title'] = word_limiter($project_name['lead_title'], 4);
+		// $project_name['lead_title'] = word_limiter($project_name['lead_title'], 4);
 		$log_subject = $log_email_content = '';
 		if($mail_type == 'new') {
 			$log_subject 		= 'Stake Holder Access Notification';
