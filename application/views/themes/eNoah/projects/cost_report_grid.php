@@ -218,7 +218,7 @@ if(!empty($needAddOtherCostArr)) {
 // echo "<pre>"; print_r($tbl_data); echo "</pre>";
 } */
 //other cost
-if(!empty($other_cost_arr)) {
+if(!empty($other_cost_arr)) { echo "<pre>"; print_r($other_cost_arr); echo "</pre>";
 	foreach($other_cost_arr as $row) {
 		if(!empty($other_cost_arr[$row]) && count($other_cost_arr[$row])>0) {
 			foreach($other_cost_arr[$row] as $oc_year=>$oc_yearArr) {
