@@ -227,7 +227,7 @@ if(!empty($other_cost_arr)) {
 						$oc_entity_key 	= $ocArrRow['oc_entity'];
 						$oc_dept_key 	= $ocArrRow['oc_dept'];
 						$oc_prac_key 	= $ocArrRow['oc_practice'];
-						$oc_mon_yr 		= substr($ocMonthKey,0,3).' '.$oc_year;
+						$oc_mon_yr 		= substr($ocMonthKey,0,3).' '.$ocYrKey;
 						$oc_other_cost_resrc_type = 'Other Cost';
 						$tbl_data[$oc_entity_key][$oc_dept_key][$oc_prac_key]['oc_skill'][$oc_other_cost_resrc_type][$oc_mon_yr][$row][$ocArrRow['oc_descrptn']]['cost'] = $ocArrRow['oc_val'];
 					}
