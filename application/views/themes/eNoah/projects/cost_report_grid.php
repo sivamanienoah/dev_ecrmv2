@@ -189,7 +189,7 @@ if(!empty($resdata)) {
 		}
 	}
 }
-// echo "<pre>"; print_r($tbl_data); echo "</pre><br>***************<br>";
+echo "<pre>"; print_r($tbl_data); echo "</pre><br>***************<br>"; die;
 // echo "<pre>"; print_r(array_unique($otherCostIncludedProjects)); echo "</pre>";
 foreach($other_cost_arr as $ocprjkey=>$va) {
 	$pjtOcArr[] = $ocprjkey;
