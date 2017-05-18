@@ -219,15 +219,19 @@ if(!empty($needAddOtherCostArr)) {
 } */
 //other cost
 if(!empty($other_cost_arr)) {
-	foreach($other_cost_arr as $oc_year=>$oc_yearArr) { echo "<pre>"; print_R($oc_yearArr); die;
+	foreach($other_cost_arr as $oc_year=>$oc_yearArr) {
 		if(!empty($oc_yearArr) && count($oc_yearArr)>0) {
-			foreach($oc_yearArr as $ocMonthKey=>$ocArrRow) { 
-				$oc_entity_key 	= $ocArrRow['oc_entity']; die;
-				$oc_dept_key 	= $ocArrRow['oc_dept'];
-				$oc_prac_key 	= $ocArrRow['oc_practice'];
-				$oc_mon_yr 		= substr($ocMonthKey,0,3).' '.$oc_year;
-				$oc_other_cost_resrc_type = 'Other Cost';
-				$tbl_data[$oc_entity_key][$oc_dept_key][$oc_prac_key]['oc_skill'][$oc_other_cost_resrc_type][$oc_mon_yr][$row][$ocArrRow['oc_descrptn']]['cost'] = $ocArrRow['oc_val'];
+			foreach($oc_yearArr as $ocYrKey=>$ocYrArr) {
+				if(!empty($ocYrArr) && count($ocYrArr)>O) {
+					foreach($ocYrArr as $ocMonthKey=>$ocArrRow) {
+						$oc_entity_key 	= $ocArrRow['oc_entity'];
+						$oc_dept_key 	= $ocArrRow['oc_dept'];
+						$oc_prac_key 	= $ocArrRow['oc_practice'];
+						$oc_mon_yr 		= substr($ocMonthKey,0,3).' '.$oc_year;
+						$oc_other_cost_resrc_type = 'Other Cost';
+						$tbl_data[$oc_entity_key][$oc_dept_key][$oc_prac_key]['oc_skill'][$oc_other_cost_resrc_type][$oc_mon_yr][$row][$ocArrRow['oc_descrptn']]['cost'] = $ocArrRow['oc_val'];
+					}
+				}
 			}
 		}
 	}
