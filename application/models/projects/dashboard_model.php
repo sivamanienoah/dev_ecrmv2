@@ -131,6 +131,7 @@ class Dashboard_model extends crm_model
 			}
 			// echo "<pre>"; print_r($other_cost_array); die;
 		}
+		echo $this->db->last_query();
 		return $other_cost_array;
 	}
 	
