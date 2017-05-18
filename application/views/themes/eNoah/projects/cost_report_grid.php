@@ -211,7 +211,7 @@ if(!empty($other_cost_arr)) {
 			<th class='prac-dt desc_opt' width='10%'>PRACTICE</th>
 			<th class='prac-dt desc_opt' width='12%'>SKILL</th>
 			<th class='prac-dt desc_opt' width='6%'>RESOURCE TYPE</th>
-			<th class='prac-dt desc_opt' width='5%'>Month Year</th>
+			<th class='prac-dt desc_opt' width='5%'>MONTH YEAR</th>
 			<th class='prac-dt desc_opt' width='15%'>PROJECT</th>
 			<th class='prac-dt desc_opt' width='7%'>RESOURCE</th>
 			<th class='prac-dt desc_opt' width='5%'>HOUR</th>
