@@ -203,8 +203,6 @@ if(!empty($other_cost_arr)) {
 <div>
 <div class="tst it_cost_grid_div">
 <?php
-$perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
-
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
 			<tr>
