@@ -219,9 +219,9 @@ if(!empty($needAddOtherCostArr)) {
 } */
 //other cost
 if(!empty($other_cost_arr)) {
-	foreach($other_cost_arr as $oc_pjt_code=>$oc_yearArr) {
-		if(!empty($oc_yearArr) && count($oc_yearArr)>0) {
-			foreach($oc_yearArr as $ocYrKey=>$ocYrArr) {
+	foreach($other_cost_arr as $oc_pjt_code=>$oc_pjtArr) {
+		if(!empty($oc_pjtArr) && count($oc_pjtArr)>0) {
+			foreach($oc_pjtArr as $ocYrKey=>$ocYrArr) {
 				if(!empty($ocYrArr) && count($ocYrArr)>O) {
 					foreach($ocYrArr as $ocMonthKey=>$ocArrRow) {
 						$oc_entity_key 	= $ocArrRow['oc_entity'];
@@ -235,7 +235,6 @@ if(!empty($other_cost_arr)) {
 			}
 		}
 	}
-echo "<pre>"; print_r($tbl_data); echo "</pre>";
 }
 //other cost
 ?>
