@@ -221,7 +221,8 @@ if(!empty($needAddOtherCostArr)) {
 if(!empty($other_cost_arr)) {
 	foreach($other_cost_arr as $oc_year=>$oc_yearArr) {
 		if(!empty($oc_yearArr) && count($oc_yearArr)>0) {
-			foreach($oc_yearArr as $ocMonthKey=>$ocArrRow) {
+			echo "<pre>"; print_r($oc_yearArr); echo "</pre>"; die;
+			foreach($oc_yearArr as $ocMonthKey=>$ocArrRow) { 
 				$oc_entity_key 	= $ocArrRow['oc_entity'];
 				$oc_dept_key 	= $ocArrRow['oc_dept'];
 				$oc_prac_key 	= $ocArrRow['oc_practice'];
