@@ -123,11 +123,11 @@ class Dashboard_model extends crm_model
 			foreach($data as $row) {
 				$year_no 	= trim(date('Y', strtotime($row['cost_incurred_date'])));
 				$month_name = trim(date('F', strtotime($row['cost_incurred_date'])));
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_val'] = $this->conver_currency($row['value'], $bk_rates[$year_no][$row['currency_type']][$us_currenty_type]);
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_entity'] 	= $entiArr[$row['division']];
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_dept'] 	= $deptArr[$row['department_id_fk']];
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_practice'] = $practArr[$row['practice']];
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_descrptn'] = $row['description'];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_val'][] = $this->conver_currency($row['value'], $bk_rates[$year_no][$row['currency_type']][$us_currenty_type]);
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_entity'][] 	= $entiArr[$row['division']];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_dept'][]	= $deptArr[$row['department_id_fk']];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_practice'][] = $practArr[$row['practice']];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name]['oc_descrptn'][] = $row['description'];
 			}
 			echo "<pre>"; print_r($other_cost_array); die;
 		}
