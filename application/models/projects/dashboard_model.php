@@ -117,7 +117,6 @@ class Dashboard_model extends crm_model
 				$practArr[$pract_row->id] = $pract_row->practices;
 			}
 		}
-		// echo "<pre>"; print_r($data); echo "<br>******<br>";
 		if(!empty($data)) {
 			$other_cost_array = array();
 			$i = 0;
