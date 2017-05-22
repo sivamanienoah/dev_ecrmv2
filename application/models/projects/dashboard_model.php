@@ -117,7 +117,7 @@ class Dashboard_model extends crm_model
 				$practArr[$pract_row->id] = $pract_row->practices;
 			}
 		}
-		echo "<pre>"; print_r($data); echo "<br>******<br>";
+		// echo "<pre>"; print_r($data); echo "<br>******<br>";
 		if(!empty($data)) {
 			$other_cost_array = array();
 			$i = 0;
@@ -131,7 +131,7 @@ class Dashboard_model extends crm_model
 				$other_cost_array[$row['pjt_id']][$year_no][$month_name][$i]['oc_descrptn'] = $row['description'];
 				$i++;
 			}
-			echo "<pre>"; print_r($other_cost_array); die;
+			// echo "<pre>"; print_r($other_cost_array); die;
 		}
 		
 		return $other_cost_array;
