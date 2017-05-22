@@ -120,14 +120,16 @@ class Dashboard_model extends crm_model
 		echo "<pre>"; print_r($data); echo "<br>******<br>";
 		if(!empty($data)) {
 			$other_cost_array = array();
+			$i = 0;
 			foreach($data as $row) {
 				$year_no 	= trim(date('Y', strtotime($row['cost_incurred_date'])));
 				$month_name = trim(date('F', strtotime($row['cost_incurred_date'])));
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_val']		= $this->conver_currency($row['value'], $bk_rates[$year_no][$row['currency_type']][$us_currenty_type]);
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_entity'] 	= $entiArr[$row['division']];
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_dept'] 	= $deptArr[$row['department_id_fk']];
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_practice'] = $practArr[$row['practice']];
-				$other_cost_array[$row['pjt_id']][$year_no][$month_name][]['oc_descrptn'] = $row['description'];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name][$i]['oc_val']		= $this->conver_currency($row['value'], $bk_rates[$year_no][$row['currency_type']][$us_currenty_type]);
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name][$i]['oc_entity'] 	= $entiArr[$row['division']];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name][$i]['oc_dept'] 	= $deptArr[$row['department_id_fk']];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name][$i]['oc_practice'] = $practArr[$row['practice']];
+				$other_cost_array[$row['pjt_id']][$year_no][$month_name][$i]['oc_descrptn'] = $row['description'];
+				$i++;
 			}
 			echo "<pre>"; print_r($other_cost_array); die;
 		}
