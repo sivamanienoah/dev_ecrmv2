@@ -378,9 +378,7 @@ if(!empty($sub_tot)) {
 					}
 					}
 				}
-			// } //if condition
 		}
-		// } //if condition
 		
 	echo "<tr data-depth='0'>
 		<td width='80%' colspan='2' align='right' class='rt-ali'><b>TOTAL:</b></td>
