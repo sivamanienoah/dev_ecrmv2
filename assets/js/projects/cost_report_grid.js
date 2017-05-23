@@ -54,7 +54,7 @@ if(filter_area_status==1) {
 
 $('#cost_rpt_search').on('keyup', function() {	
 	var value = $(this).val();
-	if (value.length >= 4) {
+	if (value.length >= 3) {
 		var patt = new RegExp(value, "i");
 
 		$('#it_cost_grid').find('tr').each(function() {
