@@ -42,11 +42,26 @@ $(function() {
 	}); */
 	
 	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
-		$('.data-table tr, .data-table th').hover(
+	$('.data-table tr, .data-table th').hover(
 		function() { $(this).addClass('over'); },
-		function() { $(this).removeClass('over'); });
+		function() { $(this).removeClass('over'); 
+	});
 	
 });
 if(filter_area_status==1) {
 	$('#advance_search').show();
 }
+
+$('#cost_rpt_search').on('keyup', function() {
+	var value = $(this).val();
+	var patt = new RegExp(value, "i");
+
+	$('#it_cost_grid').find('tr').each(function() {
+		if (!($(this).find('td').text().search(patt) >= 0)) {
+			$(this).not('.myHead').hide();
+		}
+		if (($(this).find('td').text().search(patt) >= 0)) {
+			$(this).show();
+		}
+	});
+});
