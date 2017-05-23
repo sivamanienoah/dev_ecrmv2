@@ -170,7 +170,7 @@ if(!empty($other_cost_arr)) {
 //other cost
 ?>
 <div>
-<div id="search_area" class="pull-left">
+<div id="search_area" class="pull-right">
 	<input type="text" class="textfield" name="cost_rpt_search" id="cost_rpt_search" value="" />
 </div>
 <div class="tst it_cost_grid_div">
