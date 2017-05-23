@@ -52,8 +52,12 @@ if(filter_area_status==1) {
 	$('#advance_search').show();
 }
 
-$('#cost_rpt_search').on('keyup', function() {
+$('#cost_rpt_search').on('keyup', function(event) {
+	
+	event.stopImmediatePropagation();
+	
 	var value = $(this).val();
+	
 	var patt = new RegExp(value, "i");
 
 	$('#it_cost_grid').find('tr').each(function() {
