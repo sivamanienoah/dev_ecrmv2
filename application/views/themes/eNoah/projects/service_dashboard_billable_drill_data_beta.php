@@ -349,7 +349,7 @@ if(!empty($sub_tot)) {
 				if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
 					$e = 0;
 					foreach($other_cost_val['detail'] as $oc_key=>$oc_val) {
-						if($oc_val['amt'] ! = 0) {
+						if($oc_val['amt'] != 0) {
 						$p=1;
 						$per_cost = 0;
 						if(!empty($oc_val['amt'])){
