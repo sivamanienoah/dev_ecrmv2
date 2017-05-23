@@ -54,25 +54,26 @@ if(filter_area_status==1) {
 
 $('#cost_rpt_search').on('keyup', function() {	
 	var value = $(this).val();
-	
-	var patt = new RegExp(value, "i");
+	if (value.length >= 4) {
+		var patt = new RegExp(value, "i");
 
-	$('#it_cost_grid').find('tr').each(function() {
-		if (!($(this).find('td').text().search(patt) >= 0)) {
-			$(this).not('#cost_rpt_head').hide();			
-		}
-		if (($(this).find('td').text().search(patt) >= 0)) {
-			$(this).show();
-		}
-		var getLength=$('#it_cost_grid tbody tr:visible').length;
-		if(getLength == 0) {		
-		   $('.emptyerror').show();
-		} else {
-		   $('.emptyerror').hide();
-		}
-		if(getLength > 1) {
-			$('.emptyerror').show();
-		}
-	});
-	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
+		$('#it_cost_grid').find('tr').each(function() {
+			if (!($(this).find('td').text().search(patt) >= 0)) {
+				$(this).not('#cost_rpt_head').hide();			
+			}
+			if (($(this).find('td').text().search(patt) >= 0)) {
+				$(this).show();
+			}
+			var getLength=$('#it_cost_grid tbody tr:visible').length;
+			if(getLength == 0) {		
+			   $('.emptyerror').show();
+			} else {
+			   $('.emptyerror').hide();
+			}
+			if(getLength > 1) {
+				$('.emptyerror').show();
+			}
+		});
+		$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
+	}	
 });
