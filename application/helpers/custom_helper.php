@@ -496,7 +496,7 @@ if ( ! function_exists('getOtherCostByProjectIdByDateRange'))
 			}
 			$CI->db->order_by('id', 'ASC');
 			$query  = $CI->db->get();
-			// echo $CI->db->last_query(); die;
+			echo $CI->db->last_query(); die;
 			$result = $query->result_array();
 
 			if(count($result)>0 && !empty($result)) {
