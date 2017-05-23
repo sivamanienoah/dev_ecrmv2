@@ -65,12 +65,12 @@ $('#cost_rpt_search').on('keyup', function() {
 		}
 		var getLength=$('#it_cost_grid tbody tr:visible').length;
 		if(getLength == 0) {		
-		   $('.emptyerror').html("<span style='align:center !important'>No record found.</span>");
+		   $('.emptyerror').show();
 		} else {
-		   $('.emptyerror').empty();
+		   $('.emptyerror').hide();
 		}
 		if(getLength > 1) {
-			$('.emptyerror').empty();
+			$('.emptyerror').show();
 		}
 	});
 	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
