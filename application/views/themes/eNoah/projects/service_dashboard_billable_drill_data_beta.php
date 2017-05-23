@@ -225,7 +225,7 @@ if(!empty($sub_tot)) {
 }
 
 $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
-// echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
+echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $practices_name; ?> - Project</h2>
