@@ -252,7 +252,7 @@ $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the oth
 <div>
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $calc_tot_directcost =  $calc_tot_othercost = 0;
-echo '<pre>';print_r($sub_tot); exit;
+// echo '<pre>';print_r($sub_tot); exit;
 if(!empty($sub_tot)) {
 	echo "<table id='project_dash' class='data-table'>
 			<tr>
