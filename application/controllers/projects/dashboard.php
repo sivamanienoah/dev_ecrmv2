@@ -2636,7 +2636,6 @@ class Dashboard extends crm_controller
 						}
 					}
 				}
-				echo "<pre>"; print_r($oc_res); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
 			break;
 			case 'fixedbid':
