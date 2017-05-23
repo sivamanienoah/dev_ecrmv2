@@ -60,6 +60,8 @@ $('#cost_rpt_search').on('keyup', function() {
 		if (!($(this).find('td').text().search(patt) >= 0)) {
 			$(this).not('#cost_rpt_head').hide();
 			console.log("yes");
+			var getLength=$('#it_cost_grid tbody tr').length;
+			console.log(getLength);
 		}
 		if (($(this).find('td').text().search(patt) >= 0)) {
 			$(this).show();
