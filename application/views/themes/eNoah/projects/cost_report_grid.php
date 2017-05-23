@@ -263,9 +263,7 @@ if(!empty($other_cost_arr)) {
 		</tr></tfoot>";		
 	echo "</tbody></table>";
 ?>
-<div class="emptyerror" style='align:center'>
-
-</div>
+<div class="emptyerror" style="display:none"><span>No record found.</span></div>
 </div>
 </div>
 <script>
