@@ -62,7 +62,7 @@ $('#cost_rpt_search').on('keyup', function() {
 			var getLength=$('#it_cost_grid tbody tr:visible').length;
 			if(getLength ==0)
 			{		
-			   $('#tst it_cost_grid_div').append("no data");
+			   $('.emptyerror').append("no data");
 			   
 			}
 		}
