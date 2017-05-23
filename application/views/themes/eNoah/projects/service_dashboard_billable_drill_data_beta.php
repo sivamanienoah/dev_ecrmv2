@@ -208,7 +208,7 @@ if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value
 		$sub_tot[$crmPjtName]['sub_tot_directcost'] = 0;
 	}
 }
-
+echo "<pre>"; print_r($resource_cost_not_value_project); echo "</pre>"; exit;
 $other_cost_arr = array();
 
 //calculating the other cost
