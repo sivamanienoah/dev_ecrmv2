@@ -376,8 +376,8 @@ if(!empty($sub_tot)) {
 						$p++;
 						$e++;
 					}
-					}
 				}
+			}
 		}
 		
 	echo "<tr data-depth='0'>
