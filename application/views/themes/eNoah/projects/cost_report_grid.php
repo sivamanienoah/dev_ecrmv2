@@ -2,7 +2,7 @@
 .prac-dt{ text-align:center !important; }
 .toggle { display: inline-block; }
 .tr_othercost { background-color:#f2dede !important; }
-#it_cost_grid{ border-bottom:0px; }
+#it_cost_grid{ border-bottom:0px; width:100%;}
 .lbl_search { font-size: 12px; font-weight: bold; line-height: 25px; }
 </style>
 <div class="clear"></div>
