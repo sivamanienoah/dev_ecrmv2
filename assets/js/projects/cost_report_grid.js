@@ -60,18 +60,18 @@ $('#cost_rpt_search').on('keyup', function() {
 		if (!($(this).find('td').text().search(patt) >= 0)) {
 			$(this).not('#cost_rpt_head').hide();			
 			var getLength=$('#it_cost_grid tbody tr:visible').length;
-			if(getLength ==0)
-			{		
+			if(getLength > 0) {
+				$('.emptyerror').html();
+			}
+			if(getLength ==0) {		
 			   $('.emptyerror').html("No data");
-			   
-			}else{		
+			} else {
 			   $('.emptyerror').html();
-			   
 			}
 		}
 		if (($(this).find('td').text().search(patt) >= 0)) {
 			$(this).show();
 		}
 	});
-	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
+	//$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
 });
