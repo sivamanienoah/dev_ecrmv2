@@ -4,7 +4,7 @@
 .tr_othercost { background-color:#f2dede !important; }
 #it_cost_grid{ border-bottom:0px; width:100%;}
 .lbl_search { font-size: 12px; font-weight: bold; line-height: 25px; }
-.emptyerror { text-align:center; font-size: 12px;border: 1px solid #cccccc; }
+.emptyerror { text-align:center; font-size: 12px; border: 1px solid #cccccc; border-top : 0px !important; }
 </style>
 <div class="clear"></div>
 <?php
