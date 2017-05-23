@@ -2481,17 +2481,16 @@ class Dashboard extends crm_controller
 				if($fiscalStartMonth == $current_month) {
 					$curFiscalYear 	= getLastFiscalYear();
 					$start_date		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-					echo '1 '.$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+					$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 				} else {
-					echo '2 '.$end_date = date('Y-m-d', strtotime('-1 month', $base_mon));
+					$end_date = date('Y-m-t', strtotime('-1 month', $base_mon));
 				}
 				$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
 			} else {
-				echo '3 '.$end_date  	= date('Y-m-d');
+				$end_date  	= date('Y-m-t');
 				$month    	= date("Y-m-01 00:00:00");
 			}
 		}
-		die;
 
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
