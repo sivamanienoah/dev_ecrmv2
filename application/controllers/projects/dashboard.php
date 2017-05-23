@@ -444,10 +444,6 @@ class Dashboard extends crm_controller
 		$this->db->where("status", 1);
 		$entity_query 		= $this->db->get($this->cfg['dbpref'].'sales_divisions');
 		$data['entitys'] 	= $entity_query->result();
-		
-		//get other costs
-		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
-		echo "<pre>"; print_r($data['other_cost_arr']); die;
 
 		$data['start_date'] 	  = $start_date;
 		$data['end_date']   	  = $end_date;
