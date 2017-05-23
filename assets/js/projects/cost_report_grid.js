@@ -60,7 +60,11 @@ $('#cost_rpt_search').on('keyup', function() {
 		if (!($(this).find('td').text().search(patt) >= 0)) {
 			$(this).not('#cost_rpt_head').hide();			
 			var getLength=$('#it_cost_grid tbody tr:visible').length;
-			console.log(getLength);
+			if(getLength ==0)
+			{		
+			   $('#tst it_cost_grid_div').append("no data");
+			   
+			}
 		}
 		if (($(this).find('td').text().search(patt) >= 0)) {
 			$(this).show();
