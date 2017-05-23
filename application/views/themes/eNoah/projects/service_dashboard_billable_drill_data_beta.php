@@ -345,7 +345,7 @@ if(!empty($sub_tot)) {
 					$user_ar = array();
 				}
 				endif;
-				
+				echo "<pre>"; print_r($other_cost_val['detail']); die;
 				//other cost value with description
 				if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
 					$e = 0;
