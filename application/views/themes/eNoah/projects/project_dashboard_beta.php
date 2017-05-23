@@ -139,89 +139,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>
 				<?php 
-				 //echo "<pre>"; print_r($resdata); die;
-					/* $master      = array();
-					$user_arr    = array();
-					$project_arr = array();
-					$bu_arr      = array();
-					$dept_arr    = array();
-					$prac_arr    = array();
-					$skil_arr    = array();
-					$usercnt     = array();
-					$deptusercnt = array();
-					$max_hours   = array();
-					$bu_arr['totalhour'] = 0;
-					$bu_arr['totalhead'] = 0;
-					$bu_arr['totalcost'] = 0; */
-					
-					
-					/* if(!empty($resdata)) {
-						foreach($resdata as $row){
-							// for business unit based
-							if (!in_array($row->username, $usercnt[$row->resoursetype])) {
-								$usercnt[$row->resoursetype][] = $row->username;
-								
-								$bu_arr['totalhead'] = $bu_arr['totalhead'] + 1;
-								if (isset($bu_arr['it'][$row->resoursetype]['headcount'])) {
-									$bu_arr['it'][$row->resoursetype]['headcount'] = $bu_arr['it'][$row->resoursetype]['headcount'] + 1;
-								} else {
-									$bu_arr['it'][$row->resoursetype]['headcount'] = 1;
-								}
-							}
-
-							if (isset($bu_arr['it'][$row->resoursetype]['hour'])) {
-								$bu_arr['it'][$row->resoursetype]['hour'] = $row->duration_hours + $bu_arr['it'][$row->resoursetype]['hour'];
-								$bu_arr['it'][$row->resoursetype]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype]['cost'];
-								$bu_arr['it'][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost + $bu_arr['it'][$row->resoursetype]['direct_cost'];
-							} else {
-								$bu_arr['it'][$row->resoursetype]['hour'] = $row->duration_hours;
-								$bu_arr['it'][$row->resoursetype]['cost'] = $row->resource_duration_cost;
-								$bu_arr['it'][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost;
-							}
-							
-							$financialYear 			= get_current_financial_year($row->entry_year, $row->entry_month);
-							$max_hours_resources 	= get_practice_max_hour_by_financial_year($row->practice_id, $financialYear);
-							
-							$max_hours_resource		= $max_hours_resources->practice_max_hours;
-							$duration_hours			= get_timesheet_hours_by_user($row->username,$row->entry_year,$row->entry_month,array('Leave','Hol'));
-							
-							$max_hours[$row->username][$row->entry_year][$row->entry_month]['max_hours']		= $max_hours_resource;
-							$max_hours[$row->username][$row->entry_year][$row->entry_month]['duration_hours']	= $duration_hours;
-							$rate	= $row->cost_per_hour;
-							$rate1 	= $rate;
-							if($duration_hours>$max_hours_resource){
-								$percentage = ($max_hours_resource/$duration_hours);
-								$rate1 		= number_format(($percentage*$rate),2);
-							}
-							
-							$bu_arr['totalhour'] = $bu_arr['totalhour'] + $row->duration_hours;
-							$bu_arr['totalcost'] = $bu_arr['totalcost'] + $row->resource_duration_cost;
-							$bu_arr['totaldirectcost'] = $bu_arr['totaldirectcost'] + $row->resource_duration_direct_cost;
-							//for dept based
-							if (!in_array($row->username, $deptusercnt[$row->dept_name][$row->resoursetype])) {
-								$deptusercnt[$row->dept_name][$row->resoursetype][] = $row->username;
-								$dept_arr[$row->dept_name]['totalhead'] = $dept_arr[$row->dept_name]['totalhead'] + 1;
-								if (isset($dept_arr['dept'][$row->dept_name][$row->resoursetype]['headcount'])) {
-									$dept_arr['dept'][$row->dept_name][$row->resoursetype]['headcount'] = $dept_arr['dept'][$row->dept_name][$row->resoursetype]['headcount'] + 1;
-								} else {
-									$dept_arr['dept'][$row->dept_name][$row->resoursetype]['headcount'] = 1;
-								}
-							}
-							if (isset($dept_arr['dept'][$row->dept_name][$row->resoursetype]['hour'])) {
-								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['hour'] = $row->duration_hours + $dept_arr['dept'][$row->dept_name][$row->resoursetype]['hour'];
-								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['cost'] = $row->resource_duration_cost + $dept_arr['dept'][$row->dept_name][$row->resoursetype]['cost'];
-								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost + $dept_arr['dept'][$row->dept_name][$row->resoursetype]['direct_cost'];
-							} else {
-								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['hour'] = $row->duration_hours;
-								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['cost'] = $row->resource_duration_cost;
-								$dept_arr['dept'][$row->dept_name][$row->resoursetype]['direct_cost'] = $row->resource_duration_direct_cost;
-							}
-							$dept_arr[$row->dept_name]['totalhour'] = $dept_arr[$row->dept_name]['totalhour'] + $row->duration_hours;
-							$dept_arr[$row->dept_name]['totalcost'] = $dept_arr[$row->dept_name]['totalcost'] + $row->resource_duration_cost;
-							$dept_arr[$row->dept_name]['totaldirectcost'] = $dept_arr[$row->dept_name]['totaldirectcost'] + $row->resource_duration_direct_cost;
-							//for dept based
-						}
-					} */
+					echo "<pre>"; print_r($resdata); die;
 					
 					//Applying max hours calculation//	
 					$timesheet_data = array();
@@ -279,8 +197,6 @@ table.bu-tbl-inr th{ text-align:center; }
 																				$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 																				$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																			}
-																			/* $resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['total_cost'] 	  += ($duration_hours*$direct_rateperhr1);
-																			$resource_cost[$dept_key][$resource_type_key][$resource_name][$year][$ts_month][$key4]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1); */
 																			$resource_cost[$dept_key][$resource_type_key]['duration_hours'] += $duration_hours;
 																			$resource_cost[$dept_key][$resource_type_key]['total_cost'] 	+= ($duration_hours*$direct_rateperhr1);
 																			$resource_cost[$dept_key][$resource_type_key]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1);
