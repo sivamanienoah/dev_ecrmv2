@@ -177,17 +177,17 @@ if(!empty($other_cost_arr)) {
 <?php
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
-			<tr>
-			<th class='prac-dt desc_opt' width='10%'>ENTITY</th>
-			<th class='prac-dt desc_opt' width='6%'>DEPARTMENT</th>
-			<th class='prac-dt desc_opt' width='10%'>PRACTICE</th>
-			<th class='prac-dt desc_opt' width='12%'>SKILL</th>
-			<th class='prac-dt desc_opt' width='6%'>RESOURCE TYPE</th>
-			<th class='prac-dt desc_opt' width='5%'>MONTH YEAR</th>
-			<th class='prac-dt desc_opt' width='15%'>PROJECT</th>
-			<th class='prac-dt desc_opt' width='7%'>RESOURCE</th>
-			<th class='prac-dt desc_opt' width='5%'>HOUR</th>
-			<th class='prac-dt desc_opt' width='5%'>COST</th>
+			<tr id='cost_rpt_head'>
+				<th class='prac-dt desc_opt' width='10%'>ENTITY</th>
+				<th class='prac-dt desc_opt' width='6%'>DEPARTMENT</th>
+				<th class='prac-dt desc_opt' width='10%'>PRACTICE</th>
+				<th class='prac-dt desc_opt' width='12%'>SKILL</th>
+				<th class='prac-dt desc_opt' width='6%'>RESOURCE TYPE</th>
+				<th class='prac-dt desc_opt' width='5%'>MONTH YEAR</th>
+				<th class='prac-dt desc_opt' width='15%'>PROJECT</th>
+				<th class='prac-dt desc_opt' width='7%'>RESOURCE</th>
+				<th class='prac-dt desc_opt' width='5%'>HOUR</th>
+				<th class='prac-dt desc_opt' width='5%'>COST</th>
 			</tr>";
 			echo "</thead><tbody>";
 	if(!empty($tbl_data) && count($tbl_data)>0) {
