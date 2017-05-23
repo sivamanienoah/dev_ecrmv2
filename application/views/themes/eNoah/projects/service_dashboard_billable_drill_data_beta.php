@@ -225,7 +225,7 @@ if(!empty($sub_tot)) {
 }
 
 $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
-// echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
+echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
 ?>
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $practices_name; ?> - Project</h2>
@@ -281,7 +281,7 @@ if(!empty($sub_tot)) {
 		$other_cost_val = 0;
 		foreach($sort_ar as $p_name=>$user_ar) {
 			$other_cost_val = $other_cost_arr[$p_name];
-			// if( ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0)) {
+			if( ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0)) {
 				
 				$i       = 0;
 				$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
@@ -374,7 +374,7 @@ if(!empty($sub_tot)) {
 						$e++;
 					}
 				}
-			// } //if condition
+			} //if condition
 		}
 		
 	echo "<tr data-depth='0'>
