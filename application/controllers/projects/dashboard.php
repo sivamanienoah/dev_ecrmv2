@@ -247,6 +247,8 @@ class Dashboard extends crm_controller
 				
 		$start_date = date("Y-m-1");
 		$end_date   = date("Y-m-d");
+		$start_date = date("Y-m-d", strtotime('01-04-2017'));
+		$end_date   = date("Y-m-d", strtotime('30-04-2017'));
 		
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
@@ -335,10 +337,6 @@ class Dashboard extends crm_controller
 				
 				$p_ids = $practice_ids;
 				$pids = implode(',',$p_ids);
-				// $start_date = $this->input->post("start_date");
-				// $end_date   = $this->input->post("end_date");
-				
-				// echo "<pre>"; print_R($_POST); exit;
 
 				$this->db->select('t.skill_id, t.skill_name as name');
 				// $this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
@@ -447,8 +445,8 @@ class Dashboard extends crm_controller
 		$data['entitys'] 	= $entity_query->result();
 		
 		//get other costs
-		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
-		echo "<pre>"; print_r($data['other_cost_arr']); die;
+		$data['other_cost_arr']   = $this->dashboard_model->getOtherCostsArr($start_date, $end_date, $entity_ids, $practice_ids);
+		// echo "dfdf. <pre>"; print_r($data['other_cost_arr']); die;
 
 		$data['start_date'] 	  = $start_date;
 		$data['end_date']   	  = $end_date;
@@ -2494,18 +2492,6 @@ class Dashboard extends crm_controller
 			}
 		}
 
-		/* if(!empty($month_status)){
-			if($month_status==2){
-				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-				$end_date = date('Y-m-t', strtotime('-1 month', $base_mon));
-				$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
-				// $end_date  	   = date('Y-m-t', strtotime("-1 month"));
-				// $month    = date("Y-m-01 00:00:00", strtotime("-1 month"));				
-			}else{
-				$end_date  	   = date('Y-m-d');
-				$month    = date("Y-m-01 00:00:00");				
-			}			
-		} */
 		$data['bill_month'] = $month;
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
@@ -2629,6 +2615,7 @@ class Dashboard extends crm_controller
 			break;
 			case 'dc_value':
 				$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
+				echo "<pre>"; print_r($data); exit;
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id']   = $practice;
 				$data['start_date']   	= $start_date;
