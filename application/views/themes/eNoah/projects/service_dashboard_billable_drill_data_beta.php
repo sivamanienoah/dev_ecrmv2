@@ -281,7 +281,7 @@ if(!empty($sub_tot)) {
 		$other_cost_val = 0;
 		foreach($sort_ar as $p_name=>$user_ar) {
 			$other_cost_val = $other_cost_arr[$p_name];
-			if( ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && $sub_tot[$p_name]['sub_tot_directcost'] == 0) {
+			if( ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0)) {
 				
 				$i       = 0;
 				$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
