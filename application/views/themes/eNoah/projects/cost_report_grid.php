@@ -262,6 +262,9 @@ if(!empty($other_cost_arr)) {
 		</tr></tfoot>";		
 	echo "</tbody></table>";
 ?>
+<div class="emptyerror">
+
+</div>
 </div>
 </div>
 <script>
