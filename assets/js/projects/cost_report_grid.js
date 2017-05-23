@@ -71,7 +71,7 @@ $('#cost_rpt_search').on('keyup', function() {
 			   $('.emptyerror').hide();
 			}
 			if(getLength > 1) {
-				$('.emptyerror').show();
+				$('.emptyerror').hide();
 			}
 		});
 		$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
