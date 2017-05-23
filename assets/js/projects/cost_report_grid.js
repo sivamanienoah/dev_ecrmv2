@@ -64,13 +64,13 @@ $('#cost_rpt_search').on('keyup', function() {
 			$(this).show();
 		}
 		var getLength=$('#it_cost_grid tbody tr:visible').length;
-		if(getLength ==0) {		
+		if(getLength == 0) {		
 		   $('.emptyerror').html("No data");
 		} else {
-		   $('.emptyerror').html();
+		   $('.emptyerror').empty();
 		}
-		if(getLength > 0) {
-			$('.emptyerror').html();
+		if(getLength > 1) {
+			$('.emptyerror').empty();
 		}
 	});
 	//$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
