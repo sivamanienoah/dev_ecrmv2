@@ -64,4 +64,5 @@ $('#cost_rpt_search').on('keyup', function() {
 			$(this).show();
 		}
 	});
+	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
 });
