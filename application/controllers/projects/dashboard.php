@@ -2618,7 +2618,7 @@ class Dashboard extends crm_controller
 				$data['practices_name'] = $practice_arr[$practice];
 				$data['practices_id']   = $practice;
 				$data['start_date']   	= $start_date;
-				echo $data['end_date']   	= $end_date; die;
+				$data['end_date']   	= $end_date;
 				//*for other cost value projects only*//
 				$data['othercost_projects'] = array();
 				
