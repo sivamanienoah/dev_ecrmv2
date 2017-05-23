@@ -210,7 +210,7 @@ if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value
 }
 
 $other_cost_arr = array();
-
+echo $start_date.'  '.$end_date; die;
 //calculating the other cost
 $other_cost_arr['other_cost_total'] = 0;
 if(!empty($sub_tot)) {
@@ -221,7 +221,6 @@ if(!empty($sub_tot)) {
 			$other_cost_arr[$pname]['detail']  	 = $other_cost_val['det'];
 			$other_cost_arr[$pname]['value']   	 = $other_cost_val['value'];
 			$other_cost_arr['other_cost_total'] += $other_cost_val['value'];
-			echo "<pre>"; print_r($other_cost_val); echo "</pre>"; exit;
 		}
 	}
 }
