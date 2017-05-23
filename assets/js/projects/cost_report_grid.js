@@ -64,6 +64,9 @@ $('#cost_rpt_search').on('keyup', function() {
 			{		
 			   $('.emptyerror').html("No data");
 			   
+			}else{		
+			   $('.emptyerror').html();
+			   
 			}
 		}
 		if (($(this).find('td').text().search(patt) >= 0)) {
