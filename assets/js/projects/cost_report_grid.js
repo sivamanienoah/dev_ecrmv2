@@ -57,14 +57,7 @@ $('#cost_rpt_search').on('keyup', function() {
 	if (value.length >= 3) {
 		var patt = new RegExp(value, "i");
 
-		$('#it_cost_grid').find('tr').each(function() {
-			
-			$.blockUI({
-				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-			});
-
-			
+		$('#it_cost_grid').find('tr').each(function() {		
 			if (!($(this).find('td').text().search(patt) >= 0)) {
 				$(this).not('#cost_rpt_head').hide();			
 			}
@@ -82,6 +75,5 @@ $('#cost_rpt_search').on('keyup', function() {
 			}
 		});
 		$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
-		$.unblockUI();
 	}	
 });
