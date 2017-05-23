@@ -208,18 +208,20 @@ if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value
 		$sub_tot[$crmPjtName]['sub_tot_directcost'] = 0;
 	}
 }
-echo "<pre>"; print_r($resource_cost_not_value_project); echo "</pre>"; exit;
+
 $other_cost_arr = array();
 
 //calculating the other cost
 $other_cost_arr['other_cost_total'] = 0;
 if(!empty($sub_tot)) {
 	foreach($sub_tot as $pname=>$pvals) {
-		$other_cost_val 					 = getOtherCostByProjectIdByDateRange($pname, $this->default_cur_id, $start_date, $end_date);
+		// $other_cost_val 					 = getOtherCostByProjectIdByDateRange($pname, $this->default_cur_id, $start_date, $end_date);
+		$other_cost_val 					 = getOtherCostByProjectIdByDateRange('ITS-SAR-01-0117', $this->default_cur_id, $start_date, $end_date);
 		if(isset($other_cost_val['value']) && ($other_cost_val['value'] != 0)) {
 			$other_cost_arr[$pname]['detail']  	 = $other_cost_val['det'];
 			$other_cost_arr[$pname]['value']   	 = $other_cost_val['value'];
 			$other_cost_arr['other_cost_total'] += $other_cost_val['value'];
+			echo "<pre>"; print_r($other_cost_val); echo "</pre>"; exit;
 		}
 	}
 }
