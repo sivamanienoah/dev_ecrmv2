@@ -1,10 +1,10 @@
 <?php 
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 set_time_limit(0);
-// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 class Dashboard extends crm_controller 
 {
-	function Dashboard()
+	function __construct()
 	{
 		parent::__construct();
 		$this->login_model->check_login();
@@ -444,6 +444,10 @@ class Dashboard extends crm_controller
 		$this->db->where("status", 1);
 		$entity_query 		= $this->db->get($this->cfg['dbpref'].'sales_divisions');
 		$data['entitys'] 	= $entity_query->result();
+		
+		//get other costs
+		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
+		echo "<pre>"; print_r($data['other_cost_arr']); die;
 
 		$data['start_date'] 	  = $start_date;
 		$data['end_date']   	  = $end_date;
