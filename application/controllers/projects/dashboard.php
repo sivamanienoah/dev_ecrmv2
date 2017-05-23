@@ -2688,18 +2688,6 @@ class Dashboard extends crm_controller
 						}
 					}
 				}
-				
-				/* if(!empty($res) && count($res)>0) {
-					foreach($res as $row) {
-						if (isset($data['othercost_projects'][$practice_arr[$practice]])) {
-							$data['othercost_projects'][$practice_arr[$practice]][] = $row['pjt_id'];
-						} else {
-							$data['othercost_projects'][$practice_arr[$practice]][] = $row['pjt_id'];
-						}
-					}
-				} */
-				//*for other cost value projects only*//
-				// echo "<pre>"; print_r($data); exit;
 				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
 			break;
 			case 'fixedbid':
