@@ -3,6 +3,7 @@
 .toggle { display: inline-block; }
 .tr_othercost { background-color:#f2dede !important; }
 #it_cost_grid{ border-bottom:0px; }
+.lbl_search { font-size: 12px; font-weight: bold; line-height: 25px; }
 </style>
 <div class="clear"></div>
 <?php
@@ -171,7 +172,9 @@ if(!empty($other_cost_arr)) {
 ?>
 <div>
 <div id="search_area" class="pull-right">
-	<input type="text" class="textfield" name="cost_rpt_search" id="cost_rpt_search" value="" />
+	<label class='lbl_search'> Search:
+		<input type="text" class="textfield" name="cost_rpt_search" id="cost_rpt_search" value="" />
+	</label>
 </div>
 <div class="tst it_cost_grid_div">
 <?php
