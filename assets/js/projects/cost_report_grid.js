@@ -59,6 +59,7 @@ $('#cost_rpt_search').on('keyup', function() {
 	$('#it_cost_grid').find('tr').each(function() {
 		if (!($(this).find('td').text().search(patt) >= 0)) {
 			$(this).not('#cost_rpt_head').hide();
+			console.log("yes");
 		}
 		if (($(this).find('td').text().search(patt) >= 0)) {
 			$(this).show();
