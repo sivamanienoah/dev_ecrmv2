@@ -281,98 +281,100 @@ if(!empty($sub_tot)) {
 		$other_cost_val = 0;
 		foreach($sort_ar as $p_name=>$user_ar) {
 			$other_cost_val = $other_cost_arr[$p_name];
-
-			$i       = 0;
-			$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
-			$name    				= isset($project_master[$p_name]) ? $project_master[$p_name] : $p_name;
-			$per_sub_hr 	 		= ($sub_tot[$p_name]['sub_tot_hour']/$tot_hour)*100;
-			$sub_tot_pj_cost 		= (($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100;
-			$sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_directcost)*100;
-			// $sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_cost)*100;
-			$perc_tot_hr   			+= $per_sub_hr;
-			$perc_tot_directcost 	+= $sub_tot_pj_directcost;
-			$perc_tot_cost 			+= $sub_tot_pj_cost;
-			$calc_tot_hour 			+= $sub_tot[$p_name]['sub_tot_hour'];
-			$calc_tot_directcost 	+= $sub_tot[$p_name]['sub_tot_directcost'];
-			$calc_tot_othercost 	+= $other_cost_val['value'];
-			$calc_tot_cost 			+= $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
-			
-			echo "<tr data-depth='".$i."' class='collapse'>
-				<th width='15%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($name)."</span></th>
-				<th width='15%' align='right' class='rt-ali'>SUB TOTAL(PROJECT WISE):</th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</th>
-				<th width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</th>
-				<th width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round($per_sub_hr, 1)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pj_directcost, 2)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round((($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100, 2)."</th>
-			</tr>";
-			//echo '<pre>';print_r($user_ar);
-			if(count($user_ar)>0 && !empty($user_ar)):
-			$i=1;
-			$j = 0;
-			foreach($user_ar as $ukey=>$pval) {
+			if( ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && $sub_tot[$p_name]['sub_tot_directcost'] == 0) {
 				
-				if(!empty($pval['hour'])):
-				$i=1;
-				$per_hr = $per_cost = $per_directcost = 0;
-				$per_hr   	= ($pval['hour']/$tot_hour) * 100;
-				$per_cost 	= ($pval['cost']/$tot_cost) * 100;
-				$per_directcost  = ($pval['directcost']/$tot_directcost) * 100;
+				$i       = 0;
+				$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
+				$name    				= isset($project_master[$p_name]) ? $project_master[$p_name] : $p_name;
+				$per_sub_hr 	 		= ($sub_tot[$p_name]['sub_tot_hour']/$tot_hour)*100;
+				$sub_tot_pj_cost 		= (($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100;
+				$sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_directcost)*100;
+				// $sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_cost)*100;
+				$perc_tot_hr   			+= $per_sub_hr;
+				$perc_tot_directcost 	+= $sub_tot_pj_directcost;
+				$perc_tot_cost 			+= $sub_tot_pj_cost;
+				$calc_tot_hour 			+= $sub_tot[$p_name]['sub_tot_hour'];
+				$calc_tot_directcost 	+= $sub_tot[$p_name]['sub_tot_directcost'];
+				$calc_tot_othercost 	+= $other_cost_val['value'];
+				$calc_tot_cost 			+= $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
 				
-				echo "<tr data-depth='".$i."' class='collapse'>";
-					if($j==0){
-						echo "<td width='15%' align='right'><b>Resources</b></td>";
-					} else {
-						echo "<td width='15%'></td>";
-					}
-					echo "<td width='15%'>".$timesheet_data[$ukey]['empname']."</td>
-					<td width='5%' align='right'>".round($pval['hour'], 1)."</td>
-					<td width='5%' align='right'>".round($pval['directcost'], 2)."</td>
-					<td width='5%' align='right'>-</td>
-					<td width='5%' align='right'>".round($pval['cost'], 2)."</td>
-					<td width='5%' align='right'>".round($per_hr, 1)."</td>
-					<td width='5%' align='right'>".round($per_directcost, 2)."</td>
-					<td width='5%' align='right'>".round($per_cost, 2)."</td>
+				echo "<tr data-depth='".$i."' class='collapse'>
+					<th width='15%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($name)."</span></th>
+					<th width='15%' align='right' class='rt-ali'>SUB TOTAL(PROJECT WISE):</th>
+					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</th>
+					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</th>
+					<th width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</th>
+					<th width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</th>
+					<th width='5%' align='right' class='rt-ali'>".round($per_sub_hr, 1)."</th>
+					<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pj_directcost, 2)."</th>
+					<th width='5%' align='right' class='rt-ali'>".round((($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100, 2)."</th>
 				</tr>";
-				$per_hr		= '';
-				$rate_pr_hr = 0;
-				$i++;
-				$j++;
-				endif;
-				$user_ar = array();
-			}
-			endif;
-			
-			//other cost value with description
-			if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
-				$e = 0;
-				foreach($other_cost_val['detail'] as $oc_key=>$oc_val) {
-					$p=1;
-					$per_cost = 0;
-					if(!empty($oc_val['amt'])){
-						$per_cost = ($oc_val['amt']/$tot_cost) * 100;
-					}
+				//echo '<pre>';print_r($user_ar);
+				if(count($user_ar)>0 && !empty($user_ar)):
+				$i=1;
+				$j = 0;
+				foreach($user_ar as $ukey=>$pval) {
+					
+					if(!empty($pval['hour'])):
+					$i=1;
+					$per_hr = $per_cost = $per_directcost = 0;
+					$per_hr   	= ($pval['hour']/$tot_hour) * 100;
+					$per_cost 	= ($pval['cost']/$tot_cost) * 100;
+					$per_directcost  = ($pval['directcost']/$tot_directcost) * 100;
+					
 					echo "<tr data-depth='".$i."' class='collapse'>";
-					if($e==0){
-						echo "<td width='15%' align='right'><b>Other Cost</b></td>";
-					} else {
-						echo "<td width='15%'></td>";
-					}
-					echo "<td width='15%'>".ucfirst($oc_val['desc'])."</td>
+						if($j==0){
+							echo "<td width='15%' align='right'><b>Resources</b></td>";
+						} else {
+							echo "<td width='15%'></td>";
+						}
+						echo "<td width='15%'>".$timesheet_data[$ukey]['empname']."</td>
+						<td width='5%' align='right'>".round($pval['hour'], 1)."</td>
+						<td width='5%' align='right'>".round($pval['directcost'], 2)."</td>
 						<td width='5%' align='right'>-</td>
-						<td width='5%' align='right'>-</td>
-						<td width='5%' align='right'>".round($oc_val['amt'], 2)."</td>
-						<td width='5%' align='right'>".round($oc_val['amt'], 2)."</td>
-						<td width='5%' align='right'>-</td>
-						<td width='5%' align='right'>-</td>
+						<td width='5%' align='right'>".round($pval['cost'], 2)."</td>
+						<td width='5%' align='right'>".round($per_hr, 1)."</td>
+						<td width='5%' align='right'>".round($per_directcost, 2)."</td>
 						<td width='5%' align='right'>".round($per_cost, 2)."</td>
 					</tr>";
-					$p++;
-					$e++;
+					$per_hr		= '';
+					$rate_pr_hr = 0;
+					$i++;
+					$j++;
+					endif;
+					$user_ar = array();
 				}
-			}
+				endif;
+				
+				//other cost value with description
+				if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
+					$e = 0;
+					foreach($other_cost_val['detail'] as $oc_key=>$oc_val) {
+						$p=1;
+						$per_cost = 0;
+						if(!empty($oc_val['amt'])){
+							$per_cost = ($oc_val['amt']/$tot_cost) * 100;
+						}
+						echo "<tr data-depth='".$i."' class='collapse'>";
+						if($e==0){
+							echo "<td width='15%' align='right'><b>Other Cost</b></td>";
+						} else {
+							echo "<td width='15%'></td>";
+						}
+						echo "<td width='15%'>".ucfirst($oc_val['desc'])."</td>
+							<td width='5%' align='right'>-</td>
+							<td width='5%' align='right'>-</td>
+							<td width='5%' align='right'>".round($oc_val['amt'], 2)."</td>
+							<td width='5%' align='right'>".round($oc_val['amt'], 2)."</td>
+							<td width='5%' align='right'>-</td>
+							<td width='5%' align='right'>-</td>
+							<td width='5%' align='right'>".round($per_cost, 2)."</td>
+						</tr>";
+						$p++;
+						$e++;
+					}
+				}
+			} //if condition
 		}
 		
 	echo "<tr data-depth='0'>
