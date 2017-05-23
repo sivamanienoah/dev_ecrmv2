@@ -55,12 +55,10 @@ if(filter_area_status==1) {
 $('#cost_rpt_search').on('keyup', function() {
 	var value = $(this).val();
 	if (value.length >= 3) {
-		
 		$.blockUI({
 			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
 		});
-		
 		var patt = new RegExp(value, "i");
 
 		$('#it_cost_grid').find('tr').each(function() {
