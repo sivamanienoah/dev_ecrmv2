@@ -154,7 +154,7 @@ table.bu-tbl-inr th{ text-align:center; }
  
 			<div class="clearfix"></div>
 			
-			<div id="ajax_loader" style="margin:20px;display:none" align="center">
+			<div id="ajax_loader" style="margin:10px;display:none" align="center">
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>
 		
@@ -162,7 +162,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				<?php echo $this->load->view('projects/cost_report_grid', $res_data, true); ?>
 			</div>
 			<div class="clearfix"></div>
-			<div id="drilldown_data" class="" style="margin:20px 0;display:none;">
+			<div id="drilldown_data" class="" style="margin:10px 0;display:none;">
 			
 			</div>
         <?php 
