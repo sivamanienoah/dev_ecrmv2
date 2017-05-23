@@ -177,7 +177,7 @@ if(!empty($other_cost_arr)) {
 		<input type="text" class="textfield" name="cost_rpt_search" id="cost_rpt_search" value="" />
 	</label>
 </div>
-<div class="tst it_cost_grid_div">
+<div class="it_cost_grid_div">
 <?php
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
@@ -263,8 +263,8 @@ if(!empty($other_cost_arr)) {
 		</tr></tfoot>";		
 	echo "</tbody></table>";
 ?>
-<div class="emptyerror" style="display:none"><span>No record found.</span></div>
 </div>
+<div class="emptyerror" style="display:none"><span>No record found.</span></div>
 </div>
 <script>
 var filter_area_status = '<?php echo $filter_area_status; ?>';
