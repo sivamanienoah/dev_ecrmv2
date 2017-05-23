@@ -281,7 +281,7 @@ if(!empty($sub_tot)) {
 		$other_cost_val = 0;
 		foreach($sort_ar as $p_name=>$user_ar) {
 			$other_cost_val = $other_cost_arr[$p_name];
-			if( ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0)) {
+			// if( ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0) && ($sub_tot[$p_name]['sub_tot_directcost'] != 0)) {
 				
 				$i       = 0;
 				$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
@@ -345,11 +345,11 @@ if(!empty($sub_tot)) {
 					$user_ar = array();
 				}
 				endif;
-				echo "<pre>"; print_r($other_cost_val['detail']); die;
 				//other cost value with description
 				if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
 					$e = 0;
 					foreach($other_cost_val['detail'] as $oc_key=>$oc_val) {
+						if($oc_val['amt'] ! = 0) {
 						$p=1;
 						$per_cost = 0;
 						if(!empty($oc_val['amt'])){
@@ -373,8 +373,9 @@ if(!empty($sub_tot)) {
 						$p++;
 						$e++;
 					}
+					}
 				}
-			} //if condition
+			// } //if condition
 		}
 		
 	echo "<tr data-depth='0'>
