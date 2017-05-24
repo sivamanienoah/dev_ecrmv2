@@ -32,8 +32,8 @@
 
         switch ($settings.datatype) {
             case 1:
-			alert($("#" + $settings.containerid).html()); return false;
-                Export($("#" + $settings.containerid).parent().html());
+                // Export($("#" + $settings.containerid).parent().html());
+                Export($("#" + $settings.containerid).html());
                 break;
             case 2:
                 Export(ConvertJsonToTable());
