@@ -178,6 +178,7 @@ if(!empty($other_cost_arr)) {
 	</label>
 </div-->
 <div class="it_cost_grid_div">
+<span>
 <?php
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
@@ -263,6 +264,7 @@ if(!empty($other_cost_arr)) {
 		</tr></tfoot>";		
 	echo "</tbody></table>";
 ?>
+</span>
 </div>
 <div class="emptyerror" style="display:none"><span>No record found.</span></div>
 </div>
