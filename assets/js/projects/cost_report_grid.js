@@ -47,12 +47,17 @@ $(function() {
 		function() { $(this).removeClass('over'); 
 	});
 	
+	$('table#it_cost_grid').tableSearch({
+		searchText:'Search Table',
+		searchPlaceHolder:'Input Value'
+	});
+	
 });
 if(filter_area_status==1) {
 	$('#advance_search').show();
 }
 
-$('#cost_rpt_search').on('keyup', function() {
+/* $('#cost_rpt_search').on('keyup', function() {
 	var value = $(this).val();
 	if (value.length >= 3) {
 		var patt = new RegExp(value, "i");
@@ -76,4 +81,4 @@ $('#cost_rpt_search').on('keyup', function() {
 		});
 		$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
 	}	
-});
+}); */
