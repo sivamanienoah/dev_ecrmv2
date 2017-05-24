@@ -3,6 +3,7 @@ $(function() {
 	//export
 	$("#btnExport").click(function () {
 		// document.getElementById("it_cost_grid").deleteTFoot();
+		$('#srch_hide').hide();
 		$("#it_cost_grid").btechco_excelexport({
 			containerid: "it_cost_grid"
 		   , datatype: $datatype.Table
