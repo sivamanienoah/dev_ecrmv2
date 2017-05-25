@@ -32,7 +32,12 @@
 
         switch ($settings.datatype) {
             case 1:
-			alert($("#" + $settings.containerid).parent().html()); return false;
+			var export_data = $("#" + $settings.containerid).parent().html();
+			var remove_data = '<div id="search_area" class="pull-right">Search <input class="textfield search_input" placeholder="" type="text"></div><br><br>';
+			
+			export_data.replace('remove_data','');
+			
+			alert(export_data); return false;
 				$('#search_area').hide();
                 Export($("#" + $settings.containerid).parent().html());
                 break;
