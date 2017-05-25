@@ -32,6 +32,7 @@
 
         switch ($settings.datatype) {
             case 1:
+				$('#search_area').hide();
                 Export($("#" + $settings.containerid).parent().html());
                 break;
             case 2:
@@ -202,7 +203,7 @@
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
-
+			$('#search_area').show();
             //window.open('data:application/vnd.ms-excel;charset=utf-8;filename='+filename+';' + base64data);
         }
     };
