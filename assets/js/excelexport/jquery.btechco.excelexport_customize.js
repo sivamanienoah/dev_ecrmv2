@@ -32,14 +32,12 @@
 
         switch ($settings.datatype) {
             case 1:
-			var export_data = $("#" + $settings.containerid).parent().html();
-			var remove_data = '<div id="search_area" class="pull-right">Search <input class="textfield search_input" placeholder="" type="text"></div><br><br>';
+				var export_data = $("#" + $settings.containerid).parent().html();
+				var remove_data = '<div id="search_area" class="pull-right">Search <input class="textfield search_input" placeholder="" type="text"></div><br><br>';
+				
+				var new_export_data = export_data.replace(remove_data,'');
 			
-			var new_export_data = export_data.replace(remove_data,'');
-			
-			alert(new_export_data); return false;
-				$('#search_area').hide();
-                Export($("#" + $settings.containerid).parent().html());
+                Export(new_export_data);
                 break;
             case 2:
                 Export(ConvertJsonToTable());
@@ -209,7 +207,6 @@
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
-			$('#search_area').show();
             //window.open('data:application/vnd.ms-excel;charset=utf-8;filename='+filename+';' + base64data);
         }
     };
