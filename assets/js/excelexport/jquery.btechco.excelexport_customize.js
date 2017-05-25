@@ -40,7 +40,6 @@
 				
 				var new_1export_data = export_data.replace(remove_data,'');
 				var new_export_data = new_1export_data.replace(remove_foot_data,'');
-			alert(new_export_data); return;
                 Export(new_export_data);
                 break;
             case 2:
