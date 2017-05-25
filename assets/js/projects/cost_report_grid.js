@@ -50,9 +50,7 @@ $(function() {
 	$('table#it_cost_grid').tableSearch({
 		searchText:'Search ',
 		searchPlaceHolder:''
-	},
-	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
-	);
+	});
 	
 });
 if(filter_area_status==1) {
