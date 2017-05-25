@@ -33,6 +33,7 @@
         switch ($settings.datatype) {
             case 1:
 				var export_data = $("#" + $settings.containerid).parent().html();
+				alert(export_data); return;
 				var remove_data = '<div id="search_area" class="pull-right">Search <input class="textfield search_input" placeholder="" type="text"></div><br><br>';
 				
 				var new_export_data = export_data.replace(remove_data,'');
