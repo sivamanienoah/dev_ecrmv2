@@ -178,7 +178,6 @@ if(!empty($other_cost_arr)) {
 	</label>
 </div-->
 <div class="it_cost_grid_div">
-<span>
 <?php
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
@@ -264,7 +263,6 @@ if(!empty($other_cost_arr)) {
 		</tr></tfoot>";		
 	echo "</tbody></table>";
 ?>
-</span>
 </div>
 <div class="emptyerror" style="display:none"><span>No record found.</span></div>
 </div>
@@ -274,5 +272,5 @@ var filter_area_status = '<?php echo $filter_area_status; ?>';
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
 <script type="text/javascript" src="assets/js/html-table-search.js"></script>
 <script type="text/javascript" src="assets/js/projects/cost_report_grid.js"></script>
-<script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport.js"></script>
+<script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport_customize.js"></script>
 <script type="text/javascript" src="assets/js/excelexport/jquery.base64.js"></script>
