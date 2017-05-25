@@ -47,11 +47,6 @@ $(function() {
 		function() { $(this).removeClass('over'); 
 	}); */
 	
-	/* $('table#it_cost_grid').tableSearch({
-		searchText:'Search ',
-		searchPlaceHolder:'',
-	}); */
-	
 });
 if(filter_area_status==1) {
 	$('#advance_search').show();
