@@ -50,7 +50,9 @@ $(function() {
 	$('table#it_cost_grid').tableSearch({
 		searchText:'Search ',
 		searchPlaceHolder:''
-	});
+	},
+	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
+	);
 	
 });
 if(filter_area_status==1) {
@@ -82,19 +84,3 @@ if(filter_area_status==1) {
 		$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
 	}	
 }); */
-
-var tableObj = $("#it_cost_grid")
-
-inputObj.off('keyup').on('keyup', function(){
-			searchFieldVal = $(this).val();
-			pattern = (caseSensitive)?RegExp(searchFieldVal):RegExp(searchFieldVal, 'i');
-			tableObj.find('tbody tr').hide().each(function(){
-				var currentRow = $(this);
-				currentRow.find('td').each(function(){
-					if(pattern.test($(this).html())){
-						currentRow.show();
-						return false;
-					}
-				});
-			});
-		});
