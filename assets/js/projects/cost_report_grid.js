@@ -48,8 +48,8 @@ $(function() {
 	});
 	
 	$('table#it_cost_grid').tableSearch({
-		searchText:'Search Table',
-		searchPlaceHolder:'Input Value'
+		searchText:'Search ',
+		searchPlaceHolder:''
 	});
 	
 });
