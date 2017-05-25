@@ -258,8 +258,8 @@ if(!empty($other_cost_arr)) {
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'><b>Total:</b></td>
-			<td width='5%' align='right' class='rt-ali'>".round($tot_hour, 1)."</td>
-			<td width='5%' align='right' class='rt-ali'>".round($tot_cost, 2)."</td>
+			<td width='5%' align='right' id='tfoot_hour' class='rt-ali'>".round($tot_hour, 1)."</td>
+			<td width='5%' align='right' id='tfoot_cost' class='rt-ali'>".round($tot_cost, 2)."</td>
 		</tr></tfoot>";		
 	echo "</tbody></table>";
 ?>
