@@ -16,7 +16,7 @@ $(function() {
 		$('#filter_sort_val').prop('selectedIndex','hour');
 	});
 	
-	$("#it_cost_grid thead tr th").click(function(){
+	/* $("#it_cost_grid thead tr th").click(function(){
 		$("#it_cost_grid thead tr th").addClass("desc_opt");
 		//$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");
 			if($(this).hasClass('desc_asc_opt')){
@@ -25,12 +25,12 @@ $(function() {
 				$("#it_cost_grid thead tr th").removeClass("desc_asc_opt");
 				$(this).addClass("desc_asc_opt");
 			}
-	});
+	}); */
 	
 	
 	
 	//data table
-/* 	$('#it_cost_grid').dataTable({
+	$('#it_cost_grid').dataTable({
 		"bInfo": false,
 		"bFilter": false,
 		"bPaginate": false,
@@ -39,24 +39,25 @@ $(function() {
 		"bLengthChange": false,
 		"bDestroy": true,
 		'bAutoWidth': true
-	}); */
+	});
 	
-	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
+	/* $("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
 	$('.data-table tr, .data-table th').hover(
 		function() { $(this).addClass('over'); },
 		function() { $(this).removeClass('over'); 
-	});
+	}); */
 	
-	$('table#it_cost_grid').tableSearch({
+	/* $('table#it_cost_grid').tableSearch({
 		searchText:'Search ',
-		searchPlaceHolder:''
-	});
+		searchPlaceHolder:'',
+	}); */
 	
 });
 if(filter_area_status==1) {
 	$('#advance_search').show();
 }
 
-$('.search_input').on('keyup', function() { alert('1');
+/* $('.search_input').on('keyup', function() { alert('1');
 	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
 });
+ */
