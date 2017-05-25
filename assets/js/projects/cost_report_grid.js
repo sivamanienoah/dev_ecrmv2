@@ -57,6 +57,6 @@ if(filter_area_status==1) {
 	$('#advance_search').show();
 }
 
-$('.search_input').on('keyup', function() {
+$('.search_input').on('keyup', function() { alert('1');
 	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
 });
