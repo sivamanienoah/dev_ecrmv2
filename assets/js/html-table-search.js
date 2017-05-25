@@ -11,7 +11,7 @@
 		var tableObj = $(this),
 			searchText = (options.searchText)?options.searchText:'Search: ',
 			searchPlaceHolder = (options.searchPlaceHolder)?options.searchPlaceHolder:'',
-			divObj = $('<div id="srch_hide" style="float:right;">'+searchText+'</div><br /><br />'),
+			divObj = $('<div id="search_area" class="pull-right">'+searchText+'</div><br /><br />'),
 			inputObj = $('<input type="text" class="textfield search_input" placeholder="'+searchPlaceHolder+'" />'),
 			caseSensitive = (options.caseSensitive===true)?true:false,
 			searchFieldVal = '',
