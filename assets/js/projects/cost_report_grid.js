@@ -3,7 +3,6 @@ $(function() {
 	//export
 	$("#btnExport").click(function () {
 		// document.getElementById("it_cost_grid").deleteTFoot();
-		$('#srch_hide').hide();
 		$("#it_cost_grid").btechco_excelexport({
 			containerid: "it_cost_grid"
 		   , datatype: $datatype.Table
@@ -83,3 +82,19 @@ if(filter_area_status==1) {
 		$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
 	}	
 }); */
+
+var tableObj = $("#it_cost_grid")
+
+inputObj.off('keyup').on('keyup', function(){
+			searchFieldVal = $(this).val();
+			pattern = (caseSensitive)?RegExp(searchFieldVal):RegExp(searchFieldVal, 'i');
+			tableObj.find('tbody tr').hide().each(function(){
+				var currentRow = $(this);
+				currentRow.find('td').each(function(){
+					if(pattern.test($(this).html())){
+						currentRow.show();
+						return false;
+					}
+				});
+			});
+		});
