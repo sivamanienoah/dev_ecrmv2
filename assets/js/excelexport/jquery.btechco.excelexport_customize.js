@@ -32,8 +32,8 @@
 
         switch ($settings.datatype) {
             case 1:
-				var tfoot_hour = $('#tfoot_hour').val(); alert(tfoot_hour)
-				var tfoot_cost = $('#tfoot_cost').val();
+				var tfoot_hour = $('#exp_hide').find("#tfoot_hour").html();
+				var tfoot_cost = $('#exp_hide').find("#tfoot_cost").html();
 				var export_data = $("#" + $settings.containerid).parent().html();
 				var remove_data = '<div id="it_cost_grid_filter" class="dataTables_filter"><label>Search: <input aria-controls="it_cost_grid" type="text"></label></div>';
 				var remove_foot_data = '<tfoot id="exp_hide"><tr><td colspan="1" rowspan="1" class="rt-ali" align="right"></td><td colspan="1" rowspan="1" class="rt-ali" align="right"></td><td colspan="1" rowspan="1" class="rt-ali" align="right"></td><td colspan="1" rowspan="1" class="rt-ali" align="right"></td><td colspan="1" rowspan="1" class="rt-ali" align="right"></td><td colspan="1" rowspan="1" class="rt-ali" align="right"></td><td colspan="1" rowspan="1" class="rt-ali" align="right"></td><td colspan="1" rowspan="1" class="rt-ali" align="right"><b>Total:</b></td><td colspan="1" rowspan="1" class="rt-ali" align="right" width="5%">'+tfoot_hour+'</td><td colspan="1" rowspan="1" class="rt-ali" align="right" width="5%">'+tfoot_cost+'</td></tr></tfoot>'
