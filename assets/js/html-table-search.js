@@ -31,6 +31,5 @@
 		});
 		tableObj.before(divObj.append(inputObj));
 		return tableObj;
-	},
-	$("#it_cost_grid").tablesorter({widthFixed: false, widgets: ['zebra']});
+	}
 }(jQuery));
