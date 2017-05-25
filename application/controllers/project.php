@@ -642,15 +642,15 @@ class Project extends crm_controller {
 				$support_db->select('id,name,parent_id,identifier');
 				$qry = $support_db->get_where($support_db->dbprefix("projects"),array("identifier" => $data['quote_data']['pjt_id']));
 				if($qry->num_rows()>0){
-					$res = $qry->result();
-					$pjtIds = array();					
-					$pjtNames = array();					
+					$res 		= $qry->result();
+					$pjtIds 	= array();					
+					$pjtNames 	= array();					
 					$pnames_arr = array();					
 					foreach($res as $r){
 						$pjtIds[] = $r->id;
 					}
 					$pjtIds = array_unique($pjtIds);
-					//echo '<pre>';print_r($pjtIds);exit;
+					echo '<pre>';print_r($pjtIds);exit;
 					$AllPjtIds = implode(",",$pjtIds);
 					
 					$data['AllPjtIds'] = $pjtIds;
@@ -710,9 +710,8 @@ class Project extends crm_controller {
 				$support_db->close();	
 			}
 			
-			$gantt_chart_data=$this->check_gantt_chart_data($id);
-			
-			$milestones_data=$this->check_milestones_data($id);
+			$gantt_chart_data	= $this->check_gantt_chart_data($id);
+			$milestones_data	= $this->check_milestones_data($id);
 			
 			if($gantt_chart_data==0) $data['show_gantt_chart']=0;
 			else $data['show_gantt_chart']=1;
@@ -720,10 +719,10 @@ class Project extends crm_controller {
 			if($milestones_data==0) $data['show_milestones']=0;
 			else $data['show_milestones']=1;
 			
-			$user_id =$this->userdata['userid'];
-			$data['email_templates'] = $this->project_model->get_user_email_templates($user_id);
-			$data['email_signatures'] = $this->project_model->get_user_email_signatures($user_id);
-			$data['default_signature'] = $this->project_model->get_user_default_signature($user_id);
+			$user_id 					= $this->userdata['userid'];
+			$data['email_templates'] 	= $this->project_model->get_user_email_templates($user_id);
+			$data['email_signatures'] 	= $this->project_model->get_user_email_signatures($user_id);
+			$data['default_signature'] 	= $this->project_model->get_user_default_signature($user_id);
 			
             $this->load->view('projects/welcome_view_project', $data);
         }
