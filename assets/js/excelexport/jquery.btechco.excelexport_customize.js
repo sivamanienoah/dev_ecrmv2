@@ -32,7 +32,7 @@
 
         switch ($settings.datatype) {
             case 1:
-				$('#search_area').hide(); return false;
+				$('#search_area').hide();
                 Export($("#" + $settings.containerid).parent().html());
                 break;
             case 2:
