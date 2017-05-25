@@ -32,7 +32,7 @@
 
         switch ($settings.datatype) {
             case 1:
-				var tfoot_hour = $('#tfoot_hour').val();
+				var tfoot_hour = $('#tfoot_hour').val(); alert(tfoot_hour)
 				var tfoot_cost = $('#tfoot_cost').val();
 				var export_data = $("#" + $settings.containerid).parent().html();
 				var remove_data = '<div id="it_cost_grid_filter" class="dataTables_filter"><label>Search: <input aria-controls="it_cost_grid" type="text"></label></div>';
