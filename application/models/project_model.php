@@ -144,10 +144,10 @@ class Project_model extends crm_model
 			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
 			if($rowsJobs->num_rows()>0)	$data['jobids2'] = $rowsJobs->result_array();			
 			
-			$data = array_merge_recursive($data['jobids'], $data['jobids1'],$data['jobids2']);
+			$data = array_merge_recursive($data['jobids'], $data['jobids1'], $data['jobids2']);
  
 			$res[] = 0;
-			if (is_array($data) && count($data) > 0) { 
+			if (is_array($data) && count($data) > 0) {
 				foreach ($data as $data) {
 					$res[] = $data['lead_id'];
 				}
