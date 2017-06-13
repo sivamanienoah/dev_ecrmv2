@@ -148,18 +148,7 @@ class Invoice extends CRM_Controller {
 				$data['invoices'][$i]['customer'] 			    = $inv['company'].' - '.$inv['customer_name'];
 				$data['invoices'][$i]['project_milestone_name'] = $inv['project_milestone_name'];
 				$data['invoices'][$i]['actual_amt'] 			= $inv['expect_worth_name']." ".$inv['amount'];
-				// $data['invoices'][$i]['coverted_amt']		    = $this->conver_currency($inv['amount'], $rates[$inv['expect_worth_id']][$this->default_cur_id]);
-				// $data['invoices'][$i]['new_amt'] = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][1]);
-				// converting based on default currency - Start
-				// $data['invoices'][$i]['coverted_amt'] = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][$this->default_cur_id]); 
-				// converting based on default currency - End
-				// converting based on base currency
-				/* echo "<br>Milestone's amt = ".$inv['amount'];
-				echo "<br>Fin Yr = ".$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31");
-				echo "<br>Milestone currency = ".$inv['expect_worth_id'];
-				echo "<br>Milestone's entity currency = ".$inv['base_currency'];				
-				echo "<br>Milestone's base convertsion rate = ".$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][$inv['base_currency']];
-				echo "<br>Milestone's usd convertsion rate = ".$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['base_currency']][$this->default_cur_id]; */				
+				
 				$base_conversion_amt = $this->conver_currency($inv['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31")][$inv['expect_worth_id']][$inv['base_currency']]);
 				$data['invoices'][$i]['entity_conversion_name']  = $inv['base_currency'];
 				$data['invoices'][$i]['entity_conversion_value'] = $base_conversion_amt;
@@ -167,7 +156,6 @@ class Invoice extends CRM_Controller {
 				// converting based on base currency
 				$data['invoices'][$i]['invoice_generate_notify_date'] = $inv['invoice_generate_notify_date'];
 				$data['invoices'][$i]['month_year'] 				  = $inv['month_year'];
-				// $data['invoices'][$i]['financial_year'] 		= $this->calculateFiscalYearForDate(date('m/d/y', strtotime($inv['month_year'])),"4/1","3/31");
 				$data['total_amt'] 	                           += $data['invoices'][$i]['coverted_amt'];
 				$i++;
 			}
