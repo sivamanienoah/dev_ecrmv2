@@ -27,72 +27,6 @@ class Invoice_model extends crm_model {
 	public function get_invoices($filter = false,$invoice) 
 	{
 		$job_ids = array();
-	
-		//LEVEL BASED RESTIRCTION
-		if( $this->userdata['level'] != 1 ) {
-			if (isset($this->session->userdata['region_id']))
-			$region = explode(',',$this->session->userdata['region_id']);
-			if (isset($this->session->userdata['countryid']))
-			$countryid = explode(',',$this->session->userdata['countryid']);
-			if (isset($this->session->userdata['stateid']))
-			$stateid = explode(',',$this->session->userdata['stateid']);
-			if (isset($this->session->userdata['locationid']))
-			$locationid = explode(',',$this->session->userdata['locationid']);
-			
-			$this->db->select('ls.lead_id');
-			$this->db->from($this->cfg['dbpref'].'leads as ls');
-			$this->db->join($this->cfg['dbpref'].'customers as cs', 'cs.custid  = ls.custid_fk');
-			$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = cs.company_id');
-			
-			switch($this->userdata['level']) {
-				case 2:
-					$this->db->where_in('cc.add1_region',$region);
-				break;
-				case 3:
-					$this->db->where_in('cc.add1_region',$region);
-					$this->db->where_in('cc.add1_country',$countryid);
-				break;
-				case 4:
-					$this->db->where_in('cc.add1_region',$region);
-					$this->db->where_in('cc.add1_country',$countryid);
-					$this->db->where_in('cc.add1_state',$stateid);
-				break;
-				case 5:
-					$this->db->where_in('cc.add1_region',$region);
-					$this->db->where_in('cc.add1_country',$countryid);
-					$this->db->where_in('cc.add1_state',$stateid);
-					$this->db->where_in('cc.add1_location',$locationid);
-				break;
-			}
-			// $this->db->where("ls.lead_status", 4); //for active projects only
-			// $this->db->where("ls.pjt_status", 1); //for active projects only
-			$query = $this->db->get();
-			// echo $this->db->last_query(); exit;
-			$rowscust1 = $query->result_array();
-			
-			$this->db->select('ld.lead_id');
-			$this->db->from($this->cfg['dbpref'].'leads as ld');
-			$this->db->where("(ld.assigned_to = '".$this->userdata['userid']."' OR ld.lead_assign = '".$this->userdata['userid']."' OR ld.belong_to = '".$this->userdata['userid']."')");
-			$this->db->where("ld.lead_status", 4);
-			$this->db->where("ld.pjt_status", 1);
-			$query1 = $this->db->get();
-			// echo $this->db->last_query(); exit;
-			$rowscust2 = $query1->result_array();
-			
-			$customers = array_merge_recursive($rowscust1, $rowscust2);
-			
-			$res[] = 0;
-			if (is_array($customers) && count($customers) > 0) { 
-				foreach ($customers as $cus) {
-					$res[] = $cus['lead_id'];
-				}
-			}
-			$job_ids = array_unique($res);
-			
-		}
-		
-		//LEVEL BASED RESTIRCTION
- 
 		if($filter['from_date']=='0000-00-00 00:00:00'){
 			$filter['from_date'] = '';
 		}
@@ -105,8 +39,16 @@ class Invoice_model extends crm_model {
 		if($filter['month_year_to_date']=='0000-00-00 00:00:00'){
 			$filter['month_year_to_date'] = '';
 		}
-	
-		$this->db->select('expm.received, expm.expectid, expm.invoice_status, expm.amount, expm.project_milestone_name, expm.invoice_generate_notify_date, expm.expected_date, expm.month_year,l.lead_title,l.lead_id,l.custid_fk,l.pjt_id,l.expect_worth_id,ew.expect_worth_name, c.customer_name, cc.company, sd.base_currency');
+		
+		//Access control RESTIRCTION
+		$role_not_in_arr = array(ROLE_ADMIN, ROLE_MGMT, ROLE_FINANCE);
+		$restrict_job 	 = array();
+		if(!in_array($this->userdata['role_id'], $role_not_in_arr)) {
+			$job_ids = $this->get_projects($ret=true);
+		}
+		//Access control RESTIRCTION
+		
+		$this->db->select('expm.received, expm.expectid, expm.invoice_status, expm.amount, expm.project_milestone_name, expm.invoice_generate_notify_date, expm.expected_date, expm.month_year, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, ew.expect_worth_name, c.customer_name, cc.company, sd.base_currency');
 
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
@@ -114,6 +56,10 @@ class Invoice_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = l.division');
+		
+		if(!empty($job_ids) && count($job_ids)>0) {
+			$this->db->where_in('expm.jobid_fk', $job_ids);
+		}
 		
 		if($this->userdata['role_id'] == 14){
 			$reseller_condn = '(l.belong_to = '.$this->userdata['userid'].' OR l.lead_assign = '.$this->userdata['userid'].' OR l.assigned_to ='.$this->userdata['userid'].')';
@@ -126,11 +72,7 @@ class Invoice_model extends crm_model {
 			$this->db->where('expm.invoice_status',1);
 		}
 		
-		//$this->db->where('expm.received !=',1);	
-		
-		if(!empty($job_ids) && count($job_ids)>0) {
-			$this->db->where_in('expm.jobid_fk', $job_ids);
-		}
+		//$this->db->where('expm.received !=',1);
 		
 		if (!empty($filter['project']) && $filter['project']!='null') {
 			$filter['project'] = explode(',',$filter['project']);
@@ -190,7 +132,7 @@ class Invoice_model extends crm_model {
 			$this->db->where('DATE(expm.month_year) <=', date('Y-m-d', strtotime($filter['month_year_to_date'])));
 		}
 		$query  = $this->db->get();
-		// echo $this->db->last_query();exit;
+		// echo $this->db->last_query();
 		$res 	= $query->result_array();
 		return $res;
     }
@@ -217,22 +159,22 @@ class Invoice_model extends crm_model {
 	*@Get the projects details
 	*@Method get_projects
 	*/
-	function get_projects() 
+	function get_projects($ret_id=false) 
 	{
+		// echo $this->userdata['userid'] . " - ".LVL_GLOBAL_ACCESS; die;
 		$result_ids = array();
-		if (($this->userdata['role_id'] != ROLE_ADMIN && $this->userdata['level'] != LVL_GLOBAL) || ($this->userdata['role_id'] != ROLE_MGMT && $this->userdata['level'] != LVL_GLOBAL) || ($this->userdata['role_id'] != ROLE_FINANCE)) {
-			
-			$varSessionId = $this->userdata['userid']; //Current Session Id.
-			
+		$role_not_in_arr = array(ROLE_ADMIN, ROLE_MGMT, ROLE_FINANCE);
+		if(!in_array($this->userdata['role_id'], $role_not_in_arr)) 
+		{		
 			//Fetching Project Team Members.
 			$this->db->select('jobid_fk as lead_id');
-			$this->db->where('userid_fk', $varSessionId);
+			$this->db->where('userid_fk', $this->userdata['userid']);
 			$rowscj = $this->db->get($this->cfg['dbpref'] . 'contract_jobs');
 			$data['jobids'] = $rowscj->result_array();
 			
 			//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
 			$this->db->select('lead_id');
-			$this->db->where("(assigned_to = '".$varSessionId."' OR lead_assign = '".$varSessionId."' OR belong_to = '".$varSessionId."')");
+			$this->db->where("(assigned_to = '".$this->userdata['userid']."' OR lead_assign = '".$this->userdata['userid']."' OR belong_to = '".$this->userdata['userid']."')");
 			$this->db->where("lead_status", 4);
 			if (empty($stage) && $stage=='null') {
 				$this->db->where("pjt_status", 1);
@@ -243,7 +185,7 @@ class Invoice_model extends crm_model {
 			//Fetching Stake Holders.
 			$data['jobids2'] = array();
 			$this->db->select('lead_id');
-			$this->db->where("user_id",$varSessionId);
+			$this->db->where("user_id", $this->userdata['userid']);
 			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
 			if($rowsJobs->num_rows()>0)	$data['jobids2'] = $rowsJobs->result_array();			
 			
@@ -256,7 +198,11 @@ class Invoice_model extends crm_model {
 				}
 			}
 			$result_ids = array_unique($res);
-			
+			// echo "dfdf"; die;
+		}
+		
+		if($ret_id==true) {
+			return $result_ids;
 		}
 		
 		$this->db->select('l.lead_id,l.lead_title,l.invoice_no,l.custid_fk');
@@ -271,7 +217,7 @@ class Invoice_model extends crm_model {
 		}
 		$this->db->order_by("l.lead_title");
 		$query  = $this->db->get();
-		echo $this->db->last_query();
+		// echo $this->db->last_query();
 		$res 	= $query->result_array();
 		return $res;
 	}
