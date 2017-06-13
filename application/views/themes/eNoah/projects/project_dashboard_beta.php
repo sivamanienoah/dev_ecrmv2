@@ -139,7 +139,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>
 				<?php 
-					echo "<pre>"; print_r($resdata); die;
+					// echo "<pre>"; print_r($resdata); die;
 					
 					//Applying max hours calculation//	
 					$timesheet_data = array();
@@ -160,7 +160,7 @@ table.bu-tbl-inr th{ text-align:center; }
 							$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
 							$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
 							$timesheet_data[$rec->dept_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
-							$timesheet_data[$rec->dept_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
+							$timesheet_data[$rec->dept_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 							$timesheet_data[$rec->dept_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
 							$timesheet_data[$rec->dept_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 						}
@@ -236,7 +236,7 @@ table.bu-tbl-inr th{ text-align:center; }
 							}	
 						}
 					}
-					//Applying max hours calculation//
+					//Applying max hours calculation// $other_cost_arr
 					// echo "<pre>"; print_r($resource_cost); echo "</pre>";
 				?>	
 			<div id="default_view">
@@ -260,7 +260,10 @@ table.bu-tbl-inr th{ text-align:center; }
 						ksort($resource_cost['over_all']);
 						if(!empty($resource_cost['over_all']) && count($resource_cost['over_all'])>0) {
 							foreach($resource_cost['over_all'] as $resrc_type_name=>$rtval) {
-							?>
+								// if($resrc_type_name = 'Billable') {
+									// $rtval['total_cost'] += 
+								// }
+					?>
 								<tr>
 									<td><?php echo $resrc_type_name; ?></td>
 									<td align="right"><?php echo round($rtval['duration_hours'], 1); ?></td>
@@ -421,18 +424,7 @@ if(filter_area_status==1){
 	$('#advance_search').show();
 }
 $(function() {
-    /* $('#month_year_from_date').datepicker( {
-        changeMonth: true,
-        changeYear: true,
-        showButtonPanel: true,
-        dateFormat: 'MM yy',
-        onClose: function(dateText, inst) { 
-            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-            $(this).datepicker('setDate', new Date(year, month, 1));
-        }
-    }); */
-	/*Date Picker*/
+ 	/*Date Picker*/
 	$( "#month_year_from_date, #month_year_to_date" ).datepicker({
 		changeMonth: true,
 		changeYear: true,
