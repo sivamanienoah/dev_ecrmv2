@@ -40,10 +40,18 @@ define('VIEWPATH',APPPATH.'/views/');
 define('UPLOAD_PATH',SITE_FILE_PATH.'/crm_data/');
 define('PDF_TEMP_PATH',SITE_FILE_PATH.'/crm_data/pdf_temp'); //for exporting charts as pdfs
 
+define('IS_ZERO', 0); 
 define('CONST_ZERO',0); 
 define('CONST_ONE',1); 
 define('CONST_HUNDRED',100); 
-define('CONST_TEN_LAKH',1000000); 
+define('CONST_TEN_LAKH',1000000);
+//Levels
+define('LVL_GLOBAL_ACCESS', 1);
+//Roles
+define('ROLE_ADMIN', 1);
+define('ROLE_MGMT', 2);
+define('ROLE_FINANCE', 4);
+define('ROLE_RESELLER', 14);
 
 
 /* End of file constants.php */
