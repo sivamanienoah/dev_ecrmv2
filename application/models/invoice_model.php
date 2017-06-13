@@ -24,8 +24,8 @@ class Invoice_model extends crm_model {
 	*@Get invoices
 	*@Invoice_model
 	*/
-	public function get_invoices($filter = false,$invoice) {
-
+	public function get_invoices($filter = false,$invoice) 
+	{
 		$job_ids = array();
 	
 		//LEVEL BASED RESTIRCTION
@@ -217,16 +217,61 @@ class Invoice_model extends crm_model {
 	*@Get the projects details
 	*@Method get_projects
 	*/
-	function get_projects() {
+	function get_projects() 
+	{
+		$result_ids = array();
+		if (($this->userdata['role_id'] != ROLE_ADMIN && $this->userdata['level'] != LVL_GLOBAL) || ($this->userdata['role_id'] != ROLE_MGMT && $this->userdata['level'] != LVL_GLOBAL) || ($this->userdata['role_id'] != ROLE_FINANCE)) {
+			
+			$varSessionId = $this->userdata['userid']; //Current Session Id.
+			
+			//Fetching Project Team Members.
+			$this->db->select('jobid_fk as lead_id');
+			$this->db->where('userid_fk', $varSessionId);
+			$rowscj = $this->db->get($this->cfg['dbpref'] . 'contract_jobs');
+			$data['jobids'] = $rowscj->result_array();
+			
+			//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
+			$this->db->select('lead_id');
+			$this->db->where("(assigned_to = '".$varSessionId."' OR lead_assign = '".$varSessionId."' OR belong_to = '".$varSessionId."')");
+			$this->db->where("lead_status", 4);
+			if (empty($stage) && $stage=='null') {
+				$this->db->where("pjt_status", 1);
+			}
+			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'leads');
+			$data['jobids1'] = $rowsJobs->result_array();
+
+			//Fetching Stake Holders.
+			$data['jobids2'] = array();
+			$this->db->select('lead_id');
+			$this->db->where("user_id",$varSessionId);
+			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
+			if($rowsJobs->num_rows()>0)	$data['jobids2'] = $rowsJobs->result_array();			
+			
+			$data = array_merge_recursive($data['jobids'], $data['jobids1'], $data['jobids2']);
+ 
+			$res[] = 0;
+			if (is_array($data) && count($data) > 0) { 
+				foreach ($data as $data) {
+					$res[] = $data['lead_id'];
+				}
+			}
+			$result_ids = array_unique($res);
+			
+		}
+		
 		$this->db->select('l.lead_id,l.lead_title,l.invoice_no,l.custid_fk');
 		$this->db->from($this->cfg['dbpref'].'leads as l');
 		$this->db->where("l.lead_id != 'null' AND l.lead_status IN ('4') AND l.pjt_status IN ('1','2','3','4') ");
-		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
+		if($this->userdata['role_id'] == ROLE_RESELLER) { /*Condition for Reseller user*/
 			$reseller_condn = '(l.belong_to = '.$this->userdata['userid'].' OR l.lead_assign = '.$this->userdata['userid'].' OR l.assigned_to ='.$this->userdata['userid'].')';
 			$this->db->where($reseller_condn);
 		}
+		if(is_array($result_ids) && !empty($result_ids) && count($result_ids)>IS_ZERO) {
+			$this->db->where_in('l.lead_id', $result_ids);
+		}
 		$this->db->order_by("l.lead_title");
 		$query  = $this->db->get();
+		echo $this->db->last_query();
 		$res 	= $query->result_array();
 		return $res;
 	}
