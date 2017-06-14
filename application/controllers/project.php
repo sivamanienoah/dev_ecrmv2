@@ -5596,7 +5596,7 @@ HDOC;
 	{
 		$temp_id = $this->input->post('temp_id');
 		$temp_content =$this->project_model->get_template_content($temp_id);
-		 echo json_encode($temp_content);
+		echo json_encode($temp_content);
 	}
 	public function get_signature_content()
 	{
