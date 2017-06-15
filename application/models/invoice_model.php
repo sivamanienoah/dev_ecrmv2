@@ -167,10 +167,10 @@ class Invoice_model extends crm_model {
 		if(!in_array($this->userdata['role_id'], $role_not_in_arr)) 
 		{		
 			//Fetching Project Team Members.
-			$this->db->select('jobid_fk as lead_id');
+			/* $this->db->select('jobid_fk as lead_id');
 			$this->db->where('userid_fk', $this->userdata['userid']);
 			$rowscj = $this->db->get($this->cfg['dbpref'] . 'contract_jobs');
-			$data['jobids'] = $rowscj->result_array();
+			$data['jobids'] = $rowscj->result_array(); */
 			
 			//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
 			$this->db->select('lead_id');
@@ -189,7 +189,8 @@ class Invoice_model extends crm_model {
 			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
 			if($rowsJobs->num_rows()>0)	$data['jobids2'] = $rowsJobs->result_array();			
 			
-			$data = array_merge_recursive($data['jobids'], $data['jobids1'], $data['jobids2']);
+			// $data = array_merge_recursive($data['jobids'], $data['jobids1'], $data['jobids2']);
+			$data = array_merge_recursive($data['jobids1'], $data['jobids2']);
  
 			$res[] = 0;
 			if (is_array($data) && count($data) > 0) { 
