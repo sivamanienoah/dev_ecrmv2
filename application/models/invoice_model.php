@@ -164,7 +164,7 @@ class Invoice_model extends crm_model {
 		// echo $this->userdata['userid'] . " - ".LVL_GLOBAL_ACCESS; die;
 		$result_ids = array();
 		$role_not_in_arr = array(ROLE_ADMIN, ROLE_MGMT, ROLE_FINANCE);
-		if(!in_array($this->userdata['role_id'], $role_not_in_arr)) 
+		if(!in_array($this->userdata['role_id'], $role_not_in_arr))
 		{		
 			//Fetching Project Team Members.
 			/* $this->db->select('jobid_fk as lead_id');
