@@ -165,7 +165,7 @@ class Invoice_model extends crm_model {
 		$result_ids = array();
 		$role_not_in_arr = array(ROLE_ADMIN, ROLE_MGMT, ROLE_FINANCE);
 		if(!in_array($this->userdata['role_id'], $role_not_in_arr))
-		{		
+		{
 			//Fetching Project Team Members.
 			/* $this->db->select('jobid_fk as lead_id');
 			$this->db->where('userid_fk', $this->userdata['userid']);
@@ -199,7 +199,6 @@ class Invoice_model extends crm_model {
 				}
 			}
 			$result_ids = array_unique($res);
-			// echo "dfdf"; die;
 		}
 		
 		if($ret_id==true) {
