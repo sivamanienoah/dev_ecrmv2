@@ -634,7 +634,7 @@ class Welcome extends crm_controller {
 					chmod($f_dir, 0777);
 				}
 				
-				$this->welcome_model->insert_default_folder($insert_id);
+				$this->welcome_model->insert_default_folder($insert_id, $data['lead_title']);
 				//folder name entry end
 				
 				// $this->quote_add_item($insert_id, "\nThank you for entrusting eNoah  iSolution with your web technology requirements.\nPlease see below an itemised breakdown of our service offering to you:", 0, '', FALSE);
@@ -1350,13 +1350,13 @@ class Welcome extends crm_controller {
 	/**
 	 *uploading files - creating log
 	 */
-	public function lead_fileupload_details($lead_id, $filename, $userid) {
-	   
-		$lead_files['lead_files_name'] = $filename;
+	public function lead_fileupload_details($lead_id, $filename, $userid) 
+	{
+		$lead_files['lead_files_name'] 		 = $filename;
 		$lead_files['lead_files_created_by'] = $userid;
 		$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
-		$lead_files['lead_id'] = $lead_id;
-		$insert_logs = $this->welcome_model->insert_row('lead_files', $lead_files);
+		$lead_files['lead_id'] 				 = $lead_id;
+		$insert_logs 						 = $this->welcome_model->insert_row('lead_files', $lead_files);
 		
 		$logs['jobid_fk'] = $lead_id;
 		$logs['userid_fk'] = $this->userdata['userid'];
@@ -2783,7 +2783,7 @@ HDOC;
 											mkdir($f_dir);
 											chmod($f_dir, 0777);
 										}
-										$this->welcome_model->insert_default_folder($new_id);
+										$this->welcome_model->insert_default_folder($new_id, $ins_leads['lead_title']);
 										
 										//For Logs
 										if(!empty($impt_data[$i]['W'])){

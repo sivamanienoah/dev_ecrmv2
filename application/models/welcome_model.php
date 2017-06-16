@@ -1302,22 +1302,22 @@ class Welcome_model extends crm_model {
 	}
 
 	//Folder creation code start
-	function insert_default_folder($project_id) {
+	function insert_default_folder($project_id, $title) {
 		
 		$this->db->where('parent',0);
 		$this->db->where('folder_name',$project_id);
 		$check=$this->db->get($this->cfg['dbpref'].'file_management')->row();
 		if(empty($check)) {
 			//root entry
-			$root_data	=	new stdClass();
-			$root_data->lead_id	=	$project_id;
-			$root_data->folder_name	=	$project_id;
-			$root_data->parent	=	0;
-			$root_data->created_by	=	$this->session->userdata('user_id');
+			$root_data				= new stdClass();
+			$root_data->lead_id		= $project_id;
+			$root_data->folder_name	= $project_id;
+			$root_data->parent		= 0;
+			$root_data->created_by	= $this->userdata['userid'];
 			$this->db->insert($this->cfg['dbpref'].'file_management', $root_data);
-			$root_id=$this->db->insert_id();
+			$root_id				= $this->db->insert_id();
 		} else {
-			$root_id=$check->folder_id;
+			$root_id                = $check->folder_id;
 		}
 		//parent entry
 		$this->db->where('parent_id',0);
@@ -1329,12 +1329,29 @@ class Welcome_model extends crm_model {
 			$data->lead_id	   = $project_id;
 			$data->folder_name = $value['folder_name'];
 			$data->parent	   = $root_id;
-			$data->created_by  = $this->session->userdata('user_id');
+			$data->created_by  = $this->userdata['userid'];
 			$this->db->insert($this->cfg['dbpref'].'file_management', $data);
-			$parent_id=$this->db->insert_id();
+			$parent_id = $this->db->insert_id();
+			if('Quality Control Documents'==$value['folder_name']) {
+				//inserting QMS file
+				$title = str_replace(' ', '_', $title);
+				$qms_file 		= UPLOAD_PATH.'template_file/QMS_Template.xls';
+				$new_qms_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.$title.'_QMS_Procedure_Documents_and_Approvals.xls';
+
+				if (copy($qms_file, $new_qms_file)) {
+					$lead_files 						 = array();
+					$lead_files['lead_files_name'] 		 = $title.'_QMS_Procedure_Documents_and_Approvals.xls';
+					$lead_files['lead_files_created_by'] = $this->userdata['userid'];
+					$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
+					$lead_files['lead_id'] 				 = $project_id;
+					$lead_files['folder_id'] 			 = $parent_id;
+					$insert_logs 						 = $this->db->insert($this->cfg['dbpref'].'lead_files', $lead_files);
+				}
+				
+			}
 			
-			$this->db->where('parent_id',$value['id']);
-			$sub_result=$this->db->get($this->cfg['dbpref'].'default_folder')->result_array();
+			$this->db->where('parent_id', $value['id']);
+			$sub_result = $this->db->get($this->cfg['dbpref'].'default_folder')->result_array();
 			
 			if(count($sub_result))
 			{
@@ -1344,12 +1361,11 @@ class Welcome_model extends crm_model {
 					$sub_data->lead_id	   = $project_id;
 					$sub_data->folder_name = $sub_value['folder_name'];
 					$sub_data->parent	   = $parent_id;
-					$sub_data->created_by  = $this->session->userdata('user_id');
+					$sub_data->created_by  = $this->userdata['userid'];
 					$this->db->insert($this->cfg['dbpref'].'file_management', $sub_data);
 				}
 			}
 		}
-		
     }
 	
 	public function getLeadFolders($lead_id)
