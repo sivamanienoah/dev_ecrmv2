@@ -174,8 +174,8 @@ class Timesheet_data extends crm_controller
 				
 					$ts_month = date('m', strtotime($val['start_time']));
 					$ts_month = ltrim($ts_month, '0');
-					$cost  = $userCostArr[$val['emp_id']][$val['entry_year']][$ts_month];
-					$dcost = $userDirectCostArr[$val['emp_id']][$val['entry_year']][$ts_month];
+					$cost  	= $userCostArr[$val['emp_id']][$val['entry_year']][$ts_month];
+					$dcost 	= $userDirectCostArr[$val['emp_id']][$val['entry_year']][$ts_month];
 					
 					if(!empty($cost)) {
 						$costPerHour = $cost;
