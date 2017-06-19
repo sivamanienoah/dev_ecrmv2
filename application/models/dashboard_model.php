@@ -1207,6 +1207,7 @@ class Dashboard_model extends crm_model {
    		$this->db->where('level_id', $lvlid);
 		$query = $this->db->get();
 		$cs_query = $query->result_array();
+		// echo $this->db->last_query(); die;
 		return $cs_query;
 	}
 	
@@ -1233,9 +1234,11 @@ class Dashboard_model extends crm_model {
 	}
 	
 	//For Customers
-	public function getCustomersIds($regId = FALSE, $couId = FALSE, $steId = FALSE, $locId = FALSE) {
-		$this->db->select('companyid');
-		$this->db->from($this->cfg['dbpref'].'customers_company');
+	public function getCustomersIds($regId = FALSE, $couId = FALSE, $steId = FALSE, $locId = FALSE) 
+	{
+		$this->db->select('c.custid as companyid');		
+		$this->db->join($this->cfg['dbpref']. 'customers as c', 'cc.companyid = c.company_id');
+		$this->db->from($this->cfg['dbpref'].'customers_company as cc');
 		if (!empty($regId)) {
 			$this->db->where_in('add1_region', $regId);
 		}
