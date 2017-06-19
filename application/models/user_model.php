@@ -85,9 +85,24 @@ class User_model extends crm_model {
         if(!$id) {
             return false;
         } else {
-			$customer = $this->db->get_where($this->cfg['dbpref'] . 'users', array('userid' => $id), 1);
-			return $customer->result_array();
+			$sql = $this->db->get_where($this->cfg['dbpref'] . 'users', array('userid' => $id), 1);
+			return $sql->result_array();
 		}
+    }
+
+	/*
+	*@Get User By id
+	*@Method  get_user_det
+	*/
+    public function get_user_det($id) 
+	{
+        $this->db->select('u.userid,u.first_name,u.last_name,u.username,u.password,u.email,u.auth_type,u.level,u.role_id,u.signature,u.inactive,r.name');
+		$this->db->from($this->cfg['dbpref'].'users u');
+		$this->db->join($this->cfg['dbpref'].'roles r', 'r.id = u.role_id');
+		$this->db->where('u.userid', $id);
+		$this->db->limit(1);
+		$sql = $this->db->get();
+		return $sql->row_array();
     }
     
 	/*

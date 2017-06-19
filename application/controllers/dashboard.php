@@ -1357,54 +1357,70 @@ class Dashboard extends crm_controller {
 			$cusId = '';
 		} else {
 			$cusIds = array();
-			$reg = array();
-			$cou = array();
-			$ste = array();
-			$loc = array();
+			$reg 	= array();
+			$cou 	= array();
+			$ste 	= array();
+			$loc 	= array();
 			$cusIds[] = 0;
 			switch($userdata['level']) {
 				case 2:
 					$regions = $this->dashboard_model->getRegions($userdata['userid'], $userdata['level']); //Get the Regions based on Level
+					if(!empty($regions) && count($regions)>0) {
 						foreach ($regions as $rgid) {
 							$reg[] = $rgid['region_id'];
 						}
+					}
 					$CustomersId = $this->dashboard_model->getCustomersIds($reg); //Get the Customer id based on Regions
+					if(!empty($CustomersId) && count($CustomersId)>0) {
 						foreach ($CustomersId as $cus_id) {
 							$cusIds[] = $cus_id['companyid'];
 						}
+					}
 					$cusId = $cusIds;
 				break;
 				case 3:
 					$countries = $this->dashboard_model->getCountries($userdata['userid'], $userdata['level']); //Get the Countries based on Level
+					if(!empty($countries) && count($countries)>0) {
 						foreach ($countries as $couid) {
 							$cou[] = $couid['country_id'];
 						}
-					$CustomersId = $this->dashboard_model->getCustomersIds($reg,$cou); //Get the Customer id based on Regions & Countries
+					}
+					$CustomersId = $this->dashboard_model->getCustomersIds($reg, $cou); //Get the Customer id based on Regions & Countries
+					if(!empty($CustomersId) && count($CustomersId)>0) {
 						foreach ($CustomersId as $cus_id) {
 							$cusIds[] = $cus_id['companyid'];
 						}
+					}
 					$cusId = $cusIds;
 				break;
 				case 4:
 					$states = $this->dashboard_model->getStates($userdata['userid'], $userdata['level']); //Get the States based on Level
+					if(!empty($states) && count($states)>0) {
 						foreach ($states as $steid) {
 							$ste[] = $steid['state_id'];
 						}
-					$CustomersId = $this->dashboard_model->getCustomersIds($reg,$cou,$ste); //Get the Customer id based on Regions & Countries
+					}
+					$CustomersId = $this->dashboard_model->getCustomersIds($reg, $cou, $ste); //Get the Customer id based on Regions & Countries
+					if(!empty($CustomersId) && count($CustomersId)>0) {
 						foreach ($CustomersId as $cus_id) {
 							$cusIds[] = $cus_id['companyid'];
 						}
+					}
 					$cusId = $cusIds;
 				break;
 				case 5:
 					$locations = $this->dashboard_model->getLocations($userdata['userid'], $userdata['level']); //Get the Locations based on Level
+					if(!empty($locations) && count($locations)>0) {
 						foreach ($locations as $locid) {
 							$loc[] = $locid['location_id'];
-						}	
-					$CustomersId = $this->dashboard_model->getCustomersIds($reg,$cou,$ste,$loc); //Get the Customer id based on Regions & Countries
+						}
+					}
+					$CustomersId = $this->dashboard_model->getCustomersIds($reg, $cou, $ste, $loc); //Get the Customer id based on Regions & Countries
+					if(!empty($CustomersId) && count($CustomersId)>0) {
 						foreach ($CustomersId as $cus_id) {
 							$cusIds[] = $cus_id['companyid'];
 						}
+					}
 					$cusId = $cusIds;
 				break;
 			}

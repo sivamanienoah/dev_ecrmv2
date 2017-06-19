@@ -79,10 +79,11 @@ class Myaccount extends crm_controller {
 							$update_data['password'] = sha1($this->input->post('password'));
 							// update query
 							if ($this->user_model->update_user($customer['userid'], $update_data)) {
-								//echo $this->db->last_query();
-								$new = $this->user_model->get_user($customer['userid']);
-								$this->session->set_userdata('logged_in_user', $new[0]);
+								// echo $this->db->last_query(); die;
+								/* $new = $this->user_model->get_user($customer['userid']);
+								$this->session->set_userdata('logged_in_user', $new[0]); */
 								$this->session->set_flashdata('confirm', array('User details updated!'));
+								redirect('userlogin/logout/true');
 							}
 							redirect('myaccount/'); 
 						} else {
@@ -103,17 +104,17 @@ class Myaccount extends crm_controller {
 			
 				if ($this->user_model->update_user($customer['userid'], $update_data))
 				{
-					$new = $this->user_model->get_user($customer['userid']);
-					$this->session->set_userdata('logged_in_user', $new[0]);
+					$new = $this->user_model->get_user_det($customer['userid']);
+					$this->session->set_userdata('logged_in_user', $new);
 					
 					$user_name 			 = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 					$dis['date_created'] = date('Y-m-d H:i:s');
 					$print_fancydate	 = date('l, jS F y h:iA', strtotime($dis['date_created']));
-							
+					
 					$from    	  = $this->userdata['email'];
 					$arrEmails 	  = $this->config->item('crm');
 					$arrSetEmails = $arrEmails['director_emails'];
-							
+					
 					$admin_mail = implode(',',$arrSetEmails);
 					$subject    = 'User Profile Changes Notification';
 					

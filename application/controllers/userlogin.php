@@ -289,7 +289,7 @@ class Userlogin extends crm_controller {
 		$this->load->view('login_view');
 	}
 	
-	function logout()
+	function logout($msg=false)
 	{
 		$SSO_Status = $this->config->item('IS_SSO');
 		/*
@@ -333,6 +333,9 @@ class Userlogin extends crm_controller {
         $this->session->set_userdata('menu_item_list', '');
 		$this->session->set_userdata('loggedType', '');
 		$this->session->set_userdata('logoutType', 'ldb');
+		if($msg == true) {
+			$this->session->set_flashdata('confirm', array('User details updated! Please login again.'));
+		}
 		redirect('userlogin/');
 	}
 	
