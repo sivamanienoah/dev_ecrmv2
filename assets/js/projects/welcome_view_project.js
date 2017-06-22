@@ -3210,7 +3210,7 @@ function updtActualProjectValue(projectid)
 {
 	
 	var params = {};
-	//params[csrf_token_name] = csrf_hash_token;
+	params[csrf_token_name] = csrf_hash_token;
 	params['project_id'] 	= project_id;
 	
 	$.ajax({
