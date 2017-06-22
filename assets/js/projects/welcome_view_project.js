@@ -1653,10 +1653,10 @@ function addURLtoJob()
 				var evnt_id = ui.newPanel[0].id;
 				
 				switch(evnt_id){
-					case 'jv-tab-z':
+					case 'jv-tab-0':
 						updtActualProjectValue(project_jobid);
 					break;
-					case 'jv-tab-z-a':
+					case 'jv-tab-0-a':
 						viewOtherCost(project_jobid);
 					break;
 					case 'jv-tab-1':

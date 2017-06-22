@@ -583,8 +583,8 @@
 	<div>
 		<ul id="job-view-tabs">
 			<?php if($this->userdata['role_id'] != 8):?>
-				<li><a href="<?php echo current_url() ?>#jv-tab-z">Metrics</a></li>
-				<li><a href="<?php echo current_url() ?>#jv-tab-z-a">Other Cost</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-0">Metrics</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-0-a">Other Cost</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-2">Document</a></li>
 			<?php endif; ?>
@@ -609,7 +609,7 @@
 		</ul>
 	</div>
 	<?php if($this->userdata['role_id'] != 8):?>
-	<div id="jv-tab-z">
+	<div id="jv-tab-0">
 		<div class="metrics_overlay" style="overflow: auto;">
 		<div class="pull-left">
 			<table id="project-date-assign" class="data-table1" cellpadding="0" cellspacing="0">
@@ -765,9 +765,9 @@
 		<?php } ?>
 		<!-- project variance report ends -->
 		</div>
-	</div><!--end of jv-tab-z -->
+	</div><!--end of jv-tab-0 -->
 	
-	<div id="jv-tab-z-a"><!--start of jv-tab-z-a-->
+	<div id="jv-tab-0-a"><!--start of jv-tab-0-a-->
 		<div style="color:red; margin:7px 0 0;" id="err_other_cost_data" class="succ_err_msg"></div>
 		<div style="margin:7px 0 0;" id="succes_other_cost_data" class="succ_err_msg"></div>
 		<div id="other_cost_data"> </div>
@@ -800,7 +800,7 @@
 			</div>
 		</div>
 		<!--File Upload--END-->
-	</div><!--end of jv-tab-z-a-->
+	</div><!--end of jv-tab-0-a-->
 	
 	<div id="jv-tab-1"><!--start of jv-tab-1-->
 				<div class="q-view-main-top">
