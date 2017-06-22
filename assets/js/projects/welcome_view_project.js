@@ -1654,7 +1654,9 @@ function addURLtoJob()
 				
 				switch(evnt_id){
 					case 'jv-tab-0':
-						updtActualProjectValue(project_jobid);
+						if(metrics_reload == true) {
+							updtActualProjectValue(project_jobid);
+						}
 					break;
 					case 'jv-tab-0-a':
 						viewOtherCost(project_jobid);
@@ -3187,28 +3189,26 @@ function updtActualProjectValue(projectid)
 	params[csrf_token_name] = csrf_hash_token;
 	params['project_id'] 	= project_id;
 	
-	if(metrics_reload == true) {
-		$.ajax({
-			type:'POST',
-			data:params,
-			url:site_base_url+'project/getAcutalCostDataForProject/',
-			cache:false,
-			dataType:'json',
-			beforeSend: function() {
-				//show loading symbol or overlay
-				$('.metrics_overlay').block({
-					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-				});
-			},
-			success:function(data) {
-				$('.metrics_overlay').unblock();
-				// $('.blockUI').css('display', 'none');
-				$('#actualValue').val(data.project_cost);
-				$('#varianceValue').val(data.varianceProjectVal);
-			}
-		});
-	}
+	$.ajax({
+		type:'POST',
+		data:params,
+		url:site_base_url+'project/getAcutalCostDataForProject/',
+		cache:false,
+		dataType:'json',
+		beforeSend: function() {
+			//show loading symbol or overlay
+			$('.metrics_overlay').block({
+				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+			});
+		},
+		success:function(data) {
+			$('.metrics_overlay').unblock();
+			// $('.blockUI').css('display', 'none');
+			$('#actualValue').val(data.project_cost);
+			$('#varianceValue').val(data.varianceProjectVal);
+		}
+	});
 }
 
 /* To get email template by id */
