@@ -1653,7 +1653,7 @@ function addURLtoJob()
 				var evnt_id = ui.newPanel[0].id;
 				
 				switch(evnt_id){
-					case 'jv-tab-z': alert(evnt_id+'-'+project_jobid);
+					case 'jv-tab-z':
 						updtActualProjectValue(project_jobid);
 					break;
 					case 'jv-tab-z-a':
@@ -1680,33 +1680,6 @@ function addURLtoJob()
 						loadLogs(project_jobid);
 					break;
 				}
-				/* if (ui.newPanel[0].id=='jv-tab-z') {
-					updtActualProjectValue(project_jobid);
-				}
-				if (ui.newPanel[0].id=='jv-tab-z-a') {
-					viewOtherCost(project_jobid);
-				}
-				if (ui.newPanel[0].id=='jv-tab-1') {
-					$('.payment-terms-mini-view1').html('');
-					loadPayment();
-				}
-				if (ui.newPanel[0].id=='jv-tab-3') {				
-					loadExistingFiles($('#filefolder_id').val());
-					showBreadCrumbs($('#filefolder_id').val());
-				}
-				if (ui.newPanel[0].id=='jv-tab-4') {
-					loadExistingTasks();
-				}
-				if (ui.newPanel[0].id=='jv-tab-4-5') {
-					$('.payment-received-mini-view1').hide();
-				}
-				if (ui.newPanel[0].id=='jv-tab-5') {
-					loadCustomer(quote_id);
-				}
-				if (ui.newPanel[0].id=='jv-tab-9') {
-					loadLogs(project_jobid);
-				} */
-				
 			}
 		});
 		
