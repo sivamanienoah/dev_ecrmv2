@@ -1650,7 +1650,7 @@ function addURLtoJob()
 			beforeActivate: function( event, ui ) {
 				
 				var evnt_id = ui.newPanel[0].id;
-				
+				alert(evnt_id);
 				switch(evnt_id){
 					case 'jv-tab-z':
 						updtActualProjectValue(project_jobid);
