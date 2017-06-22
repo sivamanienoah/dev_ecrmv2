@@ -3226,7 +3226,6 @@ function updtActualProjectValue(projectid)
 			});
 		},
 		success:function(data) {
-			$('#jv-tab-z').show();
 			$('.metrics_overlay').unblock();
 			$('.blockUI').css('display', 'none');
 			$('#actualValue').val(data.project_cost);
