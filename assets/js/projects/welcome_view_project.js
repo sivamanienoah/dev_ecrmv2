@@ -406,7 +406,7 @@
 	//function for load the payment terms every time click the 'Add Payment Terms' button
 	function loadPayment() 
 	{
-		$("#uploadFile").empty();
+		/* $("#uploadFile").empty();
 		var params = {};
 		params[csrf_token_name] = csrf_hash_token;
 		$.post( 
@@ -418,7 +418,7 @@
 					$('.payment-terms-mini-view1').html(data);
 				}
 			}
-		);
+		); */
 	}
 
 	function fullScreenLogs()
@@ -3218,6 +3218,7 @@ function updtActualProjectValue(projectid)
 		data:params,
 		url:site_base_url+'project/getAcutalCostDataForProject/',
 		cache:false,
+		async:false,
 		dataType:'json',
 		beforeSend: function() {
 			//show loading symbol or overlay
@@ -3225,7 +3226,7 @@ function updtActualProjectValue(projectid)
 				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
 			});
-			$('#jv-tab-z').show();
+			
 		},
 		success:function(data) {
 			$('.metrics_overlay').unblock();
