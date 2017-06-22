@@ -2,6 +2,7 @@
 *@Welcome View Project
 *@
 */
+	var metrics_reload = false;
 	$(document).ready(function() {
 		
 		var mySelect = $('#project_lead');
@@ -3011,6 +3012,7 @@ function loadLogs(id)
 
 function viewOtherCost(project_id) 
 {
+	metrics_reload = true;
 	var params = {};
 	params[csrf_token_name] = csrf_hash_token;
 	
@@ -3212,26 +3214,28 @@ function updtActualProjectValue(projectid)
 	params[csrf_token_name] = csrf_hash_token;
 	params['project_id'] 	= project_id;
 	
-	/* $.ajax({
-		type:'POST',
-		data:params,
-		url:site_base_url+'project/getAcutalCostDataForProject/',
-		cache:false,
-		dataType:'json',
-		beforeSend: function() {
-			//show loading symbol or overlay
-			$('.metrics_overlay').block({
-				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
-				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
-			});
-		},
-		success:function(data) {
-			$('.metrics_overlay').unblock();
-			// $('.blockUI').css('display', 'none');
-			$('#actualValue').val(data.project_cost);
-			$('#varianceValue').val(data.varianceProjectVal);
-		}
-	}); */
+	if(metrics_reload == true) {
+		$.ajax({
+			type:'POST',
+			data:params,
+			url:site_base_url+'project/getAcutalCostDataForProject/',
+			cache:false,
+			dataType:'json',
+			beforeSend: function() {
+				//show loading symbol or overlay
+				$('.metrics_overlay').block({
+					message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+					css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+				});
+			},
+			success:function(data) {
+				$('.metrics_overlay').unblock();
+				// $('.blockUI').css('display', 'none');
+				$('#actualValue').val(data.project_cost);
+				$('#varianceValue').val(data.varianceProjectVal);
+			}
+		});
+	}
 }
 
 /* To get email template by id */
