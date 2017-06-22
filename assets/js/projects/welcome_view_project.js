@@ -3212,7 +3212,7 @@ function updtActualProjectValue(projectid)
 	params[csrf_token_name] = csrf_hash_token;
 	params['project_id'] 	= project_id;
 	
-	$.ajax({
+	/* $.ajax({
 		type:'POST',
 		data:params,
 		url:site_base_url+'project/getAcutalCostDataForProject/',
@@ -3231,7 +3231,7 @@ function updtActualProjectValue(projectid)
 			$('#actualValue').val(data.project_cost);
 			$('#varianceValue').val(data.varianceProjectVal);
 		}
-	});
+	}); */
 }
 
 /* To get email template by id */
