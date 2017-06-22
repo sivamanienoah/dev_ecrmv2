@@ -3225,6 +3225,7 @@ function updtActualProjectValue(projectid)
 				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
 			});
+			$('#jv-tab-z').show();
 		},
 		success:function(data) {
 			$('.metrics_overlay').unblock();
