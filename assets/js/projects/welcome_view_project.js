@@ -406,7 +406,7 @@
 	//function for load the payment terms every time click the 'Add Payment Terms' button
 	function loadPayment() 
 	{
-		/* $("#uploadFile").empty();
+		$("#uploadFile").empty();
 		var params = {};
 		params[csrf_token_name] = csrf_hash_token;
 		$.post( 
@@ -418,7 +418,7 @@
 					$('.payment-terms-mini-view1').html(data);
 				}
 			}
-		); */
+		);
 	}
 
 	function fullScreenLogs()
@@ -1652,7 +1652,7 @@ function addURLtoJob()
 				var evnt_id = ui.newPanel[0].id;
 				
 				switch(evnt_id){
-					case 'jv-tab-z': 
+					case 'jv-tab-z': alert(evnt_id+'-'+project_jobid);
 						updtActualProjectValue(project_jobid);
 					break;
 					case 'jv-tab-z-a':
@@ -3208,7 +3208,6 @@ function deleteOtherCostData(costid, projectid)
 /*for updating the actual cost inclusion*/
 function updtActualProjectValue(projectid)
 {
-	
 	var params = {};
 	params[csrf_token_name] = csrf_hash_token;
 	params['project_id'] 	= project_id;
@@ -3218,7 +3217,6 @@ function updtActualProjectValue(projectid)
 		data:params,
 		url:site_base_url+'project/getAcutalCostDataForProject/',
 		cache:false,
-		async:true,		
 		dataType:'json',
 		beforeSend: function() {
 			//show loading symbol or overlay
@@ -3226,15 +3224,12 @@ function updtActualProjectValue(projectid)
 				message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 				css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
 			});
-			
 		},
 		success:function(data) {
 			$('.metrics_overlay').unblock();
 			$('.blockUI').css('display', 'none');
 			$('#actualValue').val(data.project_cost);
 			$('#varianceValue').val(data.varianceProjectVal);
-		},error:function(){
-			alert("SS");
 		}
 	}); */
 }
