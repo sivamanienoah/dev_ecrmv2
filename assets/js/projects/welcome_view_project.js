@@ -3208,17 +3208,16 @@ function deleteOtherCostData(costid, projectid)
 /*for updating the actual cost inclusion*/
 function updtActualProjectValue(projectid)
 {
-	alert("S");
+	
 	var params = {};
-	params[csrf_token_name] = csrf_hash_token;
+	//params[csrf_token_name] = csrf_hash_token;
 	params['project_id'] 	= project_id;
 	
 	$.ajax({
 		type:'POST',
 		data:params,
 		url:site_base_url+'project/getAcutalCostDataForProject/',
-		cache:false,
-		async:false,
+		cache:false,		
 		dataType:'json',
 		beforeSend: function() {
 			//show loading symbol or overlay
