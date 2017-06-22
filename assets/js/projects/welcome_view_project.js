@@ -3208,6 +3208,7 @@ function deleteOtherCostData(costid, projectid)
 /*for updating the actual cost inclusion*/
 function updtActualProjectValue(projectid)
 {
+	projectid.preventdefault()
 	
 	var params = {};
 	params[csrf_token_name] = csrf_hash_token;
