@@ -1652,7 +1652,7 @@ function addURLtoJob()
 				var evnt_id = ui.newPanel[0].id;
 				
 				switch(evnt_id){
-					case 'jv-tab-z': alert(evnt_id+'-'+project_jobid);
+					case 'jv-tab-z': 
 						updtActualProjectValue(project_jobid);
 					break;
 					case 'jv-tab-z-a':
@@ -3208,6 +3208,7 @@ function deleteOtherCostData(costid, projectid)
 /*for updating the actual cost inclusion*/
 function updtActualProjectValue(projectid)
 {
+	alert("S");
 	var params = {};
 	params[csrf_token_name] = csrf_hash_token;
 	params['project_id'] 	= project_id;
