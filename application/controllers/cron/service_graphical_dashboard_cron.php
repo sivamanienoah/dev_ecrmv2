@@ -516,7 +516,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				}			
 				
 				$this->db->where(array('practice_name' => $parr));
-				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_array);
+				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_array);
 				// echo $this->db->last_query() . "<br />";
 				$ins_array = array();
 				$ins_result = 1;
