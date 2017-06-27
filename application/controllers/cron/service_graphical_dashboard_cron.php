@@ -463,7 +463,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 						$inse_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
 					$this->db->where(array('practice_name' => $parr));
-					$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inse_array);
+					$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard', $inse_array);
 					// echo $this->db->last_query() . "<br />";
 					$inse_array = array();
 					if($fis_mon == $this->upto_month) { break; }
