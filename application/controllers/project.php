@@ -4653,7 +4653,7 @@ HDOC;
 		
 		if($updt_payment_ms) {
 			$project_details = $this->project_model->get_quote_data($pjtid);
-			$pm_inv_cc_mail = '';
+			$pm_inv_cc_mail  = '';
 			if( $this->userdata['userid'] != $project_details[0]['assigned_to'] ) {
 				//get user details
 				$cc_wh_condn 	= array('userid'=>$project_details[0]['assigned_to']);
@@ -4661,12 +4661,12 @@ HDOC;
 				$pm_inv_cc_mail = isset($cc_user_data[0]['email']) ? $cc_user_data[0]['email'] : '';
 			}
 			
-			$payment_details = $this->project_model->get_payment_term_det($eid, $pjtid);
-			$attached_files  = $this->project_model->get_attached_files($eid);
+			$payment_details 	 = $this->project_model->get_payment_term_det($eid, $pjtid);
+			$attached_files  	 = $this->project_model->get_attached_files($eid);
 			
-			$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+			$user_name 			 = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 			$dis['date_created'] = date('Y-m-d H:i:s');
-			$print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
+			$print_fancydate 	 = date('l, jS F y h:iA', strtotime($dis['date_created']));
 
 			$from		  	 = $this->userdata['email'];
 			$arrayEmails   	 = $this->config->item('crm');
@@ -4683,8 +4683,17 @@ HDOC;
 					$attachment_array[] = $attach_file_path.$att_file['lead_files_name'];
 				}
 			}
+			//1-BPO 2-ITS 
+			switch($project_details[0]['project_center']) {
+				case 1:
+					$cc_email = implode(',', $arrayEmails['bpo_invoice_emails_cc']);
+				break;
+				case 2:
+					$cc_email = implode(',', $arrayEmails['its_invoice_emails_cc']);
+				break;
+			}
 
-			switch($project_details[0]['practice']) {
+			/* switch($project_details[0]['practice']) {
 				case 1:
 				case 3:
 				case 5:
@@ -4700,7 +4709,9 @@ HDOC;
 				default:
 					$cc_email = implode(',', $arrayEmails['account_emails_cc']);
 				break;
-			}
+			} */
+			
+			
 			$subject		 = 'Generate Invoice Notification';
 			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['customer_name'];
 			$project_name	 = word_limiter($project_details[0]['lead_title'], 4);
