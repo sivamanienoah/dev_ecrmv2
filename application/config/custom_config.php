@@ -69,52 +69,22 @@ $config['crm']['milestones_complete_status'] = array(
                                     100 => '100%'
                                 );
 								
-$config['crm']['milestones_status'] = array(
-                                    0 => 'Scheduled',
-                                    1 => 'In Progress',
-                                    2 => 'Completed'
-                                );
+$config['crm']['milestones_status'] 	= array(0 => 'Scheduled',1 => 'In Progress',2 => 'Completed');
 								
-$config['crm']['billing_type'] = array(
-                                    1 => 'Milestone Based',
-                                    2 => 'Monthly Based'
-                                );
-								
-$config['crm']['tasks_search']  = array(
-                                    0 => 'Work In Progress',
-                                    1 => 'Completed',
-									-1 => 'All'
-                                );
+$config['crm']['billing_type'] 			= array(1 => 'Milestone Based',2 => 'Monthly Based');
+$config['crm']['tasks_search']  		= array(0 => 'Work In Progress',1 => 'Completed',-1 => 'All');
 
-$config['crm']['max_allowed_users'] = array(0=>1500);
-											
-$config['crm']['director_emails']  = array(
-                                    'Admin' => 'ssriram@enoahisolution.com',
-                                   );		
+$config['crm']['max_allowed_users'] 	= array(0=>1500);
+$config['crm']['director_emails']  		= array('Admin' => 'ssriram@enoahisolution.com',);		
 
-$config['crm']['management_emails'] = array(
-									'Senior Management' => 'ssriram@enoahisolution.com',
-								    );
-									
-$config['crm']['account_emails'] = array(
-									'Accounts' => 'ssriram@enoahisolution.com',
-								    );
-
-$config['crm']['account_emails_cc'] = array(
-									'mukesh' => 'ssriram@enoahisolution.com',
-								    );
-									
-$config['crm']['bpo_account_emails_cc'] = array(
-									'mukesh' => 'ssriram@enoahisolution.com',
-								    );
-
-$config['crm']['eads_account_emails_cc'] = array(
-									'mukesh' => 'ssriram@enoahisolution.com',
-								    );									
-									
-$config['crm']['crm_admin'] = array(
-									'crm_admin' => 'ssriram@enoahisolution.com',
-								    );
+$config['crm']['management_emails'] 	= array('Senior Management' => 'ssriram@enoahisolution.com',);
+$config['crm']['account_emails'] 		= array('Accounts' => 'ssriram@enoahisolution.com',);
+/* $config['crm']['account_emails_cc'] 	= array('mukesh' => 'ssriram@enoahisolution.com',);
+$config['crm']['bpo_account_emails_cc'] = array('mukesh' => 'ssriram@enoahisolution.com',);
+$config['crm']['eads_account_emails_cc']= array('mukesh' => 'ssriram@enoahisolution.com',); */
+$config['crm']['its_invoice_emails_cc'] = array('Mukesh' => 'ssriram@enoahisolution.com','Harihara' => 'ssriram@enoahisolution.com',);
+$config['crm']['bpo_invoice_emails_cc'] = array('Subbu' => 'ssriram@enoahisolution.com',);
+$config['crm']['crm_admin'] 			= array('crm_admin' => 'ssriram@enoahisolution.com');
 
 # keep in sync with above
 
