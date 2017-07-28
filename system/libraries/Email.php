@@ -1718,17 +1718,19 @@ class CI_Email {
 	 */
 	protected function _send_command($cmd, $data = '')
 	{
-		ECHO $cmd; DIE;
 		switch ($cmd)
 		{
 			case 'hello' :
 
 					if ($this->_smtp_auth OR $this->_get_encoding() == '8bit')
 						$this->_send_data('EHLO '.$this->_get_hostname());
+					echo 'host '.$this->_get_hostname(); exit;
 					else
 						$this->_send_data('HELO '.$this->_get_hostname());
 
 						$resp = 250;
+						
+					
 			break;
 			case 'starttls'	:
 
