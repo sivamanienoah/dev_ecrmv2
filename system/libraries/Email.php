@@ -1718,7 +1718,7 @@ class CI_Email {
 	 */
 	protected function _send_command($cmd, $data = '')
 	{
-		ECHO $this->_smtp_auth; DIE;
+		ECHO $cmd; DIE;
 		switch ($cmd)
 		{
 			case 'hello' :
@@ -1776,7 +1776,7 @@ class CI_Email {
 		{
 			fclose($this->_smtp_connect);
 		}
-
+echo 'test'; exit;
 		return TRUE;
 	}
 
