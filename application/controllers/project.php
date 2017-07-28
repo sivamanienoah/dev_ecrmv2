@@ -4691,6 +4691,8 @@ HDOC;
 				case 2:
 					$cc_email = implode(',', $arrayEmails['its_invoice_emails_cc']);
 				break;
+				default:
+					$cc_email = implode(',', $arrayEmails['its_invoice_emails_cc']);   
 			}
 
 			/* switch($project_details[0]['practice']) {
@@ -4710,7 +4712,6 @@ HDOC;
 					$cc_email = implode(',', $arrayEmails['account_emails_cc']);
 				break;
 			} */
-			
 			
 			$subject		 = 'Generate Invoice Notification';
 			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['customer_name'];
@@ -5570,7 +5571,7 @@ HDOC;
 		$param = array();
 
 		$param['to_mail'] 		  = 'ssriram@enoahisolution.com';
-		$param['from_email']	  = 'webmaster@enoahprojects.com';
+		$param['from_email']	  = 'raamsri14@gmail.com';
 		$param['from_email_name'] = 'Webmaster';
 		$param['template_name']	  = "test email";
 		$param['subject'] 		  = "test email";
