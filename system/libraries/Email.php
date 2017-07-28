@@ -1721,19 +1721,19 @@ class CI_Email {
 		switch ($cmd)
 		{
 			case 'hello' :
-				if ($this->_smtp_auth OR $this->_get_encoding() == '8bit') {
-					echo 1; die;
-					$this->_send_data('EHLO '.$this->_get_hostname());
-				} else {
-					echo '2';
-					$this->_send_data('HELO '.$this->_get_hostname());
-				}
-				$resp = 250;
+
+					if ($this->_smtp_auth OR $this->_get_encoding() == '8bit')
+						$this->_send_data('EHLO '.$this->_get_hostname());
+					else
+						$this->_send_data('HELO '.$this->_get_hostname());
+
+						$resp = 250;
 			break;
 			case 'starttls'	:
-					$this->_send_data('STARTTLS');
 
-					$resp = 220;
+						$this->_send_data('STARTTLS');
+
+						$resp = 220;
 			break;
 			case 'from' :
 
@@ -1760,7 +1760,7 @@ class CI_Email {
 						$resp = 221;
 			break;
 		}
-echo $resp; die;
+
 		$reply = $this->_get_smtp_data();
 
 		$this->_debug_msg[] = "<pre>".$cmd.": ".$reply."</pre>";
@@ -1775,7 +1775,7 @@ echo $resp; die;
 		{
 			fclose($this->_smtp_connect);
 		}
-echo 'test'; exit;
+
 		return TRUE;
 	}
 
