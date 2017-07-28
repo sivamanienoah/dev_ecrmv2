@@ -1722,9 +1722,11 @@ class CI_Email {
 		{
 			case 'hello' :
 
-					if ($this->_smtp_auth OR $this->_get_encoding() == '8bit')
+					if ($this->_smtp_auth OR $this->_get_encoding() == '8bit') {
 						$this->_send_data('EHLO '.$this->_get_hostname());
-					echo 'host '.$this->_get_hostname(); exit;
+						echo 'host '.$this->_get_hostname(); exit;
+					}
+						
 					else
 						$this->_send_data('HELO '.$this->_get_hostname());
 
