@@ -1718,6 +1718,7 @@ class CI_Email {
 	 */
 	protected function _send_command($cmd, $data = '')
 	{
+		ECHO $this->_smtp_auth; DIE;
 		switch ($cmd)
 		{
 			case 'hello' :
