@@ -159,7 +159,7 @@ class email_template_model extends crm_model {
 
 		$email_title 	 = $body_content[0]['email_templatesubject'];
 		$email_content	 = $body_content[0]['email_templatecontent'];
-		$email_from 	 = "webmaster@enoahprojects.com";
+		$email_from 	 = "raamsri14@gmail.com";
 		$email_from_name = 'Webmaster';
 		
 		$email_subject = $data['subject'] . " - Mail from DEV Server";
