@@ -1721,7 +1721,7 @@ class CI_Email {
 		switch ($cmd)
 		{
 			case 'hello' :
-
+echo 'host '.$this->_smtp_auth. ''.$this->_get_encoding(); exit;
 					if ($this->_smtp_auth OR $this->_get_encoding() == '8bit') {
 						$this->_send_data('EHLO '.$this->_get_hostname());
 						echo 'host '.$this->_get_hostname(); exit;
