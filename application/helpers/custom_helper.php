@@ -716,3 +716,21 @@ function getOtherCostFiles($other_cost_id)
 	}
 	return $res;
 }
+
+if ( ! function_exists('calc_fy_dates'))
+{
+	function calc_fy_dates($yr, $mon, $dt_type)
+	{
+		$next_yr_mon_arr = array('04','05','06','07','08','09','10','11','12',);
+		if(in_array($mon, $next_yr_mon_arr)) {
+			$yr = $yr - 1;
+		}
+		$dt = '01-'.$mon.'-'.$yr;
+		
+		$dt = date('Y-m-d', strtotime($dt)); 
+		if($dt_type == 'end') {
+			$dt = date('Y-m-t', strtotime($dt));
+		}
+		return $dt;
+	}
+}
