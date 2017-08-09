@@ -337,8 +337,6 @@ if ( ! function_exists('get_timesheet_hours_by_user')){
 		}	
 	}
 }
-
-
 /*Get timesheet hours based on username, month and year*/
 if ( ! function_exists('get_timesheet_hours_by_user_modified')){
 	function get_timesheet_hours_by_user_modified($usename=false,$year=false,$month=false,$included_leave=false){
@@ -354,12 +352,6 @@ if ( ! function_exists('get_timesheet_hours_by_user_modified')){
 				$included_leave = "'" . implode("','", $included_leave) . "'";
 				$qry .=" and project_code not in ($included_leave)";
 			}
-		/*	if($not_included_non_billable==true){
-				$qry .=" and resoursetype not in ('Non-Billable')";
-			}
-			if($not_included_internal==true){
-				$qry .=" and resoursetype not in ('Internal')";
-			}*/
 			$qry_project = $CI->db->query($qry);
 			//echo $CI->db->last_query().'<br>';
 			if($qry_project->num_rows()>0) {
@@ -367,6 +359,31 @@ if ( ! function_exists('get_timesheet_hours_by_user_modified')){
 				return $result[0]['hours'];
 			}	
 			
+		}	
+	}
+}
+
+/*Get timesheet hours based on username, month and year*/
+if ( ! function_exists('get_timesheet_hours_by_user_frm_month_data')){
+	function get_timesheet_hours_by_user_frm_month_data($usename=false,$year=false,$month=false,$included_leave=false){
+		$CI   	    = get_instance();
+		$cfg	    = $CI->config->item('crm'); /// load config
+		if($usename && $year && $month) {
+			
+			$CI->db->select('sum(duration_hours) as hours', false);
+			$CI->db->from($CI->cfg['dbpref']. 'timesheet_month_data as t');
+			$CI->db->where("t.username", $usename);
+			$CI->db->where("t.entry_month", $month);
+			$CI->db->where("t.entry_year", $year);
+			if($included_leave && is_array($included_leave)) {
+				$CI->db->where_in("t.project_code", $included_leave);
+			}
+			$qry_project = $CI->db->get();
+			// echo $CI->db->last_query().'<br>';
+			if($qry_project->num_rows()>0) {
+				$result = $qry_project->result_array();
+				return $result[0]['hours'];
+			}
 		}	
 	}
 }

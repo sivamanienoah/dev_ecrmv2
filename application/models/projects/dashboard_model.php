@@ -5,7 +5,7 @@ class Dashboard_model extends crm_model
     public function __construct()
     {
 		parent::__construct();
-		$this->load->helper('lead_stage_helper');
+		$this->load->helper('lead_stage');
 		$this->stg = getLeadStage();
 		$this->stages = @implode('","', $this->stg);
     }
@@ -92,6 +92,7 @@ class Dashboard_model extends crm_model
 			$this->db->where_in('l.practice', $practice_ids);
 		}
 		$query 	= $this->db->get();
+		// echo $this->db->last_query(); die;
 		$data	= $query->result_array();
 		
 		$departments 	= $this->get_departments();
@@ -136,8 +137,80 @@ class Dashboard_model extends crm_model
 		return $other_cost_array;
 	}
 	
+	//for IT cost report
+	public function getOtherCostsArr($start_date, $end_date, $entity_ids=array(), $practice_ids=array())
+	{
+		$us_currenty_type = 1;
+		$bk_rates = get_book_keeping_rates();
+		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, oc.description, l.pjt_id, l.department_id_fk, l.division, l.practice");
+		$this->db->from($this->cfg['dbpref'].'project_other_cost as oc');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = oc.project_id');
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("(oc.cost_incurred_date >='".date('Y-m-d', strtotime($start_date))."')", NULL, FALSE);
+			$this->db->where("(oc.cost_incurred_date <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
+		}
+		if(!empty($entity_ids) && count($entity_ids)>0) {
+			$this->db->where_in('l.division', $entity_ids);
+		}
+		if(!empty($practice_ids) && count($practice_ids)>0) {
+			$this->db->where_in('l.practice', $practice_ids);
+		}
+		$query 	= $this->db->get();
+		// echo $this->db->last_query(); die;
+		$data	= $query->result_array();
+		
+		$departments 	= $this->get_departments();
+		$deptArr		= array();
+		if(!empty($departments) && count($departments)>0) {
+			foreach($departments as $dept_row) {
+				$deptArr[$dept_row->department_id] = $dept_row->department_name;
+			}
+		}
+		
+		if(!empty($data)) {
+			$other_cost_array = array();
+			foreach($data as $row) {
+				$bill_type  = 'Billable';
+				$year_no 	= trim(date('Y', strtotime($row['cost_incurred_date'])));
+				$month_name = trim(date('F', strtotime($row['cost_incurred_date'])));
+				if(isset($other_cost_array[$deptArr[$row['department_id_fk']]]['Billable']['total_cost'])) {
+					$other_cost_array[$deptArr[$row['department_id_fk']]]['Billable']['total_cost'] += $this->conver_currency($row['value'], $bk_rates[$year_no][$row['currency_type']][$us_currenty_type]);
+				} else {
+					$other_cost_array[$deptArr[$row['department_id_fk']]]['Billable']['total_cost']		= $this->conver_currency($row['value'], $bk_rates[$year_no][$row['currency_type']][$us_currenty_type]);
+				}
+				if(isset($other_cost_array['over_all']['Billable']['total_cost'])) {
+					$other_cost_array['over_all']['Billable']['total_cost'] += $this->conver_currency($row['value'], $bk_rates[$year_no][$row['currency_type']][$us_currenty_type]);
+				} else {
+					$other_cost_array['over_all']['Billable']['total_cost']		= $this->conver_currency($row['value'], $bk_rates[$year_no][$row['currency_type']][$us_currenty_type]);
+				}
+				// $other_cost_array[$deptArr[$row['department_id_fk']]][$row['pjt_id']]['oc_entity'] 	= $row['division'];
+				// $other_cost_array[$deptArr[$row['department_id_fk']]][$row['pjt_id']]['oc_dept'] 	= ;
+				// $other_cost_array[$deptArr[$row['department_id_fk']]][$row['pjt_id']]['oc_practice'] = $row['practice'];
+			}
+			// echo "<pre>"; print_r($other_cost_array); die;
+		}
+		
+		return $other_cost_array;
+	}
+	
 	public function conver_currency($amount, $val) {
 		return round($amount*$val, 2);
 	}
+	
+	
+	public function get_records($tbl, $wh_condn='', $order='') {
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		if(!empty($wh_condn))
+		$this->db->where($wh_condn);
+		if(!empty($order)) {
+			foreach($order as $key=>$value) {
+				$this->db->order_by($key,$value);
+			}
+		}
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->result_array();
+    }
 }
 ?>

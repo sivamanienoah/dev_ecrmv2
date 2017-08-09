@@ -14,9 +14,7 @@ table.bu-tbl-inr th{ text-align:center; }
 <div id="content">
     <div class="inner">
         <?php if($this->session->userdata('viewPjt')==1) { ?>
-<?php
-$practice_arr = array();
-?>
+		<?php $practice_arr = array(); ?>
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm"><?php echo $page_heading ?></h2>
 			
@@ -26,6 +24,9 @@ $practice_arr = array();
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						<input type="hidden" name="filter" value="filter" />
 						<div class="pull-left">
+							<div class='pull-left'>
+								<label>Financial Year</label>
+							</div>
 							<div class="pull-left">
 								<select name='fy_name' id='fy_name'>
 									<option value=''>--Select--</option>
@@ -37,6 +38,9 @@ $practice_arr = array();
 								</select>
 							</div>
 							<div class='pull-left'>
+								<label>From Month</label>
+							</div>
+							<div class='pull-left'>
 								<select name='start_month' id='start_month'>
 									<option value=''>--Select--</option>
 									<?php if(!empty($fy_month) && count($fy_month)>0) { ?>
@@ -45,6 +49,9 @@ $practice_arr = array();
 										<?php } ?>
 									<?php } ?>
 								</select>
+							</div>
+							<div class='pull-left'>
+								<label>To Month</label>
 							</div>
 							<div class='pull-left'>
 								<select name='end_month' id='end_month'>
@@ -89,7 +96,7 @@ $practice_arr = array();
 						<th>Total</th>
 					</thead>
 				</tr>
-				<?php #echo "<pre>"; print_r($projects['practicewise']); echo "</pre>"; ?>
+				<?php $total_projects = $total_rag = 0; ?>
 				<tr>
 					<td><b>Number of Projects currently running</b></td>
 					<?php if(!empty($practice_arr)) { ?>
@@ -362,22 +369,20 @@ $practice_arr = array();
 					</td>
 				</tr>
 			</table>
-				
 			<div class="clearfix"></div>
 			<div class="service_dash_notes">
 				<span class="red"> ** </span>Infra Services & Testing Practice Values are Merged With Others Practice.
 			</div>
-			<div class="clearfix"></div>
-			<div id="drilldown_data" class="" style="margin:20px 0;display:none;">
-			
-			</div>
-        <?php 
+		</div>
+		<div class="clearfix"></div>
+		<div id="drilldown_data" class="" style="margin:20px 0;display:none;"></div>
+		<?php 
 		} else {
 			echo "You have no rights to access this page";
-		} 
+		}
 		?>
-		</div>
 	</div>
+</div>
 
 <script type="text/javascript">
 $( "#month_year_from_date, #month_year_to_date" ).datepicker({
@@ -419,7 +424,7 @@ $( "#advance_search" ).on( "click", "#advance", function(e) {
 		dataType: "html",
 		data: form_data,
 		beforeSend:function() {
-			$('#default_view').empty();
+			$('#default_view, #drilldown_data').empty();
 			$('#default_view').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
 		success: function(res) {
@@ -433,12 +438,11 @@ $( "#advance_search" ).on( "click", "#advance", function(e) {
 
 function getData(practice, clicktype)
 {	
-	var month_status   	 = $('input[name=filter_by]:checked', '#advanceFilterServiceDashboard').val()
+	var form_data = $('#advanceFilterServiceDashboard').serialize();
 	$.ajax({
 		type: "POST",
-		url: site_base_url+'projects/dashboard/service_dashboard_data_beta/',
-		// data: 'filter=filter'+'&entity='+entity+'&project_status='+project_status+'&month_year_from_date='+month_year_from_date+'&month_year_to_date='+month_year_to_date+'&billable_month='+billable_month+'&practice='+practice+'&clicktype='+clicktype+'&'+csrf_token_name+'='+csrf_hash_token,
-		data: 'filter=filter'+'&practice='+practice+'&clicktype='+clicktype+'&'+csrf_token_name+'='+csrf_hash_token+'&month_status='+month_status,
+		url: site_base_url+'projects/it_service_dashboard/service_dashboard_data/',
+		data: form_data+'&practice='+practice+'&clicktype='+clicktype,
 		cache: false,
 		beforeSend:function() {
 			$('#drilldown_data').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
