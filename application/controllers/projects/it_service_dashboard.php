@@ -352,23 +352,8 @@ class It_service_dashboard extends crm_controller
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user_frm_month_data($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 				}
 				
-				/* foreach($resdata as $rec) {
-					$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
-					$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
-					
-					$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
-					$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
-					$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
-					
-					$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
-					$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
-				} */
 				// echo "get timesheet hours " . date('d-m-Y H:i:s') . "<br>";
-				/* if(count($timesheet_data)>0 && !empty($timesheet_data)) {
+				if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 					foreach($timesheet_data as $dept_arr=>$resource_type_arr) {
 						if(!empty($resource_type_arr) && count($resource_type_arr)>0) {
 							foreach($resource_type_arr as $key1=>$value1) {
@@ -411,9 +396,9 @@ class It_service_dashboard extends crm_controller
 							}
 						}
 					}	
-				} */
+				}
 				
-				if(count($timesheet_data)>0 && !empty($timesheet_data)) {
+				/* if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 					foreach($timesheet_data as $key1=>$value1) {
 						$resource_name = $key1;
 						$max_hours = $value1['max_hours'];
@@ -452,7 +437,7 @@ class It_service_dashboard extends crm_controller
 							}
 						}
 					}	 
-				}
+				} */
 			}
 			
 			/* if(count($resource_cost)>0 && !empty($resource_cost)){
