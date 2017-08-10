@@ -376,10 +376,10 @@ if ( ! function_exists('get_timesheet_hours_by_user_frm_month_data')){
 			$CI->db->where("t.entry_month", $month);
 			$CI->db->where("t.entry_year", $year);
 			if($included_leave && is_array($included_leave)) {
-				$CI->db->where_in("t.project_code", $included_leave);
+				$CI->db->where_not_in("t.project_code", $included_leave);
 			}
 			$qry_project = $CI->db->get();
-			// echo $CI->db->last_query().'<br>';
+			echo $CI->db->last_query().'<br>';
 			if($qry_project->num_rows()>0) {
 				$result = $qry_project->result_array();
 				return $result[0]['hours'];
