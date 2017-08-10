@@ -115,7 +115,7 @@ input {
 	float:left;
 }
 .pull-right{
-	float:right;
+	float:right !important;
 }
 .clear-both {
 	display: block !important;
@@ -3077,3 +3077,27 @@ padding-bottom:15px !important;
 .desc_asc_opt {
     background: rgba(0, 0, 0, 0) url("../images/sort_asc.png") no-repeat scroll 100% 35%;
 }
+.adv_filter_it_service{
+	    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: -5px 10px;
+    padding: 2px 5px 0px;
+}
+.adv_filter_it_service div{
+	 margin-top: 2px;
+}
+.adv_filter_it_service div label{
+	margin-left: 10px;
+    margin-right: 4px;
+}
+.adv_filter_it_service #advance{
+	margin-top:3px; 
+	margin-left:10px;
+	margin-right:10px;
+}
+.mrgin0{
+	margin:0 !important;
+}
+
+
