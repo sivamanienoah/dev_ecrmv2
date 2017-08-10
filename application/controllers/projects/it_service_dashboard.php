@@ -353,7 +353,7 @@ class It_service_dashboard extends crm_controller
 				}
 				
 				// echo "get timesheet hours " . date('d-m-Y H:i:s') . "<br>";
-				if(count($timesheet_data)>0 && !empty($timesheet_data)) {
+				/* if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 					foreach($timesheet_data as $dept_arr=>$resource_type_arr) {
 						if(!empty($resource_type_arr) && count($resource_type_arr)>0) {
 							foreach($resource_type_arr as $key1=>$value1) {
@@ -396,9 +396,9 @@ class It_service_dashboard extends crm_controller
 							}
 						}
 					}	
-				}
+				} */
 				
-				/* if(count($timesheet_data)>0 && !empty($timesheet_data)) {
+				if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 					foreach($timesheet_data as $key1=>$value1) {
 						$resource_name = $key1;
 						$max_hours = $value1['max_hours'];
@@ -437,7 +437,7 @@ class It_service_dashboard extends crm_controller
 							}
 						}
 					}	 
-				} */
+				}
 			}
 			
 			/* if(count($resource_cost)>0 && !empty($resource_cost)){
