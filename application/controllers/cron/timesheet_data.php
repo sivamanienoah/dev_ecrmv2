@@ -47,15 +47,15 @@ class Timesheet_data extends crm_controller
 		
 		$timesheet_db = $this->load->database('timesheet', TRUE);
 		
-		$totalMonths  = 2;
+		$totalMonths  = 4;
 		
 		$monthYearArr = date('01-n-Y'); //For uploading last 4 months data
 		// $monthYearArr = date('d-n-Y', strtotime('2015-01-01')); //For uploading old data
 		// $startMonthYearArr = date('d-m-Y', strtotime('2015-06-01')); //For uploading old data
-
+		
 		$monthYearIn  = 0;
 		
-		$userCostArr  		= array();
+		$userCostArr  = array();
 		$userDirectCostArr  = array();
 		
 		for($i=1;$i<=$totalMonths;$i++) {
@@ -68,16 +68,16 @@ class Timesheet_data extends crm_controller
 		$end_date   = date('Y-m-d'); //For uploading last 4 months data
 		// echo "<br> End Date ".$end_date = date('Y-m-d', strtotime('2015-06-01')); //For uploading old data
 		
-		// echo "<pre>"; print_r($monthYear); die;
+		// echo "<pre>"; print_r($monthYear);
 		
-		$monthYearIn = implode("','", $monthYear);
+		$monthYearIn = implode("','",$monthYear);
 		
 		// echo "<pre>"; print_r($monthYearIn); exit;
 		
 		$sql = "SELECT `uc`.`employee_id`, `uc`.`month`, `uc`.`year`, `uc`.`direct_cost`, `uc`.`overheads_cost`, CONCAT_WS('-','01',uc.month,uc.year) FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE CONCAT_WS('-','01',uc.month,uc.year) IN ('".$monthYearIn."') ";
 		
 		// echo $sql; #exit;
-
+		// echo "<br>";
 		$query  = $timesheet_db->query($sql);
 		$result = $query->result_array();
 		
@@ -99,20 +99,20 @@ class Timesheet_data extends crm_controller
 		$started_at  = date("Y-m-d H:i:s");
 		
 		$times_sql  = 	"SELECT  
-						c.client_id, c.client_code, 
+						c.client_id,c.client_code, 
 						p.project_code,
-						u.username, u.emp_id, concat(u.first_name,' ',u.last_name) as empname, u.business_id, u.practice_id, u.department_id as dept_id, u.skill_id,
+						u.username,u.emp_id,concat(u.first_name,' ',u.last_name) as empname,u.department_id as dept_id,u.skill_id,
 
 						t.resoursetype, 
-						YEAR(t.start_time) entry_year, Monthname(t.start_time) entry_month,
+						YEAR(t.start_time) entry_year,Monthname(t.start_time) entry_month,
 						t.start_time,t.end_time, t.duration,(t.duration/60) as duration_hours, 
 
 						t.added_by, t.added_date, t.modified_by, t.modified_date
 						FROM enoah_times t
-						left join enoah_user u on u.username = t.uid
-						left join enoah_project p on p.proj_id = t.proj_id
-						left join enoah_client c on c.client_id = p.client_id
-						left join enoah_billrate_type brt on brt.billrate_type_id = t.billrate_type_id
+						left join enoah_user u on u.username=t.uid
+						left join enoah_project p on p.proj_id=t.proj_id
+						left join enoah_client c on c.client_id=p.client_id
+						left join enoah_billrate_type brt on brt.billrate_type_id=t.billrate_type_id
 						WHERE
 						( (DATE(t.start_time) >= '".$start_date."') AND (DATE(t.end_time) <= '".$end_date."') ) AND
 						p.title is not null AND c.client_id is not null AND p.client_id is not null AND t.duration is not null AND 
@@ -148,20 +148,19 @@ class Timesheet_data extends crm_controller
 			$skill_arr[$rows_arr->skill_id] = $rows_arr->name;
 		}
 		
-		$practices     = $timesheet_db->query("SELECT practice_id, practice_name FROM ".$timesheet_db->dbprefix('practice')." ");
+		$practices     = $timesheet_db->query("SELECT practice_id,practice_name,department_id,skill_id FROM ".$timesheet_db->dbprefix('practice')." ");
 		$practices_res = $practices->result();
 		$practice_arr  = array();
 		foreach($practices_res as $rec_arr){
-			$practice_arr[$rec_arr->practice_id]   = $rec_arr->practice_name;
+			if($rec_arr->skill_id){
+				$skk = explode(",",$rec_arr->skill_id);
+				foreach($skk as $pr){
+					$practice_arr[$pr]['pid']   = $rec_arr->practice_id;
+					$practice_arr[$pr]['pname'] = $rec_arr->practice_name;
+				}
+			}
 		}
-
-		$bunits 	= $timesheet_db->query("SELECT business_id, business_unit_name FROM ".$timesheet_db->dbprefix('business_unit')." ");
-		$bunits_res = $bunits->result();
-		$bunits_arr	= array();
-		foreach($bunits_res as $bu_arr){
-			$bunits_arr[$bu_arr->business_id]   = $bu_arr->business_unit_name;
-		}
-		// echo "<pre>"; print_r($skill_arr); print_r($dept_arr); echo "<br>"; echo "</pre>"; exit;
+		// echo "<pre>"; print_r($practice_arr); exit;
 		//getting dept,skill,practice details
 		// $del_status = 1;
 		if($del_status) {
@@ -175,8 +174,8 @@ class Timesheet_data extends crm_controller
 				
 					$ts_month = date('m', strtotime($val['start_time']));
 					$ts_month = ltrim($ts_month, '0');
-					$cost  	= $userCostArr[$val['emp_id']][$val['entry_year']][$ts_month];
-					$dcost 	= $userDirectCostArr[$val['emp_id']][$val['entry_year']][$ts_month];
+					$cost  = $userCostArr[$val['emp_id']][$val['entry_year']][$ts_month];
+					$dcost = $userDirectCostArr[$val['emp_id']][$val['entry_year']][$ts_month];
 					
 					if(!empty($cost)) {
 						$costPerHour = $cost;
@@ -225,17 +224,21 @@ class Timesheet_data extends crm_controller
 				$ins_row[$key] = $val;
 				$ins_row[$key]['cost_per_hour']				    = (!is_null($costPerHour)) ? $costPerHour : '';
 				$ins_row[$key]['direct_cost_per_hour'] 			= (!is_null($directCostPerHour)) ? $directCostPerHour : '';
-				$costPerHr 										= (!is_null($costPerHour)) ? $costPerHour : 0;
-				$diretCostPerHr 								= (!is_null($directCostPerHour)) ? $directCostPerHour : 0;
+				$costPerHr = (!is_null($costPerHour)) ? $costPerHour : 0;
+				$diretCostPerHr = (!is_null($directCostPerHour)) ? $directCostPerHour : 0;
 				$ins_row[$key]['resource_duration_cost'] 		= ($costPerHr * $val['duration_hours']);
 				$ins_row[$key]['resource_duration_direct_cost'] = ($diretCostPerHr * $val['duration_hours']);
-				$ins_row[$key]['business_unit_name']			= isset($bunits_arr[$val['business_id']]) ? $bunits_arr[$val['business_id']] : '';
-				$ins_row[$key]['dept_name']						= isset($dept_arr[$val['dept_id']]) ? $dept_arr[$val['dept_id']] : '';
-				$ins_row[$key]['practice_name'] 				= isset($practice_arr[$val['practice_id']]) ? $practice_arr[$val['practice_id']] : 0;
-				$ins_row[$key]['skill_name'] 					= isset($skill_arr[$val['skill_id']]) ? $skill_arr[$val['skill_id']] : 0;
+				// $ins_row[$key]['dept_id']       = $val['department_id'];
+				$ins_row[$key]['dept_name']		= isset($dept_arr[$val['dept_id']]) ? $dept_arr[$val['dept_id']] : '';;
+				$ins_row[$key]['practice_id']	= isset($practice_arr[$val['skill_id']]['pid']) ? $practice_arr[$val['skill_id']]['pid'] : 0;
+				$ins_row[$key]['practice_name'] = isset($practice_arr[$val['skill_id']]['pname']) ? $practice_arr[$val['skill_id']]['pname'] : 0;
+				// $ins_row[$key]['skill_id']		= $val['skill_id'];
+				$ins_row[$key]['skill_name'] 	= isset($skill_arr[$val['skill_id']]) ? $skill_arr[$val['skill_id']] : 0;
 				
 				// echo "<pre>"; print_r($ins_row[$key]); exit;
-				$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
+				// if(!empty($ins_row['client_id'])) {
+					$ins_res = $this->db->insert($this->cfg['dbpref'].'timesheet_data', $ins_row[$key]);
+				// }
 				// echo $this->db->last_query() . "<br />";
 				$ins_result = true;
 			}
@@ -255,8 +258,8 @@ class Timesheet_data extends crm_controller
 
 			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>$started_at, 'ended_at'=>$ended_at, 'upload_status'=>$upload_status);
 
-			$param['to_mail']    	  = 'ssriram@enoahisolution.com';
-			// $param['to_mail']    	  = 'ssriram@enoahisolution.com, ssubbiah@enoahisolution.com';
+			// $param['to_mail']    	  = 'ssriram@enoahisolution.com';
+			$param['to_mail']    	  = 'ssriram@enoahisolution.com, ssubbiah@enoahisolution.com';
 			$param['template_name']   = "Timesheet data uploaded status";
 			$param['subject'] 		  = "Timesheet data uploaded status On ".date('d-m-Y');
 			
@@ -276,7 +279,6 @@ class Timesheet_data extends crm_controller
 			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>'-', 'ended_at'=>'-', 'upload_status'=>$upload_status);
 
 			$param['to_mail']    	  = 'ssriram@enoahisolution.com';
-			// $param['to_mail']         = 'ssriram@enoahisolution.com, ssubbiah@enoahisolution.com';
 			// $param['from_email'] 	  = 'webmaster@enoahisolution.com';
 			// $param['from_email_name'] = 'Webmaster';
 			$param['template_name']   = "Timesheet data uploaded status";
@@ -310,7 +312,7 @@ class Timesheet_data extends crm_controller
 		
 		// echo "<pre>"; print_r($projEntityArr); die;
 		 
-	    $times_sql = "SELECT td.client_id, td.client_code, td.project_code, td.username, td.empname, td.resoursetype, td.entry_year, td.entry_month, td.start_time, td.end_time, td.duration,sum(td.duration_hours) as duration_hours, td.cost_per_hour,sum(td.resource_duration_cost) as resource_duration_cost, td.direct_cost_per_hour, sum(td.resource_duration_direct_cost) as resource_duration_direct_cost, td.added_by, td.added_date, td.modified_by, td.modified_date, td.business_id, td.business_unit_name, td.dept_id, td.dept_name, td.practice_id, td.practice_name, td.skill_id, td.skill_name FROM ".$this->cfg['dbpref']."timesheet_data td where DATE(td.start_time) >='2004-06-01' AND DATE(td.end_time) <= CURDATE() GROUP by project_code, username, resoursetype, entry_year, entry_month";
+	    $times_sql = "SELECT td.client_id,td.client_code,td.project_code,td.username,td.empname,td.resoursetype,td.entry_year,td.entry_month,td.start_time,td.end_time,td.duration,sum(td.duration_hours) as duration_hours,td.cost_per_hour,sum(td.resource_duration_cost) as resource_duration_cost,td.direct_cost_per_hour,sum(td.resource_duration_direct_cost) as resource_duration_direct_cost,td.added_by,td.added_date,td.modified_by,td.modified_date,td.dept_id,td.dept_name,td.practice_id,td.practice_name,td.skill_id,td.skill_name FROM ".$this->cfg['dbpref']."timesheet_data td where DATE(td.start_time) >='2004-06-01' AND DATE(td.end_time) <= CURDATE() GROUP by project_code,username,resoursetype,entry_year,entry_month";
 		
 		$times_query  = $this->db->query($times_sql);
 		$times_result = $times_query->result_array();
