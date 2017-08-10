@@ -310,7 +310,7 @@ class Timesheet_data extends crm_controller
 		
 		// echo "<pre>"; print_r($projEntityArr); die;
 		 
-	    $times_sql = "SELECT td.client_id, td.client_code, td.project_code, td.username, td.empname, td.resoursetype, td.entry_year, td.entry_month, td.start_time, td.end_time, td.duration,sum(td.duration_hours) as duration_hours, td.cost_per_hour,sum(td.resource_duration_cost) as resource_duration_cost, td.direct_cost_per_hour, sum(td.resource_duration_direct_cost) as resource_duration_direct_cost, td.added_by, td.added_date, td.modified_by, td.modified_date, td.business_id, td.business_unit_name, td.dept_id, td.dept_name, td.practice_id, td.practice_name, td.skill_id, td.skill_name FROM ".$this->cfg['dbpref']."timesheet_data td where td.start_time >='2004-06-01' AND td.end_time <= CURDATE() GROUP by project_code, username, resoursetype, entry_year, entry_month";
+	    $times_sql = "SELECT td.client_id, td.client_code, td.project_code, td.username, td.empname, td.resoursetype, td.entry_year, td.entry_month, td.start_time, td.end_time, td.duration,sum(td.duration_hours) as duration_hours, td.cost_per_hour,sum(td.resource_duration_cost) as resource_duration_cost, td.direct_cost_per_hour, sum(td.resource_duration_direct_cost) as resource_duration_direct_cost, td.added_by, td.added_date, td.modified_by, td.modified_date, td.business_id, td.business_unit_name, td.dept_id, td.dept_name, td.practice_id, td.practice_name, td.skill_id, td.skill_name FROM ".$this->cfg['dbpref']."timesheet_data td where DATE(td.start_time) >='2004-06-01' AND DATE(td.end_time) <= CURDATE() GROUP by project_code, username, resoursetype, entry_year, entry_month";
 		
 		$times_query  = $this->db->query($times_sql);
 		$times_result = $times_query->result_array();
