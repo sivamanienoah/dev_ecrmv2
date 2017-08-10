@@ -455,6 +455,31 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 			
+			/* if(count($resource_cost)>0 && !empty($resource_cost)){
+				foreach($resource_cost as $resourceName => $array1){
+					$dept_name = $resource_cost[$resourceName]['dept_name'];
+					if(count($array1)>0 && !empty($array1)){
+						foreach($array1 as $year => $array2){
+							if($year !='dept_name'){
+								if(count($array2)>0 && !empty($array2)){
+									foreach($array2 as $rs_month => $array3){
+										$duration_hours = 0;
+										$total_cost = 0;
+										$total_dc_cost = 0;
+										foreach($array3 as $project_code => $array4){
+											$duration_hours = $array4['duration_hours'];
+											$total_cost 	= $array4['total_cost'];
+											$total_dc_cost 	= $array4['total_dc_cost'];
+											$directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			} */
+			
 			if(count($resource_cost)>0 && !empty($resource_cost)){
 				foreach($resource_cost as $resourceName => $array1){
 					$dept_name = $resource_cost[$resourceName]['dept_name'];
