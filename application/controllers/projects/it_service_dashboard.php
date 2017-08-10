@@ -24,6 +24,7 @@ class It_service_dashboard extends crm_controller
 			$this->default_cur_name = 'USD';
 		}
 		$this->userdata   = $this->session->userdata('logged_in_user');
+		$this->timesheet_cur_id = 1; //default currency id for timesheet(1 = usd)
 	}
 	
 	/*
@@ -156,7 +157,8 @@ class It_service_dashboard extends crm_controller
 
 		} else {
 			
-			$bk_rates = get_book_keeping_rates();
+			$bk_rates 	= get_book_keeping_rates();
+			$rates 		= $this->get_currency_rates();
 
 			//for othercost projects
 			$this->db->select("pjt_id, lead_id, practice, lead_title");
@@ -328,20 +330,21 @@ class It_service_dashboard extends crm_controller
 			$tot_cost = 0;
 			$tot_directcost = 0;		
 			$timesheet_data = array();
-			$resource_cost = array();	
+			$resource_cost = array();
 			
 			if(count($resdata)>0) {
-				$rates = $this->get_currency_rates();
+				
 				foreach($resdata as $rec) {		
 					$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
-					$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
+					$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id, $financialYear);
 					
 					$timesheet_data[$rec->username]['practice_id'] 	= $rec->practice_id;
 					$timesheet_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
 					$timesheet_data[$rec->username]['dept_name'] 	= $rec->dept_name;
 					
-					$rateCostPerHr 		 = round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
-					$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
+					$rateCostPerHr 		 = round($rec->cost_per_hour * $bk_rates[$financialYear][$this->timesheet_cur_id][$this->default_cur_id], 2);
+					$directrateCostPerHr = round($rec->direct_cost_per_hour * $bk_rates[$financialYear][$this->timesheet_cur_id][$this->default_cur_id], 2);
+					
 					if(isset($timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'])) {
 						$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
 					} else {
@@ -491,10 +494,9 @@ class It_service_dashboard extends crm_controller
 					$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
 					$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
 					
-					$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
-					$directrateCostPerHr = round($rec->direct_cost_per_hour*$rates[1][$this->default_cur_id], 2);
+					$rateCostPerHr = round($rec->cost_per_hour*$bk_rates[$financialYear][$this->timesheet_cur_id][$this->default_cur_id], 2);
+					$directrateCostPerHr = round($rec->direct_cost_per_hour*$bk_rates[$financialYear][$this->timesheet_cur_id][$this->default_cur_id], 2);
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
-					// $timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user_frm_month_data($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
 					
@@ -1311,7 +1313,8 @@ class It_service_dashboard extends crm_controller
 	}
 	
 	public function getProjectsDataByDefaultCurrency($records, $start_date, $end_date)
-	{  
+	{
+		$bk_rates 	= get_book_keeping_rates();
 		$this->load->model('project_model');
 		$rates 					= $this->get_currency_rates();
 		$practice_id_year_array = $this->project_model->get_practice_id_year();
@@ -1364,8 +1367,9 @@ class It_service_dashboard extends crm_controller
 					$timesheet_data[$ts['project_code']][$ts['username']]['practice_id'] = $ts['practice_id'];
 					$timesheet_data[$ts['project_code']][$ts['username']]['max_hours'] = $max_hrs;
 					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
-					$rateCostPerHr 			= $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
-					$directrateCostPerHr = $this->conver_currency($ts['direct_cost'], $rates[1][$this->default_cur_id]);
+					
+					$rateCostPerHr 			= $this->conver_currency($ts['cost'], $bk_rates[$financialYear][$this->timesheet_cur_id][$this->default_cur_id]);
+					$directrateCostPerHr 	= $this->conver_currency($ts['direct_cost'], $bk_rates[$financialYear][$this->timesheet_cur_id][$this->default_cur_id]);
 					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
 					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['direct_rateperhr'] = $directrateCostPerHr;
 					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
@@ -1537,7 +1541,6 @@ class It_service_dashboard extends crm_controller
 	
 	public function getIRData($records, $start_date, $end_date, $practice)
 	{
-		
 		$bk_rates = get_book_keeping_rates();
 		
 		$data = array();
