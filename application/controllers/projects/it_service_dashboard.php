@@ -340,19 +340,19 @@ class It_service_dashboard extends crm_controller
 					$timesheet_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
 					$timesheet_data[$rec->username]['dept_name'] 	= $rec->dept_name;
 					
-					$rateCostPerHr 		 = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
+					$rateCostPerHr 		 = round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
 					$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
 					if(isset($timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'])) {
 						$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
 					} else {
-						$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] = $rec->duration_hours;
+						$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours']   = $rec->duration_hours;
+						$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+						$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 					}
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user_frm_month_data($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 				}
 				
-				/* foreach($resdata as $rec) {		
+				/* foreach($resdata as $rec) {
 					$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
 					$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 					
