@@ -1226,7 +1226,7 @@ class It_service_dashboard extends crm_controller
 	}	
 	
 	/* Change the actual worth amount to Default currency */
-	public function getProjectsDataByDefaultCurrency($records, $start_date, $end_date)
+	public function getProjectsDataByDefaultCurrency_orig($records, $start_date, $end_date)
 	{
 		$this->load->model('project_model');
 		$rates = $this->get_currency_rates();
@@ -1290,7 +1290,7 @@ class It_service_dashboard extends crm_controller
 						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['direct_cost'] = $ts['duration_direct_cost'];
 						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
 						
-						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']]['total_hours'] =get_timesheet_hours_by_user($ts['username'],$ts['yr'],$ts['month_name'],array('Leave','Hol'));
+						$timesheet_data[$ts['username']][$ts['yr']][$ts['month_name']]['total_hours'] = get_timesheet_hours_by_user($ts['username'],$ts['yr'],$ts['month_name'],array('Leave','Hol'));
 					
 					}
 				}
@@ -1389,7 +1389,195 @@ class It_service_dashboard extends crm_controller
 				$data['project_record'][$i]['total_amount_inv_raised'] = $total_amount_inv_raised;
 				$data['project_record'][$i]['total_cost'] 		= isset($total_cost)?number_format($total_cost, 2, '.', ''):'0';
 				$i++;
+			}
+		}
+		return $data['project_record'];
+	}
+	
+	public function getProjectsDataByDefaultCurrency($records, $start_date, $end_date)
+	{  
+		$this->load->model('project_model');
+		$rates 					= $this->get_currency_rates();
+		$practice_id_year_array = $this->project_model->get_practice_id_year();
+		$practice_id_array  	= $this->project_model->get_practice_id();
+		$book_keeping_rates 	= get_book_keeping_rates();
+		$data['project_record'] 			= array();
+		$arr_billing_type_projects 			= array();
+		$arr_billing_type_project_codes 	= array();
+		$arr_billing_type_project_lead_ids 	= array();
+		/** Making billing type vice project details and project codes **/
+		foreach($records as $rec) {
+			$arr_billing_type_projects[$rec['billing_type']][]						= $rec;
+			$arr_billing_type_project_codes[$rec['billing_type']]['project_code'][]	= $rec['pjt_id'];
+			$arr_billing_type_project_lead_ids[$rec['billing_type']]['lead_id'][]	= $rec['lead_id'];
+		}
+		/** Loop through all projects according to billing type  **/
+		foreach($arr_billing_type_project_codes as $key_billing_type=>$res) 
+		{
+			$data['timesheet_data'] = array();
+		    $timesheet				= array();
+			$lead_id_array 			= $arr_billing_type_project_lead_ids[$key_billing_type]['lead_id'];
+			$invoice_amount_array 	= $this->project_model->get_invoice_total_by_lead($lead_id_array);
+			$other_cost_array 		= $this->project_model->get_other_cost_by_all_lead($lead_id_array);
+			/** For monthly billing billing type is 3 **/
+			/* if(!empty($project_billing_type) && $project_billing_type==3) {
+				$bill_type = 3;
+			} else {
+				$bill_type = $key_billing_type;
+			} */
+			
+			$bill_type = 1;
+			
+			$exp_proj_codes = $res['project_code'];
+			/** Getting timesheet details against projects **/
+			$timesheet = $this->project_model->get_timesheet_data_updated($exp_proj_codes, '', $bill_type, '', $groupby_type=2);
+			/* calculation for UC based on the max hours starts */
+			$timesheet_data = array();
+			if(count($timesheet)>0) {
+				foreach($timesheet as $ts) {
+					$financialYear 		= get_current_financial_year($ts['yr'],$ts['month_name']);
+					$max_hrs 			= 0;
+					if(isset($practice_id_year_array[$ts['practice_id']][$financialYear]))
+					{
+						$max_hrs = $practice_id_year_array[$ts['practice_id']][$financialYear];
+					}
+					else if(isset($practice_id_array[$ts['practice_id']]))
+					{
+						$max_hrs = $practice_id_array[$ts['practice_id']];
+					}
+					$timesheet_data[$ts['project_code']][$ts['username']]['practice_id'] = $ts['practice_id'];
+					$timesheet_data[$ts['project_code']][$ts['username']]['max_hours'] = $max_hrs;
+					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
+					$rateCostPerHr 			= $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
+					$directrateCostPerHr = $this->conver_currency($ts['direct_cost'], $rates[1][$this->default_cur_id]);
+					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rateperhr'] = $rateCostPerHr;
+					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['direct_rateperhr'] = $directrateCostPerHr;
+					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
+					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration_direct_cost'] = $ts['duration_direct_cost'];
+					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
+					$timesheet_data[$ts['project_code']][$ts['username']][$ts['yr']][$ts['month_name']]['total_hours'] = $ts['resource_total_hours'];
+					
+				}
+			}
+			
+			$i		= 0; 
+			$keys	= array();
+			foreach($exp_proj_codes as $proj_key) {
+				$total_billable_hrs		= 0;
+				$total_non_billable_hrs = 0;
+				$total_internal_hrs		= 0;
+				$total_cost				= 0;
+				$total_hours			= 0;
+				$total_dc_hours			= 0;
+				$total_amount_inv_raised= 0;
+				$other_cost_values		= 0;
+				if(array_key_exists($proj_key, $timesheet_data))
+				{
+					$projects_arr = $timesheet_data[$proj_key];
+					foreach($projects_arr as $key1=>$value1) {
+						$resource_name = $key1;
+						$max_hours = $value1['max_hours'];
+						foreach($value1 as $key2=>$value2) {
+							$year = $key2;										
+							if(!empty($value2) && is_array($value2)){
+								foreach($value2 as $key3=>$value3) {
+									$individual_billable_hrs		= 0;
+									$month		 	  = $key3;
+									$billable_hrs	  = 0;
+									$non_billable_hrs = 0;
+									$internal_hrs	  = 0;
+									foreach($value3 as $key4=>$value4) {
+										
+										switch($key4) {
+											case 'Billable':
+												$rate				 = $value4['rateperhr'];
+												$direct_rateperhr	 = $value4['direct_rateperhr'];
+												$billable_hrs		 = $value4['duration'];
+												$direct_billable_hrs = $value4['duration_direct_cost'];
+												$total_billable_hrs += $billable_hrs;
+											break;
+											case 'Non-Billable':
+												$rate				 	 = $value4['rateperhr'];
+												$direct_rateperhr	 	 = $value4['direct_rateperhr'];
+												$non_billable_hrs		 = $value4['duration'];
+												$direct_non_billable_hrs = $value4['duration_direct_cost'];
+												$total_non_billable_hrs += $non_billable_hrs;
+											break;
+											case 'Internal':
+												$rate				 = $value4['rateperhr'];
+												$direct_rateperhr	 = $value4['direct_rateperhr'];
+												$internal_hrs 		 = $value4['duration'];
+												$direct_internal_hrs = $value4['duration_direct_cost'];
+												$total_internal_hrs += $internal_hrs;
+											break;
+										}
+									}
+								
+									$individual_billable_hrs = $value3['total_hours'];											 
+									/* calculation for the utilization cost based on the master hours entered. */
+									$rate1 = $rate;
+									$direct_rateperhr1 = $direct_rateperhr;
+									if($individual_billable_hrs>$max_hours){												
+										$percentage 		= ($max_hours/$individual_billable_hrs);												
+										$rate1 				= number_format(($percentage*$rate),2);
+										$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+									}
+								 
+									$total_hours += $billable_hrs+$internal_hrs+$non_billable_hrs;											
+									$total_dc_hours += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);
+									$total_cost += $rate1*($billable_hrs+$internal_hrs+$non_billable_hrs);				
+								}
+							}
+						}
+					}
+				}
+				$proj = $arr_billing_type_projects[$key_billing_type][$i];
+				$amt_converted = $this->conver_currency($proj['actual_worth_amount'], $rates[$proj['expect_worth_id']][$this->default_cur_id]);
+				$total_amount_inv_raised = 0;
+				$invoice_amount=0;
+				if(!empty($invoice_amount_array))
+				{
+					if(array_key_exists($lead_id_array[$i],$invoice_amount_array))
+					{
+						$invoice_amount = $invoice_amount_array[$lead_id_array[$i]];
+						if(count($invoice_amount)>0 && !empty($invoice_amount)){
+							$total_amount_inv_raised = $invoice_amount['invoice_amount']+$invoice_amount['tax_amount'];
+						}
+					}
+				}
+				/* calculation for UC based on the max hours ends */
+				$total_amount_inv_raised = $this->conver_currency($total_amount_inv_raised, $rates[$proj['expect_worth_id']][$this->default_cur_id]);
+				/* get the other cost details for the project. */
+				$other_cost_values = 0;
+				if(!empty($other_cost_array))
+				{
+					if(array_key_exists($lead_id_array[$i], $other_cost_array))
+					{
+						$other_cost_values = $this->getOtherCostValuesForBookRates($other_cost_array[$lead_id_array[$i]], $book_keeping_rates);
+					}
+				}	
+			
+				/** Building resultant array **/
+				$data['project_record'][$proj_key]['lead_id'] 			= $proj['lead_id'];
+				$data['project_record'][$proj_key]['lead_title']		= $proj['lead_title'];
+				$data['project_record'][$proj_key]['practice']			= $proj['practice'];
+				$data['project_record'][$proj_key]['complete_status'] 	= $proj['complete_status'];
+				$data['project_record'][$proj_key]['project_type']	 	= $proj['project_billing_type'];
+				$data['project_record'][$proj_key]['estimate_hour'] 	= $proj['estimate_hour'];
+				$data['project_record'][$proj_key]['actual_worth_amt']  = number_format($amt_converted, 2, '.', '');
+				$data['project_record'][$proj_key]['pjt_id']			= $proj['pjt_id'];
+				$data['project_record'][$proj_key]['rag_status'] 		= $proj['rag_status'];
+				$data['project_record'][$proj_key]['expect_worth_id'] 	= $proj['expect_worth_id'];
+				$data['project_record'][$proj_key]['bill_hr'] 			= $total_billable_hrs;
+				$data['project_record'][$proj_key]['int_hr'] 			= $total_internal_hrs;
+				$data['project_record'][$proj_key]['nbil_hr'] 			= $total_non_billable_hrs;
+				$data['project_record'][$proj_key]['other_cost'] 		= $other_cost_values;
+				$data['project_record'][$proj_key]['total_hours'] 		= $total_hours;
+				$data['project_record'][$proj_key]['total_dc_hours'] 	= $total_dc_hours;
+				$data['project_record'][$proj_key]['total_amount_inv_raised'] = $total_amount_inv_raised;
+				$data['project_record'][$proj_key]['total_cost'] 		= number_format($total_cost, 2, '.', '');
 				
+				$i++;
 			}
 		}
 		return $data['project_record'];
@@ -1414,6 +1602,20 @@ class It_service_dashboard extends crm_controller
 				$value += $convert_value;
 			}
 		}		
+		return $value;
+	}
+	function getOtherCostValuesForBookRates($other_cost_data,$bk_rates)
+	{
+		$value = 0;
+		if(!empty($other_cost_data) && count($other_cost_data)>0) {
+			foreach($other_cost_data as $rec) {
+				$conver_value  = 0;
+				$curFiscalYear = date('Y'); //set as default current year as fiscal year
+				$curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y", strtotime($rec['cost_incurred_date'])),"4/1","3/31"); //get fiscal year
+				$convert_value = $this->conver_currency($rec['value'], $bk_rates[$curFiscalYear][$rec['currency_type']][$this->default_cur_id]);
+				$value += $convert_value;
+			}
+		}	
 		return $value;
 	}
 	
