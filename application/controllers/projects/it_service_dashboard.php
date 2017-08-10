@@ -332,7 +332,7 @@ class It_service_dashboard extends crm_controller
 			
 			if(count($resdata)>0) {
 				$rates = $this->get_currency_rates();
-				/* foreach($resdata as $rec) {		
+				foreach($resdata as $rec) {		
 					$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
 					$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 					
@@ -350,9 +350,9 @@ class It_service_dashboard extends crm_controller
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user_frm_month_data($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
-				} */
+				}
 				
-				foreach($resdata as $rec) {		
+				/* foreach($resdata as $rec) {		
 					$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
 					$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
 					
@@ -366,7 +366,7 @@ class It_service_dashboard extends crm_controller
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
-				}
+				} */
 				// echo "get timesheet hours " . date('d-m-Y H:i:s') . "<br>";
 				/* if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 					foreach($timesheet_data as $dept_arr=>$resource_type_arr) {
