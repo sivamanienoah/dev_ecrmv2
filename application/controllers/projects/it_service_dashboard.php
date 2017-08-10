@@ -309,7 +309,6 @@ class It_service_dashboard extends crm_controller
 			$this->db->where($deptwhere);
 			$this->db->where("l.practice is not null");
 			$query 	 = $this->db->get();
-echo $this->db->last_query(); die;
 			$resdata = $query->result();
 			
 			## code starts here##
