@@ -23,7 +23,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						<input type="hidden" name="filter" value="filter" />
-						<div class="pull-left">
+						<div class="pull-left adv_filter_it_service">
 							<div class='pull-left'>
 								<label>Financial Year</label>
 							</div>
@@ -72,7 +72,7 @@ table.bu-tbl-inr th{ text-align:center; }
 				</div>				
 			</div>
 			
-			<div class="buttons pull-right">
+			<div class="buttons export-to-excel pull-right mrgin0">
 				<button type="button" class="positive" id="btnExportITServices">
 					Export to Excel
 				</button>
