@@ -1781,6 +1781,73 @@ class It_service_dashboard extends crm_controller
 			$objWriter->save('php://output');
 		}
 	}
+	
+	public function validate_adv_filter_fy_month()
+	{
+		$post_data 		= $this->input->post();
+		$curFiscalYear	= $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31"); //get fiscal year
+		$config_data 	= $this->config->item('crm');
+		$fy_month 		= $config_data['fy_months'];
+		$fy_start_month = '04';
+		$data = array();
+		$fy_st_mon_opt 	= '<option value="">--Select--</option>';
+		$fy_end_mon_opt = '<option value="">--Select--</option>';
+		if($post_data['fy_name'] < $curFiscalYear) {
+			$fy_end_month 	= '03';
+			if(!empty($fy_month) && count($fy_month)>IS_ZERO) {
+				foreach($fy_month as $fy_mon_key=>$fy_mon_val) {
+					$sel_st_mon  	 = ($fy_start_month == $fy_mon_key) ? 'selected="selected"' : '';
+					$sel_end_mon 	 = ($fy_end_month == $fy_mon_key) ? 'selected="selected"' : '';
+					$fy_st_mon_opt  .= '<option value="'.$fy_mon_key.'" '.$sel_st_mon.'>'.$fy_mon_val.'</option>';
+					$fy_end_mon_opt .= '<option value="'.$fy_mon_key.'" '.$sel_end_mon.'>'.$fy_mon_val.'</option>';
+				}
+			}
+		} else {
+			$fy_end_month 	= date('m');
+			if(!empty($fy_month) && count($fy_month)>IS_ZERO) {
+				foreach($fy_month as $fy_mon_key=>$fy_mon_val) {
+					$sel_st_mon  	 = ($fy_start_month == $fy_mon_key) ? 'selected="selected"' : '';
+					$sel_end_mon 	 = ($fy_end_month == $fy_mon_key) ? 'selected="selected"' : '';
+					$fy_st_mon_opt  .= '<option value="'.$fy_mon_key.'" '.$sel_st_mon.'>'.$fy_mon_val.'</option>';
+					$fy_end_mon_opt .= '<option value="'.$fy_mon_key.'" '.$sel_end_mon.'>'.$fy_mon_val.'</option>';
+					if ($fy_mon_key == $fy_end_month) { break; }
+				}
+			}
+		}
+		$data['fy_st']  = $fy_st_mon_opt;
+		$data['fy_end'] = $fy_end_mon_opt;
+		echo json_encode($data);
+		exit;
+	}
+	
+	public function set_fy_month()
+	{
+		$post_data 		= $this->input->post();
+		$config_data 	= $this->config->item('crm');
+		$fy_month 		= $config_data['fy_months'];
+		$default_fy_start_month = '04';
+		$i = 0;
+		
+		$start_month = (isset($post_data['start_month']) && !empty($post_data['start_month'])) ? $post_data['start_month'] : $default_fy_start_month;
+		
+		$fy_end_mon_opt = '<option value="">--Select--</option>';
+		
+		if(!empty($fy_month) && count($fy_month)>IS_ZERO) {
+			foreach($fy_month as $fy_mon_key=>$fy_mon_val) {
+				if(($fy_mon_key != $start_month) && ($i == 0)) {
+					continue;
+				} else {
+					$sel 			 = ($i == 0) ? 'selected="selected"' : '';
+					$fy_end_mon_opt .= '<option value="'.$fy_mon_key.'" '.$sel.'>'.$fy_mon_val.'</option>';
+					$i++;
+				}
+				
+			}
+		}
+		$data['fy_end'] = $fy_end_mon_opt;
+		echo json_encode($data);
+		exit;
+	}
 
 }
 /* End of dms resource_availability file */
