@@ -28,7 +28,7 @@ table.bu-tbl-inr th{ text-align:center; }
 								<label>Financial Year</label>
 							</div>
 							<div class="pull-left">
-								<select name='fy_name' id='fy_name'>
+								<select name='fy_name' id='fy_name' onchange="validateMonths(this.value);">
 									<option value=''>--Select--</option>
 									<?php if(!empty($fy_year) && count($fy_year)>0) { ?>
 										<?php foreach($fy_year as $fy_rec) { ?>
@@ -40,12 +40,13 @@ table.bu-tbl-inr th{ text-align:center; }
 							<div class='pull-left'>
 								<label>From Month</label>
 							</div>
-							<div class='pull-left'>
-								<select name='start_month' id='start_month'>
+							<div class='pull-left' id='fy_start_mon'>
+								<select name='start_month' id='start_month' onchange="setFyEndMon(this.value);">
 									<option value=''>--Select--</option>
 									<?php if(!empty($fy_month) && count($fy_month)>0) { ?>
 										<?php foreach($fy_month as $fy_mon_key=>$fy_mon_val) { ?>
 											<option value='<?php echo $fy_mon_key; ?>' <?php echo $start_sel_month = ($start_month == $fy_mon_key) ? 'selected="selected"' : ''; ?>><?php echo $fy_mon_val; ?></option>
+											<?php if ($fy_mon_key == date('m')) { break; } ?>
 										<?php } ?>
 									<?php } ?>
 								</select>
@@ -53,12 +54,13 @@ table.bu-tbl-inr th{ text-align:center; }
 							<div class='pull-left'>
 								<label>To Month</label>
 							</div>
-							<div class='pull-left'>
+							<div class='pull-left' id='fy_end_mon'>
 								<select name='end_month' id='end_month'>
 									<option value=''>--Select--</option>
 									<?php if(!empty($fy_month) && count($fy_month)>0) { ?>
 										<?php foreach($fy_month as $fy_end_mon_key=>$fy_end_mon_val) { ?>
 											<option value='<?php echo $fy_end_mon_key; ?>' <?php echo $end_sel_month = ($end_month == $fy_end_mon_key) ? 'selected="selected"' : ''; ?> > <?php echo $fy_end_mon_val; ?></option>
+											<?php if ($fy_end_mon_key == date('m')) { break; } ?>
 										<?php } ?>
 									<?php } ?>
 								</select>
@@ -435,6 +437,43 @@ $( "#advance_search" ).on( "click", "#advance", function(e) {
 	});
 	return false;  //stop the actual form post !important!
 });
+
+function validateMonths(yr)
+{
+	var form_data = $('#advanceFilterServiceDashboard').serialize();
+	$.ajax({
+		type: "POST",
+		url: site_base_url+'projects/it_service_dashboard/validate_adv_filter_fy_month',
+		data: form_data,
+		dataType: "json",
+		cache: false,
+		beforeSend:function() {
+			
+		},
+		success: function(res) {
+			$('#start_month').html(res.fy_st);
+			$('#end_month').html(res.fy_end);
+		}                                                                                   
+	});
+}
+
+function setFyEndMon(mon)
+{
+	var form_data = $('#advanceFilterServiceDashboard').serialize();
+	$.ajax({
+		type: "POST",
+		url: site_base_url+'projects/it_service_dashboard/set_fy_month',
+		data: form_data,
+		dataType: "json",
+		cache: false,
+		beforeSend:function() {
+			
+		},
+		success: function(res) {
+			$('#end_month').html(res.fy_end);
+		}                                                                                   
+	});
+}
 
 function getData(practice, clicktype)
 {	
