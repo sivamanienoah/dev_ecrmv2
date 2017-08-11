@@ -48,7 +48,7 @@ if ($this->session->userdata('logged_in') == TRUE) {
 </title>
 <link rel="shortcut icon" href="favicon.ico" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="assets/css/base.css?q=20" type="text/css" />
+<link rel="stylesheet" href="assets/css/base.css?v=<?php echo CLR_CACHE; ?>" type="text/css" />
 <link rel="stylesheet" href="assets/css/datatable.css" type="text/css" />
 <link rel="stylesheet" href="assets/css/demo_table.css" type="text/css" />
 <link rel="stylesheet" href="assets/css/quote.css?q=21" type="text/css" />
