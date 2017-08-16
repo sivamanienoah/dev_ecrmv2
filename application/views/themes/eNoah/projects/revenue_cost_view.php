@@ -180,13 +180,16 @@ table.bu-tbl-inr th{ text-align:center; }
 						$overall_offshore_revenue+=	$values['offshore_revenue'];
 						$overall_total_cost+=	$values['total_cost'];
 						$overall_offshore_cost+=	$values['offshore_cost'];
-						$overall_contribution+=	$values['contribution'];
 						$overall_revnue_prev+=	$values['revenue_prev'];
 						$overall_offshore_revenue_prev+=	$values['offshore_revenue_prev'];
 						$overall_total_cost_prev+=	$values['total_cost_prev'];
 						$overall_offshore_cost_prev+=	$values['offshore_cost_prev'];
-						$overall_contribution_prev+=	$values['contribution_prev'];
 						$overall_saving+=	$values['saving'];
+						
+						$overall_contribution_prev = (($overall_revnue_prev-$overall_total_cost_prev)/$overall_revnue_prev)*100;
+						$overall_contribution = (($overall_revenue-$overall_total_cost)/$overall_revenue)*100;
+
+						
 						?>
 					<?php } ?>
 					<tr>
