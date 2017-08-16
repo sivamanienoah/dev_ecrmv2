@@ -258,7 +258,7 @@ class It_service_dashboard extends crm_controller
 			$pcodes = array();
 			$pcodes = $projects['billable_ytd']['project_code'];
 			
-			$actuals = $this->get_timesheet_actual_hours('ITS-REA- 01-0112', "", "");
+			// $actuals = $this->get_timesheet_actual_hours('ITS-REA- 01-0112', "", "");
 			$actuals1 = $this->get_timesheet_actual_hours_by_pjt_code_arr(array('ITS-REA- 01-0112'), "", "");
 			echo '<br><pre>'; print_r($actuals); die;
 			
