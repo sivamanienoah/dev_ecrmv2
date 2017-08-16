@@ -255,7 +255,9 @@ class It_service_dashboard extends crm_controller
 			// echo '<pre>'; print_r($projects['billable_ytd']); die;
 
 			//for effort variance
-			$pcodes = (isset($projects['billable_ytd']['project_code']) && !empty(isset($projects['billable_ytd']['project_code']))) ? $projects['billable_ytd']['project_code'] : array();
+			// $pcodes = (isset($projects['billable_ytd']['project_code']) && !empty(isset($projects['billable_ytd']['project_code']))) ? $projects['billable_ytd']['project_code'] : array();
+			
+			$pcodes = $projects['billable_ytd']['project_code'];
 			
 			if(!empty($pcodes) && count($pcodes)>0){
 				foreach($pcodes as $rec){
