@@ -770,6 +770,7 @@ class It_service_dashboard extends crm_controller
 		$query = $this->db->get();
 		$timesheet = $query->result_array();
 		$res = array();
+		echo $this->db->last_query(); exit;
 		// echo "<pre>"; print_r($timesheet); exit;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $ts) {
