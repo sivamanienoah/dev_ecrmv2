@@ -157,6 +157,9 @@ table.bu-tbl-inr th{ text-align:center; }
 					<?php
 					foreach($results as $key => $values)
 					{
+						$contribution_prev = (($values['revenue_prev']-$values['total_cost_prev'])/$values['revenue_prev'])*100;
+						$contribution = (($values['revenue']-$values['total_cost'])/$values['revenue'])*100;
+						$saving = 0;
 					?>
 						<tr>
 							<td><?php echo $key;?></td>
@@ -164,13 +167,13 @@ table.bu-tbl-inr th{ text-align:center; }
 							<td align="right"><?php echo $values['offshore_revenue_prev'];?></td>
 							<td align="right"><?php echo $values['total_cost_prev'];?></td>
 							<td align="right"><?php echo $values['offshore_cost_prev'];?></td>
-							<td align="right"><?php echo $values['contribution_prev'];?></td>
+							<td align="right"><?php echo $contribution_prev;?></td>
 							<td align="right"><?php echo $values['revenue'];?></td>
 							<td align="right"><?php echo $values['offshore_revenue'];?></td>
 							<td align="right"><?php echo $values['total_cost'];?></td>
 							<td align="right"><?php echo $values['offshore_cost'];?></td>
-							<td align="right"><?php echo $values['contribution'];?></td>
-							<td align="right"><?php echo $values['saving'];?></td>
+							<td align="right"><?php echo $contribution;?></td>
+							<td align="right"><?php echo $saving;?></td>
 						</tr>
 						<?php 
 						$overall_revenue+=	$values['revenue'];
