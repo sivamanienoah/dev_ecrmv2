@@ -284,9 +284,9 @@ class It_service_dashboard extends crm_controller
 								$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
 								$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] = $actuals['total_hours'];
 							}
-							if($recrd['pjt_id'] == 'ITS-REA- 01-0112') {
+							/* if($recrd['pjt_id'] == 'ITS-REA- 01-0112') {
 								echo '<pre>'; print_r($actuals); die;
-							}
+							} */
 							$fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
 						}
 					}
@@ -683,7 +683,7 @@ class It_service_dashboard extends crm_controller
 		}
 	}
 	
-	public function do_eff_variance_calculation($pcodes, $practice_arr)
+	/* public function do_eff_variance_calculation($pcodes, $practice_arr)
 	{
 		if(!empty($pcodes) && count($pcodes)>0) {
 			
@@ -723,7 +723,7 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 		}
-	}
+	} */
 	
 		
 	/*
@@ -785,7 +785,7 @@ class It_service_dashboard extends crm_controller
 	}
 	
 	//for optimization
-	public function get_timesheet_actual_hours_by_pjt_code_arr($pjt_code, $start_date=false, $end_date=false, $month=false)
+	/* public function get_timesheet_actual_hours_by_pjt_code_arr($pjt_code, $start_date=false, $end_date=false, $month=false)
 	{
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, ts.project_code, ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_month_data as ts');
@@ -820,7 +820,7 @@ class It_service_dashboard extends crm_controller
 		}
 		echo "<pre>"; print_r($res); exit;
 		return $res;
-	}
+	} */
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{		
