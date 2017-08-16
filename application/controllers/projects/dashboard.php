@@ -3616,6 +3616,14 @@ class Dashboard extends crm_controller
 		}
 		// echo "<pre>";print_r($result_set);exit;
 		$data['results'] = $result_set;
+		$data['start_month'] = $start_month;
+		$data['end_month'] = $end_month;
+		$data['end_month'] = $end_month;
+		$data['department_ids'] = $this->input->post("department_ids");
+		$data['sel_practice_ids']   = $this->input->post("practice_ids");
+		$data['filter_area_status']   = $this->input->post("filter_area_status");
+		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date);
+		
 		$this->load->view("projects/revenue_cost_view", $data);
 	}
 	

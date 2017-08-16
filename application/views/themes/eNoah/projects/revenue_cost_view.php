@@ -47,34 +47,34 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td class="month-year">
 										<span>From</span>
 										<select id="start_month" name="start_month">
-										<option value="1">Jan</option>
-										<option value="2">Feb</option>
-										<option value="3">March</option>
-										<option value="4" selected="selected">Apr</option>
-										<option value="5">May</option>
-										<option value="6">Jun</option>
-										<option value="7">Jul</option>
-										<option value="8">Aug</option>
-										<option value="9">Sep</option>
-										<option value="10">Oct</option>
-										<option value="11">Nov</option>
-										<option value="12">Dec</option>
+										<option value="1" <?php if($start_month==1){?> selected="selected" <?php } ?>>Jan</option>
+										<option value="2" <?php if($start_month==2){?> selected="selected" <?php } ?>>Feb</option>
+										<option value="3" <?php if($start_month==3){?> selected="selected" <?php } ?>>March</option>
+										<option value="4" <?php if($start_month==''){?> selected="selected" <?php } ?>>Apr</option>
+										<option value="5" <?php if($start_month==5){?> selected="selected" <?php } ?>>May</option>
+										<option value="6" <?php if($start_month==6){?> selected="selected" <?php } ?>>Jun</option>
+										<option value="7" <?php if($start_month==7){?> selected="selected" <?php } ?>>Jul</option>
+										<option value="8" <?php if($start_month==8){?> selected="selected" <?php } ?>>Aug</option>
+										<option value="9" <?php if($start_month==9){?> selected="selected" <?php } ?>>Sep</option>
+										<option value="10" <?php if($start_month==10){?> selected="selected" <?php } ?>>Oct</option>
+										<option value="11" <?php if($start_month==11){?> selected="selected" <?php } ?>>Nov</option>
+										<option value="12" <?php if($start_month==12){?> selected="selected" <?php } ?>>Dec</option>
 										</select>
 										<br />
 										<span>To</span> 
 										<select id="end_month" name="end_month">
-										<option value="1">Jan</option>
-										<option value="2">Feb</option>
-										<option value="3">Mar</option>
-										<option value="4">Apr</option>
-										<option value="5">May</option>
-										<option value="6" selected="selected">Jun</option>
-										<option value="7">Jul</option>
-										<option value="8">Aug</option>
-										<option value="9">Sep</option>
-										<option value="10">Oct</option>
-										<option value="11">Nov</option>
-										<option value="12">Dec</option>
+										<option value="1" <?php if($end_month==1){?> selected="selected" <?php } ?>>Jan</option>
+										<option value="2" <?php if($end_month==2){?> selected="selected" <?php } ?>>Feb</option>
+										<option value="3" <?php if($end_month==3){?> selected="selected" <?php } ?>>March</option>
+										<option value="4" <?php if($end_month==''){?> selected="selected" <?php } ?>>Apr</option>
+										<option value="5" <?php if($end_month==5){?> selected="selected" <?php } ?>>May</option>
+										<option value="6" <?php if($end_month==6){?> selected="selected" <?php } ?>>Jun</option>
+										<option value="7" <?php if($end_month==7){?> selected="selected" <?php } ?>>Jul</option>
+										<option value="8" <?php if($end_month==8){?> selected="selected" <?php } ?>>Aug</option>
+										<option value="9" <?php if($end_month==9){?> selected="selected" <?php } ?>>Sep</option>
+										<option value="10" <?php if($end_month==10){?> selected="selected" <?php } ?>>Oct</option>
+										<option value="11" <?php if($end_month==11){?> selected="selected" <?php } ?>>Nov</option>
+										<option value="12" <?php if($end_month==12){?> selected="selected" <?php } ?>>Dec</option>
 										</select>
 									</td>
 									<td class="proj-dash-select">
@@ -96,8 +96,6 @@ table.bu-tbl-inr th{ text-align:center; }
 								</tr>
 								<tr align="right" >
 									<td colspan="7">
-										<input type="hidden" id="start_date" name="start_date" value="" />
-										<input type="hidden" id="end_date" name="end_date" value="" />
 										<input type="hidden" id="filter_area_status" name="filter_area_status" value="" />
 										<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 										<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" />
@@ -212,6 +210,10 @@ table.bu-tbl-inr th{ text-align:center; }
 
 <?php require (theme_url().'/tpl/footer.php'); ?>
 <script>
+var filter_area_status = '<?php echo $filter_area_status; ?>';
+if(filter_area_status==1) {
+	$('#advance_search').show();
+}
 function advanced_filter() {
 	$('#advance_search').slideToggle('slow');
 }
