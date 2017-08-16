@@ -258,11 +258,7 @@ class It_service_dashboard extends crm_controller
 			$pcodes = array();
 			$pcodes = $projects['billable_ytd']['project_code'];
 			
-			// $actuals = $this->get_timesheet_actual_hours('ITS-REA- 01-0112', "", "");
-			$actuals1 = $this->get_timesheet_actual_hours_by_pjt_code_arr(array('ITS-REA- 01-0112'), "", "");
-			echo '<br><pre>'; print_r($actuals); die;
-			
-			if(!empty($pcodes) && count($pcodes)>0){
+			/* if(!empty($pcodes) && count($pcodes)>0){
 				foreach($pcodes as $rec){
 					$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
 					$this->db->from($this->cfg['dbpref']. 'leads as l');
@@ -296,10 +292,10 @@ class It_service_dashboard extends crm_controller
 						}
 					}
 				}
-			}
+			} */
 			
 			//the effort variance calculation
-			// $eff_varian_calc = $this->do_eff_variance_calculation($pcodes, $practice_arr);
+			$eff_varian_calc = $this->do_eff_variance_calculation($pcodes, $practice_arr);
 			
 			$projects['eff_var']   = $effvar;
 			
@@ -688,7 +684,7 @@ class It_service_dashboard extends crm_controller
 		}
 	}
 	
-	/* public function do_eff_variance_calculation($pcodes, $practice_arr)
+	public function do_eff_variance_calculation($pcodes, $practice_arr)
 	{
 		if(!empty($pcodes) && count($pcodes)>0) {
 			
@@ -709,7 +705,7 @@ class It_service_dashboard extends crm_controller
 			//get all the actual hours
 			$act_hr_calc = $this->get_timesheet_actual_hours_by_pjt_code_arr($pcodes, "", "");
 			
-			// echo '<br>123<pre>'; print_r($act_hr_calc); die;
+			echo '<br>123<pre>'; print_r($act_hr_calc); die;
 			
 			$effvar = array();
 			
@@ -728,7 +724,7 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 		}
-	} */
+	}
 	
 		
 	/*
@@ -807,8 +803,8 @@ class It_service_dashboard extends crm_controller
 			$this->db->where("DATE(ts.start_time) >= ", date('Y-m-d', strtotime($month)));
 			$this->db->where("DATE(ts.end_time) <= ", date('Y-m-t', strtotime($month)));
 		}
-		$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
-		// $this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype", "ts.project_code"));
+		// $this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
+		$this->db->group_by(array("ts.project_code", "ts.username", "yr", "month_name", "ts.resoursetype"));
 		
 		$query = $this->db->get();
 		$timesheet = $query->result_array();
