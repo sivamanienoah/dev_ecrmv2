@@ -295,9 +295,7 @@ class It_service_dashboard extends crm_controller
 			} */
 			
 			//the effort variance calculation
-			$eff_varian_calc = $this->do_eff_variance_calculation($pcodes, $practice_arr);
-			
-			$projects['eff_var']   = $effvar;
+			$projects['eff_var'] = $this->do_eff_variance_calculation($pcodes, $practice_arr);
 			
 			$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
@@ -705,24 +703,22 @@ class It_service_dashboard extends crm_controller
 			//get all the actual hours
 			$act_hr_calc = $this->get_timesheet_actual_hours_by_pjt_code_arr($pcodes, "", "");
 			
-			echo '<br>123<pre>'; print_r($act_hr_calc); die;
-			
 			$effvar = array();
 			
 			if(!empty($pro_data) && count($pro_data)>0) {
 				foreach($pro_data as $recrd){
 					if(isset($effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'])){
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
-						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
-						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
+						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $act_hr_calc['pjt_id']['total_hours'];
 					} else {
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] = $recrd['estimate_hour'];
-						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
-						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] = $actuals['total_hours'];
+						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] = $act_hr_calc['pjt_id']['total_hours'];
 					}
-					$fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
+					// $fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
 				}
 			}
+			
+			return $effvar;
 		}
 	}
 	
