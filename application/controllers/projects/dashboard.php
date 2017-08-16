@@ -3579,7 +3579,7 @@ class Dashboard extends crm_controller
 			if($i<9){$month_key="0".$i;}
 			else{$month_key=$i;}
 			$start_date_prev = date("Y",strtotime("-1 year"))."-".$month_key."-01";
-			$end_date_prev = date("Y",strtotime("-1 year"))."-".$month_key."-".date('t');
+			$end_date_prev = date("Y")."-".$month_key."-".date('t');
 			
 			$revenue_results_prev = $this->findRevenue($start_date_prev,$end_date_prev);
 			// echo "<pre>";print_r($revenue);exit;
@@ -3587,7 +3587,7 @@ class Dashboard extends crm_controller
 			$result_set[$months[$i]]['total_cost_prev'] = $revenue_results_prev['total_cost'];
 			
 			$start_date = date('Y')."-".$month_key."-01";
-			$end_date = date('Y')."-".$month_key."-".date('t');
+			$end_date = date('Y',strtotime("+1 year"))."-".$month_key."-".date('t');
 			
 			$revenue_results = $this->findRevenue($start_date,$end_date);
 			
