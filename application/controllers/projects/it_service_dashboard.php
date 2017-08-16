@@ -781,7 +781,7 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 		}
-		echo "<pre>"; print_r($res); exit;
+		// echo "<pre>"; print_r($res); exit;
 		return $res;
 	}
 	
