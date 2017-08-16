@@ -198,12 +198,12 @@ table.bu-tbl-inr th{ text-align:center; }
 						<td align="right"><?php echo $overall_offshore_revenue_prev;?></td>
 						<td align="right"><?php echo $overall_total_cost_prev;?></td>
 						<td align="right"><?php echo $overall_offshore_cost_prev;?></td>
-						<td align="right"><?php echo $overall_contribution_prev;?></td>
+						<td align="right"><?php echo round($overall_contribution_prev)."%";?></td>
 						<td align="right"><?php echo $overall_revenue;?></td>
 						<td align="right"><?php echo $overall_offshore_revenue;?></td>
 						<td align="right"><?php echo $overall_total_cost;?></td>
 						<td align="right"><?php echo $overall_offshore_cost;?></td>
-						<td align="right"><?php echo $overall_contribution;?></td>
+						<td align="right"><?php echo round($overall_contribution)."%";?></td>
 						<td align="right"><?php echo $overall_saving;?></td>
 					</tr>
 				</table>
