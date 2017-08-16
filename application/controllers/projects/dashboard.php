@@ -3564,5 +3564,292 @@ class Dashboard extends crm_controller
 		$query = $this->db->get();
 		return $query->result();
 	}
+	
+	public function revenue_cost()
+	{
+		$data['previous_year'] = date("Y",strtotime("-1 year"))."-".date("Y");  //last year "2013"
+		$data['current_year'] = date("Y")."-".date("Y",strtotime("+1 year"));  //last year "2013"
+		
+		$months = array('1'=>'Jan','2'=>'Feb','3'=>'Mar','4'=>'Apr','5'=>'May','6'=>'Jun','7'=>'Jul','8'=>'Aug','9'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Dec');
+		$results = array('revenue'=>'1000','offshore_revenue'=>'2000','total_cost'=>'3000','offshore_cost'=>'4000','contribution'=>'5000','revnue_prev'=>'6000','offshore_revenue_prev'=>'7000','total_cost_prev'=>'8000','offshore_cost_prev'=>'9000','contribution_prev'=>'10000','saving'=>'11000');
+		$start_month=3;
+		$end_month=6;
+		for($i=$start_month;$i<=$end_month;$i++)
+		{
+			if($i<9){$month_key="0".$i;}
+			else{$month_key=$i;}
+			$start_date_prev = date("Y",strtotime("-1 year"))."-".$month_key."-01";
+			$end_date_prev = date("Y",strtotime("-1 year"))."-".$month_key."-".date('t');
+			
+			$revenue_results_prev = $this->findRevenue($start_date_prev,$end_date_prev);
+			// echo "<pre>";print_r($revenue);exit;
+			$result_set[$months[$i]]['revenue_prev'] = $revenue_results_prev['revenue'];
+			$result_set[$months[$i]]['total_cost_prev'] = $revenue_results_prev['total_cost'];
+			
+			$start_date = date('Y')."-".$month_key."-01";
+			$end_date = date('Y')."-".$month_key."-".date('t');
+			
+			$revenue_results = $this->findRevenue($start_date,$end_date);
+			
+			$result_set[$months[$i]]['revenue'] = $revenue_results_prev['revenue'];
+			$result_set[$months[$i]]['total_cost'] = $revenue_results_prev['total_cost'];
+		}
+		// echo "<pre>";print_r($result_set);exit;
+		$data['results'] = $result_set;
+		$this->load->view("projects/revenue_cost_view", $data);
+	}
+	
+	public function findRevenue($start_date,$end_date)
+	{
+		@set_time_limit(-1); //disable the mysql query maximum execution time
+			
+		$data  				  = array();
+			
+		$bk_rates = get_book_keeping_rates();
+
+		$project_status = 1;
+		
+		$project_code = array();
+		$projects 	  = array();
+		$practice_arr = array();
+
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$this->db->where('p.status', 1);
+		//BPO practice are not shown in IT Services Dashboard
+		$practice_not_in = array(6);
+		$this->db->where_not_in('p.id', $practice_not_in);
+		//$this->db->where_in('p.id', array(1));
+		$pquery = $this->db->get();
+		$pres = $pquery->result();
+		$data['practice_data'] = $pquery->result();		
+				
+		if(!empty($pres) && count($pres)>0){
+			foreach($pres as $prow) {
+				$practice_arr[$prow->id] = $prow->practices;
+				$practice_array[] = $prow->practices;
+			}
+		}
+		
+		//for othercost projects
+		$this->db->select("pjt_id, lead_id, practice, lead_title");
+		$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
+		$oc_res = $ocres->result_array();
+		
+		if(!empty($oc_res)) {
+			foreach($oc_res as $ocrow) {
+				if (isset($projects['othercost_projects'][$practice_arr[$ocrow['practice']]])) {
+					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]][] = $ocrow['lead_id'];
+				} else {
+					$projects['othercost_projects'][$practice_arr[$ocrow['practice']]][] = $ocrow['lead_id'];
+				}
+			}
+		}
+		
+		//need to calculate for the total IR
+		$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
+		$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
+		$this->db->join($this->cfg['dbpref'].'sales_divisions as enti', 'enti.div_id  = l.division');
+		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
+		$this->db->where("sfv.type", 'A');
+		//BPO practice are not shown in IT Services Dashboard
+		// $this->db->where_not_in("l.practice", 6);
+		$practice_not_in = array(6);
+		$this->db->where_not_in('l.practice', $practice_not_in);
+		if(!empty($start_date)) {
+			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
+		}
+		if(!empty($end_date)) {
+			$this->db->where("sfv.for_month_year <= ", date('Y-m-d H:i:s', strtotime($end_date)));
+		}
+		
+		$query1 = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		$invoices_data = $query1->result_array();
+		
+		if(!empty($invoices_data) && count($invoices_data)>0) {
+			foreach($invoices_data as $ir) {
+				if($practice_arr[$ir['practice']] == 'Testing' || $practice_arr[$ir['practice']] == 'Infra Services'){
+					$practice_arr[$ir['practice']] = 'Others';
+				}
+				$base_conver_amt = $this->conver_currency($ir['milestone_value'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['expect_worth_id']][$ir['base_currency']]);
+				$projects['irval'][$practice_arr[$ir['practice']]] += $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
+			}
+		}
+	
+		
+		
+
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
+	 
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("t.start_time <= ", date('Y-m-d', strtotime($end_date)));
+		}
+		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
+		$this->db->where($excludewhere);
+		$resrc = 't.resoursetype IS NOT NULL';
+		$this->db->where($resrc);
+		$deptwhere = "t.dept_id IN ('10','11')";
+		$this->db->where($deptwhere);
+		$this->db->where("l.practice is not null");
+		$query 	 = $this->db->get();		
+		$resdata = $query->result();
+		
+		## code starts here##
+		$tbl_data = array();
+		$sub_tot  = array();
+		$cost_arr = array();
+		$directcost_arr = array();
+		$usercnt  = array();
+		$prjt_hr  = array();
+		$prjt_cst = array();
+		$prjt_directcst = array();
+		$prac = array();
+		$dept = array();
+		$skil = array();
+		$proj = array();
+		$tot_hour = 0;
+		$tot_cost = 0;
+		$tot_directcost = 0;		
+		$timesheet_data = array();
+		$resource_cost = array();	
+		
+		if(count($resdata)>0) {
+			$rates = $this->get_currency_rates();
+			foreach($resdata as $rec) {		
+				$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
+				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
+				
+				$timesheet_data[$rec->username]['practice_id'] 	= $rec->practice_id;
+				$timesheet_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
+				$timesheet_data[$rec->username]['dept_name'] 	= $rec->dept_name;
+				
+				$rateCostPerHr 		 = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
+				$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
+			}
+
+			if(count($timesheet_data)>0 && !empty($timesheet_data)) {
+				foreach($timesheet_data as $key1=>$value1) {
+					$resource_name = $key1;
+					$max_hours = $value1['max_hours'];
+					$dept_name = $value1['dept_name'];
+					$resource_cost[$resource_name]['dept_name'] = $dept_name;
+					if(count($value1)>0 && !empty($value1)){
+						foreach($value1 as $key2=>$value2) {
+							$year = $key2;
+							if(count($value2)>0 && !empty($value2)){
+								foreach($value2 as $key3=>$value3) {
+									$individual_billable_hrs = 0;
+									$ts_month		 	  	 = $key3;
+									if(count($value3)>0 && !empty($value3)){
+										foreach($value3 as $key4=>$value4) {
+											if($key4 != 'total_hours'){ 
+												$individual_billable_hrs = $value3['total_hours'];
+												$duration_hours			 = $value4['duration_hours'];
+												$rate				 	 = $value4['rateperhr'];
+												$direct_rateperhr	 	 = $value4['direct_rateperhr'];
+												$rate1 					 = $rate;
+												$direct_rateperhr1 		 = $direct_rateperhr;
+												if($individual_billable_hrs>$max_hours) {
+													$percentage 		= ($max_hours/$individual_billable_hrs);
+													$rate1 				= number_format(($percentage*$direct_rateperhr),2);
+													$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+												}
+												$resource_cost[$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;
+												$resource_cost[$resource_name][$year][$ts_month][$key4]['total_cost'] 	  += ($duration_hours*$direct_rateperhr1);
+												$resource_cost[$resource_name][$year][$ts_month][$key4]['practice_id'] 	   = ($duration_hours*$rate1);
+												$resource_cost[$resource_name][$year][$ts_month][$key4]['total_dc_cost']  += ($duration_hours*$direct_rateperhr1);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}	 
+			}
+		}
+		if(count($resource_cost)>0 && !empty($resource_cost)){
+			foreach($resource_cost as $resourceName => $array1){
+				$dept_name = $resource_cost[$resourceName]['dept_name'];
+				if(count($array1)>0 && !empty($array1)){
+					foreach($array1 as $year => $array2){
+						if($year !='dept_name'){
+							if(count($array2)>0 && !empty($array2)){
+								foreach($array2 as $rs_month => $array3){
+									$duration_hours = 0;
+									$total_cost = 0;
+									$total_dc_cost = 0;
+									foreach($array3 as $project_code => $array4){
+										$duration_hours = $array4['duration_hours'];
+										$total_cost 	= $array4['total_cost'];
+										$total_dc_cost 	= $array4['total_dc_cost'];
+										$directcost1[$project_code]['project_total_direct_cost'] += $total_cost;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		$this->db->select("pjt_id,practice,lead_title");
+		$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
+		$project_res = $res->result();
+		$project_master = array();
+		if(!empty($project_res)){
+			foreach($project_res as $prec){
+				$directcost2[$practice_arr[$prec->practice]][$prec->pjt_id]['total_direct_cost'] += $directcost1[$prec->pjt_id]['project_total_direct_cost'];
+			}
+		}
+		
+		foreach($directcost2 as $practiceId => $val1){
+			if(!empty($practiceId)) {
+				if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
+					$practiceId = 'Others';
+				}
+				foreach($val1 as $pjtCode => $val){				
+					$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
+				}
+			}
+		}
+		
+		$projects['direct_cost']    = $directcost;
+		$ins_array = array();
+		
+		if(!empty($practice_array)){
+			foreach($practice_array as $parr){
+				/**other cost data*/
+				$other_cost_val 	= 0;
+				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$parr]) && count($projects['othercost_projects'][$parr])>0) {
+					foreach($projects['othercost_projects'][$parr] as $pro_id) {
+						$val 	= getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $start_date, $end_date);
+						$other_cost_val    += $val;
+					}
+					$projects['other_cost'][$parr] = $other_cost_val;
+				}
+				
+				$ytd_billing   += ($projects['irval'][$parr] != '') ? round($projects['irval'][$parr]) : '-';
+				
+				$temp_ytd_utilization_cost = $projects['direct_cost'][$parr]['total_direct_cost'] + $projects['other_cost'][$parr];
+				$ytd_utilization_cost += ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
+				
+				$results['revenue']=$ytd_billing;
+				$results['total_cost']=$ytd_utilization_cost;
+			}
+		
+		}
+		return $results;
+	}
 }
 /* End of dms resource_availability file */
