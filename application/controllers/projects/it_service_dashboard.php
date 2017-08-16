@@ -686,6 +686,8 @@ class It_service_dashboard extends crm_controller
 	{
 		if(!empty($pcodes) && count($pcodes)>0) {
 			
+			$effvar = array();
+			
 			//get all the estimate hours
 			$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
 			$this->db->from($this->cfg['dbpref']. 'leads as l');
@@ -702,9 +704,7 @@ class It_service_dashboard extends crm_controller
 			
 			//get all the actual hours
 			$act_hr_calc = $this->get_timesheet_actual_hours_by_pjt_code_arr($pcodes, "", "");
-			
-			$effvar = array();
-			
+
 			if(!empty($pro_data) && count($pro_data)>0) {
 				foreach($pro_data as $recrd){
 					if(isset($effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'])){
@@ -717,6 +717,8 @@ class It_service_dashboard extends crm_controller
 					// $fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
 				}
 			}
+			
+			echo '<pre>'; print_r($effvar); die;
 			
 			return $effvar;
 		}
