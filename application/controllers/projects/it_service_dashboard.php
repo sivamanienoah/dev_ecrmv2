@@ -259,6 +259,7 @@ class It_service_dashboard extends crm_controller
 			$pcodes = $projects['billable_ytd']['project_code'];
 			
 			$actuals = $this->get_timesheet_actual_hours('ITS-REA- 01-0112', "", "");
+			$actuals1 = $this->get_timesheet_actual_hours_by_pjt_code_arr(array('ITS-REA- 01-0112'), "", "");
 			echo '<br><pre>'; print_r($actuals); die;
 			
 			if(!empty($pcodes) && count($pcodes)>0){
@@ -793,7 +794,7 @@ class It_service_dashboard extends crm_controller
 	}
 	
 	//for optimization
-	/* public function get_timesheet_actual_hours_by_pjt_code_arr($pjt_code, $start_date=false, $end_date=false, $month=false)
+	public function get_timesheet_actual_hours_by_pjt_code_arr($pjt_code, $start_date=false, $end_date=false, $month=false)
 	{
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, ts.project_code, ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_month_data as ts');
@@ -812,7 +813,7 @@ class It_service_dashboard extends crm_controller
 		$query = $this->db->get();
 		$timesheet = $query->result_array();
 		$res = array();
-		// echo "<pre>"; print_r($timesheet); exit;
+		echo $this->db->last_query(); exit;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $ts) {
 				if(isset($res[$ts['project_code']]['total_cost'])) {
@@ -828,7 +829,7 @@ class It_service_dashboard extends crm_controller
 		}
 		echo "<pre>"; print_r($res); exit;
 		return $res;
-	} */
+	}
 	
 	public function get_timesheet_data($practice_arr, $start_date=false, $end_date=false, $month=false)
 	{		
