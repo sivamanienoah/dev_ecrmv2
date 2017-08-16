@@ -252,10 +252,10 @@ class It_service_dashboard extends crm_controller
 			$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
 			$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 			
-			// echo "After efforts " . date('d-m-Y H:i:s') . "<br>";
-			
+			// echo '<pre>'; print_r($projects['billable_ytd']); die;
+
 			//for effort variance
-			$pcodes = $projects['billable_ytd']['project_code'];
+			$pcodes = (isset($projects['billable_ytd']['project_code']) && !empty(isset($projects['billable_ytd']['project_code']))) ? $projects['billable_ytd']['project_code'] : array();
 			
 			if(!empty($pcodes) && count($pcodes)>0){
 				foreach($pcodes as $rec){
@@ -273,7 +273,7 @@ class It_service_dashboard extends crm_controller
 					// $this->db->where("l.billing_type", 1);
 					$query3 = $this->db->get();
 					$pro_data = $query3->result_array();
-					if(!empty($pro_data) && count($pro_data)>0){
+					if(!empty($pro_data) && count($pro_data)>0) {
 						foreach($pro_data as $recrd){
 							if(isset($effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'])){
 								$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
@@ -289,9 +289,11 @@ class It_service_dashboard extends crm_controller
 					}
 				}
 			}
-			$projects['eff_var']   = $effvar;
 			
-			// echo "After effvar " . date('d-m-Y H:i:s') . "<br>";
+			//the effort variance calculation
+			// $eff_varian_calc = $this->do_eff_variance_calculation($pcodes, $practice_arr);
+			
+			$projects['eff_var']   = $effvar;
 			
 			$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
@@ -678,6 +680,48 @@ class It_service_dashboard extends crm_controller
 		}
 	}
 	
+	public function do_eff_variance_calculation($pcodes, $practice_arr)
+	{
+		if(!empty($pcodes) && count($pcodes)>0) {
+			
+			//get all the estimate hours
+			$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
+			$this->db->from($this->cfg['dbpref']. 'leads as l');
+			//Project Billing Type - Fixed bid projects only
+			$this->db->where("l.project_type", 1);
+			$client_not_in_arr = array('ENO','NOA');
+			$this->db->where_not_in("l.client_code", $client_not_in_arr);
+			$this->db->where_in("l.pjt_id", $pcodes);
+			//BPO practice are not shown in IT Services Dashboard
+			$practice_not_in = array(6);
+			$this->db->where_not_in('l.practice', $practice_not_in);
+			$query3   = $this->db->get();
+			$pro_data = $query3->result_array();
+			
+			//get all the actual hours
+			$act_hr_calc = $this->get_timesheet_actual_hours_by_pjt_code_arr($pcodes, "", "");
+			
+			// echo '<br>123<pre>'; print_r($act_hr_calc); die;
+			
+			$effvar = array();
+			
+			if(!empty($pro_data) && count($pro_data)>0) {
+				foreach($pro_data as $recrd){
+					if(isset($effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'])){
+						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
+						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
+						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $actuals['total_hours'];
+					} else {
+						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] = $recrd['estimate_hour'];
+						$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
+						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] = $actuals['total_hours'];
+					}
+					$fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
+				}
+			}
+		}
+	}
+	
 		
 	/*
 	*@Get Current Financial year
@@ -733,7 +777,47 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 		}
-		// echo "<pre>"; print_r($res); exit;
+		if($pjt_code == 'ITS-REA- 01-0112') {
+			echo "<pre>"; print_r($res); exit;
+		}
+		return $res;
+	}
+	
+	//for optimization
+	public function get_timesheet_actual_hours_by_pjt_code_arr($pjt_code, $start_date=false, $end_date=false, $month=false)
+	{
+		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, ts.project_code, ts.empname, ts.username, SUM(ts.duration_hours) as duration_hours, ts.resoursetype, ts.username, ts.empname, ts.direct_cost_per_hour as direct_cost, sum( ts.`resource_duration_direct_cost`) as duration_direct_cost, sum( ts.`resource_duration_cost`) as duration_cost');
+		$this->db->from($this->cfg['dbpref'] . 'timesheet_month_data as ts');
+		$this->db->where_in("ts.project_code", $pjt_code);
+		if( (!empty($start_date)) && (!empty($end_date)) ){
+			$this->db->where("DATE(ts.start_time) >= ", date('Y-m-d', strtotime($start_date)));
+			$this->db->where("DATE(ts.start_time) <= ", date('Y-m-d', strtotime($end_date)));
+		}
+		if(!empty($month)) {
+			$this->db->where("DATE(ts.start_time) >= ", date('Y-m-d', strtotime($month)));
+			$this->db->where("DATE(ts.end_time) <= ", date('Y-m-t', strtotime($month)));
+		}
+		$this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype"));
+		// $this->db->group_by(array("ts.username", "yr", "month_name", "ts.resoursetype", "ts.project_code"));
+		
+		$query = $this->db->get();
+		$timesheet = $query->result_array();
+		$res = array();
+		// echo "<pre>"; print_r($timesheet); exit;
+		if(count($timesheet)>0) {
+			foreach($timesheet as $ts) {
+				if(isset($res[$ts['project_code']]['total_cost'])) {
+					$res[$ts['project_code']]['total_cost']  += $ts['duration_cost'];
+					$res[$ts['project_code']]['total_hours'] += $ts['duration_hours'];
+					$res[$ts['project_code']]['total_dc'] 	 += $ts['duration_direct_cost'];
+				} else {
+					$res[$ts['project_code']]['total_cost']  = $ts['duration_cost'];
+					$res[$ts['project_code']]['total_hours'] = $ts['duration_hours'];
+					$res[$ts['project_code']]['total_dc'] 	 = $ts['duration_direct_cost'];
+				}
+			}
+		}
+		echo "<pre>"; print_r($res); exit;
 		return $res;
 	}
 	
@@ -1841,7 +1925,6 @@ class It_service_dashboard extends crm_controller
 					$fy_end_mon_opt .= '<option value="'.$fy_mon_key.'" '.$sel.'>'.$fy_mon_val.'</option>';
 					$i++;
 				}
-				
 			}
 		}
 		$data['fy_end'] = $fy_end_mon_opt;
