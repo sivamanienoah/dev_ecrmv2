@@ -285,9 +285,9 @@ class It_service_dashboard extends crm_controller
 								$actuals = $this->get_timesheet_actual_hours($recrd['pjt_id'], "", "");
 								$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] = $actuals['total_hours'];
 							}
-							/* if($recrd['pjt_id'] == 'ITS-REA- 01-0112') {
+							if($recrd['pjt_id'] == 'ITS-REA- 01-0112') {
 								echo '<pre>'; print_r($actuals); die;
-							} */
+							}
 							$fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
 						}
 					}
