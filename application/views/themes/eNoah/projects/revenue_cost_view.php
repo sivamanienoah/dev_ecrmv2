@@ -167,12 +167,12 @@ table.bu-tbl-inr th{ text-align:center; }
 							<td align="right"><?php echo $values['offshore_revenue_prev'];?></td>
 							<td align="right"><?php echo $values['total_cost_prev'];?></td>
 							<td align="right"><?php echo $values['offshore_cost_prev'];?></td>
-							<td align="right"><?php echo $contribution_prev;?></td>
+							<td align="right"><?php echo round($contribution_prev)."%";?></td>
 							<td align="right"><?php echo $values['revenue'];?></td>
 							<td align="right"><?php echo $values['offshore_revenue'];?></td>
 							<td align="right"><?php echo $values['total_cost'];?></td>
 							<td align="right"><?php echo $values['offshore_cost'];?></td>
-							<td align="right"><?php echo $contribution;?></td>
+							<td align="right"><?php echo round($contribution)."%";?></td>
 							<td align="right"><?php echo $saving;?></td>
 						</tr>
 						<?php 
