@@ -32,75 +32,65 @@ table.bu-tbl-inr th{ text-align:center; }
 
 			<div id="filter_section">
 				<div class="clear"></div>
+				
 				<div id="advance_search" style="padding-bottom:15px; display:none;">
-					<form action="<?php echo site_url('projects/dashboard/utilization_metrics_beta')?>" name="project_dashboard" id="project_dashboard" method="post">					
-						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+				<form action="<?php echo site_url('projects/dashboard/revenue_cost')?>" name="project_dashboard" id="project_dashboard" method="post">					
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						<div style="border: 1px solid #DCDCDC;">
 							<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 								<tr>
 									<td class="tblheadbg">MONTH & YEAR</td>
-									<td class="tblheadbg">EXCLUDE</td>
-									<td class="tblheadbg">ENTITY</td>
 									<td class="tblheadbg">DEPARTMENT</td>
 									<td class="tblheadbg">PRACTICE</td>
-									<td class="tblheadbg">SKILL</td>
-									<td class="tblheadbg">RESOURCE</td>
 								</tr>
 								<tr>	
 									<td class="month-year">
-										<span>From</span> <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($start_date)); ?>" />
+										<span>From</span>
+										<select id="start_month" name="start_month">
+										<option value="1">Jan</option>
+										<option value="2">Feb</option>
+										<option value="3">March</option>
+										<option value="4" selected="selected">Apr</option>
+										<option value="5">May</option>
+										<option value="6">Jun</option>
+										<option value="7">Jul</option>
+										<option value="8">Aug</option>
+										<option value="9">Sep</option>
+										<option value="10">Oct</option>
+										<option value="11">Nov</option>
+										<option value="12">Dec</option>
+										</select>
 										<br />
-										<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date)); ?>" />
-									</td>
-									<td class="by-exclusion">
-										<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>
-										<label><input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value="1" /><span>Leave</span></label>
-														
-										<br />
-										<?php $holidayChecked=''; if($exclude_holiday==1) { $holidayChecked ='checked="checked"'; } ?>
-										<label><input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value="1" /><span>Holiday</span></label>
-									</td>
-									<td class="proj-dash-select">
-										<select title="Select Entity" id="entity_ids" name="entity_ids[]" multiple="multiple">
-										<?php if(count($entitys)>0 && !empty($entitys)) { ?>
-										<?php foreach($entitys as $enty) { ?>
-										<option <?php echo in_array($enty->div_id, $entity_ids) ? 'selected="selected"' : '';?> value="<?php echo $enty->div_id;?>"><?php echo $enty->division_name; ?></option>
-										<?php } ?>
-										<?php } ?>
+										<span>To</span> 
+										<select id="end_month" name="end_month">
+										<option value="1">Jan</option>
+										<option value="2">Feb</option>
+										<option value="3">Mar</option>
+										<option value="4">Apr</option>
+										<option value="5">May</option>
+										<option value="6" selected="selected">Jun</option>
+										<option value="7">Jul</option>
+										<option value="8">Aug</option>
+										<option value="9">Sep</option>
+										<option value="10">Oct</option>
+										<option value="11">Nov</option>
+										<option value="12">Dec</option>
 										</select>
 									</td>
 									<td class="proj-dash-select">
 										<select title="Select Department" id="department_ids" name="department_ids[]"	multiple="multiple">
-											<?php if(count($departments)>0 && !empty($departments)){?>
-											<?php foreach($departments as $depts){?>
-											<option <?php echo in_array($depts->department_id,$department_ids)?'selected="selected"':'';?> value="<?php echo $depts->department_id;?>"><?php echo $depts->department_name;?></option>
-											<?php } }?>
+										<?php if(count($departments)>0 && !empty($departments)){?>
+												<?php foreach($departments as $depts){?>
+													<option <?php echo in_array($depts->department_id,$department_ids)?'selected="selected"':'';?> value="<?php echo $depts->department_id;?>"><?php echo $depts->department_name;?></option>
+										<?php } }?>
 										</select>
 									</td>
 									<td class="proj-dash-select">
 										<select multiple="multiple" title="Select Practice" id="practice_ids" name="practice_ids[]">
-											<?php if(count($practice_ids_selected)>0 && !empty($practice_ids_selected)) { ?>
-											<?php foreach($practice_ids_selected as $prac) {?>
-											<option <?php echo in_array($prac->practice_id, $practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->practice_id;?>"><?php echo $prac->practice_name;?></option>
+											<?php if(count($practice_ids)>0 && !empty($practice_ids)) { ?>
+													<?php foreach($practice_ids as $prac) {?>
+														<option <?php echo in_array($prac->id, $sel_practice_ids)?'selected="selected"':'';?> value="<?php echo $prac->id;?>"><?php echo $prac->practices;?></option>
 											<?php } } ?>
-										</select>
-									</td>
-									<td class="proj-dash-select">
-										<select title="Select Skill" id="skill_ids" name="skill_ids[]"	multiple="multiple">
-											<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)) { ?>
-											<?php foreach($skill_ids_selected as $skills) {
-											$skills->name = ($skills->skill_id==0)?'N/A':$skills->name;
-											?>
-											<option <?php echo in_array($skills->skill_id,$skill_ids)?'selected="selected"':'';?> value="<?php echo $skills->skill_id; ?>"><?php echo $skills->name;?></option>
-											<?php } }?>
-										</select>
-									</td>
-									<td class="proj-dash-select">
-										<select title="Select Members" id="member_ids" name="member_ids[]" multiple="multiple">
-											<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
-											<?php foreach($member_ids_selected as $members){?>
-											<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?>  value="<?php echo $members->username;?>"><?php echo $members->emp_name;?></option>
-											<?php } }?>								
 										</select>
 									</td>
 								</tr>
@@ -222,22 +212,43 @@ table.bu-tbl-inr th{ text-align:center; }
 
 <?php require (theme_url().'/tpl/footer.php'); ?>
 <script>
-function revenue_cost()
-{
-	var start_month = '01';
-	var end_month = '08';
-	$.ajax({
-			type: "POST",
-			url: site_base_url+'cron/service_dashboard_cron_revenue/',                                                              
-			data: 'start_month='+start_month+'&end_month='+end_month+'&csrf_token_name='+csrf_hash_token,
-			cache: false,
-			beforeSend:function() {
-			
-			},
-			success: function(data) {
-				
-			}                                                                                   
-		});
+function advanced_filter() {
+	$('#advance_search').slideToggle('slow');
 }
-revenue_cost();
+$(document).ready(function(){
+	$("#department_ids").change(function(){
+		var ids = $(this).val();
+		var start_date = $('#month_year_from_date').val();
+		var end_date   = $('#month_year_to_date').val();
+		var params = {'dept_ids':ids,'start_date':start_date,'end_date':end_date};
+		params[csrf_token_name] = csrf_hash_token;
+		$("#filter_area_status").val('1');
+		$('#practice_ids').html('');
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'projects/dashboard/get_practices',
+			data: params,
+			success: function(practices) {
+				if(practices){
+					var prac_html='';
+					var prac = $.parseJSON(practices);
+					if(prac.length){
+						for(var i=0;i<prac.length;i++){
+							prac_html +='<option value="'+prac[i].practice_id+'">'+prac[i].practice_name+'</option>';
+						}	
+					}
+					$('#practice_ids').html('');
+					$('#practice_ids').append(prac_html);
+				}
+			}
+		});
+		return false;		
+	});
+});
+
+$('#filter_reset').click(function() {
+	 $("#project_dashboard").find('input:checkbox').removeAttr('checked').removeAttr('selected');
+	 $("#practice_ids").html('');
+	 $('select#department_ids option').removeAttr("selected");
+});
 </script>

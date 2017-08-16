@@ -3570,10 +3570,30 @@ class Dashboard extends crm_controller
 		$data['previous_year'] = date("Y",strtotime("-1 year"))."-".date("Y");  //last year "2013"
 		$data['current_year'] = date("Y")."-".date("Y",strtotime("+1 year"));  //last year "2013"
 		
+		$timesheet_db = $this->load->database("timesheet", true);
+		$depts_res = array();
+		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')."  ");
+		if($dept->num_rows()>0){
+			$depts_res = $dept->result();
+		}
+		$data['departments'] = $depts_res;
+		
 		$months = array('1'=>'Jan','2'=>'Feb','3'=>'Mar','4'=>'Apr','5'=>'May','6'=>'Jun','7'=>'Jul','8'=>'Aug','9'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Dec');
-		$results = array('revenue'=>'1000','offshore_revenue'=>'2000','total_cost'=>'3000','offshore_cost'=>'4000','contribution'=>'5000','revnue_prev'=>'6000','offshore_revenue_prev'=>'7000','total_cost_prev'=>'8000','offshore_cost_prev'=>'9000','contribution_prev'=>'10000','saving'=>'11000');
-		$start_month=3;
+		/* $results = array('revenue'=>'1000','offshore_revenue'=>'2000','total_cost'=>'3000','offshore_cost'=>'4000','contribution'=>'5000','revnue_prev'=>'6000','offshore_revenue_prev'=>'7000','total_cost_prev'=>'8000','offshore_cost_prev'=>'9000','contribution_prev'=>'10000','saving'=>'11000'); */
+		
+		$start_month=4;
 		$end_month=6;
+		$practice_ids = '';
+		
+		if($this->input->post("start_month")) {
+			$start_month = $this->input->post("start_month");
+		}
+		if($this->input->post("end_month")) {
+			$end_month = $this->input->post("end_month");
+		}
+		if($this->input->post("practice_ids")) {
+			$practice_ids = $this->input->post("practice_ids");
+		}
 		for($i=$start_month;$i<=$end_month;$i++)
 		{
 			if($i<9){$month_key="0".$i;}
@@ -3581,7 +3601,7 @@ class Dashboard extends crm_controller
 			$start_date_prev = date("Y",strtotime("-1 year"))."-".$month_key."-01";
 			$end_date_prev = date("Y")."-".$month_key."-".date('t');
 			
-			$revenue_results_prev = $this->findRevenue($start_date_prev,$end_date_prev);
+			$revenue_results_prev = $this->findRevenue($start_date_prev,$end_date_prev,$practice_ids);
 			// echo "<pre>";print_r($revenue);exit;
 			$result_set[$months[$i]]['revenue_prev'] = $revenue_results_prev['revenue'];
 			$result_set[$months[$i]]['total_cost_prev'] = $revenue_results_prev['total_cost'];
@@ -3589,7 +3609,7 @@ class Dashboard extends crm_controller
 			$start_date = date('Y')."-".$month_key."-01";
 			$end_date = date('Y',strtotime("+1 year"))."-".$month_key."-".date('t');
 			
-			$revenue_results = $this->findRevenue($start_date,$end_date);
+			$revenue_results = $this->findRevenue($start_date,$end_date,$practice_ids);
 			
 			$result_set[$months[$i]]['revenue'] = $revenue_results_prev['revenue'];
 			$result_set[$months[$i]]['total_cost'] = $revenue_results_prev['total_cost'];
@@ -3599,7 +3619,7 @@ class Dashboard extends crm_controller
 		$this->load->view("projects/revenue_cost_view", $data);
 	}
 	
-	public function findRevenue($start_date,$end_date)
+	public function findRevenue($start_date,$end_date,$practice_ids)
 	{
 		@set_time_limit(-1); //disable the mysql query maximum execution time
 			
@@ -3619,7 +3639,10 @@ class Dashboard extends crm_controller
 		//BPO practice are not shown in IT Services Dashboard
 		$practice_not_in = array(6);
 		$this->db->where_not_in('p.id', $practice_not_in);
-		//$this->db->where_in('p.id', array(1));
+		if($practice_ids!='')
+		{
+			$this->db->where_in('p.id', $practice_ids);
+		}
 		$pquery = $this->db->get();
 		$pres = $pquery->result();
 		$data['practice_data'] = $pquery->result();		
@@ -3633,7 +3656,16 @@ class Dashboard extends crm_controller
 		
 		//for othercost projects
 		$this->db->select("pjt_id, lead_id, practice, lead_title");
-		$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use
+		$this->db->from($this->cfg['dbpref']. 'leads');
+		$this->db->where('pjt_id !=', '');
+		$this->db->where('practice !=', '');
+		$this->db->where('practice !=', 6);
+		if($practice_ids!='')
+		{
+			$this->db->where_in('practice', $practice_ids);
+		}
+		/* $ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("pjt_id !=" => '',"practice !=" => '', "practice !=" => 6)); //for temporary use */
+		$ocres = $this->db->get();
 		$oc_res = $ocres->result_array();
 		
 		if(!empty($oc_res)) {
@@ -3659,6 +3691,10 @@ class Dashboard extends crm_controller
 		// $this->db->where_not_in("l.practice", 6);
 		$practice_not_in = array(6);
 		$this->db->where_not_in('l.practice', $practice_not_in);
+		if($practice_ids!='')
+		{
+			$this->db->where_in('l.practice', $practice_ids);
+		}
 		if(!empty($start_date)) {
 			$this->db->where("sfv.for_month_year >= ", date('Y-m-d H:i:s', strtotime($start_date)));
 		}
