@@ -809,7 +809,7 @@ class It_service_dashboard extends crm_controller
 		$query = $this->db->get();
 		$timesheet = $query->result_array();
 		$res = array();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $ts) {
 				if(isset($res[$ts['project_code']]['total_cost'])) {
