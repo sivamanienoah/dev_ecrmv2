@@ -709,10 +709,10 @@ class It_service_dashboard extends crm_controller
 				foreach($pro_data as $recrd){
 					if(isset($effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'])){
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] += $recrd['estimate_hour'];
-						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $act_hr_calc['pjt_id']['total_hours'];
+						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] += $act_hr_calc[$recrd['pjt_id']]['total_hours'];
 					} else {
 						$effvar[$practice_arr[$recrd['practice']]]['tot_estimate_hrs'] = $recrd['estimate_hour'];
-						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] = $act_hr_calc['pjt_id']['total_hours'];
+						$effvar[$practice_arr[$recrd['practice']]]['total_actual_hrs'] = $act_hr_calc[$recrd['pjt_id']]['total_hours'];
 					}
 					// $fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
 				}
