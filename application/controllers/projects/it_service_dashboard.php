@@ -258,6 +258,9 @@ class It_service_dashboard extends crm_controller
 			$pcodes = array();
 			$pcodes = $projects['billable_ytd']['project_code'];
 			
+			$actuals = $this->get_timesheet_actual_hours('ITS-REA- 01-0112', "", "");
+			echo '<br><pre>'; print_r($actuals); die;
+			
 			if(!empty($pcodes) && count($pcodes)>0){
 				foreach($pcodes as $rec){
 					$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title');
