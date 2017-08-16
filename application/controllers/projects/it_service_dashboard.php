@@ -781,6 +781,9 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 		}
+		if($pjt_code == 'ITS-REA- 01-0112') {
+			echo '<pre>'; print_r($res); die;
+		}
 		// echo "<pre>"; print_r($res); exit;
 		return $res;
 	}
