@@ -50,7 +50,7 @@ table.bu-tbl-inr th{ text-align:center; }
 										<option value="1" <?php if($start_month==1){?> selected="selected" <?php } ?>>Jan</option>
 										<option value="2" <?php if($start_month==2){?> selected="selected" <?php } ?>>Feb</option>
 										<option value="3" <?php if($start_month==3){?> selected="selected" <?php } ?>>March</option>
-										<option value="4" <?php if($start_month==''){?> selected="selected" <?php } ?>>Apr</option>
+										<option value="4" <?php if($start_month=='' || $start_month==4){?> selected="selected" <?php } ?>>Apr</option>
 										<option value="5" <?php if($start_month==5){?> selected="selected" <?php } ?>>May</option>
 										<option value="6" <?php if($start_month==6){?> selected="selected" <?php } ?>>Jun</option>
 										<option value="7" <?php if($start_month==7){?> selected="selected" <?php } ?>>Jul</option>
@@ -66,7 +66,7 @@ table.bu-tbl-inr th{ text-align:center; }
 										<option value="1" <?php if($end_month==1){?> selected="selected" <?php } ?>>Jan</option>
 										<option value="2" <?php if($end_month==2){?> selected="selected" <?php } ?>>Feb</option>
 										<option value="3" <?php if($end_month==3){?> selected="selected" <?php } ?>>March</option>
-										<option value="4" <?php if($end_month==''){?> selected="selected" <?php } ?>>Apr</option>
+										<option value="4" <?php if($end_month=='' || $end_month==4){?> selected="selected" <?php } ?>>Apr</option>
 										<option value="5" <?php if($end_month==5){?> selected="selected" <?php } ?>>May</option>
 										<option value="6" <?php if($end_month==6){?> selected="selected" <?php } ?>>Jun</option>
 										<option value="7" <?php if($end_month==7){?> selected="selected" <?php } ?>>Jul</option>
