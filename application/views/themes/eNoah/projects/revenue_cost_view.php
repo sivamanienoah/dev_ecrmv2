@@ -39,7 +39,7 @@ table.bu-tbl-inr th{ text-align:center; }
 						<div style="border: 1px solid #DCDCDC;">
 							<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 								<tr>
-									<td class="tblheadbg">MONTH & YEAR</td>
+									<td class="tblheadbg">MONTH</td>
 									<td class="tblheadbg">DEPARTMENT</td>
 									<td class="tblheadbg">PRACTICE</td>
 								</tr>
