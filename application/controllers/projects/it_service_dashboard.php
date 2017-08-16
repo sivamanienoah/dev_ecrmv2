@@ -716,10 +716,7 @@ class It_service_dashboard extends crm_controller
 					}
 					// $fixed_bid[$practice_arr[$recrd['practice']]][$recrd['pjt_id']] = $recrd['lead_title'];
 				}
-			}
-			
-			echo '<pre>'; print_r($effvar); die;
-			
+			}	
 			return $effvar;
 		}
 	}
