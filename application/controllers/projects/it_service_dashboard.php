@@ -1560,8 +1560,8 @@ class It_service_dashboard extends crm_controller
 	public function get_billable_efforts_beta($practice, $month=false, $start_date=false, $end_date=false)
 	{		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
-		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-		// $this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+		// $this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->where('t.resoursetype', 'Billable');
 		if(!empty($month)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($month))."' )", NULL, FALSE);
