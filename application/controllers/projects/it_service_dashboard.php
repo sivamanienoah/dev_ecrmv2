@@ -297,6 +297,7 @@ class It_service_dashboard extends crm_controller
 			//the effort variance calculation
 			$projects['eff_var'] = $this->do_eff_variance_calculation($pcodes, $practice_arr);
 			
+			//Contribution
 			$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
@@ -336,9 +337,9 @@ class It_service_dashboard extends crm_controller
 			
 			if(count($resdata)>0) {
 				$rates = $this->get_currency_rates();
-				foreach($resdata as $rec) {		
+				foreach($resdata as $rec) {
 					$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
-					$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
+					$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id, $financialYear);
 					
 					$timesheet_data[$rec->username]['practice_id'] 	= $rec->practice_id;
 					$timesheet_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
@@ -1398,7 +1399,6 @@ class It_service_dashboard extends crm_controller
 	
 	public function getIRData($records, $start_date, $end_date, $practice)
 	{
-		
 		$bk_rates = get_book_keeping_rates();
 		
 		$data = array();
