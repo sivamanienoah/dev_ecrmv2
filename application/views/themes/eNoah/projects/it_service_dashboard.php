@@ -66,7 +66,8 @@ table.bu-tbl-inr th{ text-align:center; }
 								</select>
 							</div>
 							<div class='pull-left'>
-								<input type="submit" class="positive input-font" name="advance" id="advance" value="Search" style="display:block;"/>
+								<span id='show_srch_btn'><input type="submit" class="positive input-font" name="advance" id="advance" value="Search" style="display:block;"/></span>
+								<span id='show_load_btn'><img src="<?php echo base_url().'assets/images/loading.gif'; ?>" style="display:none; margin-left: 6px; width: 65px;"></span>
 							</div>
 						</div>
 						
@@ -426,13 +427,16 @@ $( "#advance_search" ).on( "click", "#advance", function(e) {
 		dataType: "html",
 		data: form_data,
 		beforeSend:function() {
+			$('#show_srch_btn').hide();
+			$('#show_load_btn').show();
 			$('#default_view, #drilldown_data').empty();
 			$('#default_view').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
 		success: function(res) {
 			// $('#advance').show();
 			$('#default_view').html(res);
-			// $('#load').hide();
+			$('#show_load_btn').hide();
+			$('#show_srch_btn').show();
 		}
 	});
 	return false;  //stop the actual form post !important!
@@ -448,11 +452,14 @@ function validateMonths(yr)
 		dataType: "json",
 		cache: false,
 		beforeSend:function() {
-			
+			$('#show_srch_btn').hide();
+			$('#show_load_btn').show();
 		},
 		success: function(res) {
 			$('#start_month').html(res.fy_st);
 			$('#end_month').html(res.fy_end);
+			$('#show_load_btn').hide();
+			$('#show_srch_btn').show();
 		}                                                                                   
 	});
 }
