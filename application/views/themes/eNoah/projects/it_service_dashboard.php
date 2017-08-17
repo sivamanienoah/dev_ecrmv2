@@ -66,8 +66,8 @@ table.bu-tbl-inr th{ text-align:center; }
 								</select>
 							</div>
 							<div class='pull-left'>
-								<span id='show_srch_btn'><input type="submit" class="positive input-font" name="advance" id="advance" value="Search" style="display:block;"/></span>
-								<span id='show_load_btn'><img src="<?php echo base_url().'assets/images/loading.gif'; ?>" style="display:none; margin-left: 6px; width: 65px;"></span>
+								<span id='show_srch_btn'><input type="submit" class="positive input-font" name="advance" id="advance" value="Search"/></span>
+								<span id='show_load_btn' style="display:none;"><img src="<?php echo base_url().'assets/images/loading.gif'; ?>" style="margin-left: 6px; width: 65px;"></span>
 							</div>
 						</div>
 						
