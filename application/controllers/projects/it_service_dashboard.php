@@ -1913,7 +1913,9 @@ class It_service_dashboard extends crm_controller
 		$default_fy_start_month = '04';
 		$i = 0;
 		
-		$start_month = (isset($post_data['start_month']) && !empty($post_data['start_month'])) ? $post_data['start_month'] : $default_fy_start_month;
+		$curFiscalYear	= $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31"); //get fiscal year
+		
+		$start_month 	= (isset($post_data['start_month']) && !empty($post_data['start_month'])) ? $post_data['start_month'] : $default_fy_start_month;
 		
 		$fy_end_mon_opt = '<option value="">--Select--</option>';
 		
@@ -1925,6 +1927,9 @@ class It_service_dashboard extends crm_controller
 					$sel 			 = ($i == 0) ? 'selected="selected"' : '';
 					$fy_end_mon_opt .= '<option value="'.$fy_mon_key.'" '.$sel.'>'.$fy_mon_val.'</option>';
 					$i++;
+					if(($post_data['fy_name'] == $curFiscalYear) && ($fy_mon_key == date('m'))) {
+						break;
+					}
 				}
 			}
 		}
