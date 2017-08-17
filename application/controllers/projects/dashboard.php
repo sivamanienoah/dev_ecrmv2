@@ -1467,41 +1467,6 @@ class Dashboard extends crm_controller
 			}
 		}
 		
-		/* if (($this->userdata['role_id'] != '1' && $this->userdata['level'] != '1') || ($this->userdata['role_id'] != '2' && $this->userdata['level'] != '1')) {
-			$varSessionId = $this->userdata['userid']; //Current Session Id.
-
-			//Fetching Project Team Members.
-			$this->db->select('jobid_fk as lead_id');
-			$this->db->where('userid_fk', $varSessionId);
-			$rowscj = $this->db->get($this->cfg['dbpref'] . 'contract_jobs');
-			$dat['jobids'] = $rowscj->result_array();
-			
-			//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
-			$this->db->select('lead_id');
-			$this->db->where("(assigned_to = '".$varSessionId."' OR lead_assign = '".$varSessionId."' OR belong_to = '".$varSessionId."')");
-			$this->db->where("lead_status", 4);
-			$this->db->where("pjt_status", 1);
-			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'leads');
-			$dat['jobids1'] = $rowsJobs->result_array();
-
-			//Fetching Stake Holders.
-			$data['jobids2'] = array();
-			$this->db->select('lead_id');
-			$this->db->where("user_id",$varSessionId);
-			$rowsJobs = $this->db->get($this->cfg['dbpref'] . 'stake_holders');
-			if($rowsJobs->num_rows()>0)	$dat['jobids2'] = $rowsJobs->result_array();			
-			
-			$data = array_merge_recursive($dat['jobids'], $dat['jobids1'],$dat['jobids2']);
- 
-			$res[] = 0;
-			if (is_array($data) && count($data) > 0) { 
-				foreach ($data as $data) {
-					$res[] = $data['lead_id'];
-				}
-			}
-			$result_ids = array_unique($res);
-		} */
-		
 		$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
 		$this->db->where("l.lead_id != ", 'null');
@@ -1817,7 +1782,7 @@ class Dashboard extends crm_controller
 		$this->load->view('projects/service_dashboard_grid', $data);
 		else
 		$this->load->view('projects/service_dashboard', $data);
-	}	
+	}
 
 	public function service_dashboard_beta()
 	{
