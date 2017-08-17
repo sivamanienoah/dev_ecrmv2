@@ -388,35 +388,6 @@ table.bu-tbl-inr th{ text-align:center; }
 </div>
 
 <script type="text/javascript">
-$( "#month_year_from_date, #month_year_to_date" ).datepicker({
-	changeMonth: true,
-	changeYear: true,
-	dateFormat: 'MM yy',
-	maxDate: 0,
-	showButtonPanel: true,	
-	onClose: function(dateText, inst) {
-		var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-		var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();         
-		$(this).datepicker('setDate', new Date(year, month, 1));
-	},
-	beforeShow : function(input, inst) {
-		if ((datestr = $(this).val()).length > 0) {
-			year = datestr.substring(datestr.length-4, datestr.length);
-			month = jQuery.inArray(datestr.substring(0, datestr.length-5), $(this).datepicker('option', 'monthNames'));
-			$(this).datepicker('option', 'defaultDate', new Date(year, month, 1));
-			$(this).datepicker('setDate', new Date(year, month, 1));    
-		}
-			var other  = this.id  == "month_year_from_date" ? "#month_year_to_date" : "#month_year_from_date";
-			var option = this.id == "month_year_from_date" ? "maxDate" : "minDate";        
-		if ((selectedDate = $(other).val()).length > 0) {
-			year = selectedDate.substring(selectedDate.length-4, selectedDate.length);
-			month = jQuery.inArray(selectedDate.substring(0, selectedDate.length-5), $(this).datepicker('option', 'monthNames'));
-			$(this).datepicker( "option", option, new Date(year, month, 1));
-		}
-		$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
-	}
-});
-
 //For Advance Filters functionality.
 $( "#advance_search" ).on( "click", "#advance", function(e) {
 	e.preventDefault();
@@ -474,10 +445,13 @@ function setFyEndMon(mon)
 		dataType: "json",
 		cache: false,
 		beforeSend:function() {
-			
+			$('#show_srch_btn').hide();
+			$('#show_load_btn').show();
 		},
 		success: function(res) {
 			$('#end_month').html(res.fy_end);
+			$('#show_load_btn').hide();
+			$('#show_srch_btn').show();
 		}                                                                                   
 	});
 }
