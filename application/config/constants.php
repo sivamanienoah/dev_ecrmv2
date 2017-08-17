@@ -19,7 +19,7 @@ define('DIR_READ_MODE', 0755);
 define('DIR_WRITE_MODE', 0777);
 define('SSOURL', "http://sso.enoahisolution.com/"); 
 define('EXPIRYDAYS', 3); 
-define('CLR_CACHE', 'cgtmky'); 
+define('CLR_CACHE', 'Hgrsilo'); 
 /*
 |--------------------------------------------------------------------------
 | File Stream Modes
