@@ -298,13 +298,15 @@ class It_service_dashboard extends crm_controller
 			$tot_cost = 0;
 			$tot_directcost = 0;		
 			$timesheet_data = array();
-			$resource_cost = array();	
+			$resource_cost = array();
 			
-			if(count($resdata)>0) {
-				$rates = $this->get_currency_rates();
-				//get all the hours for practice by financial year wise
-				$practice_id_year_array = $this->dashboard_model->get_practice_max_hrs_by_fiscal_year();
-				$practice_id_array  	= $this->dashboard_model->get_practice_max_hr();
+			$rates = $this->get_currency_rates();
+			
+			//get all the hours for practice by financial year wise
+			$practice_id_year_array = $this->dashboard_model->get_practice_max_hrs_by_fiscal_year();
+			$practice_id_array  	= $this->dashboard_model->get_practice_max_hr();
+			
+			if(count($resdata)>0) {				
 				foreach($resdata as $rec) {
 					/*
 					$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
@@ -334,8 +336,6 @@ class It_service_dashboard extends crm_controller
 						$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 					}
 					// $timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user_frm_month_data($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
-					echo '1 '.get_timesheet_hours_by_user_frm_month_data($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
-					echo '<br>2 '.$rec->resource_total_hours; die;
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = $rec->resource_total_hours;
 				}
 				
@@ -471,19 +471,28 @@ class It_service_dashboard extends crm_controller
 			if(count($resdata)>0) {
 				$rates = $this->get_currency_rates();
 				foreach($resdata as $rec) {		
-					$financialYear 		= get_current_financial_year($rec->yr, $rec->month_name);
-					$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id, $financialYear);
+					// $financialYear 		= get_current_financial_year($rec->yr, $rec->month_name);
+					// $max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id, $financialYear);
+					
+					$financialYear 			= get_current_financial_year($rec->yr, $rec->month_name);
+					$max_hrs 				= 0;
+					if(isset($practice_id_year_array[$rec->practice_id][$financialYear])) {
+						$max_hrs = $practice_id_year_array[$rec->practice_id][$financialYear];
+					} else if(isset($practice_id_array[$rec->practice_id])) {
+						$max_hrs = $practice_id_array[$rec->practice_id];
+					}
 					
 					$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
-					$timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
+					// $timesheet_data[$rec->username]['max_hours'] = $max_hours_resource->practice_max_hours;
+					$timesheet_data[$rec->username]['max_hours'] = $max_hrs;
 					$timesheet_data[$rec->username]['dept_name'] = $rec->dept_name;
 					
-					$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
+					$rateCostPerHr 		 = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
 					$directrateCostPerHr = round($rec->direct_cost_per_hour*$rates[1][$this->default_cur_id], 2);
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
-					$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user_frm_month_data($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
+					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours']  += $rec->duration_hours;
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
-					
+					// $timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user_frm_month_data($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
+					$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = $rec->resource_total_hours;
 				}
 
 				if(count($timesheet_data)>0 && !empty($timesheet_data)) {
