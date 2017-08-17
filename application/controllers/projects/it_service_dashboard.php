@@ -303,8 +303,8 @@ class It_service_dashboard extends crm_controller
 			if(count($resdata)>0) {
 				$rates = $this->get_currency_rates();
 				//get all the hours for practice by financial year wise
-				$practice_id_year_array = $this->project_model->get_practice_max_hrs_by_fiscal_year();
-				$practice_id_array  	= $this->project_model->get_practice_max_hr();
+				$practice_id_year_array = $this->dashboard_model->get_practice_max_hrs_by_fiscal_year();
+				$practice_id_array  	= $this->dashboard_model->get_practice_max_hr();
 				foreach($resdata as $rec) {
 					/*
 					$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
