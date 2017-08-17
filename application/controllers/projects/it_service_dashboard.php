@@ -1142,7 +1142,7 @@ class It_service_dashboard extends crm_controller
 				
 				$this->db->select("pjt_id, lead_id, practice, lead_title");
 				$this->db->where_in('department_id_fk', array(10,11)); //only eads & eqad projects only
-				$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("practice" => $practice)); //for temporary use
+				$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("practice" => $practice));
 				$oc_res = $ocres->result_array();
 				
 				if(!empty($oc_res)) {
