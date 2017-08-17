@@ -155,5 +155,37 @@ class Dashboard_model extends crm_model
 		// echo $this->db->last_query();
 		return $query->result_array();
     }
+	
+	public function get_practice_max_hrs_by_fiscal_year()
+	{
+		$this->db->select('practice_id,practice_max_hours,financial_year');
+		$this->db->from($this->cfg['dbpref'].'practice_max_hours_history');
+		$this->db->order_by('id','desc');
+		$query = $this->db->get();
+		$data =  $query->result_array();
+		if(!empty($data)) {
+			$id_year_arr = array();
+			foreach($data as $row) {
+				$id_year_arr[$row['practice_id']][$row['financial_year']] = $row['practice_max_hours'];
+			}
+			return $id_year_arr;
+		}
+	}
+	
+	public function get_practice_max_hr()
+	{
+		$this->db->select('practice_id,practice_max_hours');
+		$this->db->from($this->cfg['dbpref'].'practice_max_hours_history');
+		$this->db->order_by('id','desc');
+		$query = $this->db->get();
+		$data =  $query->result_array();
+		if(!empty($data)) {
+			$id_arr =array();
+			foreach($data as $row) {
+				$id_arr[$row['practice_id']] = $row['practice_max_hours'];
+			}
+			return $id_arr;
+		}
+	}
 }
 ?>
