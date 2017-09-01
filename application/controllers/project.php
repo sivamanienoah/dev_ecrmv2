@@ -4692,7 +4692,7 @@ HDOC;
 					$cc_email = implode(',', $arrayEmails['its_invoice_emails_cc']);
 				break;
 				default:
-					$cc_email = implode(',', $arrayEmails['its_invoice_emails_cc']);   
+					$cc_email = implode(',', $arrayEmails['bpo_invoice_emails_cc']);   
 			}
 
 			/* switch($project_details[0]['practice']) {
