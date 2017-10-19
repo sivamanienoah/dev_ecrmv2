@@ -3755,7 +3755,7 @@ class Dashboard extends crm_controller
 		
 		
 		// echo "<pre>"; print_r($data); die;
-		$this->load->view("projects/cost_report_view", $data);
+		$this->load->view("projects/cost_report_view_new", $data);
 	}
 	
 	private function get_default_practices($start_date, $end_date)
