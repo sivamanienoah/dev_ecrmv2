@@ -230,7 +230,8 @@ $(document).ready(function(){
 		var ids = $(this).val();
 		var start_date = $('#month_year_from_date').val();
 		var end_date   = $('#month_year_to_date').val();
-		var params = {'dept_ids':ids,'start_date':start_date,'end_date':end_date};
+		var entity_ids=$('#entity_ids').val();
+		var params = {'dept_ids':ids,'start_date':start_date,'end_date':end_date,'entity_ids':entity_ids};
 		params[csrf_token_name] = csrf_hash_token;
 		$("#filter_area_status").val('1');
 		$('#practice_ids').html('');
@@ -290,9 +291,10 @@ $(document).ready(function(){
 						}
 					}
 				});
+				$('#project_ids').html('');
 				$.ajax({
 			type: 'POST',
-			url: site_base_url+'projects/dashboard/get_projects_by_practice',
+			url: site_base_url+'projects/dashboard/get_projects_by_condition',
 			data: params,
 			success: function(pdata) 
 			{
@@ -305,8 +307,7 @@ $(document).ready(function(){
 						for(var i=0;i<projs.length;i++)
 						{
 						 html +='<option value="'+projs[i].project_code+'" title="'+projs[i].project_name+'">'+projs[i].project_name+'</option>';
-						}
-						$('#project_ids').html('');
+						}						
 						$('#project_ids').append(html)
 					}
 				}
@@ -323,7 +324,8 @@ $(document).ready(function(){
 		var d_ids = $('#department_ids').val();
 		var start_date = $('#month_year_from_date').val();
 		var end_date   = $('#month_year_to_date').val();
-		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':start_date,'end_date':end_date};
+		var entity_ids=$('#entity_ids').val();
+		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':start_date,'end_date':end_date,'entity_ids':entity_ids};
 		$("#filter_area_status").val('1');
 		$('#skill_ids').html('');
 		params[csrf_token_name] = csrf_hash_token;
@@ -364,9 +366,10 @@ $(document).ready(function(){
 				}
 			}
 		});
+		$('#project_ids').html('');
 		$.ajax({
 			type: 'POST',
-			url: site_base_url+'projects/dashboard/get_projects_by_practice',
+			url: site_base_url+'projects/dashboard/get_projects_by_condition',
 			data: params,
 			success: function(pdata) 
 			{
@@ -380,7 +383,7 @@ $(document).ready(function(){
 						{
 						 html +='<option value="'+projs[i].project_code+'" title="'+projs[i].project_name+'">'+projs[i].project_name+'</option>';
 						}
-						$('#project_ids').html('');
+						
 						$('#project_ids').append(html)
 					}
 				}
@@ -388,6 +391,49 @@ $(document).ready(function(){
 		});
 		return false;		
 	});
+	
+	
+	
+	//on change for Entity id
+	$("#entity_ids").change(function(){
+		var ids  = $('#practice_ids').val();
+		var d_ids = $('#department_ids').val();
+		var start_date = $('#month_year_from_date').val();
+		var end_date   = $('#month_year_to_date').val();
+		var entity_ids=$('#entity_ids').val();
+		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':start_date,'end_date':end_date,'entity_ids':entity_ids};
+		$("#filter_area_status").val('1');
+		$('#skill_ids').html('');
+		params[csrf_token_name] = csrf_hash_token;
+		
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'projects/dashboard/get_projects_by_condition',
+			data: params,
+			success: function(pdata) 
+			{
+				$('#project_ids').html('');
+				if(pdata)
+				{
+					var projs = $.parseJSON(pdata);
+					if(projs.length)
+					{
+						var html='';
+						for(var i=0;i<projs.length;i++)
+						{
+						 html +='<option value="'+projs[i].project_code+'" title="'+projs[i].project_name+'">'+projs[i].project_name+'</option>';
+						}						
+						$('#project_ids').append(html)
+					}
+				}
+			}
+		});
+		return false;		
+	});
+	
+	
+	
+	
 	
 	$('body').on('change','#skill_ids',function(){
 		var dids       = $('#department_ids').val();

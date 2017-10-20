@@ -1253,31 +1253,24 @@ class Dashboard extends crm_controller
 	}
 	
 	
-	function get_projects_by_practice()
-	{//error_reporting(E_ALL);
-		// echo "<pre>"; print_R($this->input->post()); exit;
-		//if($this->input->post("prac_id")){
-			$ids = '';
-			if($this->input->post("dept_ids")) {
-				$ids = $this->input->post("dept_ids");
-				$dids = implode(',',$ids);
-			}
+	function get_projects_by_condition()
+	{
+			
+			$ids = $this->input->post("dept_ids");
 			$p_ids = $this->input->post("prac_id");
-			if(!empty($p_ids))
-			$pids = implode(',',$p_ids);
-			$start_date = $this->input->post("start_date");
-			$end_date = $this->input->post("end_date");
+			$entity_ids=$this->input->post("entity_ids");
 
 			$this->db->select('t.project_code, p.lead_title as project_name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->join($this->cfg['dbpref'].'leads as p', 'p.pjt_id = t.project_code');
-			$this->db->where("t.practice_id !=", 0);
-			// $this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-			// $this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			$this->db->where("t.practice_id !=", 0);			
 			if(!empty($ids))
 			$this->db->where_in("t.dept_id", $ids);
 			if(!empty($p_ids))
 			$this->db->where_in("t.practice_id", $p_ids);
+			if(!empty($entity_ids))
+			$this->db->where_in("p.division", $entity_ids);
+		
 			$this->db->group_by('t.project_code');
 			$this->db->order_by('project_name');
 			$query = $this->db->get();
@@ -1289,7 +1282,7 @@ class Dashboard extends crm_controller
 				echo 0;
 				exit;
 			}
-		//}
+		
 	}
 	
 	function get_members()
@@ -3704,7 +3697,7 @@ class Dashboard extends crm_controller
 			$data['skill_ids_selected'] = $skquery->result();
 		}
 		
-		if(!empty($project_ids) && count($project_ids)>0) {
+		if(!empty($department_ids) || !empty($practice_ids) || !empty($entity_ids)) {
 			
 			$this->db->select('t.project_code, p.lead_title as project_name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
@@ -3714,6 +3707,8 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.dept_id", $department_ids);
 			if(!empty($practice_ids))
 			$this->db->where_in("t.practice_id", $practice_ids);
+			if(!empty($entity_ids))
+			$this->db->where_in("p.division", $entity_ids);
 			$this->db->group_by('t.project_code');
 			$this->db->order_by('project_name');
 			$proj_query = $this->db->get();
