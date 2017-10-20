@@ -403,7 +403,6 @@ $(document).ready(function(){
 		var entity_ids=$('#entity_ids').val();
 		var params = {'dept_ids':d_ids,'prac_id':ids,'start_date':start_date,'end_date':end_date,'entity_ids':entity_ids};
 		$("#filter_area_status").val('1');
-		$('#skill_ids').html('');
 		params[csrf_token_name] = csrf_hash_token;
 		
 		$.ajax({
