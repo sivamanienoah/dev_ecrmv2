@@ -3697,8 +3697,9 @@ class Dashboard extends crm_controller
 			$data['skill_ids_selected'] = $skquery->result();
 		}
 		
-		if(!empty($department_ids) || !empty($practice_ids) || !empty($entity_ids)) {
-			
+		//if(!empty($department_ids) || !empty($practice_ids) || !empty($entity_ids)) {
+		if($this->input->post())
+		{
 			$this->db->select('t.project_code, p.lead_title as project_name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->join($this->cfg['dbpref'].'leads as p', 'p.pjt_id = t.project_code');
@@ -3714,8 +3715,8 @@ class Dashboard extends crm_controller
 			$proj_query = $this->db->get();
 			$data['project_ids'] = $proj_query->result();
 			
-			
-		}
+		}	
+		//}
 		
 		if(!empty($data['member_ids']) && count($data['member_ids'])>0) {
 			$this->db->select("t.empname as emp_name, t.username");
