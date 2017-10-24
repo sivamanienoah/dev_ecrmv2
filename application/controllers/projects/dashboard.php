@@ -3654,16 +3654,16 @@ class Dashboard extends crm_controller
 			$this->db->where_in('t.username', $member_ids);
 		}
 		$this->db->where('l.practice is not null');
-		//Checking Admin,Management
-			if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) 
-			{
-			   //No restriction
-			}
-			else
-			{
-			$this->db->where("(l.assigned_to = '".$varSessionId."' OR l.lead_assign = '".$varSessionId."' OR l.belong_to = '".$varSessionId."')");
-			}
-			$this->db->where("l.lead_status", 4);
+		/* Checking Admin,Management */
+		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) 
+		{
+		   //No restriction
+		}
+		else
+		{
+		$this->db->where("(l.assigned_to = '".$varSessionId."' OR l.lead_assign = '".$varSessionId."' OR l.belong_to = '".$varSessionId."')");
+		}
+		$this->db->where("l.lead_status", 4);
 		$query 						= $this->db->get();		
 		// echo $this->db->last_query(); exit;
 		$data['resdata'] 	   		= $query->result();
