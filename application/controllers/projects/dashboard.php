@@ -3663,7 +3663,7 @@ class Dashboard extends crm_controller
 			{
 			$this->db->where("(l.assigned_to = '".$varSessionId."' OR l.lead_assign = '".$varSessionId."' OR l.belong_to = '".$varSessionId."')");
 			}
-			$this->db->where("p.lead_status", 4);
+			$this->db->where("l.lead_status", 4);
 		$query 						= $this->db->get();		
 		// echo $this->db->last_query(); exit;
 		$data['resdata'] 	   		= $query->result();
