@@ -1255,7 +1255,7 @@ class Dashboard extends crm_controller
 	
 	function get_projects_by_condition()
 	{
-			
+			$varSessionId = $this->userdata['userid'];
 			$ids = $this->input->post("dept_ids");
 			$p_ids = $this->input->post("prac_id");
 			$entity_ids=$this->input->post("entity_ids");
@@ -1270,6 +1270,16 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.practice_id", $p_ids);
 			if(!empty($entity_ids))
 			$this->db->where_in("p.division", $entity_ids);
+		    //echo '<pre>';print_r($this->session->userdata);exit;
+			if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) 
+			{
+			
+			}
+			else
+			{
+			$this->db->where("(p.assigned_to = '".$varSessionId."' OR p.lead_assign = '".$varSessionId."' OR p.belong_to = '".$varSessionId."')");
+			}
+			$this->db->where("p.lead_status", 4);
 		
 			$this->db->group_by('t.project_code');
 			$this->db->order_by('project_name');
