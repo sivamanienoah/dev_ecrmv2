@@ -1270,10 +1270,10 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.practice_id", $p_ids);
 			if(!empty($entity_ids))
 			$this->db->where_in("p.division", $entity_ids);
-		    //echo '<pre>';print_r($this->session->userdata);exit;
+		    //Checking Admin,Management
 			if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) 
 			{
-			
+			   //No restriction
 			}
 			else
 			{
@@ -3558,6 +3558,7 @@ class Dashboard extends crm_controller
 	*/
 	public function cost_report_new()
 	{
+		$varSessionId = $this->userdata['userid'];
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
@@ -3653,6 +3654,16 @@ class Dashboard extends crm_controller
 			$this->db->where_in('t.username', $member_ids);
 		}
 		$this->db->where('l.practice is not null');
+		//Checking Admin,Management
+			if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) 
+			{
+			   //No restriction
+			}
+			else
+			{
+			$this->db->where("(l.assigned_to = '".$varSessionId."' OR l.lead_assign = '".$varSessionId."' OR l.belong_to = '".$varSessionId."')");
+			}
+			$this->db->where("p.lead_status", 4);
 		$query 						= $this->db->get();		
 		// echo $this->db->last_query(); exit;
 		$data['resdata'] 	   		= $query->result();
@@ -3710,6 +3721,7 @@ class Dashboard extends crm_controller
 		//if(!empty($department_ids) || !empty($practice_ids) || !empty($entity_ids)) {
 		if($this->input->post())
 		{
+			
 			$this->db->select('t.project_code, p.lead_title as project_name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->join($this->cfg['dbpref'].'leads as p', 'p.pjt_id = t.project_code');
@@ -3720,6 +3732,16 @@ class Dashboard extends crm_controller
 			$this->db->where_in("t.practice_id", $practice_ids);
 			if(!empty($entity_ids))
 			$this->db->where_in("p.division", $entity_ids);
+			//Checking Admin,Management
+			if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) 
+			{
+			   //No restriction
+			}
+			else
+			{
+			$this->db->where("(p.assigned_to = '".$varSessionId."' OR p.lead_assign = '".$varSessionId."' OR p.belong_to = '".$varSessionId."')");
+			}
+			$this->db->where("p.lead_status", 4);
 			$this->db->group_by('t.project_code');
 			$this->db->order_by('project_name');
 			$proj_query = $this->db->get();
