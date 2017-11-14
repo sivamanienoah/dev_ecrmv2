@@ -1374,10 +1374,11 @@ class Welcome_model extends crm_model {
 		$title = str_replace(' ', '_', $title);
 		// echo'<pre>';print_r($title);exit;
 		$qms_file 		= UPLOAD_PATH.'template_file/QMS_Template.xls';
-		$new_qms_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.$title.'_QMS_Procedure_Documents_and_Approvals_Revised.xls';
+		$new_qms_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.'QMS_Procedure_Documents_and_Approvals_Revised.xls';
+		// echo'<pre>';print_r($new_qms_file);exit;
 		if (copy($qms_file, $new_qms_file)) {
 			$lead_files 						 = array();
-			$lead_files['lead_files_name'] 		 = $title.'_QMS_Procedure_Documents_and_Approvals_Revised.xls';
+			$lead_files['lead_files_name'] 		 = 'QMS_Procedure_Documents_and_Approvals_Revised.xls';
 			$lead_files['lead_files_created_by'] = $this->userdata['userid'];
 			$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
 			$lead_files['lead_id'] 				 = $project_id;
@@ -1386,10 +1387,10 @@ class Welcome_model extends crm_model {
 		}
 
 		$asset_file 		= UPLOAD_PATH.'template_file/Asset_Template.xls';
-		$new_asset_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.$title.'_Classification_Register.xls';
+		$new_asset_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.'Asset_Classification_Register.xls';
 		if (copy($asset_file, $new_asset_file)) {
 			$lead_files 						 = array();
-			$lead_files['lead_files_name'] 		 = $title.'_Classification_Register.xls';
+			$lead_files['lead_files_name'] 		 = 'Asset_Classification_Register.xls';
 			$lead_files['lead_files_created_by'] = $this->userdata['userid'];
 			$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
 			$lead_files['lead_id'] 				 = $project_id;
@@ -1398,10 +1399,10 @@ class Welcome_model extends crm_model {
 		}
 		 
 		$project_file 		= UPLOAD_PATH.'template_file/Project_Template.xls';
-		$new_project_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.$title.'_Project_Metrics.xls';
+		$new_project_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.'Project_Metrics.xls';
 		if (copy($project_file, $new_project_file)) {
 			$lead_files 						 = array();
-			$lead_files['lead_files_name'] 		 = $title.'_Project_Metrics.xls';
+			$lead_files['lead_files_name'] 		 = 'Project_Metrics.xls';
 			$lead_files['lead_files_created_by'] = $this->userdata['userid'];
 			$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
 			$lead_files['lead_id'] 				 = $project_id;
