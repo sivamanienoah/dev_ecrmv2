@@ -1307,7 +1307,6 @@ class Welcome_model extends crm_model {
 		$this->db->where('parent',0);
 		$this->db->where('folder_name',$project_id);
 		$check=$this->db->get($this->cfg['dbpref'].'file_management')->row();
-		
 		if(empty($check)) {
 			//root entry
 			$root_data				= new stdClass();
@@ -1320,11 +1319,9 @@ class Welcome_model extends crm_model {
 		} else {
 			$root_id                = $check->folder_id;
 		}
-		
 		//parent entry
 		$this->db->where('parent_id',0);
 		$result=$this->db->get($this->cfg['dbpref'].'default_folder')->result_array();
-		// echo'<pre>';print_r($result);exit;
 		$i=0;
 		foreach($result as $value)
 		{
@@ -1333,25 +1330,24 @@ class Welcome_model extends crm_model {
 			$data->folder_name = $value['folder_name'];
 			$data->parent	   = $root_id;
 			$data->created_by  = $this->userdata['userid'];
-			// echo'<pre>';print_r($value['folder_name'];);exit;
 			$this->db->insert($this->cfg['dbpref'].'file_management', $data);
 			$parent_id = $this->db->insert_id();
 			/* if('Quality Control Documents'==$value['folder_name']) {
-				
 				//inserting QMS file
 				$title = str_replace(' ', '_', $title);
-				// echo'<pre>';print_r($title);exit;
 				$qms_file 		= UPLOAD_PATH.'template_file/QMS_Template.xls';
-				$new_qms_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.$title.'_QMS_Procedure_Documents_and_Approvals_Revised.xls';
+				$new_qms_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.$title.'_QMS_Procedure_Documents_and_Approvals.xls';
+
 				if (copy($qms_file, $new_qms_file)) {
 					$lead_files 						 = array();
-					$lead_files['lead_files_name'] 		 = $title.'_QMS_Procedure_Documents_and_Approvals_Revised.xls';
+					$lead_files['lead_files_name'] 		 = $title.'_QMS_Procedure_Documents_and_Approvals.xls';
 					$lead_files['lead_files_created_by'] = $this->userdata['userid'];
 					$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
 					$lead_files['lead_id'] 				 = $project_id;
-					$lead_files['folder_id'] 			 = $root_id;
+					$lead_files['folder_id'] 			 = $parent_id;
 					$insert_logs 						 = $this->db->insert($this->cfg['dbpref'].'lead_files', $lead_files);
 				}
+				
 			} */
 			
 			$this->db->where('parent_id', $value['id']);
@@ -1372,13 +1368,11 @@ class Welcome_model extends crm_model {
 		}
 		//inserting QMS file
 		$title = str_replace(' ', '_', $title);
-		// echo'<pre>';print_r($title);exit;
 		$qms_file 		= UPLOAD_PATH.'template_file/QMS_Template.xls';
-		$new_qms_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.'QMS_Procedure_Documents_and_Approvals_Revised.xls';
-		// echo'<pre>';print_r($new_qms_file);exit;
+		$new_qms_file 	= UPLOAD_PATH.'files/'.$project_id.'/'.'QMS_Procedure_Documents_and_Approvals_Checklist.xls';
 		if (copy($qms_file, $new_qms_file)) {
 			$lead_files 						 = array();
-			$lead_files['lead_files_name'] 		 = 'QMS_Procedure_Documents_and_Approvals_Revised.xls';
+			$lead_files['lead_files_name'] 		 = 'QMS_Procedure_Documents_and_Approvals_Checklist.xls';
 			$lead_files['lead_files_created_by'] = $this->userdata['userid'];
 			$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
 			$lead_files['lead_id'] 				 = $project_id;
