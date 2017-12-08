@@ -192,7 +192,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 		}
 	}
 }
-echo '<pre><br><br><br>';print_r($prjt_directcst); die;
+
 //**Get the other cost value projects only**//
 $resource_cost_not_value_project = array_diff($othercost_projects[$practices_name], $timesheet_projects);
 // echo "<pre>"; print_r($othercost_projects[$practices_name]);
@@ -208,6 +208,7 @@ if(is_array($resource_cost_not_value_project) && !empty($resource_cost_not_value
 	}
 }
 
+// echo '<pre><br><br><br>';print_r($prjt_directcst); die;
 $other_cost_arr = array();
 //calculating the other cost
 $other_cost_arr['other_cost_total'] = 0;
@@ -222,7 +223,7 @@ if(!empty($sub_tot)) {
 		}
 	}
 }
-
+echo '<pre><br><br><br>';print_r($sub_tot); die;
 $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
 // echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
 ?>
