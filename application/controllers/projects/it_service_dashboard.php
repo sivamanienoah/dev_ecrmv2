@@ -761,7 +761,7 @@ class It_service_dashboard extends crm_controller
 		$query = $this->db->get();
 		$timesheet = $query->result_array();
 		$res = array();
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		// echo "<pre>"; print_r($timesheet); exit;
 		if(count($timesheet)>0) {
 			foreach($timesheet as $ts) {
@@ -776,9 +776,9 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 		}
-		if($pjt_code == 'ITS-REA- 01-0112') {
+		/* if($pjt_code == 'ITS-REA- 01-0112') {
 			echo '<pre>'; print_r($res); die;
-		}
+		} */
 		// echo "<pre>"; print_r($res); exit;
 		return $res;
 	}
