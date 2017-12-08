@@ -245,8 +245,6 @@ class It_service_dashboard extends crm_controller
 			//for current month EFFORTS
 			$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
 			$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
-			
-			// echo '<pre>'; print_r($projects['billable_ytd']); die;
 
 			//for effort variance
 			$pcodes = array();
@@ -273,7 +271,7 @@ class It_service_dashboard extends crm_controller
 			$this->db->where($deptwhere);
 			$this->db->where("l.practice is not null");
 			$query 	 = $this->db->get();
-			// echo $this->db->last_query(); exit;
+			echo $this->db->last_query(); exit;
 			$resdata = $query->result();
 			// echo "123<pre><br><br><br><br><br><br>"; print_r($resdata); echo "</pre>";
 			## code starts here##
