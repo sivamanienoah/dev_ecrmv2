@@ -34,7 +34,6 @@ class It_service_dashboard extends crm_controller
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
-		echo '1'; die;
 		$data  				  = array();
 		$projects  			  = array();
 		$data['page_heading'] = "IT Services Dashboard";
@@ -77,8 +76,6 @@ class It_service_dashboard extends crm_controller
 		$data['start_month'] = date('m', strtotime($start_date));
 		$data['end_month']   = date('m', strtotime($end_date));
 		// dates - end
-		
-		// echo '<pre>'; print_r($data); die;
 		
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -144,7 +141,6 @@ class It_service_dashboard extends crm_controller
 			$this->db->where("month_status",$month_status);
 			$sql = $this->db->get();
 			$dashboard_details = $sql->result_array();
-				// echo '<pre>';print_r($dashboard_details);exit;
 			$dashboard_det = array();
 			if(!empty($dashboard_details)){
 				foreach($dashboard_details as $key=>$val) {
@@ -152,8 +148,6 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 			$data['dashboard_det'] = $dashboard_det;
-			
-			// echo '<pre>'; print_r($data); die;
 
 		} else {
 			
@@ -195,7 +189,6 @@ class It_service_dashboard extends crm_controller
 			}
 			
 			$query1 = $this->db->get();
-			// echo $this->db->last_query(); exit;
 			$invoices_data = $query1->result_array();
 			
 			if(!empty($invoices_data) && count($invoices_data)>0) {
@@ -230,7 +223,7 @@ class It_service_dashboard extends crm_controller
 				$this->db->where("sfv.for_month_year <= ", date('Y-m-t H:i:s', strtotime($month)));
 			}
 			$query5 = $this->db->get();
-			// echo '<pre>'; print_r($this->db->last_query()); die;
+			echo '<pre>'; print_r($this->db->last_query()); die;
 			$cm_invoices_data = $query5->result_array();
 
 			if(!empty($cm_invoices_data) && count($cm_invoices_data)>0) {
