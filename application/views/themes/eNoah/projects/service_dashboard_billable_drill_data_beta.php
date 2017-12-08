@@ -75,6 +75,7 @@ if(count($resdata)>0) {
 		$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] 		= $rateCostPerHr;
 		$timesheet_data[$rec->username]['empname'] = $rec->empname;
 	}
+	echo '<pre><br><br><br><br><br>'; print_r($timesheet_data); die;
 	$resource_cost = array();	
 	if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 		foreach($timesheet_data as $key1=>$value1) {
