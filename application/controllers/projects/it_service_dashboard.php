@@ -430,7 +430,7 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 			
-			echo '<br><br><pre>'; print_R($directcost); 
+			echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_R($directcost); die;
 			## code ends here##
 			
 			## code month contribution starts here##
@@ -577,7 +577,7 @@ class It_service_dashboard extends crm_controller
 			$projects['direct_cost']    = $directcost;
 			$projects['cm_direct_cost'] = $cm_directcost;
 			$data['projects'] 			= $projects;
-			echo '<pre>'; print_R($projects); die;
+			// echo '<pre>'; print_R($projects); die;
 			$ins_array = array();
 			$show_arr  = array();
 			$tot = array();
