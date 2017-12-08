@@ -407,6 +407,7 @@ class It_service_dashboard extends crm_controller
 					}
 				}
 			}
+			echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_R($directcost1); die;
 			// echo "After resource cost calc" . date('d-m-Y H:i:s') . "<br>"; die;
 			
 			$this->db->select("pjt_id,practice,lead_title");
