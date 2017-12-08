@@ -120,7 +120,6 @@ if(count($resdata)>0) {
 	}
 }
 
-echo '<pre><br><br><br>';print_r($resource_cost); die;
 if(count($resource_cost)>0 && !empty($resource_cost)){
 	$timesheet_projects = array();
 	foreach($resource_cost as $resourceName => $array1){
@@ -193,6 +192,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 		}
 	}
 }
+echo '<pre><br><br><br>';print_r($prjt_directcst); die;
 //**Get the other cost value projects only**//
 $resource_cost_not_value_project = array_diff($othercost_projects[$practices_name], $timesheet_projects);
 // echo "<pre>"; print_r($othercost_projects[$practices_name]);
