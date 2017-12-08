@@ -341,7 +341,7 @@ class It_service_dashboard extends crm_controller
 				}
 				
 				// echo "get timesheet hours " . date('d-m-Y H:i:s') . "<br>";
-				echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_r($timesheet_data); die;
+				
 				if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 					foreach($timesheet_data as $key1=>$value1) {
 						$resource_name = $key1;
@@ -387,7 +387,7 @@ class It_service_dashboard extends crm_controller
 					}	 
 				}
 			}
-			
+			echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_r($resource_cost); die;
 			if(count($resource_cost)>0 && !empty($resource_cost)){
 				foreach($resource_cost as $resourceName => $array1){
 					$dept_name = $resource_cost[$resourceName]['dept_name'];
