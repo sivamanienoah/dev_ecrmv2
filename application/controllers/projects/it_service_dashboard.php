@@ -223,7 +223,7 @@ class It_service_dashboard extends crm_controller
 				$this->db->where("sfv.for_month_year <= ", date('Y-m-t H:i:s', strtotime($month)));
 			}
 			$query5 = $this->db->get();
-			echo '<pre>'; print_r($this->db->last_query()); die;
+			// echo '<pre>'; print_r($this->db->last_query()); die;
 			$cm_invoices_data = $query5->result_array();
 
 			if(!empty($cm_invoices_data) && count($cm_invoices_data)>0) {
