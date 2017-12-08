@@ -282,7 +282,7 @@ if(!empty($sub_tot)) {
 		foreach($sort_ar as $p_name=>$user_ar) {
 			// if(!empty($user_ar) && count($user_ar)>0 && isset($other_cost_arr[$p_name])) {
 			$other_cost_val = $other_cost_arr[$p_name];
-			if( ($sub_tot[$p_name]['sub_tot_directcost'] == 0) && ($sub_tot[$p_name]['sub_tot_directcost'] == 0) && ($sub_tot[$p_name]['sub_tot_directcost'] == 0) && empty($other_cost_val)) {
+			if( ($sub_tot[$p_name]['sub_tot_cost'] == 0) && ($sub_tot[$p_name]['sub_tot_hour'] == 0) && ($sub_tot[$p_name]['sub_tot_directcost'] == 0) && empty($other_cost_val)) {
 				continue;
 			}
 				
