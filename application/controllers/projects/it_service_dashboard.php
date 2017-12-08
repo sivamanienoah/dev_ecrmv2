@@ -376,7 +376,6 @@ class It_service_dashboard extends crm_controller
 					}	 
 				}
 			}
-			// echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_r($timesheet_data); die;
 			if(count($resource_cost)>0 && !empty($resource_cost)){
 				foreach($resource_cost as $resourceName => $array1){
 					$dept_name = $resource_cost[$resourceName]['dept_name'];
@@ -401,7 +400,6 @@ class It_service_dashboard extends crm_controller
 					}
 				}
 			}
-			echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_R($directcost1); die;
 			// echo "After resource cost calc" . date('d-m-Y H:i:s') . "<br>"; die;
 			
 			$this->db->select("pjt_id,practice,lead_title");
@@ -424,8 +422,6 @@ class It_service_dashboard extends crm_controller
 					}
 				}
 			}
-			
-			echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_R($directcost); die;
 			## code ends here##
 			
 			## code month contribution starts here##
