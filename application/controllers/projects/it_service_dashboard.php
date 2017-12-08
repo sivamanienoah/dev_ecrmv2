@@ -273,7 +273,6 @@ class It_service_dashboard extends crm_controller
 			$this->db->where("l.practice is not null");
 			$query 	 = $this->db->get();
 			$resdata = $query->result();
-			// echo "123<pre><br><br><br><br><br><br>"; print_r($resdata); echo "</pre>";
 			## code starts here##
 			$tbl_data = array();
 			$sub_tot  = array();
