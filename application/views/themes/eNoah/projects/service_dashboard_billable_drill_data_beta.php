@@ -223,7 +223,7 @@ if(!empty($sub_tot)) {
 		}
 	}
 }
-echo '<pre><br><br><br>';print_r($sub_tot); die;
+// echo '<pre><br><br><br>';print_r($sub_tot); die;
 $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the other cost values
 // echo "<pre>"; print_r($other_cost_arr); echo "</pre>"; exit;
 ?>
