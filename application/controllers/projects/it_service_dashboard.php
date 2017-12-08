@@ -429,6 +429,8 @@ class It_service_dashboard extends crm_controller
 					}
 				}
 			}
+			
+			echo '<pre>'; print_R($directcost); die;
 			## code ends here##
 			
 			## code month contribution starts here##
