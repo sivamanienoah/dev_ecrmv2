@@ -34,6 +34,7 @@ class It_service_dashboard extends crm_controller
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
+		echo '1'; die;
 		$data  				  = array();
 		$projects  			  = array();
 		$data['page_heading'] = "IT Services Dashboard";
