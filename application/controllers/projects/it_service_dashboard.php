@@ -376,7 +376,7 @@ class It_service_dashboard extends crm_controller
 					}	 
 				}
 			}
-			echo '<pre><br><br><br><br><br>'; print_r($timesheet_data); die;
+			// echo '<pre><br><br><br><br><br>'; print_r($timesheet_data); die;
 			if(count($resource_cost)>0 && !empty($resource_cost)){
 				foreach($resource_cost as $resourceName => $array1){
 					$dept_name = $resource_cost[$resourceName]['dept_name'];
@@ -402,7 +402,7 @@ class It_service_dashboard extends crm_controller
 				}
 			}
 			// echo "After resource cost calc" . date('d-m-Y H:i:s') . "<br>"; die;
-			
+			echo '<pre><br><br><br><br><br>'; print_r($directcost1); die;
 			$this->db->select("pjt_id,practice,lead_title");
 			$res = $this->db->get_where($this->cfg['dbpref']."leads",array("pjt_id !=" => '',"practice !=" => ''));
 			$project_res = $res->result();
