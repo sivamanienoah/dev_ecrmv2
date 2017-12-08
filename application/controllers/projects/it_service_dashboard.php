@@ -280,7 +280,7 @@ class It_service_dashboard extends crm_controller
 			$this->db->where("l.practice is not null");
 			$query 	 = $this->db->get();
 			$resdata = $query->result();
-			
+			echo "123<pre><br><br><br><br><br><br>"; print_r($resdata); echo "</pre>";
 			## code starts here##
 			$tbl_data = array();
 			$sub_tot  = array();
@@ -340,13 +340,17 @@ class It_service_dashboard extends crm_controller
 				}
 				
 				// echo "get timesheet hours " . date('d-m-Y H:i:s') . "<br>";
-				
+				echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_r($timesheet_data); die;
 				if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 					foreach($timesheet_data as $key1=>$value1) {
 						$resource_name = $key1;
+						
 						$max_hours = $value1['max_hours'];
 						$dept_name = $value1['dept_name'];
 						$resource_cost[$resource_name]['dept_name'] = $dept_name;
+						if($resource_name== 'suresha.t') {
+							echo $max_hours; die;
+						}
 						if(count($value1)>0 && !empty($value1)){
 							foreach($value1 as $key2=>$value2) {
 								$year = $key2;
