@@ -52,7 +52,6 @@ $tot_hour = 0;
 $tot_cost = 0;
 $tot_directcost = 0;
 
-if(!empty($resdata)) {
 $timesheet_data = array();
 if(count($resdata)>0) {
 	// $rates = $this->report_lead_region_model->get_currency_rates_new();
@@ -75,7 +74,7 @@ if(count($resdata)>0) {
 		$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] 		= $rateCostPerHr;
 		$timesheet_data[$rec->username]['empname'] = $rec->empname;
 	}
-	echo '<pre><br><br><br><br><br>'; print_r($timesheet_data); die;
+	
 	$resource_cost = array();	
 	if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 		foreach($timesheet_data as $key1=>$value1) {
@@ -121,8 +120,7 @@ if(count($resdata)>0) {
 	}
 }
 
-}	
-// echo '<pre>';print_r($resource_cost); die;
+echo '<pre><br><br><br>';print_r($resource_cost); die;
 if(count($resource_cost)>0 && !empty($resource_cost)){
 	$timesheet_projects = array();
 	foreach($resource_cost as $resourceName => $array1){
