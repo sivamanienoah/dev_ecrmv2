@@ -341,9 +341,6 @@ class It_service_dashboard extends crm_controller
 						$max_hours = $value1['max_hours'];
 						$dept_name = $value1['dept_name'];
 						$resource_cost[$resource_name]['dept_name'] = $dept_name;
-						if($resource_name== 'suresha.t') {
-							echo $max_hours; die;
-						}
 						if(count($value1)>0 && !empty($value1)){
 							foreach($value1 as $key2=>$value2) {
 								$year = $key2;
@@ -379,7 +376,7 @@ class It_service_dashboard extends crm_controller
 					}	 
 				}
 			}
-			echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_r($timesheet_data); die;
+			// echo '<br><br><br><br><br><br><br><br><br><br><pre>'; print_r($timesheet_data); die;
 			if(count($resource_cost)>0 && !empty($resource_cost)){
 				foreach($resource_cost as $resourceName => $array1){
 					$dept_name = $resource_cost[$resourceName]['dept_name'];
