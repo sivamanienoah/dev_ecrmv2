@@ -282,38 +282,39 @@ if(!empty($sub_tot)) {
 		foreach($sort_ar as $p_name=>$user_ar) {
 			// if(!empty($user_ar) && count($user_ar)>0 && isset($other_cost_arr[$p_name])) {
 			$other_cost_val = $other_cost_arr[$p_name];
+			
 			if( ($sub_tot[$p_name]['sub_tot_cost'] == 0) && ($sub_tot[$p_name]['sub_tot_hour'] == 0) && ($sub_tot[$p_name]['sub_tot_directcost'] == 0) && empty($other_cost_val)) {
 				continue;
 			}
 				
-				$i       = 0;
-				$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
-				$name    				= isset($project_master[$p_name]) ? $project_master[$p_name] : $p_name;
-				$per_sub_hr 	 		= ($sub_tot[$p_name]['sub_tot_hour']/$tot_hour)*100;
-				$sub_tot_pj_cost 		= (($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100;
-				$sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_directcost)*100;
-				// $sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_cost)*100;
-				$perc_tot_hr   			+= $per_sub_hr;
-				$perc_tot_directcost 	+= $sub_tot_pj_directcost;
-				$perc_tot_cost 			+= $sub_tot_pj_cost;
-				$calc_tot_hour 			+= $sub_tot[$p_name]['sub_tot_hour'];
-				$calc_tot_directcost 	+= $sub_tot[$p_name]['sub_tot_directcost'];
-				$calc_tot_othercost 	+= $other_cost_val['value'];
-				$calc_tot_cost 			+= $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
-				
-				echo "<tr data-depth='".$i."' class='collapse'>
-					<th width='15%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($name)."</span></th>
-					<th width='15%' align='right' class='rt-ali'>SUB TOTAL(PROJECT WISE):</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</th>
-					<th width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</th>
-					<th width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($per_sub_hr, 1)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pj_directcost, 2)."</th>
-					<th width='5%' align='right' class='rt-ali'>".round((($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100, 2)."</th>
-				</tr>";
-				//echo '<pre>';print_r($user_ar);
-				if(count($user_ar)>0 && !empty($user_ar)):
+			$i       = 0;
+			$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
+			$name    				= isset($project_master[$p_name]) ? $project_master[$p_name] : $p_name;
+			$per_sub_hr 	 		= ($sub_tot[$p_name]['sub_tot_hour']/$tot_hour)*100;
+			$sub_tot_pj_cost 		= (($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100;
+			$sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_directcost)*100;
+			// $sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_cost)*100;
+			$perc_tot_hr   			+= $per_sub_hr;
+			$perc_tot_directcost 	+= $sub_tot_pj_directcost;
+			$perc_tot_cost 			+= $sub_tot_pj_cost;
+			$calc_tot_hour 			+= $sub_tot[$p_name]['sub_tot_hour'];
+			$calc_tot_directcost 	+= $sub_tot[$p_name]['sub_tot_directcost'];
+			$calc_tot_othercost 	+= $other_cost_val['value'];
+			$calc_tot_cost 			+= $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
+			
+			echo "<tr data-depth='".$i."' class='collapse'>
+				<th width='15%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($name)."</span></th>
+				<th width='15%' align='right' class='rt-ali'>SUB TOTAL(PROJECT WISE):</th>
+				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</th>
+				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</th>
+				<th width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</th>
+				<th width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</th>
+				<th width='5%' align='right' class='rt-ali'>".round($per_sub_hr, 1)."</th>
+				<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pj_directcost, 2)."</th>
+				<th width='5%' align='right' class='rt-ali'>".round((($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100, 2)."</th>
+			</tr>";
+			//echo '<pre>';print_r($user_ar);
+			if(count($user_ar)>0 && !empty($user_ar)):
 				$i=1;
 				$j = 0;
 				foreach($user_ar as $ukey=>$pval) {
@@ -347,12 +348,12 @@ if(!empty($sub_tot)) {
 					endif;
 					$user_ar = array();
 				}
-				endif;
-				//other cost value with description
-				if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
-					$e = 0;
-					foreach($other_cost_val['detail'] as $oc_key=>$oc_val) {
-						if($oc_val['amt'] != 0) {
+			endif;
+			//other cost value with description
+			if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
+				$e = 0;
+				foreach($other_cost_val['detail'] as $oc_key=>$oc_val) {
+					if($oc_val['amt'] != 0) {
 						$p=1;
 						$per_cost = 0;
 						if(!empty($oc_val['amt'])){
