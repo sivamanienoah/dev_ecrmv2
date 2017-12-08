@@ -332,6 +332,7 @@ class It_service_dashboard extends crm_controller
 				}
 				
 				// echo "get timesheet hours " . date('d-m-Y H:i:s') . "<br>";
+				echo '<pre>'; print_r($timesheet_data); die;
 				
 				if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 					foreach($timesheet_data as $key1=>$value1) {
