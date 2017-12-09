@@ -97,7 +97,7 @@ if(count($resdata)>0) {
 										$rate				 	= $value4['rateperhr'];
 										$direct_rateperhr	 	= $value4['direct_rateperhr'];
 										$rate1 = $rate;
-										$direct_rateperhr1 = $direct_rateperhr;
+										echo '<br>'.$direct_rateperhr1 = $direct_rateperhr;
 										echo '<br>max_hours'.$max_hours; die;
 										if($individual_billable_hrs>$max_hours){
 											//echo 'max'.$max_hours.'<br>';
