@@ -83,6 +83,7 @@ if(count($resdata)>0) {
 			$dept_name = $value1['dept_name'];
 			$resource_cost[$resource_name]['dept_name'] = $dept_name;
 			if(count($value1)>0 && !empty($value1)){
+				echo '<pre>'; print_r($value1); die;
 				foreach($value1 as $key2=>$value2) {
 					$year = $key2;
 					if(count($value2)>0 && !empty($value2)){
@@ -92,21 +93,21 @@ if(count($resdata)>0) {
 							if(count($value3)>0 && !empty($value3)){
 								foreach($value3 as $key4=>$value4) {
 									if($key4 != 'total_hours'){
-										echo '<br>'.$individual_billable_hrs = $value3['total_hours'];
+										$individual_billable_hrs = $value3['total_hours'];
 										$duration_hours			= $value4['duration_hours'];
 										$rate				 	= $value4['rateperhr'];
 										$direct_rateperhr	 	= $value4['direct_rateperhr'];
-										$rate1 = $rate;
-										echo '<br>'.$direct_rateperhr1 = $direct_rateperhr;
+										$rate1 					= $rate;
+										$direct_rateperhr1 		= $direct_rateperhr;
 										// echo '<br>max_hours'.$max_hours; die;
 										$max_hours = 125;
 										if($individual_billable_hrs>$max_hours){
-											//echo 'max'.$max_hours.'<br>';
 											$percentage 		= ($max_hours/$individual_billable_hrs);
 											// $rate1 				= number_format(($percentage*$rate),2);
 											$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 											$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 										}
+										
 										echo '<br>'. $direct_rateperhr1; die;
 										$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
 										// $resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
