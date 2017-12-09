@@ -106,8 +106,10 @@ if(count($resdata)>0) {
 											$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 											$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 										}
-										echo '<pre>practice_id12'; print_r($value1['practice_id']); die;
-										echo '<br>'. $direct_rateperhr1; die;
+										if($value1['practice_id'] == 0) {
+											$direct_rateperhr1 = $direct_rateperhr;
+										}
+										echo '<br>'. $direct_rateperhr; die;
 										$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
 										// $resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
 										$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$direct_rateperhr1);
