@@ -109,11 +109,10 @@ if(count($resdata)>0) {
 										if($value1['practice_id'] == 0) {
 											$direct_rateperhr1 = $direct_rateperhr;
 										}
-										echo '<br>'. $direct_rateperhr; die;
 										$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
 										// $resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
 										$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$direct_rateperhr1);
-										$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] 	+= ($duration_hours*$direct_rateperhr1);
+										echo $resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] 	+= ($duration_hours*$direct_rateperhr1); die;
 									}
 								}
 							}
