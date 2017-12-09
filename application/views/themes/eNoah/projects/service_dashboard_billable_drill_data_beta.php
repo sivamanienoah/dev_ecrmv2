@@ -92,7 +92,7 @@ if(count($resdata)>0) {
 							if(count($value3)>0 && !empty($value3)){
 								foreach($value3 as $key4=>$value4) {
 									if($key4 != 'total_hours'){
-										$individual_billable_hrs = $value3['total_hours'];
+										echo '<br>'.$individual_billable_hrs = $value3['total_hours'];
 										$duration_hours			= $value4['duration_hours'];
 										$rate				 	= $value4['rateperhr'];
 										echo $direct_rateperhr	 	= $value4['direct_rateperhr'].'<br>';
