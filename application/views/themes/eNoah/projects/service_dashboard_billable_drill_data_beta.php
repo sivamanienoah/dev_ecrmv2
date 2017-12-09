@@ -94,10 +94,11 @@ if(count($resdata)>0) {
 									if($key4 != 'total_hours'){
 										echo '<br>'.$individual_billable_hrs = $value3['total_hours'];
 										$duration_hours			= $value4['duration_hours'];
-										echo '<br>'.$rate				 	= $value4['rateperhr'];
-										echo '<br>'.$direct_rateperhr	 	= $value4['direct_rateperhr'].'<br>';
-										echo '<br>'.$rate1 = $rate;
-										echo '<br>'.$direct_rateperhr1 = $direct_rateperhr;
+										$rate				 	= $value4['rateperhr'];
+										$direct_rateperhr	 	= $value4['direct_rateperhr'];
+										$rate1 = $rate;
+										$direct_rateperhr1 = $direct_rateperhr;
+										echo '<br>'.$max_hours; die;
 										if($individual_billable_hrs>$max_hours){
 											//echo 'max'.$max_hours.'<br>';
 											$percentage 		= ($max_hours/$individual_billable_hrs);
