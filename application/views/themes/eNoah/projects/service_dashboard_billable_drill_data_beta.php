@@ -83,7 +83,6 @@ if(count($resdata)>0) {
 			$dept_name = $value1['dept_name'];
 			$resource_cost[$resource_name]['dept_name'] = $dept_name;
 			if(count($value1)>0 && !empty($value1)){
-				echo '<pre>practice_id'; print_r($value1['practice_id']); die;
 				foreach($value1 as $key2=>$value2) {
 					$year = $key2;
 					if(count($value2)>0 && !empty($value2)){
@@ -107,7 +106,7 @@ if(count($resdata)>0) {
 											$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 											$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 										}
-										
+										echo '<pre>practice_id12'; print_r($value1['practice_id']); die;
 										echo '<br>'. $direct_rateperhr1; die;
 										$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
 										// $resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
