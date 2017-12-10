@@ -57,14 +57,15 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 	}
 	
-	echo "<pre>"; print_r($timesheet_data); echo "</pre>"; die;
+	// echo "<pre>"; print_r($timesheet_data); echo "</pre>"; die;
 	
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $entity_key=>$entity_arr) {
 			if(!empty($entity_arr) && count($entity_arr)>0) {
 				foreach($entity_arr as $dept_key=>$prac_arr) {
 					if(!empty($prac_arr) && count($prac_arr)>0) {
-						foreach($prac_arr as $prac_key=>$skill_arr) { #echo "dept key " .$dept_key . " practice ".$prac_key; print_r($skill_arr); echo "</pre>"; die;
+						foreach($prac_arr as $prac_key=>$skill_arr) { 
+						#echo "dept key " .$dept_key . " practice ".$prac_key; print_r($skill_arr); echo "</pre>"; die;
 							if(!empty($skill_arr) && count($skill_arr)>0) {
 								foreach($skill_arr as $skill_key=>$resrc_type_arr) {
 									if(!empty($resrc_type_arr) && count($resrc_type_arr)>0) {
@@ -79,7 +80,7 @@ if(!empty($resdata)) {
 														foreach($recval_data as $key2=>$value2) {
 															$year = $key2;
 															if(count($value2)>0 && !empty($value2)) {
-																echo '<pre>'; print_r($recval_data); die;
+																// echo '<pre>'; print_r($recval_data); die;
 																foreach($value2 as $key3=>$value3) {
 																	$individual_billable_hrs = 0;
 																	$ts_month		 	  	 = $key3;
