@@ -74,7 +74,7 @@ if(count($resdata)>0) {
 		$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] 		= $rateCostPerHr;
 		$timesheet_data[$rec->username]['empname'] = $rec->empname;
 	}
-	
+	echo '<pre>'; print_r($resdata); die;
 	$resource_cost = array();	
 	if(count($timesheet_data)>0 && !empty($timesheet_data)) {
 		foreach($timesheet_data as $key1=>$value1) {
@@ -98,18 +98,15 @@ if(count($resdata)>0) {
 										$direct_rateperhr	 	= $value4['direct_rateperhr'];
 										$rate1 					= $rate;
 										$direct_rateperhr1 		= $direct_rateperhr;
-										// echo '<br>max_hours'.$max_hours; die;
 										if($individual_billable_hrs>$max_hours){
 											$percentage 		= ($max_hours/$individual_billable_hrs);
-											// $rate1 				= number_format(($percentage*$rate),2);
 											$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 											$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 										}
 										if($value1['practice_id'] == 0) {
-											$direct_rateperhr1 = $direct_rateperhr;
+											$direct_rateperhr1  = $direct_rateperhr;
 										}
 										$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] 	+= $duration_hours;
-										// $resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$rate1);
 										$resource_cost[$resource_name][$year][$month][$key4]['total_cost'] 		+= ($duration_hours*$direct_rateperhr1);
 										$resource_cost[$resource_name][$year][$month][$key4]['total_dc_cost'] 	+= ($duration_hours*$direct_rateperhr1);
 									}
