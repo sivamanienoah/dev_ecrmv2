@@ -31,7 +31,7 @@ $sub_tot_entity_cst 	= array();
 $sub_tot_entity_dircst 	= array();
 $tot_hour = 0;
 $tot_cost = 0;
-
+echo '<pre>'; print_r($resdata); die;
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
 		$rates 				= $conversion_rates;
