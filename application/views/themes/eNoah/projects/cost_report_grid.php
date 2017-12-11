@@ -31,7 +31,7 @@ $sub_tot_entity_cst 	= array();
 $sub_tot_entity_dircst 	= array();
 $tot_hour = 0;
 $tot_cost = 0;
-echo '<pre>'; print_r($resdata); die;
+// echo '<pre>'; print_r($resdata); die;
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
 		$rates 				= $conversion_rates;
@@ -80,7 +80,7 @@ if(!empty($resdata)) {
 														foreach($recval_data as $key2=>$value2) {
 															$year = $key2;
 															if(count($value2)>0 && !empty($value2)) {
-																// echo '<pre>'; print_r($recval_data); die;
+																echo '<pre>'; print_r($value2); die;
 																foreach($value2 as $key3=>$value3) {
 																	$individual_billable_hrs = 0;
 																	$ts_month		 	  	 = $key3;
@@ -97,9 +97,9 @@ if(!empty($resdata)) {
 																				$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 																				$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																			}
-																			/* if($value2['practice_id'] == 0) {
+																			if($value2['practice_id'] == 0) {
 																				$direct_rateperhr1  = $direct_rateperhr;
-																			} */
+																			}
 																			/*calc*/
 																			$rateHour = $duration_hours * $direct_rateperhr1;
 																			
