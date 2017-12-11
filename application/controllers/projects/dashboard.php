@@ -370,11 +370,12 @@ class Dashboard extends crm_controller
 			$data['member_ids_selected'] = $qry1->result();			
 		}
 
-		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, l.practice as practice_id, p.practices as practice_name');
+		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, t.practice_id, t.practice_name');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
-		$this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice');
+		// $this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice');
 		$this->db->where("t.resoursetype !=", '');
+		// $this->db->where("t.project_code", 'ITS-IIT- 01-0414'); //for testing load some data only
 		if(!empty($start_date) && !empty($end_date)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
@@ -398,7 +399,7 @@ class Dashboard extends crm_controller
 		}
 		if(!empty($practice_ids) && count($practice_ids)>0) {
 			$data['practice_ids'] = $practice_ids;
-			$this->db->where_in('l.practice', $practice_ids);
+			$this->db->where_in('t.practice_id', $practice_ids);
 		}
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$dids = implode(",",$department_ids);
@@ -614,14 +615,19 @@ class Dashboard extends crm_controller
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
 		$json = '';
+		// $where .= ' AND project_code = "ITS-IIT- 01-0414"'; //for testing load some data only
+		/* $getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, start_time, end_time, direct_cost_per_hour, resource_duration_direct_cost
+		FROM crm_timesheet_month_data 
+		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where"; */
 		
 		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, start_time, end_time, direct_cost_per_hour, resource_duration_direct_cost
-		FROM crm_timesheet_data 
-		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where";
+		FROM crm_timesheet_month_data 
+		WHERE start_time >= '$start_date' and start_time <= '$end_date' AND resoursetype != '' $where";
 		
 		// echo $getITDataQry; exit;
 		$sql = $this->db->query($getITDataQry);
 		$data['resdata'] = $sql->result();
+		// echo '<pre>'; print_r($data['resdata']); die;
 		$arr_depts          = array();
 		$check_array 	    = array();
 		$check_user_array   = array();
@@ -832,10 +838,11 @@ class Dashboard extends crm_controller
 		$member_ids		= $this->input->post("member_ids");
 		$entity_ids 	= $this->input->post("entity_ids");
 		
-		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, l.practice as practice_id, p.practices as practice_name');
+		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, t.practice_id, t.practice_name');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
-		$this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice');
+		// $this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice');
+		// $this->db->where("t.project_code", 'ITS-IIT- 01-0414'); //for testing load some data only
 		$this->db->where("t.resoursetype !=", '');
 		if(!empty($start_date) && !empty($end_date)) {
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
@@ -884,7 +891,7 @@ class Dashboard extends crm_controller
 		// if(!empty($practice_ids) && !empty($department_ids)) {
 		if(!empty($practice_ids)) {
 			$pids = explode(',', $practice_ids);
-			$this->db->where_in("l.practice", $pids);
+			$this->db->where_in("t.practice_id", $pids);
 		}
 		if(!empty($entity_ids)) {
 			$entys = explode(',', $entity_ids);
@@ -988,9 +995,10 @@ class Dashboard extends crm_controller
 		$data['hmonth_year'] = $this->input->post("month_year_from_date");
 		
 		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost');
-		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+		// $this->db->where("(t.project_code ='ITS-IIT- 01-0414')", NULL, FALSE); //for testing load some data only
 		if(!empty($resource_type))
 		$this->db->where('t.resoursetype', $resource_type);
 		if(!empty($department_ids)) {
@@ -1057,6 +1065,7 @@ class Dashboard extends crm_controller
 		}
 		
 		$data['resdata'] 	   = $query->result();
+		// echo '<pre>'; print_R($data['resdata']); die;
 		$data['heading'] 	   = $heading;
 		$data['dept_type']     = $dept_type;
 		$data['resource_type'] = $resource_type;
