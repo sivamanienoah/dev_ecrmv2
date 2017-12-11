@@ -41,7 +41,7 @@ if(!empty($resdata)) {
 		$user_data[$rec->username]['emp_name'] 		= $rec->empname;
 		$user_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
 		$user_data[$rec->username]['dept_name'] 	= $rec->dept_name;
-		$user_data[$rec->username]['prac_id'] 		= $rec->practice_id;
+		$user_data[$rec->username]['prac_id'] 		= $rec->practice_id; 
 		
 		$rateCostPerHr 			= round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
 		$directrateCostPerHr 	= round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
@@ -77,7 +77,7 @@ if(!empty($resdata)) {
 													$emp_name 		= $user_data[$resrc_name]['emp_name'];
 													$max_hours 		= $user_data[$resrc_name]['max_hours'];
 													$dept_name 		= $user_data[$resrc_name]['dept_name'];
-													$prac_id 		= $user_data[$resrc_name]['prac_id'];
+													$prac_id 		= $user_data[$resrc_name]['prac_id']; 
 													if(count($recval_data)>0 && !empty($recval_data)) { 
 														foreach($recval_data as $key2=>$value2) {
 															$year = $key2;
