@@ -97,7 +97,6 @@ if(!empty($resdata)) {
 																				$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 																				$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 																			}
-																			echo '<pre>'; print_r($value2); die;
 																			if($value2['practice_id'] == 0) {
 																				$direct_rateperhr1  = $direct_rateperhr;
 																			}
