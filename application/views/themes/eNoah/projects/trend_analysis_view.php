@@ -107,11 +107,16 @@ table.bu-tbl-inr th{ text-align:center; }
 								</td>
 								<td class="by-exclusion">
 									<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>
-									<label><input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value=1 /><span>Leave</span></label>
-																		
+									<label>
+										<input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value=1 />
+										<span>Leave</span>
+									</label>
 									<br />
 									<?php $holidayChecked=''; if($exclude_holiday==1) { $holidayChecked ='checked="checked"'; } ?>
-									<label><input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value=1 /><span>Holiday</span></label>
+									<label>
+										<input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value=1 />
+										<span>Holiday</span>
+									</label>
 								</td>
 								<td class="proj-dash-select">
 									<select title="Select Department" id="department_ids" name="department_ids[]"	multiple="multiple">
@@ -181,16 +186,16 @@ table.bu-tbl-inr th{ text-align:center; }
 				$skil_arr    = array();
 				$usercnt     = array();
 				$deptusercnt = array();
-				$business_unit 		   = array();
-				$month_no_arr		   = array();
-				$month_name_arr 	   = array();
-				$billable_value_hr     = array();
-				$internal_value_hr     = array();
-				$non_billable_value_hr = array();
-				$bu_arr['totalhour'] = 0;
-				$bu_arr['totalhead'] = 0;
-				$bu_arr['totalcost'] = 0;
-				
+				$business_unit 		    = array();
+				$month_no_arr		    = array();
+				$month_name_arr 	    = array();
+				$billable_value_hr      = array();
+				$internal_value_hr      = array();
+				$non_billable_value_hr  = array();
+				$bu_arr['totalhour'] 	= 0;
+				$bu_arr['totalhead'] 	= 0;
+				$bu_arr['totalcost'] 	= 0;
+				// echo "<pre>"; print_r($resdata); echo "</pre>"; exit;
 				if(!empty($resdata)) {
 					foreach($resdata as $row){
 						$mont_yr = date('Y-m', strtotime($row->start_time));
@@ -200,9 +205,9 @@ table.bu-tbl-inr th{ text-align:center; }
 							$bu_arr['it'][$row->resoursetype][$mont_yr]['cost'] = $row->resource_duration_cost + $bu_arr['it'][$row->resoursetype][$mont_yr]['cost'];
 							$bu_arr['it'][$row->resoursetype][$mont_yr]['direct_cost'] = $row->resource_duration_direct_cost + $bu_arr['it'][$row->resoursetype][$mont_yr]['direct_cost'];
 						} else {
-							$bu_arr['it'][$row->resoursetype][$mont_yr]['hour'] = $row->duration_hours;
-							$bu_arr['it'][$row->resoursetype][$mont_yr]['cost'] = $row->resource_duration_cost;
-							$bu_arr['it'][$row->resoursetype][$mont_yr]['direct_cost'] = $row->resource_duration_direct_cost;
+							$bu_arr['it'][$row->resoursetype][$mont_yr]['hour'] 		= $row->duration_hours;
+							$bu_arr['it'][$row->resoursetype][$mont_yr]['cost'] 		= $row->resource_duration_cost;
+							$bu_arr['it'][$row->resoursetype][$mont_yr]['direct_cost'] 	= $row->resource_duration_direct_cost;
 						}
 						//total calculation by month
 						if (isset($bu_arr['it'][$mont_yr]['totalhour'])) {
@@ -217,7 +222,6 @@ table.bu-tbl-inr th{ text-align:center; }
 					}
 				}
 				$business_unit = $bu_arr['it'];
-				// echo "<pre>"; print_r($business_unit); echo "</pre>"; exit;
 				// echo $end_date; exit;
 				
 				//creating values

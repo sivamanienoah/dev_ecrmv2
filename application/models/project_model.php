@@ -577,7 +577,7 @@ class Project_model extends crm_model
 		}
 
 		$this->db->select('ts.cost_per_hour as cost, ts.entry_month as month_name, ts.entry_year as yr, ts.emp_id, 
-		ts.empname, ts.username, duration_hours, ts.resoursetype, ts.username, ts.empname,ts.practice_id, ts.`resource_duration_cost` as duration_cost, ts.direct_cost_per_hour as direct_cost, ts.`resource_duration_direct_cost` as duration_direct_cost,resource_total_hours');
+		ts.empname, ts.username, duration_hours, ts.resoursetype, ts.username, ts.empname, ts.practice_id, ts.`resource_duration_cost` as duration_cost, ts.direct_cost_per_hour as direct_cost, ts.`resource_duration_direct_cost` as duration_direct_cost,resource_total_hours');
 		$this->db->from($this->cfg['dbpref'] . 'timesheet_month_data as ts');
 		$this->db->where("ts.project_code",$pjt_code);
 		$this->db->where("DATE(ts.start_time) >= ",$start_date);
@@ -678,7 +678,6 @@ class Project_model extends crm_model
 	public function get_timesheet_project_type($pjt_code)
 	{
 		$timesheet_db = $this->load->database('timesheet',TRUE);
-	
 		$sql = "SELECT pj.project_type_id, pjtype.project_type_name
 		FROM ".$timesheet_db->dbprefix('project')." as pj 
 		JOIN ".$timesheet_db->dbprefix('project_types')." as pjtype ON pjtype.project_type_id = pj.project_type_id 

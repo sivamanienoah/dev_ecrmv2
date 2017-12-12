@@ -440,9 +440,7 @@ class Project extends crm_controller {
 			
 			if(!empty($get_parent_folder_id)){			
 				$data['parent_ffolder_id'] = $get_parent_folder_id['folder_id'];
-				 
 			} else {
-			
 				//creating files folder name
 				$f_dir = UPLOAD_PATH.'files/';
 				if (!is_dir($f_dir)) {
@@ -456,7 +454,6 @@ class Project extends crm_controller {
 					mkdir($f_dir);
 					chmod($f_dir, 0777);
 				}
-			
 				$ins = array('lead_id'=>$id,'folder_name'=>$id,'parent'=>0,'created_by'=>$this->userdata['userid']);
 				$data['parent_ffolder_id'] = $this->request_model->get_id_by_insert_row('file_management', $ins);
 			}
@@ -473,6 +470,7 @@ class Project extends crm_controller {
 			if(!empty($data['quote_data']['pjt_id'])) {
 				$bill_type = $data['quote_data']['billing_type'];
 				$timesheet = $this->project_model->get_timesheet_data($data['quote_data']['pjt_id'], $id, $bill_type, '', $groupby_type=2);
+				// echo '<pre>'; print_r($timesheet); die;
 
 				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
 				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
@@ -541,7 +539,7 @@ class Project extends crm_controller {
 						$max_hours_resource = get_practice_max_hour_by_financial_year($ts['practice_id'],$financialYear);
 						
 						$data['timesheet_data'][$ts['username']]['practice_id'] = $ts['practice_id'];
-						$data['timesheet_data'][$ts['username']]['max_hours'] = $max_hours_resource->practice_max_hours;
+						$data['timesheet_data'][$ts['username']]['max_hours'] 	= $max_hours_resource->practice_max_hours;
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['cost'] = $ts['cost'];
 						//$rateCostPerHr = $this->conver_currency($ts['cost'], $rates[1][$this->default_cur_id]);
 						$rateCostPerHr = $ts['cost'];
@@ -549,7 +547,8 @@ class Project extends crm_controller {
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['duration'] = $ts['duration_hours'];
 						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']][$ts['resoursetype']]['rs_name'] = $ts['empname'];
 						
-						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']]['total_hours'] =get_timesheet_hours_by_user($ts['username'],$ts['yr'],$ts['month_name'],array('Leave','Hol'));
+						$data['timesheet_data'][$ts['username']][$ts['yr']][$ts['month_name']]['total_hours'] = get_timesheet_hours_by_user($ts['username'],$ts['yr'],$ts['month_name'],array('Leave','Hol'));
+						// echo $ts['practice_id'].'-'.$financialYear.'-'.$ts['username'].'-'.$rateCostPerHr.'-'.get_timesheet_hours_by_user($ts['username'],$ts['yr'],$ts['month_name'],array('Leave','Hol')).'<br>';
 					}
 				}
 			}
@@ -623,7 +622,7 @@ class Project extends crm_controller {
 			$project_code_ts = $data['quote_data']['pjt_id'];
 		
 			$qry_pv = $timesheet_db->query("SELECT tt.task_id,tt.name as taskName, sum(pte.prj_task_hours) As EstimatedHours, pe.prj_est_id,pe.proj_est_name,pte.prj_est_id,pte.proj_id,pte.task_id,(select sum(tim.duration)/60 from ".$timesheet_db->dbprefix('times')." As tim where tim.proj_id = tt.proj_id and tim.task_id = tt.task_id) As actualHours from ".$timesheet_db->dbprefix('task')." AS tt LEFT JOIN ".$timesheet_db->dbprefix('project_task_estimation')." AS pte ON pte.task_id = tt.task_id LEFT JOIN ".$timesheet_db->dbprefix('project_estimation')." AS pe ON pe.prj_est_id = pte.prj_est_id  left join ".$timesheet_db->dbprefix('project')." as prj on prj.proj_id = tt.proj_id WHERE prj.project_code='".$project_code_ts."' group by tt.task_id");
-			//echo $timesheet_db->last_query();exit;
+			// echo $timesheet_db->last_query();exit;
 			if($qry_pv->num_rows()>0){
 				$res_pv 					= $qry_pv->result();
 				$data['timesheet_variance'] = $res_pv;

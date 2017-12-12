@@ -67,12 +67,8 @@ class Timesheet_data extends crm_controller
 		echo "<br> Start Date ".$start_date = date('Y-m-01',strtotime(end($monthYear)));
 		$end_date   = date('Y-m-d'); //For uploading last 4 months data
 		// echo "<br> End Date ".$end_date = date('Y-m-d', strtotime('2015-06-01')); //For uploading old data
-		
-		// echo "<pre>"; print_r($monthYear);
-		
+
 		$monthYearIn = implode("','",$monthYear);
-		
-		// echo "<pre>"; print_r($monthYearIn); exit;
 		
 		$sql = "SELECT `uc`.`employee_id`, `uc`.`month`, `uc`.`year`, `uc`.`direct_cost`, `uc`.`overheads_cost`, CONCAT_WS('-','01',uc.month,uc.year) FROM (".$timesheet_db->dbprefix('user_cost')." as uc) WHERE CONCAT_WS('-','01',uc.month,uc.year) IN ('".$monthYearIn."') ";
 		
@@ -92,8 +88,6 @@ class Timesheet_data extends crm_controller
 		
 		ksort($userCostArr);
 		ksort($userDirectCostArr);
-		
-		// echo "<pre>"; print_r($userDirectCostArr); exit;
 
 		echo "<br>Started = ".date("Y-m-d H:i:s");
 		$started_at  = date("Y-m-d H:i:s");
@@ -124,13 +118,10 @@ class Timesheet_data extends crm_controller
 		$times_query  = $timesheet_db->query($times_sql);
 		$times_result = $times_query->result_array();
 		
-		// echo "<pre>"; print_r($times_result);
-		
 		if(!empty($times_result)) {
 		
 			$del_status = $this->db->delete($this->cfg['dbpref'].'timesheet_data', array('DATE(start_time) >=' => $start_date, 'DATE(end_time) <= '=> $end_date));
 			// echo $this->db->last_query();
-			
 		}
 		
 		//getting dept,skill,practice details
@@ -161,7 +152,7 @@ class Timesheet_data extends crm_controller
 			}
 		}
 		// echo "<pre>"; print_r($practice_arr); exit;
-		//getting dept,skill,practice details
+		// getting dept,skill,practice details
 		// $del_status = 1;
 		if($del_status) {
 		
@@ -224,8 +215,8 @@ class Timesheet_data extends crm_controller
 				$ins_row[$key] = $val;
 				$ins_row[$key]['cost_per_hour']				    = (!is_null($costPerHour)) ? $costPerHour : '';
 				$ins_row[$key]['direct_cost_per_hour'] 			= (!is_null($directCostPerHour)) ? $directCostPerHour : '';
-				$costPerHr = (!is_null($costPerHour)) ? $costPerHour : 0;
-				$diretCostPerHr = (!is_null($directCostPerHour)) ? $directCostPerHour : 0;
+				$costPerHr 										= (!is_null($costPerHour)) ? $costPerHour : 0;
+				$diretCostPerHr 								= (!is_null($directCostPerHour)) ? $directCostPerHour : 0;
 				$ins_row[$key]['resource_duration_cost'] 		= ($costPerHr * $val['duration_hours']);
 				$ins_row[$key]['resource_duration_direct_cost'] = ($diretCostPerHr * $val['duration_hours']);
 				// $ins_row[$key]['dept_id']       = $val['department_id'];
@@ -248,44 +239,28 @@ class Timesheet_data extends crm_controller
 		$ended_at = date("Y-m-d H:i:s");
 		
 		if($ins_result) {
-		
 			$upload_status = "Insert successfully";
 			echo "<br>Insert successfully";
-			
 			$this->load->model('email_template_model');
-			
 			$param = array();
-
-			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>$started_at, 'ended_at'=>$ended_at, 'upload_status'=>$upload_status);
-
+			$param['email_data'] 	  = array('print_date'=>date('d-m-Y'), 'started_at'=>$started_at, 'ended_at'=>$ended_at, 'upload_status'=>$upload_status);
 			// $param['to_mail']    	  = 'ssriram@enoahisolution.com';
 			$param['to_mail']    	  = 'ssriram@enoahisolution.com, ssubbiah@enoahisolution.com';
 			$param['template_name']   = "Timesheet data uploaded status";
 			$param['subject'] 		  = "Timesheet data uploaded status On ".date('d-m-Y');
-			
 			$this->email_template_model->sent_email($param);
-
-			
 		} else {
-			
 			echo "<br>Insertion Failed";
-			
 			$upload_status = "Failed to Insert the timesheet data";
-
 			$this->load->model('email_template_model');
-			
-			$param = array();
-
-			$param['email_data'] = array('print_date'=>date('d-m-Y'), 'started_at'=>'-', 'ended_at'=>'-', 'upload_status'=>$upload_status);
-
-			$param['to_mail']    	  = 'ssriram@enoahisolution.com';
+			$param 					= array();
+			$param['email_data'] 	= array('print_date'=>date('d-m-Y'), 'started_at'=>'-', 'ended_at'=>'-', 'upload_status'=>$upload_status);
+			$param['to_mail']    	= 'ssriram@enoahisolution.com';
 			// $param['from_email'] 	  = 'webmaster@enoahisolution.com';
 			// $param['from_email_name'] = 'Webmaster';
-			$param['template_name']   = "Timesheet data uploaded status";
-			$param['subject'] 	  = "Timesheet data uploaded status On ".date('d-m-Y');
-			
+			$param['template_name'] = "Timesheet data uploaded status";
+			$param['subject'] 	    = "Timesheet data uploaded status On ".date('d-m-Y');
 			$this->email_template_model->sent_email($param);
-			
 		}
 	}
 	
@@ -311,13 +286,12 @@ class Timesheet_data extends crm_controller
 		}
 		
 		// echo "<pre>"; print_r($projEntityArr); die;
-		 
 	    $times_sql = "SELECT td.client_id,td.client_code,td.project_code,td.username,td.empname,td.resoursetype,td.entry_year,td.entry_month,td.start_time,td.end_time,td.duration,sum(td.duration_hours) as duration_hours,td.cost_per_hour,sum(td.resource_duration_cost) as resource_duration_cost,td.direct_cost_per_hour,sum(td.resource_duration_direct_cost) as resource_duration_direct_cost,td.added_by,td.added_date,td.modified_by,td.modified_date,td.dept_id,td.dept_name,td.practice_id,td.practice_name,td.skill_id,td.skill_name FROM ".$this->cfg['dbpref']."timesheet_data td where DATE(td.start_time) >='2004-06-01' AND DATE(td.end_time) <= CURDATE() GROUP by project_code,username,resoursetype,entry_year,entry_month";
 		
 		$times_query  = $this->db->query($times_sql);
 		$times_result = $times_query->result_array();
 		if(!empty($times_result))
-		{  
+		{ 
 			$this->db->truncate($this->cfg['dbpref'].'timesheet_month_data');
 			$hours_details = array();
 			foreach($times_result as $key=>$ts)
@@ -326,7 +300,7 @@ class Timesheet_data extends crm_controller
 				if(isset($hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours']))
 				{
 					$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'] = $hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'];
-				}	
+				}
 				else
 				{
 					$hours_details[$ts['username']][$ts['entry_year']][$ts['entry_month']]['total_hours'] = get_timesheet_hours_by_user_modified($ts['username'],$ts['entry_year'],$ts['entry_month'],array('Leave','Hol'));
@@ -361,5 +335,5 @@ class Timesheet_data extends crm_controller
 		}
 		echo "<br>End :".date("Y-m-d H:i;s");
 	}
-	}
+}
 ?>

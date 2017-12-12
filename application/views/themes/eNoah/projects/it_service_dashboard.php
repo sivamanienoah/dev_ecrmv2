@@ -110,8 +110,8 @@ table.bu-tbl-inr th{ text-align:center; }
 										$infraProjects  = isset($projects['practicewise']['Infra Services']) ? $projects['practicewise']['Infra Services'] : 0;
 										$testinProjects = isset($projects['practicewise']['Testing']) ? $projects['practicewise']['Testing'] : 0;
 										$otherProjects  = isset($projects['practicewise']['Others']) ? $projects['practicewise']['Others'] : 0;
-										$noProjects = $infraProjects+$otherProjects+$testinProjects;
-										$noProjects = isset($noProjects) ? $noProjects : '';
+										$noProjects 	= $infraProjects+$otherProjects+$testinProjects;
+										$noProjects 	= isset($noProjects) ? $noProjects : '';
 									} else {
 										$noProjects = isset($projects['practicewise'][$parr]) ? $projects['practicewise'][$parr] : '';
 									}

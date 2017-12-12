@@ -1939,7 +1939,7 @@
 					</table>
 					<table class="data-table">
 						<?php
-						//echo '<pre>';print_r($timesheet_data);exit;
+						// echo '<pre>';print_r($timesheet_data);exit;
 						
 						$total_billable_hrs		= 0;
 						$total_non_billable_hrs = 0;
