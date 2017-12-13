@@ -839,7 +839,7 @@ class Dashboard extends crm_controller
 		$member_ids		= $this->input->post("member_ids");
 		$entity_ids 	= $this->input->post("entity_ids");
 		
-		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, t.practice_id, t.practice_name, l.practices');
+		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, t.practice_id, t.practice_name, p.practices');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
 		$this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice');
