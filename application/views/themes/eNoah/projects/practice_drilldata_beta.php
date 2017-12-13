@@ -102,13 +102,14 @@ if(!empty($resdata)) {
 		$user_data[$rec->username]['emp_name'] 		= $rec->empname;
 		$user_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
 		$user_data[$rec->username]['dept_name'] 	= $rec->dept_name;
+		$user_data[$rec->username]['prac_id'] 		= $rec->practice_id;
 		
 		$rateCostPerHr 			= round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
 		$directrateCostPerHr 	= round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
-		$timesheet_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
-		$timesheet_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
-		$timesheet_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
-		$timesheet_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
+		$timesheet_data[$rec->dept_name][$rec->practices][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
+		$timesheet_data[$rec->dept_name][$rec->practices][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
+		$timesheet_data[$rec->dept_name][$rec->practices][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+		$timesheet_data[$rec->dept_name][$rec->practices][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 	}
 	
 	// echo "<pre>"; print_r($timesheet_data); 
@@ -125,6 +126,7 @@ if(!empty($resdata)) {
 									$emp_name 		= $user_data[$resrc_name]['emp_name'];
 									$max_hours 		= $user_data[$resrc_name]['max_hours'];
 									$dept_name 		= $user_data[$resrc_name]['dept_name'];
+									$prac_id 		= $user_data[$resrc_name]['prac_id'];
 									if(count($recval_data)>0 && !empty($recval_data)) {
 										foreach($recval_data as $key2=>$value2) {
 											$year = $key2;
@@ -145,6 +147,9 @@ if(!empty($resdata)) {
 																	$percentage 		= ($max_hours/$individual_billable_hrs);
 																	$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 																	$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+																}
+																if($prac_id == 0) {
+																	$direct_rateperhr1  = $direct_rateperhr;
 																}
 																/*calc*/
 																$rateHour = $duration_hours * $direct_rateperhr1;
@@ -289,116 +294,7 @@ if(!empty($resdata)) {
 		}		
 	}
 		
-		// echo "<pre>"; print_r($tbl_data); echo "</pre>";
 		
-		/* if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'])) {
-			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] += $rec->duration_hours;
-		} else {
-			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['hour'] = $rec->duration_hours;
-		} */
-		/* if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['cost'])) {
-			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['cost'] += $rec->resource_duration_cost;
-		} else {
-			$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['cost'] = $rec->resource_duration_cost;
-		} */
-	
-		/* if(isset($tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['directcost']))
-		$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['directcost'] += $rec->resource_duration_direct_cost;
-		else
-		$tbl_data[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname][$rec->project_code]['directcost'] = $rec->resource_duration_direct_cost; */
-	
-		//for sub total
-		/* if(isset($sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_hour'])){
-			$sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_hour'] +=  $rec->duration_hours;
-		} else {
-			$sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_hour'] =  $rec->duration_hours;
-		}
-		if(isset($sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_cost'])){
-			$sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_cost'] +=  $rec->resource_duration_cost;
-		} else {
-			$sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_cost'] =  $rec->resource_duration_cost;
-		}
-		if(isset($sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_directcost'])){
-			$sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_directcost'] +=  $rec->resource_duration_direct_cost;
-		} else {
-			$sub_tot[$rec->dept_name][$rec->practice_name]['sub_tot_directcost'] =  $rec->resource_duration_direct_cost;
-		}
-		if(isset($skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_hour']))
-		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_hour'] += $rec->duration_hours;
-		else 
-		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_hour'] = $rec->duration_hours;
-		
-		if(isset($skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_cost']))
-		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_cost'] += $rec->resource_duration_cost;
-		else 
-		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_cost'] = $rec->resource_duration_cost;
-	
-		if(isset($skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_directcost']))
-		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_directcost'] += $rec->resource_duration_direct_cost;
-		else 
-		$skil_sub_tot[$rec->dept_name][$rec->practice_name][$rec->skill_name]['skil_sub_tot_directcost'] = $rec->resource_duration_direct_cost; */
-		//for sub total
-		
-		//for practicewise - sorting-hour
-		/* if(isset($sub_tot_hr[$rec->dept_name][$rec->practice_name]))
-		$sub_tot_hr[$rec->dept_name][$rec->practice_name] +=  $rec->duration_hours;
-		else
-		$sub_tot_hr[$rec->dept_name][$rec->practice_name] =  $rec->duration_hours;
-		//for practicewise sorting-cost
-		if(isset($sub_tot_cst[$rec->dept_name][$rec->practice_name]))
-		$sub_tot_cst[$rec->dept_name][$rec->practice_name] +=  $rec->resource_duration_cost;
-		else
-		$sub_tot_cst[$rec->dept_name][$rec->practice_name] =  $rec->resource_duration_cost;
-		if(isset($sub_tot_directcst[$rec->dept_name][$rec->practice_name]))
-		$sub_tot_directcst[$rec->dept_name][$rec->practice_name] +=  $rec->resource_duration_direct_cost;
-		else
-		$sub_tot_directcst[$rec->dept_name][$rec->practice_name] =  $rec->resource_duration_direct_cost;
-		//for skillwise - sorting-hour
-		if(isset($skil_sort_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name]))
-		$skil_sort_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name] += $rec->duration_hours;
-		else 
-		$skil_sort_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name] = $rec->duration_hours;
-		//for skillwise - sorting-cost
-		if(isset($skil_sort_cst[$rec->dept_name][$rec->practice_name][$rec->skill_name]))
-		$skil_sort_cst[$rec->dept_name][$rec->practice_name][$rec->skill_name] += $rec->resource_duration_cost;
-		else 
-		$skil_sort_cst[$rec->dept_name][$rec->practice_name][$rec->skill_name] = $rec->resource_duration_cost;
-		//for skillwise - sorting-directcost
-		if(isset($skil_sort_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name]))
-		$skil_sort_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name] += $rec->resource_duration_direct_cost;
-		else 
-		$skil_sort_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name] = $rec->resource_duration_direct_cost;
-		//for userwise - sorting-hour
-		if(isset($user_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname]))
-		$user_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname] += $rec->duration_hours;
-		else 
-		$user_hr[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname] = $rec->duration_hours;
-		//for userwise - sorting-hour
-		if(isset($user_cst[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname]))
-		$user_cst[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname] += $rec->resource_duration_cost;
-		else 
-		$user_cst[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname] = $rec->resource_duration_cost;
-		//for userwise - sorting-hour
-		if(isset($user_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname]))
-		$user_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname] += $rec->resource_duration_direct_cost;
-		else 
-		$user_directcst[$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->empname] = $rec->resource_duration_direct_cost; */
-
-		/* $tot_hour = $tot_hour + $rec->duration_hours;
-		$tot_cost = $tot_cost + $rec->resource_duration_cost;
-		$tot_directcost = $tot_directcost + $rec->resource_duration_direct_cost; */
-		
-		/* //cost
-		$cost_arr[$rec->empname] = $rec->cost_per_hour;
-		$directcost_arr[$rec->empname] = $rec->direct_cost_per_hour;
-		
-		//usercount
-		if (!in_array($rec->empname, $pr_usercnt[$rec->dept_name][$rec->practice_name]))
-		$pr_usercnt[$rec->dept_name][$rec->practice_name][] = $rec->empname;
-	
-		if (!in_array($rec->empname, $sk_usercnt[$rec->dept_name][$rec->practice_name][$rec->skill_name]))
-		$sk_usercnt[$rec->dept_name][$rec->practice_name][$rec->skill_name][] = $rec->empname; */
-	// }
 }
 ?>
 <div class="page-title-head">
