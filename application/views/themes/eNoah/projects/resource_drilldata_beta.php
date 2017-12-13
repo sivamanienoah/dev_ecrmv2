@@ -147,6 +147,7 @@ if(!empty($resdata)) {
 		$user_data[$rec->username]['emp_name'] 		= $rec->empname;
 		$user_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
 		$user_data[$rec->username]['dept_name'] 	= $rec->dept_name;
+		$user_data[$rec->username]['prac_id'] 		= $rec->practice_id;
 		
 		$rateCostPerHr 			= round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
 		$directrateCostPerHr 	= round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
@@ -169,6 +170,7 @@ if(!empty($resdata)) {
 									$resource_name 	= $resrc_name;
 									$emp_name 		= $user_data[$resrc_name]['emp_name'];
 									$max_hours 		= $user_data[$resrc_name]['max_hours'];
+									$prac_id 		= $user_data[$resrc_name]['prac_id'];
 									$year = $key2;
 									if(count($value2)>0 && !empty($value2)) {
 										foreach($value2 as $key3=>$value3) {
@@ -184,6 +186,9 @@ if(!empty($resdata)) {
 												$percentage 		= ($max_hours/$individual_billable_hrs);
 												$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 												$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+											}
+											if($prac_id == 0) {
+												$direct_rateperhr1  = $direct_rateperhr;
 											}
 											$rateHour = $duration_hours * $direct_rateperhr1;
 											
