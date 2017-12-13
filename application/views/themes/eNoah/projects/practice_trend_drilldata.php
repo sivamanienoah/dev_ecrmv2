@@ -248,7 +248,6 @@ if(!empty($resdata)) {
 													$individual_billable_hrs = 0;
 													$ts_month		 	  	 = $key3;
 													if(count($value3)>0 && !empty($value3)) {
-														echo '<pre>'; print_r($value3); die;
 														foreach($value3 as $pjt_code=>$value4) {
 															if($pjt_code != 'total_hours'){ 
 																$individual_billable_hrs = $value3['total_hours'];
@@ -435,7 +434,7 @@ if(!empty($resdata)) {
 <div class="clearfix"></div>
 <div>
 <?php
-echo "<pre>"; print_r($tbl_data); echo "</pre>"; exit;
+// echo "<pre>"; print_r($tbl_data); echo "</pre>"; exit;
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
