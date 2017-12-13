@@ -292,9 +292,7 @@ if(!empty($resdata)) {
 				}
 			}
 		}		
-	}
-		
-		
+	}	
 }
 ?>
 <div class="page-title-head">
