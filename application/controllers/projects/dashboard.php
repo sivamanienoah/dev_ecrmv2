@@ -498,15 +498,15 @@ class Dashboard extends crm_controller
 		$where = '';
 		// echo $this->input->post("exclude_leave"); exit;
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
-			$where .= " and project_code NOT IN ('Leave')";
+			$where .= " and t.project_code NOT IN ('Leave')";
 			$data['exclude_leave'] = 1;
 		}
 		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
-			$where .= " and project_code NOT IN ('HOL')";
+			$where .= " and t.project_code NOT IN ('HOL')";
 			$data['exclude_holiday'] = 1;
 		}
 		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
-			$where .= " and project_code NOT IN ('HOL','Leave')";
+			$where .= " and t.project_code NOT IN ('HOL','Leave')";
 			$data['exclude_leave']   = 1;
 			$data['exclude_holiday'] = 1;
 		}
@@ -515,9 +515,9 @@ class Dashboard extends crm_controller
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$dids = implode(",",$department_ids);
 			$data['department_ids'] = $department_ids;
-			$where .= " and dept_id in ($dids)";
+			$where .= " and t.dept_id in ($dids)";
 		} else {
-			$where .= " and dept_id in ('10','11')";
+			$where .= " and t.dept_id in ('10','11')";
 		}
 		
 		$practice_ids = $this->input->post("practice_ids");
@@ -537,7 +537,7 @@ class Dashboard extends crm_controller
 		if(count($practice_ids)>0 && !empty($practice_ids)) {
 			$pids = implode(",",$practice_ids);
 			$data['practice_ids'] = $practice_ids;
-			$where .= " and practice in ($pids)";
+			$where .= " and l.practice in ($pids)";
 		}
 		
 		$this->db->group_by('t.practice_id');
@@ -575,7 +575,7 @@ class Dashboard extends crm_controller
 			$sids = implode(",",$skill_ids);
 			if(count($skill_ids)>0 && !empty($skill_ids)){
 				$data['skill_ids'] = $skill_ids;
-				$where .= " and skill_id in ($sids)";
+				$where .= " and t.skill_id in ($sids)";
 			}
 		}
 
@@ -584,7 +584,7 @@ class Dashboard extends crm_controller
 			$mids = "'".implode("','",$member_ids)."'";
 			if(count($member_ids)>0 && !empty($member_ids)) {
 				$data['member_ids'] = $member_ids;
-				$where .= " and username in ($mids)";
+				$where .= " and t.username in ($mids)";
 			}
 			
 			$ids = $this->input->post("department_ids");
@@ -616,14 +616,15 @@ class Dashboard extends crm_controller
 		$data['end_date']   = $end_date;
 		$json = '';
 		// $where .= ' AND project_code = "ITS-IIT- 01-0414"'; //for testing load some data only
+		
 		/* $getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, start_time, end_time, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_month_data 
-		WHERE start_time between '$start_date' and '$end_date' AND resoursetype != '' $where"; */
-		
-		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, start_time, end_time, direct_cost_per_hour, resource_duration_direct_cost
-		FROM crm_timesheet_month_data 
 		LEFT JOIN `crm_leads` ON pjt_id` = project_code` 
-		WHERE start_time >= '$start_date' and start_time <= '$end_date' AND resoursetype != '' $where";
+		WHERE start_time >= '$start_date' and start_time <= '$end_date' AND resoursetype != '' $where"; */
+		
+		$getITDataQry = "SELECT t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, t.practice_id, t.practice_name 
+		FROM (crm_timesheet_month_data as t) LEFT JOIN crm_leads as l ON l.pjt_id = t.project_code 
+		WHERE t.resoursetype != '' AND (t.start_time >='$start_date') AND (t.start_time <='$end_date') AND l.resoursetype != '' $where";
 		
 		// echo $getITDataQry; exit;
 		$sql = $this->db->query($getITDataQry);
