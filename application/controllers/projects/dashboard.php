@@ -629,7 +629,7 @@ class Dashboard extends crm_controller
 		// echo $getITDataQry; exit;
 		$sql = $this->db->query($getITDataQry);
 		$data['resdata'] = $sql->result();
-		echo '<pre>'; print_r($data['resdata']); die;
+		// echo '<pre>'; print_r($data['resdata']); die;
 		$arr_depts          = array();
 		$check_array 	    = array();
 		$check_user_array   = array();
