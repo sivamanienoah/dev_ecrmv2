@@ -72,26 +72,26 @@ function array_sort($array, $on, $order='SORT_ASC')
     }
     return $new_array;
 }
-$tbl_data = array();
-$sub_tot  = array();
-$sub_tot_hr    = array();
-$sub_tot_cst   = array();
-$pr_usercnt    = array();
-$sk_usercnt    = array();
-$skil_sub_tot  = array();
-$skil_sort_hr  = array();
-$skil_sort_cst = array();
-$user_hr 	   = array();
-$user_cst 	   = array();
-$cost_arr 	   = array();
+$tbl_data   = array();
+$sub_tot    = array();
+$cost_arr   = array();
+$directcost_arr= array();
+$pj_sub_tot = array();
+$pj_usercnt = array();
+$sk_usercnt = array();
+$skil_hr  = array();
+$skil_cst = array();
+$skil_directcst= array();
+$prjt_hr  = array();
+$prjt_cst = array();
+$prjt_directcst= array();
 $prac = array();
 $dept = array();
 $skil = array();
 $proj = array();
-$user_data 		= array();
-$timesheet_data = array();
 $tot_hour = 0;
 $tot_cost = 0;
+$tot_directcost= 0;
 // echo "<pre>"; print_r($resdata); exit;
 /* if(!empty($resdata)) {
 	foreach($resdata as $rec) {
