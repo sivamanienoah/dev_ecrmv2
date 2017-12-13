@@ -67,7 +67,6 @@ table.bu-tbl-inr th{ text-align:center; }
 								<td class="by-exclusion">
 									<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>
 									<label><input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value="1" /><span>Leave</span></label>
-																		
 									<br />
 									<?php $holidayChecked=''; if($exclude_holiday==1) { $holidayChecked ='checked="checked"'; } ?>
 									<label><input type="checkbox" id="exclude_holiday" name="exclude_holiday" <?php echo $holidayChecked; ?> value="1" /><span>Holiday</span></label>
@@ -146,7 +145,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					$user_data = array();
 					$resource_cost = array();
 					$head_count_arr = array();
-							
+
 					if(count($resdata)>0) {
 						$rates = $conversion_rates;
 						foreach($resdata as $rec) {
@@ -156,6 +155,7 @@ table.bu-tbl-inr th{ text-align:center; }
 							$user_data[$rec->username]['practice_id'] 	= $rec->practice_id;
 							$user_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
 							$user_data[$rec->username]['dept_name'] 	= $rec->dept_name;
+							$user_data[$rec->username]['prac_id'] 		= $rec->practice_id;
 							
 							$rateCostPerHr = round($rec->cost_per_hour*$rates[1][$this->default_cur_id], 2);
 							$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
@@ -175,6 +175,7 @@ table.bu-tbl-inr th{ text-align:center; }
 												$resource_name 	= $resrc_name;
 												$max_hours 		= $user_data[$resrc_name]['max_hours'];
 												$dept_name 		= $user_data[$resrc_name]['dept_name'];
+												$prac_id 		= $user_data[$resrc_name]['prac_id'];
 												
 												if(count($resrc_data)>0 && !empty($resrc_data)) {
 													foreach($resrc_data as $key2=>$value2) {
@@ -196,6 +197,9 @@ table.bu-tbl-inr th{ text-align:center; }
 																				$percentage 		= ($max_hours/$individual_billable_hrs);
 																				$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 																				$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+																			}
+																			if($prac_id == 0) {
+																				$direct_rateperhr1  = $direct_rateperhr;
 																			}
 																			$resource_cost[$dept_key][$resource_type_key]['duration_hours'] += $duration_hours;
 																			$resource_cost[$dept_key][$resource_type_key]['total_cost'] 	+= ($duration_hours*$direct_rateperhr1);
