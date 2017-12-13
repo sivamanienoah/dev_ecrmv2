@@ -399,7 +399,7 @@ class Dashboard extends crm_controller
 		}
 		if(!empty($practice_ids) && count($practice_ids)>0) {
 			$data['practice_ids'] = $practice_ids;
-			$this->db->where_in('t.practice_id', $practice_ids);
+			$this->db->where_in('l.practice', $practice_ids);
 		}
 		if(count($department_ids)>0 && !empty($department_ids)) {
 			$dids = implode(",",$department_ids);
@@ -3471,7 +3471,7 @@ class Dashboard extends crm_controller
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$data['resdata'] 	   		= $query->result();
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
