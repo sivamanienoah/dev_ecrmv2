@@ -81,18 +81,17 @@ $sk_usercnt    = array();
 $skil_sub_tot  = array();
 $skil_sort_hr  = array();
 $skil_sort_cst = array();
-$skil_sort_directcst = array();
 $user_hr 	   = array();
 $user_cst 	   = array();
-$user_directcst= array();
 $cost_arr 	   = array();
 $prac = array();
 $dept = array();
 $skil = array();
 $proj = array();
+$user_data 		= array();
+$timesheet_data = array();
 $tot_hour = 0;
 $tot_cost = 0;
-$tot_directcost = 0;
 // echo "<pre>"; print_r($resdata); exit;
 /* if(!empty($resdata)) {
 	foreach($resdata as $rec) {
@@ -436,7 +435,7 @@ if(!empty($resdata)) {
 <div>
 <?php
 // echo "<pre>"; print_r($tbl_data); echo "</pre>"; exit;
-$perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $perc_tot_directcost = $calc_tot_directcost = 0;
+$perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
 			<tr>
