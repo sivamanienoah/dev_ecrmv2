@@ -626,10 +626,10 @@ class Dashboard extends crm_controller
 		FROM (crm_timesheet_month_data as t) LEFT JOIN crm_leads as l ON l.pjt_id = t.project_code 
 		WHERE t.resoursetype != '' AND (t.start_time >='$start_date') AND (t.start_time <='$end_date') $where";
 		
-		echo $getITDataQry; exit;
+		// echo $getITDataQry; exit;
 		$sql = $this->db->query($getITDataQry);
 		$data['resdata'] = $sql->result();
-		// echo '<pre>'; print_r($data['resdata']); die;
+		echo '<pre>'; print_r($data['resdata']); die;
 		$arr_depts          = array();
 		$check_array 	    = array();
 		$check_user_array   = array();
