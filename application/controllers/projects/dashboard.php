@@ -537,7 +537,7 @@ class Dashboard extends crm_controller
 		if(count($practice_ids)>0 && !empty($practice_ids)) {
 			$pids = implode(",",$practice_ids);
 			$data['practice_ids'] = $practice_ids;
-			$where .= " and practice_id in ($pids)";
+			$where .= " and l.practice in ($pids)";
 		}
 		
 		$this->db->group_by('t.practice_id');
@@ -622,6 +622,7 @@ class Dashboard extends crm_controller
 		
 		$getITDataQry = "SELECT dept_id, dept_name, practice_id, practice_name, skill_id, skill_name, resoursetype, username, duration_hours, resource_duration_cost, project_code, start_time, end_time, direct_cost_per_hour, resource_duration_direct_cost
 		FROM crm_timesheet_month_data 
+		LEFT JOIN `crm_leads` as l ON `l`.`pjt_id` = project_code` 
 		WHERE start_time >= '$start_date' and start_time <= '$end_date' AND resoursetype != '' $where";
 		
 		// echo $getITDataQry; exit;
@@ -891,7 +892,8 @@ class Dashboard extends crm_controller
 		// if(!empty($practice_ids) && !empty($department_ids)) {
 		if(!empty($practice_ids)) {
 			$pids = explode(',', $practice_ids);
-			$this->db->where_in("t.practice_id", $pids);
+			// $this->db->where_in("t.practice_id", $pids);
+			$this->db->where_in("l.practice", $pids);
 		}
 		if(!empty($entity_ids)) {
 			$entys = explode(',', $entity_ids);
