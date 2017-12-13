@@ -204,7 +204,7 @@ $tot_cost = 0;
 	}
 } */
 // asort($sub_tot_hr);
-echo "<pre>"; print_r($resdata); echo "</pre>";
+// echo "<pre>"; print_r($resdata); echo "</pre>";
 
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
@@ -225,7 +225,7 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->dept_name][$rec->practices][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 	}
 	
-	echo "<pre>"; print_r($timesheet_data); echo '</pre>';
+	// echo "<pre>"; print_r($timesheet_data); echo '</pre>';
 	
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $dept_key=>$prac_arr) {
