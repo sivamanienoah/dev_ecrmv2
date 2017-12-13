@@ -997,8 +997,10 @@ class Dashboard extends crm_controller
 		$member_ids		= $this->input->post("member_ids");
 		$data['hmonth_year'] = $this->input->post("month_year_from_date");
 		
-		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost');
+		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, p.practices');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
+		$this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice');
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 		// $this->db->where("(t.project_code ='ITS-IIT- 01-0414')", NULL, FALSE); //for testing load some data only
@@ -1010,7 +1012,7 @@ class Dashboard extends crm_controller
 		}
 		if(!empty($practice_ids)) {
 			$pids = explode(',', $practice_ids);
-			$this->db->where_in("t.practice_id", $pids);
+			$this->db->where_in("l.practice", $pids);
 		}
 		if(!empty($skill_ids)) {
 			$sids = @explode(",",$skill_ids);
