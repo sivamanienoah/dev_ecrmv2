@@ -434,7 +434,7 @@ if(!empty($resdata)) {
 <div class="clearfix"></div>
 <div>
 <?php
-// echo "<pre>"; print_r($tbl_data); echo "</pre>"; exit;
+echo "<pre>"; print_r($tbl_data); echo "</pre>"; exit;
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = 0;
 if(!empty($tbl_data)) {
 	echo "<table id='project_dash' class='proj-dash-table data-table proj-table-odd-even'>
