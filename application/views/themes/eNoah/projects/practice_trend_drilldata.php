@@ -204,7 +204,7 @@ $tot_cost = 0;
 	}
 } */
 // asort($sub_tot_hr);
-// echo "<pre>"; print_r($sub_tot_hr); echo "</pre>";
+echo "<pre>"; print_r($resdata); echo "</pre>";
 
 if(!empty($resdata)) {
 	foreach($resdata as $rec) {
@@ -218,7 +218,7 @@ if(!empty($resdata)) {
 		$user_data[$rec->username]['prac_id'] 		= $rec->practice_id;
 		
 		$rateCostPerHr 			= round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
-		echo $directrateCostPerHr 	= round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2); die;
+		$directrateCostPerHr 	= round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
 		$timesheet_data[$rec->dept_name][$rec->practices][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
 		$timesheet_data[$rec->dept_name][$rec->practices][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
 		$timesheet_data[$rec->dept_name][$rec->practices][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
