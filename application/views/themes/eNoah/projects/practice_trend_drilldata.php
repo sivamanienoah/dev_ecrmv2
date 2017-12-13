@@ -225,7 +225,7 @@ if(!empty($resdata)) {
 		$timesheet_data[$rec->dept_name][$rec->practices][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
 	}
 	
-	echo "<pre>"; print_r($user_data); die;
+	echo "<pre>"; print_r($timesheet_data); echo '</pre>';
 	
 	if(!empty($timesheet_data) && count($timesheet_data)>0) {
 		foreach($timesheet_data as $dept_key=>$prac_arr) {
@@ -248,6 +248,7 @@ if(!empty($resdata)) {
 													$individual_billable_hrs = 0;
 													$ts_month		 	  	 = $key3;
 													if(count($value3)>0 && !empty($value3)) {
+														echo '<pre>'; print_r($value3); die;
 														foreach($value3 as $pjt_code=>$value4) {
 															if($pjt_code != 'total_hours'){ 
 																$individual_billable_hrs = $value3['total_hours'];
