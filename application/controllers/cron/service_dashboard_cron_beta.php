@@ -347,6 +347,9 @@ class Service_dashboard_cron_beta extends crm_controller
 													$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 													$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
 												}
+												if($value1['practice_id'] == 0) {
+													$direct_rateperhr1  = $direct_rateperhr;
+												}
 												$resource_cost[$resource_name][$year][$ts_month][$key4]['duration_hours'] += $duration_hours;
 												$resource_cost[$resource_name][$year][$ts_month][$key4]['total_cost'] 	  += ($duration_hours*$direct_rateperhr1);
 												$resource_cost[$resource_name][$year][$ts_month][$key4]['practice_id'] 	   = ($duration_hours*$rate1);
