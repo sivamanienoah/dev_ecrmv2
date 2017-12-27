@@ -73,15 +73,18 @@ $(function() {
 $('#service_dashboard_inv_export_excel').click(function() {
 	var practice   			 = $('#practices').val();
 	var excelexporttype   	 = $('#excelexporttype').val();
+	var fy_name   	 		 = $('#fy_name').val();
 	var month_year_from_date = $("#start_month").val();
 	var month_year_to_date   = $("#end_month").val();
 	// var billable_month   	 = $("#billable_month").val();
-	alert(month_year_from_date+'-'+month_year_to_date); return;
-	var url = site_base_url+"projects/dashboard/service_dashboard_data/";
+	// alert(month_year_from_date+'-'+month_year_to_date);
+	// var url = site_base_url+"projects/dashboard/service_dashboard_data/";
+	var url = site_base_url+"projects/it_service_dashboard/service_dashboard_data/";
 	var form = $('<form action="' + url + '" method="post">' +
 	  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 	  '<input id="practice" type="hidden" name="practice" value="'+practice+'" />'+
 	  '<input id="clicktype" type="hidden" name="clicktype" value="'+excelexporttype+'" />'+
+	  '<input id="fy_name" type="hidden" name="fy_name" value="'+fy_name+'" />'+
 	  '<input id="month_year_from_date" type="hidden" name="month_year_from_date" value="'+month_year_from_date+'" />'+
 	  '<input id="month_year_to_date" type="hidden" name="month_year_to_date" value="'+month_year_to_date+'" />'+
 	  // '<input id="billable_month" type="hidden" name="billable_month" value="'+billable_month+'" />'+
