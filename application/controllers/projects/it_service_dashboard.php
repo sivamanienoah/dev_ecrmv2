@@ -420,7 +420,7 @@ class It_service_dashboard extends crm_controller
 					if($practiceId == 'Testing' || $practiceId == 'Infra Services') {
 						$practiceId = 'Others';
 					}
-					foreach($val1 as $pjtCode => $val){				
+					foreach($val1 as $pjtCode => $val){
 						$directcost[$practiceId]['total_direct_cost'] += $val['total_direct_cost'];
 					}
 				}
@@ -928,6 +928,8 @@ class It_service_dashboard extends crm_controller
 		
 		$post_data 	= $this->input->post();
 		$data 		= array();
+		
+		echo '<pre>'; print_r($post_data); die;
 		
 		// dates - start
 		$curFiscalYear 	  = getFiscalYearForDate(date("m/d/y"), "4/1", "3/31");
