@@ -274,7 +274,8 @@ $(function() {
 		var end_month   	= $("#end_month").val();
 		// var billable_month   	 = $("#billable_month").val();
 
-		var url = site_base_url+"projects/dashboard/service_dashboard_data/";
+		// var url = site_base_url+"projects/dashboard/service_dashboard_data/";
+		var url = site_base_url+"projects/it_service_dashboard/service_dashboard_data/";
 		var form = $('<form action="' + url + '" method="post">' +
 		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
 		  '<input id="practice" type="hidden" name="practice" value="'+practice+'" />'+
