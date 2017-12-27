@@ -73,8 +73,8 @@ $(function() {
 $('#service_dashboard_inv_export_excel').click(function() {
 	var practice   			 = $('#practices').val();
 	var excelexporttype   	 = $('#excelexporttype').val();
-	var month_year_from_date = $("#month_year_from_date").val();
-	var month_year_to_date   = $("#month_year_to_date").val();
+	var month_year_from_date = $("#start_month").val();
+	var month_year_to_date   = $("#end_month").val();
 	// var billable_month   	 = $("#billable_month").val();
 	alert(month_year_from_date+'-'+month_year_to_date); return;
 	var url = site_base_url+"projects/dashboard/service_dashboard_data/";
