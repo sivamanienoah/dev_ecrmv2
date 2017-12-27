@@ -929,8 +929,6 @@ class It_service_dashboard extends crm_controller
 		$post_data 	= $this->input->post();
 		$data 		= array();
 		
-		echo '<pre>'; print_r($post_data); die;
-		
 		// dates - start
 		$curFiscalYear 	  = getFiscalYearForDate(date("m/d/y"), "4/1", "3/31");
 		if(!empty($post_data['fy_name'])) {
