@@ -584,7 +584,6 @@ class It_service_dashboard extends crm_controller
 				if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$prarr]) && count($projects['othercost_projects'][$prarr])>0) {
 					foreach($projects['othercost_projects'][$prarr] as $pro_id) {
 						$val 	= getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $start_date, $end_date);
-						echo 'month '.$month.'<br>';
 						$cm_val = getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $month, $month);
 						$other_cost_val    += $val;
 						$cm_other_cost_val += $cm_val;
