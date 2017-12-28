@@ -591,7 +591,7 @@ if ( ! function_exists('getOtherCostByLeadIdByDateRange'))
 			$CI->db->order_by('id', 'ASC');
 			$query  = $CI->db->get();
 			if('2017-04-01 00:00:00'=$end_date) {
-				echo 'asdf'. $start_date.'<br>'.$end_date.'<br>'.$CI->db->last_query(); exit;
+				echo $CI->db->last_query(); exit;
 			}
 			$result = $query->result_array();
 
