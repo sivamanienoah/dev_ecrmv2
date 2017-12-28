@@ -606,8 +606,8 @@ class It_service_dashboard extends crm_controller
 				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$prarr] != '') ? round($projects['cm_irval'][$prarr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$prarr] != '') ? round($projects['irval'][$prarr]) : '-';
-				echo 'ytd uc <br>'.$projects['direct_cost'][$prarr]['total_direct_cost'].' !!! '.$projects['other_cost'][$prarr];
-				echo '<br>temp_ytd_utilization_cost'.$temp_ytd_utilization_cost = $projects['direct_cost'][$prarr]['total_direct_cost'] + $projects['other_cost'][$prarr];
+				$projects['direct_cost'][$prarr]['total_direct_cost'].' !!! '.$projects['other_cost'][$prarr];
+				$temp_ytd_utilization_cost = $projects['direct_cost'][$prarr]['total_direct_cost'] + $projects['other_cost'][$prarr];
 				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
 				
 				$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
@@ -619,8 +619,8 @@ class It_service_dashboard extends crm_controller
 				
 				$eff_var = (($projects['eff_var'][$prarr]['total_actual_hrs'] - $projects['eff_var'][$prarr]['tot_estimate_hrs'])/$projects['eff_var'][$prarr]['tot_estimate_hrs'])*100;
 				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
-				echo 'cm ytd uc <br>'.$projects['cm_direct_cost'][$prarr]['total_cm_direct_cost'].' !!! '.$projects['cm_other_cost'][$prarr];
-				echo '<br>temp_cm_utd_cost'.$temp_cm_utd_cost = $projects['cm_direct_cost'][$prarr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$prarr];
+				$projects['cm_direct_cost'][$prarr]['total_cm_direct_cost'].' !!! '.$projects['cm_other_cost'][$prarr];
+				$temp_cm_utd_cost = $projects['cm_direct_cost'][$prarr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$prarr];
 				if($temp_cm_utd_cost){
 					$cm_dc_val = (($projects['cm_irval'][$prarr] - $temp_cm_utd_cost)/$projects['cm_irval'][$prarr]) * 100;
 				}
@@ -638,14 +638,14 @@ class It_service_dashboard extends crm_controller
 				$tot_actual_hr += $projects['eff_var'][$prarr]['total_actual_hrs'];
 				$tot_estimated_hrs += $projects['eff_var'][$prarr]['tot_estimate_hrs'];
 				
-				echo '<br>'.$prarr.'<br>tot_cm_irvals';
-				echo $tot_cm_irvals += $projects['cm_irval'][$prarr];
-				echo '<br>tot_cm_dc_tot';
-				echo $tot_cm_dc_tot += $temp_cm_utd_cost;
-				echo '<br>tot_dc_vals';
-				echo $tot_dc_vals += $projects['irval'][$prarr];
-				echo '<br>tot_dc_tots';
-				echo $tot_dc_tots += $temp_ytd_utilization_cost;
+				// echo '<br>'.$prarr.'<br>tot_cm_irvals';
+				$tot_cm_irvals += $projects['cm_irval'][$prarr];
+				// echo '<br>tot_cm_dc_tot';
+				$tot_cm_dc_tot += $temp_cm_utd_cost;
+				// echo '<br>tot_dc_vals';
+				$tot_dc_vals += $projects['irval'][$prarr];
+				// echo '<br>tot_dc_tots';
+				$tot_dc_tots += $temp_ytd_utilization_cost;
 				
 				$show_arr[$prarr] = $ins_array;
 			}
