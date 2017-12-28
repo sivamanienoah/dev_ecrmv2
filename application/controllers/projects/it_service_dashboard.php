@@ -635,7 +635,7 @@ class It_service_dashboard extends crm_controller
 				$tot_actual_hr += $projects['eff_var'][$prarr]['total_actual_hrs'];
 				$tot_estimated_hrs += $projects['eff_var'][$prarr]['tot_estimate_hrs'];
 				
-				echo $prarr.'<br>tot_cm_irvals';
+				echo '<br>'.$prarr.'<br>tot_cm_irvals';
 				echo $tot_cm_irvals += $projects['cm_irval'][$prarr];
 				echo '<br>tot_cm_dc_tot';
 				echo $tot_cm_dc_tot += $temp_cm_utd_cost;
