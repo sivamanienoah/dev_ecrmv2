@@ -69,7 +69,7 @@ class It_service_dashboard extends crm_controller
 		}
 		$end_date 			 = calc_fy_dates($curFiscalYear, $data['end_month'], 'end');
 		
-		$month = $data['bill_month'] = ($end_date != "") ? date('Y-m-01 00:00:00', strtotime($end_date)) : date('Y-m-01 00:00:00'); //set the default billing & billable month.
+		echo $month = $data['bill_month'] = ($end_date != "") ? date('Y-m-01 00:00:00', strtotime($end_date)) : date('Y-m-01 00:00:00'); //set the default billing & billable month.
 		$data['start_date']  = $start_date;
 		$data['end_date']    = $end_date;
 		$data['fy_name']     = $curFiscalYear;
