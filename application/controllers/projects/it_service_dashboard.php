@@ -60,7 +60,7 @@ class It_service_dashboard extends crm_controller
 		if(!empty($post_data['start_month'])) {
 			$data['start_month'] = $post_data['start_month'];
 		}
-		$start_date 	= calc_fy_dates($curFiscalYear, $data['start_month'], 'start');
+		$start_date 			= calc_fy_dates($curFiscalYear, $data['start_month'], 'start');
 		
 		$default_fy_end_month 	= date('m');
 		$data['end_month']  	= $default_fy_end_month;
@@ -635,11 +635,11 @@ class It_service_dashboard extends crm_controller
 				$tot_actual_hr += $projects['eff_var'][$prarr]['total_actual_hrs'];
 				$tot_estimated_hrs += $projects['eff_var'][$prarr]['tot_estimate_hrs'];
 				
-				$tot_cm_irvals += $projects['cm_irval'][$prarr];
-				$tot_cm_dc_tot += $temp_cm_utd_cost;
+				echo .'<br>'.$tot_cm_irvals += $projects['cm_irval'][$prarr];
+				echo .'<br>'.$tot_cm_dc_tot += $temp_cm_utd_cost;
 				
-				$tot_dc_vals += $projects['irval'][$prarr];
-				$tot_dc_tots += $temp_ytd_utilization_cost;
+				echo .'<br>'.$tot_dc_vals += $projects['irval'][$prarr];
+				echo .'<br>'.$tot_dc_tots += $temp_ytd_utilization_cost;
 				
 				$show_arr[$prarr] = $ins_array;
 			}
