@@ -606,7 +606,6 @@ class It_service_dashboard extends crm_controller
 				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$prarr] != '') ? round($projects['cm_irval'][$prarr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$prarr] != '') ? round($projects['irval'][$prarr]) : '-';
-				$projects['direct_cost'][$prarr]['total_direct_cost'].' !!! '.$projects['other_cost'][$prarr];
 				$temp_ytd_utilization_cost = $projects['direct_cost'][$prarr]['total_direct_cost'] + $projects['other_cost'][$prarr];
 				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
 				
@@ -619,7 +618,7 @@ class It_service_dashboard extends crm_controller
 				
 				$eff_var = (($projects['eff_var'][$prarr]['total_actual_hrs'] - $projects['eff_var'][$prarr]['tot_estimate_hrs'])/$projects['eff_var'][$prarr]['tot_estimate_hrs'])*100;
 				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
-				$projects['cm_direct_cost'][$prarr]['total_cm_direct_cost'].' !!! '.$projects['cm_other_cost'][$prarr];
+				
 				$temp_cm_utd_cost = $projects['cm_direct_cost'][$prarr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$prarr];
 				if($temp_cm_utd_cost){
 					$cm_dc_val = (($projects['cm_irval'][$prarr] - $temp_cm_utd_cost)/$projects['cm_irval'][$prarr]) * 100;
