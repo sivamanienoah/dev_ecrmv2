@@ -431,7 +431,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
 		
-		echo '<pre>'; print_r($projects); die;
+		// echo '<pre>'; print_r($projects); die;
 		
 		$ins_array    = array();
 		$tot 		  = array();
@@ -519,7 +519,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				
 				$this->db->where(array('practice_name' => $parr));
 				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_array);
-				// echo $this->db->last_query() . "<br />";
+				echo $this->db->last_query() . "<br />";
 				$ins_array = array();
 				$ins_result = 1;
 			}
