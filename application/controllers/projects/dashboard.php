@@ -1179,6 +1179,7 @@ class Dashboard extends crm_controller
 	
 	function get_practices()
 	{
+		// echo "<pre>"; print_R($this->input->post()); exit;
 		// echo "projects"; exit;
 		if($this->input->post("dept_ids")){
 			$ids 		= $this->input->post("dept_ids");
@@ -1188,8 +1189,6 @@ class Dashboard extends crm_controller
 			$this->db->select('t.practice_id, t.practice_name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 			$this->db->where("t.practice_id !=", 0);
-			// $this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-			// $this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
 			if(!empty($ids))
 			$this->db->where_in("t.dept_id", $ids);
 			$this->db->group_by('t.practice_id');
@@ -1270,43 +1269,45 @@ class Dashboard extends crm_controller
 	
 	function get_projects_by_condition()
 	{
-			$varSessionId = $this->userdata['userid'];
-			$ids = $this->input->post("dept_ids");
-			$p_ids = $this->input->post("prac_id");
-			$entity_ids=$this->input->post("entity_ids");
+		$varSessionId = $this->userdata['userid'];
+		$ids = $this->input->post("dept_ids");
+		$p_ids = $this->input->post("prac_id");
+		$entity_ids=$this->input->post("entity_ids");
 
-			$this->db->select('t.project_code, p.lead_title as project_name');
-			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
-			$this->db->join($this->cfg['dbpref'].'leads as p', 'p.pjt_id = t.project_code');
-			$this->db->where("t.practice_id !=", 0);			
-			if(!empty($ids))
-			$this->db->where_in("t.dept_id", $ids);
-			if(!empty($p_ids))
-			$this->db->where_in("t.practice_id", $p_ids);
-			if(!empty($entity_ids))
-			$this->db->where_in("p.division", $entity_ids);
-		    //Checking Admin,Management
-			if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) 
-			{
-			   //No restriction
-			}
-			else
-			{
-			$this->db->where("(p.assigned_to = '".$varSessionId."' OR p.lead_assign = '".$varSessionId."' OR p.belong_to = '".$varSessionId."')");
-			}
-			$this->db->where("p.lead_status", 4);
-		
-			$this->db->group_by('t.project_code');
-			$this->db->order_by('project_name');
-			$query = $this->db->get();
-			 //echo $this->db->last_query(); exit;
-			if($query->num_rows()>0){
-				$res = $query->result();
-				echo json_encode($res); exit;
-			}else{
-				echo 0;
-				exit;
-			}
+		$this->db->select('t.project_code, p.lead_title as project_name');
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+		$this->db->join($this->cfg['dbpref'].'leads as p', 'p.pjt_id = t.project_code');
+		$this->db->where("t.practice_id !=", 0);			
+		if(!empty($ids))
+		$this->db->where_in("t.dept_id", $ids);
+		if(!empty($p_ids))
+		$this->db->where_in("t.practice_id", $p_ids);
+		if(!empty($entity_ids))
+		$this->db->where_in("p.division", $entity_ids);
+		//Checking Admin,Management
+		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) 
+		{
+		   //No restriction
+		}
+		else
+		{
+			// $this->db->where("(p.assigned_to = '".$varSessionId."' OR p.lead_assign = '".$varSessionId."' OR p.belong_to = '".$varSessionId."')");
+			$wh_condn = ' (p.belong_to = '.$varSessionId.' OR p.assigned_to ='.$varSessionId.' OR FIND_IN_SET('.$varSessionId.', p.lead_assign)) ';
+			$this->db->where($wh_condn);
+		}
+		$this->db->where("p.lead_status", 4);
+	
+		$this->db->group_by('t.project_code');
+		$this->db->order_by('project_name');
+		$query = $this->db->get();
+		 //echo $this->db->last_query(); exit;
+		if($query->num_rows()>0){
+			$res = $query->result();
+			echo json_encode($res); exit;
+		}else{
+			echo 0;
+			exit;
+		}
 		
 	}
 	
@@ -3675,7 +3676,9 @@ class Dashboard extends crm_controller
 		}
 		else
 		{
-		$this->db->where("(l.assigned_to = '".$varSessionId."' OR l.lead_assign = '".$varSessionId."' OR l.belong_to = '".$varSessionId."')");
+			// $this->db->where("(l.assigned_to = '".$varSessionId."' OR l.lead_assign = '".$varSessionId."' OR l.belong_to = '".$varSessionId."')");
+			$wh_condn = ' (l.belong_to = '.$varSessionId.' OR l.assigned_to ='.$varSessionId.' OR FIND_IN_SET('.$varSessionId.', l.lead_assign)) ';
+			$this->db->where($wh_condn);
 		}
 		$this->db->where("l.lead_status", 4);
 		$query 						= $this->db->get();		
@@ -3753,7 +3756,9 @@ class Dashboard extends crm_controller
 			}
 			else
 			{
-			$this->db->where("(p.assigned_to = '".$varSessionId."' OR p.lead_assign = '".$varSessionId."' OR p.belong_to = '".$varSessionId."')");
+				// $this->db->where("(p.assigned_to = '".$varSessionId."' OR p.lead_assign = '".$varSessionId."' OR p.belong_to = '".$varSessionId."')");
+				$wh_condn = ' (p.belong_to = '.$varSessionId.' OR p.assigned_to ='.$varSessionId.' OR FIND_IN_SET('.$varSessionId.', p.lead_assign)) ';
+				$this->db->where($wh_condn);
 			}
 			$this->db->where("p.lead_status", 4);
 			$this->db->group_by('t.project_code');
@@ -3802,14 +3807,13 @@ class Dashboard extends crm_controller
 	
 	private function get_default_practices($start_date, $end_date)
 	{
-		$this->db->select('t.practice_id as id, t.practice_name as practices');
-		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
-		$this->db->where("t.practice_id !=", 0);
-		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-		$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-		$this->db->where_in("t.dept_id", array(10,11));
-		$this->db->group_by('t.practice_id');
+		$practice_not_in_array = array('6','7','8');
+		$this->db->select('id, practices');
+		$this->db->from($this->cfg['dbpref']. 'practices');
+		$this->db->where("status !=", 0);
+		$this->db->where_not_in("id", $practice_not_in_array);
 		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
 		return $query->result();
 	}
 	
