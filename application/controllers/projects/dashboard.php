@@ -1182,7 +1182,7 @@ class Dashboard extends crm_controller
 		// echo "<pre>"; print_R($this->input->post()); exit;
 		$practice_not_in_array = array('6','7','8');
 		
-		$eads_arr = array(1,3,10,12,13,14);
+		$eads_arr = array(1,3,10,12,13,14,15);
 		$eqad_arr = array(3,5);
 		// echo "projects"; exit;
 		if($this->input->post("dept_ids")) {
