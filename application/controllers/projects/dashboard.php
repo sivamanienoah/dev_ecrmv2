@@ -523,7 +523,7 @@ class Dashboard extends crm_controller
 		$practice_ids = $this->input->post("practice_ids");
 		
 		//for practices
-		$this->db->select('t.practice_id, t.practice_name');
+		/* $this->db->select('t.practice_id, t.practice_name');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 		$this->db->where("t.practice_id !=", 0);
 		$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
@@ -543,10 +543,23 @@ class Dashboard extends crm_controller
 		$this->db->group_by('t.practice_id');
 		$this->db->order_by('t.practice_name');
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
 		if($query->num_rows()>0) {
 			$data['practice_ids_selected'] = $query->result();
+		} */
+		
+		$practice_not_in_array = array('6','7','8');
+		$this->db->select('id as practice_id, practices as practice_name');
+		$this->db->from($this->cfg['dbpref']. 'practices');
+		$this->db->where("status !=", 0);
+		if(count($practice_ids)>0 && !empty($practice_ids)) {
+			$pids = implode(",",$practice_ids);
+			$data['practice_ids'] = $practice_ids;
+			$where .= " and l.practice in ($pids)";
 		}
+		$this->db->where_not_in("id", $practice_not_in_array);
+		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
+		$data['practice_ids_selected'] = $query->result();
 		
 		if($this->input->post("practice_ids")) {
 			$ids = $this->input->post("department_ids");
