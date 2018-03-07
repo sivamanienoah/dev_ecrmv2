@@ -1180,18 +1180,26 @@ class Dashboard extends crm_controller
 	function get_practices()
 	{
 		// echo "<pre>"; print_R($this->input->post()); exit;
+		$practice_not_in_array = array('6','7','8');
+		
+		$eads_arr = array(1,3,10,12,13,14);
+		$eqad_arr = array(3,5);
 		// echo "projects"; exit;
-		if($this->input->post("dept_ids")){
-			$ids 		= $this->input->post("dept_ids");
-			$start_date = $this->input->post("start_date");
-			$end_date   = $this->input->post("end_date");
+		if($this->input->post("dept_ids")) {
+			$dept_arr = $this->input->post("dept_ids");
 			
-			$this->db->select('t.practice_id, t.practice_name');
-			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-			$this->db->where("t.practice_id !=", 0);
-			if(!empty($ids))
-			$this->db->where_in("t.dept_id", $ids);
-			$this->db->group_by('t.practice_id');
+			$this->db->select('id as practice_id, practices as practice_name');
+			$this->db->from($this->cfg['dbpref']. 'practices');
+			$this->db->where("status !=", 0);
+			$this->db->where_not_in("id", $practice_not_in_array);
+			if(!empty($dept_arr) && count($dept_arr)!=2) {
+				if(in_array(10, $dept_arr)) {
+					$this->db->where_in("id", $eads_arr);
+				}
+				if(in_array(11, $dept_arr)) {
+					$this->db->where_in("id", $eqad_arr);
+				}
+			}
 			$query = $this->db->get();
 			// echo $this->db->last_query(); exit;
 			// $data['resdata'] =  $query->result();
