@@ -1669,8 +1669,9 @@ class Project extends crm_controller {
 				{
 					if (preg_match('/^[0-9]+$/', $con))
 					{
-						$ins['jobid_fk'] =  $data['lead_id'];
-						$ins['userid_fk'] =  $con;
+						$ins['jobid_fk']     =  $data['lead_id'];
+						$ins['userid_fk']    =  $con;
+						$ins['modified_by']  = $this->userdata['userid'];
 						$insert_contract_job = $this->project_model->insert_row('contract_jobs', $ins);
 					}
 				}
