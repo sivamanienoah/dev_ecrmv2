@@ -370,7 +370,8 @@ class Project extends crm_controller {
 	 */
 	public function view_project($id = 0)
 	{
-		ini_set("display_errors",1);error_reporting(1);
+		// ini_set("display_errors",1);
+		// error_reporting(1);
         $this->load->helper('text');
 		$this->load->helper('fix_text');
 		$usernme = $this->session->userdata('logged_in_user');
@@ -513,7 +514,8 @@ class Project extends crm_controller {
 					
 					$inse['jobid_fk']  =  $data['quote_data']['lead_id'];
 					foreach($ts_team_members as $ts){
-						$inse['userid_fk'] =  $ts;
+						$inse['userid_fk'] 	 =  $ts;
+						$inse['modified_by'] =  $this->userdata['userid'];
 						$this->db->insert($this->cfg['dbpref'].'contract_jobs',$inse);
 					}
 				}
@@ -1374,7 +1376,8 @@ class Project extends crm_controller {
 										
 					//inserting the assigned users in the contract jobs table.
 					foreach($ptms as $pmembers){
-						$ins['userid_fk'] = $pmembers;
+						$ins['userid_fk'] 	 = $pmembers;
+						$inse['modified_by'] = $this->userdata['userid'];
 						$insert = $this->project_model->insert_row('contract_jobs', $ins);
 						// echo "Insert" . $this->db->last_query() . "<br>";
 					}
@@ -3214,12 +3217,12 @@ HDOC;
 					
 					$param['email_data'] = array('user_name'=>$user_name, 'print_fancydate'=>$print_fancydate, 'log_content'=>$ins['log_content'], 'signature'=>$this->userdata['signature']);
 
-					$param['to_mail'] = $mgmt_mail.','.$lead_assign_mail[0]['email'].','.$lead_owner[0]['email'];
-					$param['bcc_mail'] = $admin_mail;
-					$param['from_email'] = $this->userdata['email'];
-					$param['from_email_name'] = $user_name;
-					$param['template_name'] = "Lead - Delete Notification Message";
-					$param['subject'] = "Project Delete Notification";
+					$param['to_mail'] 			= $mgmt_mail.','.$lead_owner[0]['email'];
+					$param['bcc_mail'] 			= $admin_mail;
+					$param['from_email'] 		= $this->userdata['email'];
+					$param['from_email_name'] 	= $user_name;
+					$param['template_name'] 	= "Lead - Delete Notification Message";
+					$param['subject'] 			= "Project Delete Notification";
 
 					$this->email_template_model->sent_email($param);
 					
@@ -5026,12 +5029,11 @@ HDOC;
 			/**
 			*@Initiate to get all Practice data database
 			**/
-			$data['practices'] = $this->project_model->get_practices();
+			$data['practices'] 		= $this->project_model->get_practices();
 
 			$data['contract_users'] = $this->project_model->get_contract_users($id);
-			$data['stake_holders'] = $this->project_model->get_stake_holders($id);
+			$data['stake_holders'] 	= $this->project_model->get_stake_holders($id);
 
-			
 			$this->load->view('leads/leads_confirmations_view', $data);
         }
 	
