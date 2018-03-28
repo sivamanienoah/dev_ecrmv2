@@ -1377,10 +1377,11 @@ class Project extends crm_controller {
 					//inserting the assigned users in the contract jobs table.
 					foreach($ptms as $pmembers){
 						$ins['userid_fk'] 	 = $pmembers;
-						$inse['modified_by'] = $this->userdata['userid'];
+						$ins['modified_by'] = $this->userdata['userid'];
 						$insert = $this->project_model->insert_row('contract_jobs', $ins);
-						// echo "Insert" . $this->db->last_query() . "<br>";
+						
 					}
+					echo "Insert" . $this->db->last_query() . "<br>"; die;
 				}
 			}
 			
