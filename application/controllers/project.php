@@ -1381,7 +1381,7 @@ class Project extends crm_controller {
 						$insert = $this->project_model->insert_row('contract_jobs', $ins);
 						
 					}
-					echo "Insert" . $this->db->last_query() . "<br>"; die;
+					// echo "Insert" . $this->db->last_query() . "<br>"; die;
 				}
 			}
 			
