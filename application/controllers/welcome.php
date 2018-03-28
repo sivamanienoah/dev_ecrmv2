@@ -533,7 +533,7 @@ class Welcome extends crm_controller {
 			{
 				$this->db->delete($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $post_data['project_lead_id']));
 				foreach($project_team_members as $pusers){
-					$this->db->insert($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $post_data['project_lead_id'],"userid_fk" => $pusers,"modified_by"=>$this->userdata['userid']));
+					$this->db->insert($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $post_data['project_lead_id'], "userid_fk" => $pusers,"modified_by"=>$this->userdata['userid']));
 				}
 			}
 			
