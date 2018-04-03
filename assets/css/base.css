@@ -1481,13 +1481,13 @@ ul.ui-sortable li{
 }
 .label-success {
 	border-radius: 3px 3px 3px 3px;
-	padding: 1px 4px 2px;
+	padding: 1px 3px 2px;
     background-color: #468847;
 	color: #fff;
 }
 .label-warning {
-	border-radius: 3px 3px 3px 3px;
-	padding: 1px 4px 2px;
+	border-radius: 3px 3px 3px 3px;	
+	padding: 1px 3px 2px;
     background-color: #F89406;
 	color: #fff;
 }
@@ -1499,31 +1499,31 @@ ul.ui-sortable li{
 }
 .label-hot {
 	border-radius: 3px 3px 3px 3px;
-	padding: 1px 4px 2px;
+	padding: 1px 3px 2px;
     background-color: #910000;
 	color: #fff;
 }
 .label-warm {
 	border-radius: 3px 3px 3px 3px;
-	padding: 1px 4px 2px;
+	padding: 1px 3px 2px;
     background-color: #F47123;
 	color: #fff;
 }
 .label-cold {
 	border-radius: 3px 3px 3px 3px;
-	padding: 1px 4px 2px;
+	padding: 1px 3px 2px;
     background-color: #2C84C5;
 	color: #fff;
 }
 .label-complete {
 	border-radius: 3px 3px 3px 3px;
-	padding: 1px 4px 2px;
+	padding: 1px 3px 2px;
     background-color: #F89406;
 	color: #fff;
 }
 .label-inactive {
 	border-radius: 3px 3px 3px 3px;
-	padding: 1px 4px 2px;
+	padding: 1px 3px 2px;
     background-color: #c0504d;
 	color: #fff;
 }
