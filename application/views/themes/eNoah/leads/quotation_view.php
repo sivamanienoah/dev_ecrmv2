@@ -86,13 +86,13 @@ require (theme_url().'/tpl/header.php');
 						<div style="border: 1px solid #DCDCDC;">
 							<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 								<tr>
-									<td class="tblheadbg">By Date</td>
+									<td class="tblheadbg">By Created Date</td>
 									<td class="tblheadbg">By Lead Stage</td>
 									<td class="tblheadbg">By Customer</td>
 									<td class="tblheadbg">Expected Worth</td>
 									<td class="tblheadbg">By lead Owner</td>
 									<td class="tblheadbg">By Lead Assignee</td>
-									<td class="tblheadbg">By Service</td>
+									<td class="tblheadbg" colspan="2">By Service</td>
 									
 								</tr>
 								<tr>	
@@ -143,7 +143,7 @@ require (theme_url().'/tpl/header.php');
 											?>
 										</select> 
 									</td>
-									<td>
+									<td colspan="2">
 										<select multiple="multiple" id="service" name="service[]" >
 											<?php
 												if(isset($services) && count($services)>0){
@@ -164,7 +164,7 @@ require (theme_url().'/tpl/header.php');
 									<td class="tblheadbg">By State Wise</td>
 									<td class="tblheadbg">By Location Wise</td>
 									<td class="tblheadbg">By Status</td>
-									
+									<td class="tblheadbg">By Lead Indicator</td>
 								</tr>
 								<tr>
 									<td>
@@ -223,13 +223,6 @@ require (theme_url().'/tpl/header.php');
 											<option value="5">Moved to Project</option>
 										</select> 
 									</td>
-									
-								</tr>
-								<tr>
-									<td class="tblheadbg">By Lead Indicator</td>
-								</tr>
-								
-								<tr align="right" >
 									<td>
 										<select style="width:85px" multiple="multiple" id="lead_indi" name="lead_indi[]">
 											<option value="HOT">Hot</option>
@@ -237,7 +230,13 @@ require (theme_url().'/tpl/header.php');
 											<option value="COLD">Cold</option>
 										</select> 
 									</td>
-									<td colspan="7"><input type="reset" class="positive input-font" name="advance" value="Reset" />
+									
+								</tr>
+								
+								
+								<tr align="right" >
+									
+									<td colspan="8"><input type="reset" class="positive input-font" name="advance" value="Reset" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="search_advance" value="Search" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" />
 									<div id = 'load' style = 'float:right;display:none;height:1px;'>

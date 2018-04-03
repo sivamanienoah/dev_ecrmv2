@@ -12,11 +12,12 @@ $userdata = $this->session->userdata('logged_in_user');
 			<th>Region</th>
 			<th>Lead Owner</th>
 			<th>Lead Assigned To</th>
+			<th>Lead Created Date</th>
 			<th style="width:100px;">Status</th>
 		</tr>
 	</thead>
 	<tbody>
-		<?php
+		<?php //echo'<pre>';print_r($closed_jobs);exit;
 			if(!empty($closed_jobs)) 
 			{
 				foreach($closed_jobs as $jobs) 
@@ -55,6 +56,7 @@ $userdata = $this->session->userdata('logged_in_user');
 						<td><?php echo $jobs['region_name']; ?></td>
 						<td><?php echo $jobs['ubfn'].' '.$jobs['ubln']; ?></td>
 						<td><?php echo $jobs['ufname'].' '.$jobs['ulname']; ?></td>
+						<td><?php echo date('d-m-Y',strtotime($jobs['date_created'])); ?></td>
 						<td style="width:100px;">		
 							<?php
 								switch ($jobs['pjt_status'])

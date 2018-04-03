@@ -84,8 +84,9 @@ button.ui-datepicker-current { display: none; }
 									<td class="tblheadbg">By Customer</td>
 									<td class="tblheadbg">By lead Owner</td>
 									<td class="tblheadbg">By Lead Assignee</td>
-									<td class="tblheadbg" colspan=2>By Service</td>
+									<td class="tblheadbg">By Service</td>
 									<td class="tblheadbg">By Industry</td>
+									<td class="tblheadbg">By Lead Created Date</td>
 								</tr>
 								<tr>
 									<td>
@@ -115,7 +116,7 @@ button.ui-datepicker-current { display: none; }
 											?>
 										</select> 
 									</td>
-									<td colspan=2>
+									<td>
 										<select multiple="multiple" id="service" name="service[]" >
 											<?php
 												if(isset($services) && count($services)>0){
@@ -136,6 +137,11 @@ button.ui-datepicker-current { display: none; }
 												}
 											?>
 										</select>
+									</td>
+									<td>
+										From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:57px;" />
+										<br />
+										To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
 									</td>
 								</tr>
 								<tr>
@@ -214,6 +220,7 @@ button.ui-datepicker-current { display: none; }
 								<th>Region</th>
 								<th>Lead Owner</th>
 								<th>Lead Assigned To</th>
+								<th>Lead Created Date</th>
 								<th style="width:100px;">Status</th>
 							</tr>
 						</thead>
@@ -257,6 +264,7 @@ button.ui-datepicker-current { display: none; }
 											<td><?php echo $jobs['region_name']; ?></td>
 											<td><?php echo $jobs['ubfn'].' '.$jobs['ubln']; ?></td>
 											<td><?php echo $jobs['ufname'].' '.$jobs['ulname']; ?></td>
+											<td><?php echo date('d-m-Y',strtotime($jobs['date_created'])); ?></td>
 											<td style="width:100px;">		
 												<?php
 													switch ($jobs['pjt_status'])
@@ -353,6 +361,40 @@ $('#excel_lead').click(function() {
 	$(form).submit();
 	return false;
 
+});
+
+$(function() {
+	$('#from_date').datepicker({ 
+		dateFormat: 'dd-mm-yy', 
+		changeMonth: true, 
+		changeYear: true, 
+		onSelect: function(date) {
+			if($('#to_date').val!='')
+			{
+				$('#to_date').val('');
+			}
+			var return_date = $('#from_date').val();
+			$('#to_date').datepicker("option", "minDate", return_date);
+		},
+		beforeShow: function(input, inst) {
+			/* if ((selDate = $(this).val()).length > 0) 
+			{
+				iYear = selDate.substring(selDate.length - 4, selDate.length);
+				iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+				$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			} */
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
+	$('#to_date').datepicker({ 
+		dateFormat: 'dd-mm-yy', 
+		changeMonth: true, 
+		changeYear: true,
+		beforeShow: function(input, inst) {
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
 });
 </script>
 <?php

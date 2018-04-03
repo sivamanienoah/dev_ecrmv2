@@ -149,7 +149,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 						<td <?php echo $td_reg; ?>><?php echo $filter_result['region_name']; ?></td>
 						<td <?php echo $td_lo; ?>><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
 						<td <?php echo $td_lat; ?>><?php echo $filter_result['ufname'].' '.$filter_result['ulname']; ?></td>
-						<td <?php echo $td_lat; ?>><?php echo date('Y-m-d',strtotime($filter_result['date_created'])); ?></td>
+						<td <?php echo $td_lat; ?>><?php echo date('d-m-Y',strtotime($filter_result['date_created'])); ?></td>
 						<td <?php echo $td_stg; ?>><?php echo $filter_result['lead_stage_name']; ?></td>
 						<td <?php echo $td_ind; ?>>
 							<?php 

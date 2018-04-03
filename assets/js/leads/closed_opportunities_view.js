@@ -36,12 +36,14 @@ $("#search_advance").click(function() {
 	var industry     = $("#industry").val();
 	var month_year_from_date = $("#month_year_from_date").val();
 	var month_year_to_date   = $("#month_year_to_date").val();
+	var from_date = $("#from_date").val();
+	var to_date   = $("#to_date").val();
 
 	$.ajax({
 		type: "POST",
 		url: site_base_url+"welcome/closed_opportunities",
 		cache: false,
-		data: "customer="+customer+"&filter="+filter+"&service="+service+"&lead_src="+lead_src+"&industry="+industry+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&month_year_from_date="+month_year_from_date+"&month_year_to_date="+month_year_to_date+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: "customer="+customer+"&filter="+filter+"&service="+service+"&lead_src="+lead_src+"&industry="+industry+"&owner="+owner+"&leadassignee="+leadassignee+"&regionname="+regionname+"&countryname="+countryname+"&statename="+statename+"&locname="+locname+"&month_year_from_date="+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&from_date="+from_date+"&to_date="+to_date+'&'+csrf_token_name+'='+csrf_hash_token,
 		success: function(data){
 			$('#advance_search_results').html(data);
 			$('#load').hide();

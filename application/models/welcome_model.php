@@ -576,12 +576,15 @@ class Welcome_model extends crm_model {
 			// date_created
 			if(isset($from_date) && !empty($from_date) && empty($to_date)) {
 				$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'"';
+				// echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 			} else if(isset($to_date) && !empty($to_date) && empty($from_date)) {	
 				$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'"';
+				// echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
 				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				 // echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 			}
 			
@@ -1635,6 +1638,13 @@ class Welcome_model extends crm_model {
 		$date_range = false;
 		$leadid_arr = array();
 		
+		if(isset($filter) && $filter['from_date'] == '0000-00-00 00:00:00'){
+			$lead_created_from_date = '';
+		}
+		if(isset($filter) && $filter['to_date'] == '0000-00-00 00:00:00'){
+			$lead_created_to_date = '';
+		}
+		
 		if(isset($filter) && $filter['month_year_from_date']) {
 			$from_date  = date('Y-m-d', strtotime($filter['month_year_from_date']));
 			$date_range = true;
@@ -1650,7 +1660,8 @@ class Welcome_model extends crm_model {
 			$this->db->select('lead_id, dateofchange');
 			$this->db->from($this->cfg['dbpref'].'lead_status_history');
 			$this->db->where("changed_status", 4);
-			
+			// echo'<pre>from_date=>';print_r($from_date);
+			// echo'<pre>to_date=>';print_r($to_date);exit;
 			if(!empty($from_date) && empty($to_date)) {
 				$this->db->where('DATE(dateofchange) >=', $from_date);
 			} else if(!empty($from_date) && !empty($to_date)) {
@@ -1666,11 +1677,12 @@ class Welcome_model extends crm_model {
 			$sql = $this->db->get();
 
 			$res_arr = $sql->result_array();
-			
+			// echo "<pre>"; print_r($res_arr); die;
 			if(!empty($res_arr) && count($res_arr)>0){
 				foreach($res_arr as $row)
 				$leadid_arr[] = $row['lead_id'];
 			}
+			// echo $this->db->last_query(); exit;
 			// echo "<pre>"; print_r($leadid_arr); die;
 		}
 		
@@ -1684,7 +1696,7 @@ class Welcome_model extends crm_model {
 
 		// $frm_dt = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		// $to_dt = $curFiscalYear."-03-31"; //eg.2014-03-01
-		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.actual_worth_amount, j.lead_status, j.belong_to, j.lead_assign, j.pjt_status, cc.company, c.customer_name, rg.region_name, co.country_name, u.first_name as ufname, u.last_name as ulname, ub.first_name as ubfn, ub.last_name as ubln, ew.expect_worth_name');
+		$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.expect_worth_id, j.actual_worth_amount, j.lead_status, j.date_created, j.belong_to, j.lead_assign, j.pjt_status, cc.company, c.customer_name, rg.region_name, co.country_name, u.first_name as ufname, u.last_name as ulname, ub.first_name as ubfn, ub.last_name as ubln, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads as j');
 		$this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = j.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users as ub', 'ub.userid = j.belong_to');
@@ -1705,6 +1717,21 @@ class Welcome_model extends crm_model {
 		if(!empty($leadid_arr) && count($leadid_arr)) {
 			$this->db->where_in('j.lead_id',$leadid_arr);
 		}
+		
+		if(isset($filter['from_date']) && !empty($filter['from_date']) && empty($filter['to_date'])) {
+			$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($filter['from_date'])).'"';
+			// echo'<pre>';print_r($dt_query);exit;
+			$this->db->where($dt_query);
+		} else if(isset($filter['to_date']) && !empty($filter['to_date']) && empty($filter['from_date'])) {	
+			$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($filter['to_date'])).'"';
+			// echo'<pre>';print_r($dt_query);exit;
+			$this->db->where($dt_query);
+		} else if(isset($filter['from_date']) && !empty($filter['from_date']) && isset($filter['to_date']) && !empty($filter['to_date'])) {
+			$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($filter['from_date'])).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($filter['to_date'])).'")';
+			 // echo'<pre>';print_r($dt_query);exit;
+			$this->db->where($dt_query);
+		}
+		
 		if (!empty($filter['customer']) && ($filter['customer']!='null')) {
 			$this->db->where_in('cc.companyid', $filter['customer']);
 		}
