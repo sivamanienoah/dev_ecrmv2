@@ -86,15 +86,21 @@ require (theme_url().'/tpl/header.php');
 						<div style="border: 1px solid #DCDCDC;">
 							<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 								<tr>
+									<td class="tblheadbg">By Date</td>
 									<td class="tblheadbg">By Lead Stage</td>
 									<td class="tblheadbg">By Customer</td>
 									<td class="tblheadbg">Expected Worth</td>
 									<td class="tblheadbg">By lead Owner</td>
 									<td class="tblheadbg">By Lead Assignee</td>
 									<td class="tblheadbg">By Service</td>
-									<td class="tblheadbg">By Industry</td>
+									
 								</tr>
 								<tr>	
+									<td>
+										From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:57px;" />
+										<br />
+										To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
+									</td>
 									<td>
 										<select style="width:180px" multiple="multiple" id="stage" name="stage[]">
 											<?php foreach($lead_stage as $ls) { ?>
@@ -148,6 +154,19 @@ require (theme_url().'/tpl/header.php');
 											?>
 										</select>
 									</td>
+									
+								</tr>
+								<tr>
+									<td class="tblheadbg">By Industry</td>
+									<td class="tblheadbg">By Source</td>
+									<td class="tblheadbg">By Region Wise</td>
+									<td class="tblheadbg">By Country Wise</td>
+									<td class="tblheadbg">By State Wise</td>
+									<td class="tblheadbg">By Location Wise</td>
+									<td class="tblheadbg">By Status</td>
+									
+								</tr>
+								<tr>
 									<td>
 										<select multiple="multiple" id="industry" name="industry[]" >
 											<?php
@@ -159,17 +178,6 @@ require (theme_url().'/tpl/header.php');
 											?>
 										</select>
 									</td>
-								</tr>
-								<tr>
-									<td class="tblheadbg">By Source</td>
-									<td class="tblheadbg">By Region Wise</td>
-									<td class="tblheadbg">By Country Wise</td>
-									<td class="tblheadbg">By State Wise</td>
-									<td class="tblheadbg">By Location Wise</td>
-									<td class="tblheadbg">By Status</td>
-									<td class="tblheadbg">By Lead Indicator</td>
-								</tr>
-								<tr>
 									<td>
 										<select multiple="multiple" id="lead_src" name="lead_src[]" >
 											<?php
@@ -215,6 +223,13 @@ require (theme_url().'/tpl/header.php');
 											<option value="5">Moved to Project</option>
 										</select> 
 									</td>
+									
+								</tr>
+								<tr>
+									<td class="tblheadbg">By Lead Indicator</td>
+								</tr>
+								
+								<tr align="right" >
 									<td>
 										<select style="width:85px" multiple="multiple" id="lead_indi" name="lead_indi[]">
 											<option value="HOT">Hot</option>
@@ -222,8 +237,6 @@ require (theme_url().'/tpl/header.php');
 											<option value="COLD">Cold</option>
 										</select> 
 									</td>
-								</tr>
-								<tr align="right" >
 									<td colspan="7"><input type="reset" class="positive input-font" name="advance" value="Reset" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="search_advance" value="Search" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" />
@@ -248,6 +261,39 @@ require (theme_url().'/tpl/header.php');
 <div id='popupGetSearchName'></div>
 <script>
 var query_type = '<?php echo isset($load_proposal_expect_end) ? $load_proposal_expect_end : '' ?>';
+$(function() {
+	$('#from_date').datepicker({ 
+		dateFormat: 'dd-mm-yy', 
+		changeMonth: true, 
+		changeYear: true, 
+		onSelect: function(date) {
+			if($('#to_date').val!='')
+			{
+				$('#to_date').val('');
+			}
+			var return_date = $('#from_date').val();
+			$('#to_date').datepicker("option", "minDate", return_date);
+		},
+		beforeShow: function(input, inst) {
+			/* if ((selDate = $(this).val()).length > 0) 
+			{
+				iYear = selDate.substring(selDate.length - 4, selDate.length);
+				iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+				$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			} */
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
+	$('#to_date').datepicker({ 
+		dateFormat: 'dd-mm-yy', 
+		changeMonth: true, 
+		changeYear: true,
+		beforeShow: function(input, inst) {
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
+});
 </script>
 <script type="text/javascript" src="assets/js/leads/quotation_view.js"></script>
 <?php

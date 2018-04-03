@@ -40,6 +40,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 				<th>Region</th>
 				<th>Lead Owner</th>
 				<th>Lead Assigned To</th>
+				<th>Lead Created Date</th>
 				<th>Lead Stage</th>
 				<th>Lead Indicator</th>
 				<th>Status</th>
@@ -49,6 +50,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 				<th <?php echo $td_reg; ?> >Region</th>			
 				<th <?php echo $td_lo; ?> >Lead Owner</th>
 				<th <?php echo $td_lat; ?> >Lead Assigned To</th>
+				<th <?php echo $td_lat; ?> >Lead Created Date</th>
 				<th <?php echo $td_stg; ?> >Lead Stage</th>
 				<th <?php echo $td_ind; ?> >Lead Indicator</th>
 				<th <?php echo $td_stat; ?> >Status</th>
@@ -56,7 +58,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 		</tr>
 		</thead>
 		<tbody>
-		<?php
+		<?php //echo'<pre>';print_r($filter_results);exit;
 			if(!empty($filter_results)) 
 			{
 				foreach($filter_results as $filter_result) 
@@ -98,6 +100,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 					<td><?php echo $filter_result['region_name']; ?></td>
 					<td><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
 					<td><?php echo $filter_result['ufname'].' '.$filter_result['ulname']; ?></td>
+					<td><?php echo date('d-m-Y',strtotime($filter_result['date_created'])); ?></td>
 					<td><?php echo $filter_result['lead_stage_name']; ?></td>
 					<td>
 						<?php 
@@ -146,6 +149,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 						<td <?php echo $td_reg; ?>><?php echo $filter_result['region_name']; ?></td>
 						<td <?php echo $td_lo; ?>><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
 						<td <?php echo $td_lat; ?>><?php echo $filter_result['ufname'].' '.$filter_result['ulname']; ?></td>
+						<td <?php echo $td_lat; ?>><?php echo date('Y-m-d',strtotime($filter_result['date_created'])); ?></td>
 						<td <?php echo $td_stg; ?>><?php echo $filter_result['lead_stage_name']; ?></td>
 						<td <?php echo $td_ind; ?>>
 							<?php 

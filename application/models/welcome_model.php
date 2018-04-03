@@ -522,10 +522,18 @@ class Welcome_model extends crm_model {
 		return $customers;
 	}
 	
-	public function get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword, $proposal_expect_end)
+	public function get_filter_results($from_date,$to_date,$stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword, $proposal_expect_end)
 	{
 		$userdata 		= $this->session->userdata('logged_in_user');
-		 
+		 // echo "<pre>"; print_r($userdata); die;
+		if($from_date == '0000-00-00 00:00:00'){
+			$from_date = '';
+		}
+		if($to_date == '0000-00-00 00:00:00'){
+			$to_date = '';
+		}
+		// $fromdate 		= $fromdate;
+		// $todate 		= $todate;
 		$stage 			= (count($stage)>0)?explode(',',$stage):'';
 		$owner 			= (count($owner)>0)?explode(',',$owner):'';
 		$customer 		= (count($customer)>0)?explode(',',$customer):'';
@@ -565,6 +573,26 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'] . 'location as locn', 'locn.locationid = cc.add1_location');
 			$this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage', 'LEFT');
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
+			// date_created
+			if(isset($from_date) && !empty($from_date) && empty($to_date)) {
+				$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'"';
+				$this->db->where($dt_query);
+			} else if(isset($to_date) && !empty($to_date) && empty($from_date)) {	
+				$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'"';
+				$this->db->where($dt_query);
+			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
+				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				$this->db->where($dt_query);
+			}
+			
+			/* if(!empty($fromdate) && empty($todate)) {
+				$this->db->where('DATE(j.date_created) >=', date('Y-m-d', strtotime($fromdate)));
+			} else if(empty($fromdate) && !empty($todate)){
+				$this->db->where('DATE(j.date_created) <=', date('Y-m-d', strtotime($todate)));
+			} else if(!empty($fromdate) && !empty($todate)) {
+				$this->db->where('DATE(j.date_created) >=', date('Y-m-d', strtotime($fromdate)));
+				$this->db->where('DATE(j.date_created) <=', date('Y-m-d', strtotime($todate)));
+			} */
 			
 			if(!empty($stage) && count($stage)>0){
 				if($stage[0] != 'null' && $stage[0] != 'all') {		
@@ -665,6 +693,17 @@ class Welcome_model extends crm_model {
 			$this->db->where($reseller_condn);
 			
 			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
+			
+			if(isset($from_date) && !empty($from_date) && empty($to_date)) {
+				$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'"';
+				$this->db->where($dt_query);
+			} else if(isset($to_date) && !empty($to_date) && empty($from_date)) {	
+				$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'"';
+				$this->db->where($dt_query);
+			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
+				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				$this->db->where($dt_query);
+			}
 			
 			if(!empty($stage) && count($stage)>0){
 				if($stage[0] != 'null' && $stage[0] != 'all') {
@@ -797,6 +836,17 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			
 			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
+			
+			if(isset($from_date) && !empty($from_date) && empty($to_date)) {
+				$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'"';
+				$this->db->where($dt_query);
+			} else if(isset($to_date) && !empty($to_date) && empty($from_date)) {	
+				$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'"';
+				$this->db->where($dt_query);
+			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
+				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				$this->db->where($dt_query);
+			}
 			
 			if(!empty($stage) && count($stage)>0){
 				if($stage[0] != 'null' && $stage[0] != 'all') {

@@ -651,7 +651,7 @@ class Project extends crm_controller {
 						$pjtIds[] = $r->id;
 					}
 					$pjtIds = array_unique($pjtIds);
-					echo '<pre>';print_r($pjtIds);exit;
+					// echo '<pre>';print_r($pjtIds);exit;
 					$AllPjtIds = implode(",",$pjtIds);
 					
 					$data['AllPjtIds'] = $pjtIds;

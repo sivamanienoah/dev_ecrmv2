@@ -67,8 +67,13 @@ class Welcome extends crm_controller {
 	// public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $lead_indi='null', $keyword='null') 
 	public function advance_filter_search($search_type = false, $search_id = false)
 	{
+		// echo"here";exit;
+		// echo'<pre>search_type=>';print_r($search_type);
+		// echo'<pre>search_id=>';print_r($search_id);
 		$filt 			= array();
 		$stage	      	=null; 
+		$from_date	    =null; 
+		$to_date	    =null;
 		$customer	 	=null;
 		$service	  	=null;
 		$lead_src	  	=null;
@@ -88,7 +93,7 @@ class Welcome extends crm_controller {
 		$this->session->unset_userdata('load_proposal_expect_end');
 		
 		if($search_type == 'search' && $search_id == false) {
-			$filt = real_escape_array($this->input->post());
+			$filt = real_escape_array($this->input->post());//echo'<pre>filt1=>';print_r($filt);
 			$this->session->set_userdata("lead_search_by_default",0);
 			$this->session->set_userdata("lead_search_by_id",0);
 			$this->session->set_userdata("lead_search_only",1);
@@ -127,8 +132,12 @@ class Welcome extends crm_controller {
 				$this->session->set_userdata("lead_search_by_id",0);				
 			}
 		}
+		// echo'<pre>filt2=>';print_r($filt);
+		// echo'<pre>';print_r(count($filt));exit;
 		 if (count($filt)>0) {			 
 		//echo 'yes';
+			$from_date 	  = $filt['from_date'];
+			$to_date 	  = $filt['to_date'];
 			$stage 		  = $filt['stage'];
 			$customer 	  = $filt['customer'];
 			$service 	  = $filt['service'];
@@ -160,7 +169,7 @@ class Welcome extends crm_controller {
 			$this->session->set_userdata("search_keyword",'');
 		}
 
-		$filter_results = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
+		$filter_results = $this->welcome_model->get_filter_results($from_date,$to_date,$stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
 		// echo $this->db->last_query(); die;
 		$data['filter_results'] = $filter_results;
 
