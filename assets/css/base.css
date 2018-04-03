@@ -1493,7 +1493,7 @@ ul.ui-sortable li{
 }
 .label-wip {
 	border-radius: 3px 3px 3px 3px;
-	padding: 1px 4px 2px;
+	padding: 1px 3px 2px;
     background-color: #006fc0;
 	color: #fff;
 }
@@ -3099,5 +3099,3 @@ padding-bottom:15px !important;
 .mrgin0{
 	margin:0 !important;
 }
-
-
