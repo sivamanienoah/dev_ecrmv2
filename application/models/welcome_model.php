@@ -576,26 +576,23 @@ class Welcome_model extends crm_model {
 			// date_created
 			if(isset($from_date) && !empty($from_date) && empty($to_date)) {
 				$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'"';
+				$dt_mod_query =  'DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'"';
 				// echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
+				$this->db->or_where($dt_mod_query);
 			} else if(isset($to_date) && !empty($to_date) && empty($from_date)) {	
 				$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'"';
+				$dt_mod_query = 'DATE(j.date_modified) <= "'.date('Y-m-d', strtotime($to_date)).'"';
 				// echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
+				$this->db->or_where($dt_mod_query);
 			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
 				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				$dt_mod_query = '(DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
 				 // echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
+				$this->db->or_where($dt_mod_query);
 			}
-			
-			/* if(!empty($fromdate) && empty($todate)) {
-				$this->db->where('DATE(j.date_created) >=', date('Y-m-d', strtotime($fromdate)));
-			} else if(empty($fromdate) && !empty($todate)){
-				$this->db->where('DATE(j.date_created) <=', date('Y-m-d', strtotime($todate)));
-			} else if(!empty($fromdate) && !empty($todate)) {
-				$this->db->where('DATE(j.date_created) >=', date('Y-m-d', strtotime($fromdate)));
-				$this->db->where('DATE(j.date_created) <=', date('Y-m-d', strtotime($todate)));
-			} */
 			
 			if(!empty($stage) && count($stage)>0){
 				if($stage[0] != 'null' && $stage[0] != 'all') {		
@@ -699,13 +696,19 @@ class Welcome_model extends crm_model {
 			
 			if(isset($from_date) && !empty($from_date) && empty($to_date)) {
 				$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'"';
+				$dt_mod_query =  'DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'"';
 				$this->db->where($dt_query);
+				$this->db->or_where($dt_mod_query);
 			} else if(isset($to_date) && !empty($to_date) && empty($from_date)) {	
 				$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'"';
+				$dt_mod_query = 'DATE(j.date_modified) <= "'.date('Y-m-d', strtotime($to_date)).'"';
 				$this->db->where($dt_query);
+				$this->db->or_where($dt_mod_query);
 			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
 				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				$dt_mod_query = '(DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
 				$this->db->where($dt_query);
+				$this->db->or_where($dt_mod_query);
 			}
 			
 			if(!empty($stage) && count($stage)>0){
@@ -842,13 +845,19 @@ class Welcome_model extends crm_model {
 			
 			if(isset($from_date) && !empty($from_date) && empty($to_date)) {
 				$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'"';
+				$dt_mod_query =  'DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'"';
 				$this->db->where($dt_query);
+				$this->db->or_where($dt_mod_query);
 			} else if(isset($to_date) && !empty($to_date) && empty($from_date)) {	
 				$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'"';
+				$dt_mod_query = 'DATE(j.date_modified) <= "'.date('Y-m-d', strtotime($to_date)).'"';
 				$this->db->where($dt_query);
+				$this->db->or_where($dt_mod_query);
 			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
 				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				$dt_mod_query = '(DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
 				$this->db->where($dt_query);
+				$this->db->or_where($dt_mod_query);
 			}
 			
 			if(!empty($stage) && count($stage)>0){

@@ -86,7 +86,7 @@ require (theme_url().'/tpl/header.php');
 						<div style="border: 1px solid #DCDCDC;">
 							<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 								<tr>
-									<td class="tblheadbg">By Created Date</td>
+									<td class="tblheadbg">By Created / Modified Date</td>
 									<td class="tblheadbg">By Lead Stage</td>
 									<td class="tblheadbg">By Customer</td>
 									<td class="tblheadbg">Expected Worth</td>
