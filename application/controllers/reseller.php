@@ -507,7 +507,8 @@ class Reseller extends crm_controller {
 		$this->db->where("l.pjt_id  != ", 'null');
 		$this->db->where("l.lead_status", 4);
 		$this->db->where("l.pjt_status", 1);
-		$reseller_condn = '(`l`.`belong_to` = '.$this->input->post('userid').' OR `l`.`lead_assign` = '.$this->input->post('userid').' OR `l`.`assigned_to` = '.$this->input->post('userid').')';
+		// $reseller_condn = '(`l`.`belong_to` = '.$this->input->post('userid').' OR `l`.`lead_assign` = '.$this->input->post('userid').' OR `l`.`assigned_to` = '.$this->input->post('userid').')';
+		$reseller_condn = '(`l`.`belong_to` = '.$this->input->post('userid').' OR `l`.`assigned_to` ='.$this->input->post('userid').' OR FIND_IN_SET('.$this->input->post('userid').', `l`.`lead_assign`)) ';
 		$this->db->where($reseller_condn);
 		$query = $this->db->get();
 		// echo $this->db->last_query(); die;
@@ -610,7 +611,8 @@ class Reseller extends crm_controller {
 			} else {
 				$this->db->where_in('l.pjt_status', array(1));
 			}
-			$reseller_condn = '(`l`.`belong_to` = '.$this->input->post('userid').' OR `l`.`lead_assign` = '.$this->input->post('userid').' OR `l`.`assigned_to` = '.$this->input->post('userid').')';
+			// $reseller_condn = '(`l`.`belong_to` = '.$this->input->post('userid').' OR `l`.`lead_assign` = '.$this->input->post('userid').' OR `l`.`assigned_to` = '.$this->input->post('userid').')';
+			$reseller_condn = '(`l`.`belong_to` = '.$this->input->post('userid').' OR `l`.`assigned_to` ='.$this->input->post('userid').' OR FIND_IN_SET('.$this->input->post('userid').', `l`.`lead_assign`)) ';
 			$this->db->where($reseller_condn);
 			$query = $this->db->get();
 			// echo $this->db->last_query(); die;

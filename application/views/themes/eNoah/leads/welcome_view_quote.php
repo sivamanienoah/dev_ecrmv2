@@ -25,10 +25,10 @@ $(function(){
 <div class="comments-log-container"></div>
 
 <script type="text/javascript">
-var unid = <?php  echo $userdata['userid'] ?>;
-var belong_to = <?php echo $quote_data['belong_to'] ?>;
-var lead_assign = <?php echo $quote_data['lead_assign'] ?>;
-var role_id = <?php echo $userdata['role_id'] ?>;
+var unid 		= <?php  echo $userdata['userid'] ?>;
+var belong_to 	= <?php echo $quote_data['belong_to'] ?>;
+var lead_assign = '<?php echo $quote_data['lead_assign'] ?>';
+var role_id 	= <?php echo $userdata['role_id'] ?>;
 
 var lead_services = [];
 lead_services['not_select'] = '';
@@ -37,10 +37,10 @@ lead_services['not_select'] = '';
 lead_services[<?php echo $job["sid"] ?>] = '<?php echo $job["services"] ?>';
 <?php } ?>
 
-var quote_id = <?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
-var ex_cust_id = 0;
+var quote_id 		= <?php echo isset($quote_data['lead_id']) ? $quote_data['lead_id'] : 0 ?>;
+var ex_cust_id 		= 0;
 var item_sort_order = '';
-var curr_job_id = <?php echo $quote_data['lead_id'] ?>;
+var curr_job_id 	= <?php echo $quote_data['lead_id'] ?>;
 
 $(function(){
 	<?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
@@ -633,8 +633,12 @@ $(function(){
     <div class="inner q-view">
 		<div class="right-communication">
 			
-		<?php 
-		if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
+		<?php
+		
+		$lead_assign_arr = array(0);
+		$lead_assign_arr = @explode(',',$quote_data['lead_assign']);
+		
+		if ($quote_data['belong_to'] == $userdata['userid'] || (in_array($userdata['userid'], $lead_assign_arr) ) || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) { ?>
 			<form id="comm-log-form">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				<textarea name="job_log" id="job_log" class="textfield width99pct height100px gray-text">Click to view options</textarea>
@@ -815,7 +819,7 @@ $(function(){
 						</p>
 						<p class="clearfix"><label>Entity </label><span><?php echo $quote_data['division_name'] ?></span></p>
 						<p class="clearfix"><label>Lead Owner </label> <span><?php echo $quote_data['ownfname'] .' '. $quote_data['ownlname']; ?></span></p>
-						<p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname'] .' '. $quote_data['asslname']; ?></span></p>
+						<p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname']; ?></span></p>
 						<p class="clearfix"><label>Lead Indicator </label><span><?php echo $quote_data['lead_indicator'] ?></span></p>
 						<p class="clearfix"><label>Lead Status </label>
 							<span> 
@@ -849,7 +853,7 @@ $(function(){
 				<?php
 					include theme_url() . '/tpl/user_accounts_options.php';
 
-					if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) 
+					if ($quote_data['belong_to'] == $userdata['userid'] || (in_array($userdata['userid'], $lead_assign_arr) ) || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) 
 					{
 				?>
 					<div class="buttons" style="overflow:hidden; padding-bottom:10px; margin:10px 0 0;">
@@ -943,7 +947,7 @@ $(function(){
 			</div>			
 			<?php } 
 			?>
-			<?php */?>
+			<?php */ ?>
 					</div>
 					<?php } ?>
 					<div class='clrboth'></div>

@@ -6,7 +6,7 @@ class proposal_expected_date_cron extends crm_controller
 	
     public function __construct()
 	{
-         parent::__construct();
+		parent::__construct();
 		//$this->login_model->check_login();
 		//$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('customer_model');
@@ -16,7 +16,8 @@ class proposal_expected_date_cron extends crm_controller
     }
     
     function index()
-	{	
+	{
+		
 		$today = date('Y-m-d'); 
 		// $tomorrow = date('Y-m-d', strtotime("+1 day"));
 		
@@ -29,13 +30,12 @@ class proposal_expected_date_cron extends crm_controller
 			// echo "<pre>"; print_r($result); exit;
 			
 			foreach ($result as $res) {
-				$expe = $this->db->query(" SELECT jb.lead_id, jb.lead_title, jb.belong_to, jb.lead_assign, DATEDIFF(jb.proposal_expected_date, '".$today."') as date_diff , jb.proposal_expected_date, CONCAT(own.first_name, ' ', own.last_name) as owners, CONCAT(ass.first_name, ' ', ass.last_name) as assign, ass.email
+				$expe = $this->db->query(" SELECT jb.lead_id, jb.lead_title, jb.belong_to, jb.lead_assign, DATEDIFF(jb.proposal_expected_date, '".$today."') as date_diff , jb.proposal_expected_date, CONCAT(own.first_name, ' ', own.last_name) as owners
 				FROM `".$this->cfg['dbpref']."leads` as jb 
 				LEFT JOIN `".$this->cfg['dbpref']."users` as own ON `own`.`userid` = `jb`.`belong_to`
-				LEFT JOIN `".$this->cfg['dbpref']."users` as ass ON `ass`.`userid` = `jb`.`lead_assign`
-				where jb.proposal_expected_date between CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '".$res['no_of_days']."' DAY)) AND jb.lead_status = 1 AND jb.lead_assign='".$res['userid']."' order by jb.lead_id ");
-				
-				
+				LEFT JOIN `".$this->cfg['dbpref']."users` as ass ON `FIND_IN_SET` (`ass`.`userid` , `jb`.`lead_assign`)
+				where jb.proposal_expected_date between CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '".$res['no_of_days']."' DAY)) AND jb.lead_status = 1 AND FIND_IN_SET('".$res['userid']."', jb.lead_assign) order by jb.lead_id ");
+
 				$data['members'] = $expe->result_array();
 				// echo "<pre>"; print_r($data['members']); exit;
 				$user_name = "Webmaster";
@@ -78,7 +78,7 @@ class proposal_expected_date_cron extends crm_controller
 										<span>'.$print_fancydate.'</span>&nbsp;&nbsp;&nbsp;
 										</p>
 										<p style="padding: 4px;">';
-										$log_email_content .= 'Dear '.$member['assign'].', <br /><br />';
+										$log_email_content .= 'Dear Members, <br /><br />';
 										$log_email_content .= 'The proposal expected date for the lead "<a href='.$this->config->item('base_url').'welcome/view_quote/'.$member['lead_id'].'>'.$member['lead_title'].'</a>" is going to end on '.date('d-m-Y', strtotime($member['proposal_expected_date'])).'';
 									  $log_email_content .= '<br /><br />
 									  Thanks & Regards,<br />Webmaster.
@@ -98,7 +98,8 @@ class proposal_expected_date_cron extends crm_controller
 							</table>
 							</body>
 							</html>';
-						$this->email->to($member['email']);	
+						$assign_email  = get_lead_assigne_email($member['lead_assign']);
+						$this->email->to($assign_email);	
 						$this->email->message($log_email_content);
 						$this->email->send();
 						

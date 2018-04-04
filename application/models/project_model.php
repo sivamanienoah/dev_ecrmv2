@@ -727,7 +727,7 @@ class Project_model extends crm_model
 		
 		if(count($res) > 0) {
 			foreach($res as $row){
-				$users['name'][] = $row['first_name'] . ' ' .$row['last_name'];
+				$users['name'][] 	 = $row['first_name'] . ' ' .$row['last_name'];
 				$users['username'][] = strtolower($row['username']);
 			}
 		}

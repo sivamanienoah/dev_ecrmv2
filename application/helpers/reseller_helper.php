@@ -32,7 +32,8 @@ if ( ! function_exists('getResellerActiveLeads'))
 		
 		$CI->db->select('jb.lead_id');
 		$CI->db->where('jb.lead_status', 1);
-		$reseller_condn = '(`jb`.`belong_to` = '.$userid.' OR `jb`.`lead_assign` = '.$userid.')';
+		// $reseller_condn = '(`jb`.`belong_to` = '.$userid.' OR `jb`.`lead_assign` = '.$userid.')';
+		$reseller_condn = '(jb.belong_to = '.$userid.' OR FIND_IN_SET('.$userid.', jb.lead_assign)) ';
 		$CI->db->where($reseller_condn);
 		$CI->db->where('jb.lead_id != "null" AND jb.lead_stage IN ("'.$CI->stages.'")');
 		$query  = $CI->db->get($CI->cfg['dbpref'].'leads jb');
@@ -56,7 +57,8 @@ if ( ! function_exists('getResellerActiveProjects'))
 		$CI->db->select('jb.lead_id');
 		$CI->db->where('jb.lead_status', 4);
 		$CI->db->where('jb.pjt_status', 1);
-		$reseller_condn = '(`jb`.`belong_to` = '.$userid.' OR `jb`.`lead_assign` = '.$userid.' OR `jb`.`assigned_to` = '.$userid.')';
+		// $reseller_condn = '(`jb`.`belong_to` = '.$userid.' OR `jb`.`lead_assign` = '.$userid.' OR `jb`.`assigned_to` = '.$userid.')';
+		$reseller_condn = '(jb.belong_to = '.$userid.' OR jb.assigned_to ='.$userid.' OR FIND_IN_SET('.$userid.', jb.lead_assign)) ';
 		$CI->db->where($reseller_condn);
 		$query  = $CI->db->get($CI->cfg['dbpref'].'leads jb');
 		// echo $CI->db->last_query(); exit;

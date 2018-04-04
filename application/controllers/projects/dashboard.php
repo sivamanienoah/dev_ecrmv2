@@ -3834,8 +3834,7 @@ class Dashboard extends crm_controller
 		$data['start_date'] 	  = $start_date;
 		$data['end_date']   	  = $end_date;
 		$data['results']    	  = $arr_depts;
-		
-		
+
 		// echo "<pre>"; print_r($data); die;
 		$this->load->view("projects/cost_report_view_new", $data);
 	}

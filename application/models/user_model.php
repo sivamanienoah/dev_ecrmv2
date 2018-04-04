@@ -523,7 +523,7 @@ class User_model extends crm_model {
 		$this->db->from($this->cfg['dbpref']."users");
 		$this->db->where("userid in (".$users.")");
 		$this->db->where("inactive", 0);
-		$this->db->order_by("first_name"); 		
+		$this->db->order_by("first_name");
 		$query = $this->db->get();
 		$user_res = $query->result_array();
 		$res = '';

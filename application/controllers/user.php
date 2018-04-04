@@ -80,8 +80,8 @@ class User extends crm_controller {
 		
 		//for Inactive Role
 		if($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
-			// $where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.") AND pjt_status = 0";
-			$where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.")";
+			// $where = "(belong_to=".$id." or lead_assign=".$id." or assigned_to =".$id.")";
+			$where = '(belong_to = '.$id.' OR assigned_to ='.$id.' OR FIND_IN_SET('.$id.', lead_assign)) ';
 			$this->db->where($where);
 			$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
 		}
@@ -314,7 +314,25 @@ class User extends crm_controller {
 	*/
 	function getUserDetFromDb() {
 		$data = real_escape_array($this->input->post());
-		$this->user_model->getUserLeadAssigned($data['user']);
+		$res = $this->user_model->getUserLeadAssigned($data['user']);
+		return $res;
+	}
+	
+	function getRestrictedUsers() {
+		$data = real_escape_array($this->input->post());
+		
+		$this->db->select("userid, first_name, last_name, emp_id");
+		$this->db->from($this->cfg['dbpref']."users");
+		$this->db->where("userid in (".$data['user'].")");
+		$this->db->where("inactive", 0);
+		$this->db->order_by("first_name");
+		$query = $this->db->get();
+		$user_res = $query->result_array();
+		$res = '';
+		foreach($user_res as $user) {
+			$res .= "<option value=".$user['userid'].">".$user['first_name']." ".$user['last_name']." - ".$user['emp_id']."</option>";
+		}
+		echo $res;
 	}
 	
 	

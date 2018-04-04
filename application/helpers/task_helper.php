@@ -6,11 +6,12 @@ if ( ! function_exists('getAccessFromLead'))
 		$CI = get_instance();
 		$cfg = $CI->config->item('crm'); // load config
 		
-		
-		
+		$wh_condn = '(belong_to = '.$uid.' OR assigned_to ='.$uid.' OR FIND_IN_SET('.$uid.', lead_assign)) ';
+
 		$CI->db->select('lead_assign, assigned_to, belong_to');
 		$CI->db->where('lead_id', $id);
-		$CI->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
+		// $CI->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
+		$CI->db->where($wh_condn);
 		$sql = $CI->db->get($cfg['dbpref'].'leads');
 		
 		//echo $CI->db->last_query();

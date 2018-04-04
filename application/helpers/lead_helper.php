@@ -76,7 +76,8 @@ if ( ! function_exists('proposal_expect_end_msg') )
 		$CI->db->select('jb.lead_id, jb.lead_title, jb.proposal_expected_date as dt, DATEDIFF(jb.proposal_expected_date, CURDATE()) as datediff');
 		$CI->db->where('jb.proposal_expected_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '.$day.' DAY)) ');
 		$CI->db->where('jb.lead_status', 1);
-		$CI->db->where('jb.lead_assign', $userdata['userid']);
+		// $CI->db->where('jb.lead_assign', $userdata['userid']);
+		$CI->db->where("FIND_IN_SET('".$userdata['userid']."', jb.lead_assign)");
 		$sql = $CI->db->get($cfg['dbpref'].'leads as jb');
 
 		// echo $CI->db->last_query(); exit;
@@ -136,12 +137,15 @@ if ( ! function_exists('check_max_users') )
 
 function get_del_access($id, $uid)
 {
+	$wh_condn = '(belong_to = '.$uid.' OR assigned_to ='.$uid.' OR FIND_IN_SET('.$uid.', lead_assign)) ';
+	
 	$CI = get_instance();
 	$cfg = $CI->config->item('crm'); // load config
 	
 	$CI->db->select('lead_assign, assigned_to, belong_to');
 	$CI->db->where('lead_id', $id);
-	$CI->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
+	// $CI->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
+	$CI->db->where($wh_condn);
 	$sql = $CI->db->get($cfg['dbpref'].'leads');
 	$res = $sql->result_array();
 	if (empty($res)) {
@@ -150,6 +154,32 @@ function get_del_access($id, $uid)
 		$chge_access = 1;
 	}
 	return $chge_access;
+}
+
+function get_lead_assigne_names($user_id)
+{
+	$CI = get_instance();
+	$cfg = $CI->config->item('crm'); // load config
+	
+	$CI->db->select('GROUP_CONCAT(CONCAT(u.first_name, " " , u.last_name) SEPARATOR ",") as assignees', FALSE);
+	$CI->db->where_in('u.userid', @explode(',', $user_id));
+	$sql = $CI->db->get($cfg['dbpref'].'users u');
+	$res = $sql->row_array();
+	// echo $CI->db->last_query() . '<br>'; 
+	return $res['assignees'];
+}
+
+function get_lead_assigne_email($user_id)
+{
+	$CI = get_instance();
+	$cfg = $CI->config->item('crm'); // load config
+	
+	$CI->db->select('GROUP_CONCAT(u.email SEPARATOR ",") as emails', FALSE);
+	$CI->db->where_in('u.userid', @explode(',', $user_id));
+	$sql = $CI->db->get($cfg['dbpref'].'users u');
+	$res = $sql->row_array();
+	// echo $CI->db->last_query() . '<br>'; 
+	return $res['emails'];
 }
 
 if ( ! function_exists('get_file_access'))

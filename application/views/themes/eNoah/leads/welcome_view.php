@@ -1,12 +1,14 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
-
+<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
+<style>
+	.ui-autocomplete { max-height:200px; overflow-y:auto; overflow-x: hidden; }
+	#ui-datepicker-div {z-index: 999 !important;}
+</style>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/ajaxfileupload.js"></script>
-<style>
-.ui-autocomplete { max-height:200px; overflow-y:auto; overflow-x: hidden; }
-</style>
+<script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
 <input type="hidden" class="hiddenUrl"/>
 <script type="text/javascript">
 <?php 
@@ -222,13 +224,14 @@ function get_user_infm(users) {
 	var user = users.toString();
 	$.ajax({
 		type: "POST",
-		url : baseurl + 'user/getUserDetFromDb/',
+		url : baseurl + 'user/getRestrictedUsers/',
 		cache : false,
 		data: { user: user,'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>' },
 		success : function(response){
 		//alert(response);
 			if(response != '') {
 				$("#lead_assign").html(response);
+				$("#lead_assign").trigger("liszt:updated");
 			}
 		}
 	});
@@ -307,7 +310,7 @@ function startQuote() {
 	if ($('#lead_source').val() == 'not_select') {
         err.push('Lead Source must be selected');
     }
-	if ($('#lead_assign').val() == 'not_select') {
+	if ($('#lead_assign').val() == null) {
         err.push('Lead Assigned to must be selected');
     }
 	if ($('#job_division').val() == 'not_select') {
@@ -883,8 +886,9 @@ h3 .small {
 					
 					<p><label>Lead Assigned To</label></p>
 					<p>
-						<select name="lead_assign" id="lead_assign" class="textfield width300px">
-						<option value="not_select">Please Select</option>
+						<!--select name="lead_assign" id="lead_assign" class="textfield width300px"-->
+						<select data-placeholder="Choose Assignee..." name="lead_assign[]" multiple id="lead_assign" class="chzn-select width300px">
+							<option value="not_select">Please Select</option>
                             <?php
 							if (!empty($lead_assign)) {
 								foreach ($lead_assign as $leada) {
@@ -1061,18 +1065,10 @@ h3 .small {
 						<p><label>Lead Owner </label></p>
 						<p>
 						<?php if(($quote_data['belong_to'] ==  $userdata['userid']) || ($userdata['role_id'] == 1 || $userdata['role_id'] == 2)) { ?>
-							
-							
 							<select name="lead_owner_edit" id="lead_owner_edit" class="textfield width300px">
-							
-							<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
-								
-								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['belong_to'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] ?></option>
-								
-							<?php
-								
-							}
-							?>
+								<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
+									<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['belong_to'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] ?></option>
+								<?php } ?>
 							</select>
 							<script>
 							$('#lead_owner_edit').change(function() {
@@ -1082,16 +1078,10 @@ h3 .small {
 							});
 							</script>
 						<?php } else { ?>
-										<select name="lead_owner_edit" id="lead_owner_edit" class="textfield width300px" disabled=true>
-							<?php foreach ($lead_assign_edit as $leadassignedit) {
-								
-								?>
-								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['belong_to'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo  $leadassignedit['first_name'] ?></option>
-								
-							<?php
-								
-							}
-							?>
+							<select name="lead_owner_edit" id="lead_owner_edit" class="textfield width300px" disabled=true>
+								<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
+									<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['belong_to'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo  $leadassignedit['first_name'] ?></option>
+								<?php } ?>
 							</select>
 							<script>
 								$(document).ready(function() {
@@ -1106,39 +1096,35 @@ h3 .small {
 						</p>
 						<!-- lead edit owner ends here -->
 						<p><label>Lead Assigned To</label></p>
+						<?php
+							$lead_assign_arr = array(0);
+							$lead_assign_arr = @explode(',',$quote_data['lead_assign']);
+						?>
 						<p>
 						<?php if($quote_data['belong_to'] ==  $userdata['userid'] || $userdata['role_id'] == 1) { ?>
-							<select name="lead_assign_edit" id="lead_assign_edit" class="textfield width300px">
-							<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
-								<option value="<?php echo $leadassignedit['userid'] ?>"<?php echo ($quote_data['lead_assign'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] ?></option>
-							<?php
-							}
-							?>
+							<select data-placeholder="Choose Assignee..." name="lead_assign_edit[]" multiple id="lead_assign_edit" class="chzn-select width300px">
+								<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
+									<option value="<?php echo $leadassignedit['userid'] ?>"<?php echo (in_array($leadassignedit['userid'], $lead_assign_arr) ) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] . " - " . $leadassignedit['emp_id']; ?></option>
+								<?php } ?>
 							</select>
 							<script>
-							$('#lead_assign_edit').change(function() {
-								var assign_mail = $('#lead_assign_edit').val();
-								//alert(assign_mail);
-								$('#lead_assign_edit_hidden').val(assign_mail);
-							});
+								$('#lead_assign_edit').change(function() {
+									var assign_mail = $('#lead_assign_edit').val();
+									//alert(assign_mail);
+									$('#lead_assign_edit_hidden').val(assign_mail);
+								});
 							</script>
 						<?php } else {	?>
-								<select name="lead_assign_edit" id="lead_assign_edit" class="textfield width300px" disabled=true>
-							<?php foreach ($lead_assign_edit as $leadassignedit) {
-								
-								?>
-								<option value="<?php echo  $leadassignedit['userid'] ?>"<?php echo  ($quote_data['lead_assign'] == $leadassignedit['userid']) ? ' selected="selected"' : '' ?>><?php echo  $leadassignedit['first_name'] ?></option>
-								
-							<?php 
-								
-							}
-							?>
+							<select data-placeholder="Choose Assignee..." name="lead_assign_edit[]" multiple id="lead_assign_edit" disabled=true class="chzn-select width300px">
+								<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
+									<option value="<?php echo $leadassignedit['userid'] ?>"<?php echo (in_array($leadassignedit['userid'], $lead_assign_arr) ) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] . " - " . $leadassignedit['emp_id'] ?></option>
+								<?php } ?>
 							</select>
 							<script>
 								$(document).ready(function() {
-								var assign_hidden = $('#lead_assign_edit').val();
-								//alert(assign_hidden);
-								$('#lead_assign_edit_hidden').val(assign_hidden);
+									var assign_hidden = $('#lead_assign_edit').val();
+									//alert(assign_hidden);
+									$('#lead_assign_edit_hidden').val(assign_hidden);
 								});
 							</script>
 						<?php } ?>
@@ -1523,15 +1509,27 @@ $(function(){
 		});
 	});
 	
+	//for lead assign
+	var config = {
+	  '.chzn-select'           : {},
+	  '.chzn-select-deselect'  : {allow_single_deselect:true},
+	  '.chzn-select-no-single' : {disable_search_threshold:10},
+	  '.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
+	  '.chzn-select-width'     : {width:"95%"}
+	}
+	for (var selector in config) {
+	  $(selector).chosen(config[selector]);
+	}
+	
 });
 
 //code added for when the customer name field is empty it will show the notice div.
 $("#ex-cust-name").keyup(function(){
 //alert('test');
-var mylength = $(this).val();
+	var mylength = $(this).val();
     if(mylength == '') {
 		$('.notice').slideDown(400);
-		location.reload();
+		// location.reload();
     }
 });
 

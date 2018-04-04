@@ -65,7 +65,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->assigned_first_name.' '.$lead->assigned_last_name;
+				$content .= get_lead_assigne_names($lead->lead_assign);
 				$content .= "</td>";
 				
 				

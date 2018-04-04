@@ -9,7 +9,6 @@ class Dashboard extends crm_controller {
 	*/
 	function __construct()
 	{
-		
 		parent::__construct();
 		$this->login_model->check_login();
 		$this->load->model('dashboard_model');
@@ -17,10 +16,10 @@ class Dashboard extends crm_controller {
 		$this->load->model('regionsettings_model');
 		$this->load->model('welcome_model');
 		 
-		$this->load->helper('custom_helper');
+		$this->load->helper('custom');
 		 
-		$this->load->helper('text_helper');
-		$this->load->helper('lead_stage_helper');
+		$this->load->helper('text');
+		$this->load->helper('lead_stage');
 		$this->userdata   = $this->session->userdata('logged_in_user');
 		$this->pjt_stg 	  = array(0,1,2,3);
 		$this->pjt_stages = @implode("','", $this->pjt_stg);
@@ -53,7 +52,6 @@ class Dashboard extends crm_controller {
 
 		if (isset($filter['search_type']) && $filter['search_type'] == 'search') {
 			$data['val_export'] = 'search';
-			// echo "<pre>"; print_r($filter); exit;
 		} else if(isset($filter['search_type']) && is_numeric($filter['search_type'])) {
 			$wh_condn = array('search_id'=>$filter['search_type'], 'search_for'=>4, 'user_id'=>$this->userdata['userid']);
 			$get_rec  = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
@@ -582,13 +580,16 @@ class Dashboard extends crm_controller {
 
 		if (isset($data['getLeadDetail']) && count($data['getLeadDetail'])) :
 			foreach($data['getLeadDetail'] as $leadDet) {
+				
+				$assign_names  = get_lead_assigne_names($leadDet['lead_assign']);
+				
 			    $amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
 				$res['html'] .='<tr>
 								<td><a href="'.base_url().'welcome/view_quote/'.$leadDet['lead_id'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
 								<td><a href="'.base_url().'welcome/view_quote/'.$leadDet['lead_id'].'" target="_blank">'.character_limiter($leadDet['lead_title'], 35).'</a></td>
 								<td>'.$leadDet['company'].' - '.$leadDet['customer_name'].'</td>
 								<td>'.$leadDet['owrfname'].' '.$leadDet['owrlname'].'</td>
-								<td>'.$leadDet['assifname'].' '.$leadDet['assilname'].'</td>
+								<td>'.$assign_names.'</td>
 								<td>'.$leadDet['lead_indicator'].'</td>
 								<td text align="right">'.number_format($amt_converted, 2, '.', '').'</td>
 								</tr>';
@@ -654,20 +655,23 @@ class Dashboard extends crm_controller {
         $lead_table_output .= "<input id='lead-owner-username' type='hidden' value='".$username."'/>";			
 		$lead_table_output .= '<div class="export-to-excel"><a id="lead-ownner-export">Export to Excel</a></div>';
 		$lead_table_output .=  '<table name="'.$userid.'" cellspacing="0" id="lead-dependency-table" class="dashboard-heads" cellpadding="10px;" border="0" width="100%"><thead><tr><th>Lead No.</th><th>Lead Title </th><th>Customer</th><th>Lead Owner</th><th>Lead Assignee</th><th>Lead Indicator</th><th>Expected Worth ('.$this->default_cur_name.')</th><thead><tbody role="alert" aria-live="polite" aria-relevant="all">';
+		
 		foreach($data['getLeadOwnerDependence']->result() as $lead_info) {
+			$assignee_name = get_lead_assigne_names($lead_info->lead_assign);
 			$lead_det['invoice_no']   		 = $lead_info->invoice_no;
 			$lead_det['lead_id'] 			 = $lead_info->lead_id;
 			$lead_det['lead_title'] 		 = $lead_info->lead_title;
-			$lead_det['owrfirst_name'] 		 = $lead_info->ownrfname;	
 			$lead_det['usrfname'] 			 = $lead_info->usrfname;
-			$lead_det['cflname'] 			 = $lead_info->company.' - '.$lead_info->cfname;		
+			$lead_det['cflname'] 			 = $lead_info->company.' - '.$lead_info->cfname;
+			$lead_det['ownrname'] 			 = $lead_info->ownrfname.' '.$lead_info->ownrlname;
 			$lead_det['expect_worth_amount'] = $lead_info->expect_worth_name." ".$lead_info->expect_worth_amount;	
 			$lead_det['lead_indicator'] 	 = $lead_info->lead_indicator;	
 			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
+			$assign_names  = 
 			$lead_table_output .=  "<tr><td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".$lead_det['invoice_no']."</a></td>
 			<td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".character_limiter($lead_det['lead_title'], 35)."</a></td>
-			<td>".$lead_det['cflname']."</td><td>".$lead_det['owrfirst_name']."</td>
-			<td>".$lead_det['usrfname']."</td><td>". $lead_det['lead_indicator'] ."</td><td text align=right>".number_format($amt_converted, 2, '.', '') ."</td>
+			<td>".$lead_det['cflname']."</td><td>".$lead_det['ownrname']."</td>
+			<td>".$assignee_name."</td><td>". $lead_det['lead_indicator'] ."</td><td text align=right>".number_format($amt_converted, 2, '.', '') ."</td>
 			</tr>";
 		}
 		$lead_table_output .=  "</tbody>";
@@ -776,12 +780,13 @@ class Dashboard extends crm_controller {
 			$lead_det['cflname'] 		= $lead_info->company.' - '.$lead_info->cfname;
 			$lead_det['lead_indicator'] = $lead_info->lead_indicator;	
 			$amt_converted = $this->conver_currency($lead_info->expect_worth_amount,$rates[$lead_info->expect_worth_id][$this->default_cur_id]);
+			$assign_names  = get_lead_assigne_names($lead_info->lead_assign);
 			$assignee_table_output .=  "<tr>
 			<td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".$lead_det['invoice_no']."</a></td>
 			<td><a href='".base_url()."welcome/view_quote/".$lead_det['lead_id']."' target='_blank'>".character_limiter($lead_det['lead_title'], 35)."</a></td>
 			<td>".$lead_det['cflname']."</td>
 			<td>".$lead_det['owrfirst_name']."</td>
-			<td>".$lead_det['usrfname']."</td>
+			<td>".$assign_names."</td>
 			<td>". $lead_det['lead_indicator']."</td>
 			<td text align=right>".number_format($amt_converted, 2, '.', '')  ."</td></tr>";
 		}
@@ -819,16 +824,17 @@ class Dashboard extends crm_controller {
 			$filter		= $res;
 		}
 		
-		$cusId 		= $this->level_restriction();
+		$cusId 			= $this->level_restriction();
 		$data['getCurrentActivityTable'] = $this->dashboard_model->getCurrentActivityLeadsAjax($isSelect, $cusId, $filter);
 		// echo "<pre>"; print_r($data['getCurrentActivityTable']); exit;
 		$weekly_monthly_repo .= '<table class="dashboard-heads" id="weekly-monthly-table" cellspacing="0" cellpadding="10px;" border="0" width="100%">';
 		$rates = $this->get_currency_rates();
 		$weekly_monthly_repo .= '<thead><tr><th>Lead Title</th><th>Estimated Worth ('.$this->default_cur_name.')</th><th>Lead Owner</th><th>Lead Assignee</th></tr></thead><tbody>';
 		foreach($data['getCurrentActivityTable'] as $lead_info) {
+			$lead_det['usrfname'] 			 = '';
 			$lead_det['lead_title'] 	     = '<a onclick="getCurrentLeadActivity('. $lead_info['lead_id'].','."'".$lead_info['lead_title']."'".')" >'. character_limiter($lead_info['lead_title'], 35).'</a>';
 			$lead_det['owrfirst_name'] 		 = $lead_info['ownrfname']." ".$lead_info['ownrlname'];	
-			$lead_det['usrfname'] 			 = $lead_info['usrfname']." ".$lead_info['usrlname'];
+			$lead_det['usrfname'] 			 = get_lead_assigne_names($lead_info['lead_assign']);
 			$lead_det['expect_worth_amount'] = number_format(round($rates[$lead_info['expect_worth_id']][$this->default_cur_id]*$lead_info['expect_worth_amount']), 2, '.', '');	
 			$weekly_monthly_repo .= "<tr><td>".$lead_det['lead_title']. "</td><td align='right'>". $lead_det['expect_worth_amount']."</td>" ;
 			$weekly_monthly_repo .= "<td>".$lead_det['owrfirst_name']."</td><td>".$lead_det['usrfname']."</td></tr>";
@@ -990,12 +996,13 @@ class Dashboard extends crm_controller {
 				case 'pie2':
 				case 'pie3':
 				case 'pie4':
-					for($j = 0; $j < count($res); $j++) {			
+					for($j = 0; $j < count($res); $j++) {
+						$assign_names = get_lead_assigne_names($res[$j]['lead_assign']);
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $res[$j]['invoice_no']);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $res[$j]['lead_title']);
 						$this->excel->getActiveSheet()->setCellValue('C'.$i, $res[$j]['company'].' - '.$res[$j]['customer_name']);
 						$this->excel->getActiveSheet()->setCellValue('D'.$i, $res[$j]['owrfname'].' '.$res[$j]['owrlname']);
-						$this->excel->getActiveSheet()->setCellValue('E'.$i, $res[$j]['assifname'].' '.$res[$j]['assilname']);
+						$this->excel->getActiveSheet()->setCellValue('E'.$i, $assign_names);
 						$this->excel->getActiveSheet()->setCellValue('F'.$i, $res[$j]['lead_indicator']);
 						$amt_converted = $this->conver_currency($res[$j]['expect_worth_amount'],$rates[$res[$j]['expect_worth_id']][$this->default_cur_id]);
 						$total_amt_converted += $this->conver_currency($res[$j]['expect_worth_amount'],$rates[$res[$j]['expect_worth_id']][$this->default_cur_id]);
@@ -1011,12 +1018,13 @@ class Dashboard extends crm_controller {
 				break;
 				
 				case 'currentactivity':
-					foreach ($lead_owner_opp as $lead) {			
+					foreach ($lead_owner_opp as $lead) {
+						$assign_names = get_lead_assigne_names($lead['lead_assign']);
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead['invoice_no']);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead['lead_title']);
 						$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead['cfname'].' '.$lead['clname']);
 						$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead['ownrfname'].' '.$lead['ownrlname']);
-						$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead['usrfname'].' '.$lead['usrlname']);
+						$this->excel->getActiveSheet()->setCellValue('E'.$i, $assign_names);
 						$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead['lead_indicator']);
 						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
 						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
@@ -1036,11 +1044,12 @@ class Dashboard extends crm_controller {
 				case 'leastactive':
 				case 'line2':
 					foreach ($res as $lead) {			//LeadDetails
+						$assign_names = get_lead_assigne_names($lead['lead_assign']);
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead['invoice_no']);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead['lead_title']);
 						$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead['company'].' - '.$lead['customer_name']);
 						$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead['owrfname'].' '.$lead['owrlname']);
-						$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead['assifname'].' '.$lead['assilname']);
+						$this->excel->getActiveSheet()->setCellValue('E'.$i, $assign_names);
 						$this->excel->getActiveSheet()->setCellValue('F'.$i, $lead['lead_indicator']);
 						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
 						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
@@ -1057,12 +1066,13 @@ class Dashboard extends crm_controller {
 				
 				case 'leadowner':
 				case 'assignee':
-					foreach ($lead_owner_opp as $lead) {			
+					foreach ($lead_owner_opp as $lead) {
+						$assign_names = get_lead_assigne_names($lead['lead_assign']);
 						$this->excel->getActiveSheet()->setCellValue('A'.$i, $lead['invoice_no']);
 						$this->excel->getActiveSheet()->setCellValue('B'.$i, $lead['lead_title']);
 						$this->excel->getActiveSheet()->setCellValue('C'.$i, $lead['company'].' - '.$lead['cfname']);
 						$this->excel->getActiveSheet()->setCellValue('D'.$i, $lead['ownrfname'].' '.$lead['ownrlname']);
-						$this->excel->getActiveSheet()->setCellValue('E'.$i, $lead['usrfname'].' '.$lead['usrlname']);
+						$this->excel->getActiveSheet()->setCellValue('E'.$i, $assign_names);
 						/* converting to USD */
 						$amt_converted = $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
 						$total_amt_converted += $this->conver_currency($lead['expect_worth_amount'],$rates[$lead['expect_worth_id']][$this->default_cur_id]);
@@ -1240,12 +1250,13 @@ class Dashboard extends crm_controller {
 		if (isset($data['leadDeta']) && count($data['leadDeta'])) :
 			foreach($data['leadDeta'] as $leadDet) {
 				$amt_converted = $this->conver_currency($leadDet['expect_worth_amount'],$rates[$leadDet['expect_worth_id']][$this->default_cur_id]);
+				$assign_names  = get_lead_assigne_names($leadDet['lead_assign']);
 				$res['html'] .= '<tr>
 								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.$leadDet['invoice_no'].'</a></td>
 								 <td><a href="'.base_url().$linkurl.$leadDet['lead_id'].'" target="_blank">'.character_limiter($leadDet['lead_title'], 35).'</a></td>
 								 <td>'.$leadDet['company'].' - '.$leadDet['customer_name'].'</td>
 								 <td>'.$leadDet['owrfname'].' '.$leadDet['owrlname'].'</td>
-								 <td>'.$leadDet['assifname'].' '.$leadDet['assilname'].'</td>
+								 <td>'.$assign_names.'</td>
 								 <td>'.$leadDet['lead_indicator'].'</td>
 								 <td text align="right">'.number_format($amt_converted, 2, '.', '').'</td>
 								 </tr>';

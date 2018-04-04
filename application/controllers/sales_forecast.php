@@ -43,7 +43,8 @@ class Sales_forecast extends crm_controller {
 		
 		$or_where = '';
 		if($this->userdata['role_id'] == 14) {
-			$or_where = '(belong_to = '.$this->userdata['userid'].' OR lead_assign = '.$this->userdata['userid'].' OR assigned_to ='.$this->userdata['userid'].')';
+			// $or_where = '(belong_to = '.$this->userdata['userid'].' OR lead_assign = '.$this->userdata['userid'].' OR assigned_to ='.$this->userdata['userid'].')';
+			$or_where = '(belong_to = '.$this->userdata['userid'].' OR assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', lead_assign)) ';
 		}
 		$data['leads_data']     = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>1,'pjt_status'=>0), $order = array("lead_id"=>"asc"), $or_where);
 		$data['projects_data']  = $this->sales_forecast_model->get_records('leads', $wh_condn=array('lead_status'=>4,'pjt_status'=>1), $order = array("lead_id"=>"asc"), $or_where);

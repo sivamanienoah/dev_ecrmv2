@@ -22,7 +22,9 @@ class Dashboard_model extends crm_model {
    		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			// $reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';			
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
+			
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -38,7 +40,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -65,6 +82,7 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
 		}
 		$this->db->group_by('jb.lead_stage');
+		// $this->db->group_by('jb.lead_id');
 		$this->db->order_by('jb.lead_stage', 'asc');
 		$query = $this->db->get();
 		$tot_query =  $query->result_array();
@@ -106,7 +124,9 @@ class Dashboard_model extends crm_model {
 		$this->db->where('j.lead_status',1);
 		// $this->db->where_in('j.lead_stage', $lead_stage);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$this->db->where('c.created_by', $this->userdata['userid']);
+			// $this->db->where('c.created_by', $this->userdata['userid']);
+			$reseller_condn = '(j.belong_to = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', j.lead_assign)) ';
+			$this->db->where($reseller_condn);
 		}
 		$this->db->where_in('j.lead_stage', $this->stg);
 		
@@ -135,7 +155,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('j.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('j.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('j.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", j.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', j.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -178,7 +213,7 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -194,7 +229,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -230,13 +280,14 @@ class Dashboard_model extends crm_model {
 	public function getLeadsByAssignee($cusId = FALSE, $filter = FALSE) {
 		$this->db->select('us.userid, COUNT( * ), CONCAT(us.first_name," ",us.last_name) as user_name', FALSE);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'users us', 'us.userid = jb.lead_assign');
+		// $this->db->join($this->cfg['dbpref'].'users us', 'us.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'users as us',' FIND_IN_SET (us.userid , jb.lead_assign) ');
 		$this->db->join($this->cfg['dbpref'].'customers c','c.custid = jb.custid_fk','inner');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id','inner');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -252,7 +303,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -278,9 +344,10 @@ class Dashboard_model extends crm_model {
 		if (!empty($filter['lead_indi'])) {
 			$this->db->where_in('jb.lead_indicator', $filter['lead_indi']);
 		}
-		$this->db->group_by('jb.lead_assign');
+		$this->db->group_by('us.userid');
 		$this->db->order_by('us.first_name', 'asc');
 		$query = $this->db->get();
+		// echo $this->db->last_query(); exit;
 		$assg_query = $query->result_array();
 		return $assg_query;
 	}
@@ -327,8 +394,24 @@ class Dashboard_model extends crm_model {
 			$condn .= " AND j.belong_to IN ('".$ownr."')";
 		}
 		if (!empty($filter['leadassignee'])) {
-			$assinee = implode("','", $filter['leadassignee']);
-			$condn  .= " AND j.lead_assign IN ('".$assinee."')";
+			/* $assinee = implode("','", $filter['leadassignee']);
+			$condn  .= " AND j.lead_assign IN ('".$assinee."')"; */
+			
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$condn 	.= 'AND CONCAT(",", j.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$condn 	.= "AND FIND_IN_SET('".$filter['leadassignee'][0]."', j.lead_assign)";
+			}
+			// $this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$reg	 = implode("','", $filter['regionname']);
@@ -364,7 +447,7 @@ class Dashboard_model extends crm_model {
 		}
 		$reseller_condn = '';
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = ' AND (j.belong_to = '.$this->userdata['userid'].' OR j.lead_assign = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = 'AND (j.belong_to = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', j.lead_assign)) ';
 		}
 		$indicator_query = $this->db->query("SELECT COUNT(
 			CASE WHEN j.lead_indicator = 'HOT'
@@ -389,17 +472,16 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, jb.expect_worth_amount, jb.lead_indicator, jb.lead_assign, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
-		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -416,7 +498,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 		}
 		if (!empty($fresult['fassg_id'])) {
-			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			$cnt = count($fresult['fassg_id']);
+			if(count($fresult['fassg_id'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($fresult['fassg_id']); $i++) {
+					$find_wh_id .= $fresult['fassg_id'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -462,7 +559,8 @@ class Dashboard_model extends crm_model {
 		$this->db->where('j.lead_status',1);
 		$this->db->where('j.lead_indicator != ', 'HOT');
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(j.belong_to = '.$this->userdata['userid'].' OR j.lead_assign = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].')';
+			// $reseller_condn = '(j.belong_to = '.$this->userdata['userid'].' OR j.lead_assign = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(j.belong_to = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', j.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -478,7 +576,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('j.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('j.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('j.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", j.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', j.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -514,9 +627,11 @@ class Dashboard_model extends crm_model {
 	}
 	
 	public function getCurrentActivityLeads($isSelect = 7, $cusId = FALSE, $filter = FALSE) {
-		$this->db->select('jb.lead_title,jb.invoice_no,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, jb.lead_id, jb.lead_assign, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname');
+		$this->db->select('jb.lead_title,jb.invoice_no,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, jb.lead_id, jb.lead_assign, jb.expect_worth_amount, jb.belong_to, ownr.first_name as ownrfname, ownr.last_name as ownrlname');
+		$this->db->select('GROUP_CONCAT(CONCAT(usr.first_name, " " , usr.last_name) SEPARATOR ",") as usr', FALSE);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
+		// $this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'users as usr',' FIND_IN_SET (usr.userid , jb.lead_assign) ');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->join($this->cfg['dbpref'].'customers c','c.custid = jb.custid_fk','inner');
@@ -527,7 +642,7 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		//advanced filter
@@ -541,7 +656,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -578,9 +708,8 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_title,jb.invoice_no,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, jb.lead_id, jb.lead_assign, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname');
+		$this->db->select('jb.lead_title,jb.invoice_no,ew.expect_worth_id, ew.expect_worth_name, ownr.userid as ownr_userid, jb.lead_id, jb.lead_assign, jb.expect_worth_amount, jb.belong_to, ownr.first_name as ownrfname, ownr.last_name as ownrlname');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->join($this->cfg['dbpref'].'customers c','c.custid = jb.custid_fk','inner');
@@ -588,35 +717,46 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
 			$this->db->where_in('cc.companyid', $cusId);
 		}
 		//for advanced filters
-		if (!empty($fresult['fstge']))
+		if (!empty($fresult['fstge'])) {
 			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
-		if (!empty($fresult['fcust_id']))
+		}
+		if (!empty($fresult['fcust_id'])) {
 			$this->db->where_in('jb.custid_fk', $fresult['fcust_id']);
-		if (!empty($fresult['fownr_id']))
+		}
+		if (!empty($fresult['fownr_id'])) {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
-		if (!empty($fresult['fassg_id']))
+		}
+		if (!empty($fresult['fassg_id'])) {
 			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
-		if (!empty($fresult['freg_id']))
+		}
+		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
-		if (!empty($fresult['fcntry_id']))
+		}
+		if (!empty($fresult['fcntry_id'])) {
 			$this->db->where_in('cc.add1_country', $fresult['fcntry_id']);
-		if (!empty($fresult['fstet_id']))
+		}
+		if (!empty($fresult['fstet_id'])) {
 			$this->db->where_in('cc.add1_state', $fresult['fstet_id']);
-		if (!empty($fresult['flocn_id']))
+		}
+		if (!empty($fresult['flocn_id'])) {
 			$this->db->where_in('cc.add1_location', $fresult['flocn_id']);
-		if (!empty($fresult['fser_req_id']))
+		}
+		if (!empty($fresult['fser_req_id'])) {
 			$this->db->where_in('jb.lead_service', $fresult['fser_req_id']);
-		if (!empty($fresult['flead_src_id']))
+		}
+		if (!empty($fresult['flead_src_id'])) {
 			$this->db->where_in('jb.lead_source', $fresult['flead_src_id']);
-		if (!empty($fresult['findustry']))
+		}
+		if (!empty($fresult['findustry'])) {
 			$this->db->where_in('jb.industry', $fresult['findustry']);
+		}
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
@@ -676,8 +816,23 @@ class Dashboard_model extends crm_model {
 			$condn .= " AND j.belong_to IN ('".$ownr."')";
 		}
 		if (!empty($filter['leadassignee'])) {
-			$assinee = implode("','", $filter['leadassignee']);
-			$condn  .= " AND j.lead_assign IN ('".$assinee."')";
+			/* $assinee = implode("','", $filter['leadassignee']);
+			$condn  .= " AND j.lead_assign IN ('".$assinee."')"; */
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$condn 	.= 'AND CONCAT(",", j.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$condn 	.= "AND FIND_IN_SET('".$filter['leadassignee'][0]."', j.lead_assign)";
+			}
+			// $this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$reg	 = implode("','", $filter['regionname']);
@@ -712,7 +867,7 @@ class Dashboard_model extends crm_model {
 			$condn  .= " AND j.lead_indicator IN ('".$indic."')";
 		}
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = ' AND (j.belong_to = '.$this->userdata['userid'].' OR j.lead_assign = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = 'AND (j.belong_to = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', j.lead_assign)) ';
 		}
 		$stg = $this->stages;
 		$age_query = $this->db->query("SELECT 
@@ -796,17 +951,16 @@ class Dashboard_model extends crm_model {
 			break;	
 		}
 		
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.lead_assign, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, jb.expect_worth_amount, jb.lead_indicator, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = cs.company_id', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to', 'LEFT');
-		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id', 'LEFT');
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status', 1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -828,7 +982,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 		}
 		if (!empty($fresult['fassg_id'])) {
-			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			$cnt = count($fresult['fassg_id']);
+			if(count($fresult['fassg_id'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($fresult['fassg_id']); $i++) {
+					$find_wh_id .= $fresult['fassg_id'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -866,10 +1035,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-	    $lead_dependencies = $this->db->select('jb.lead_id,jb.lead_title,ew.expect_worth_id, cs.customer_name as cfname, cc.company, jb.invoice_no, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
+	    $lead_dependencies = $this->db->select('jb.lead_id, jb.lead_title, ew.expect_worth_id, cs.customer_name as cfname, cc.company, jb.invoice_no, jb.lead_assign, jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
-		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
+		$this->db->join($this->cfg['dbpref'].'users as ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = cs.company_id');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
@@ -877,7 +1045,7 @@ class Dashboard_model extends crm_model {
 		$this->db->where('jb.lead_status',1);
 		$this->db->where('ownr.userid', $userid);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -893,7 +1061,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 		}
 		if (!empty($fresult['fassg_id'])) {
-			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			$cnt = count($fresult['fassg_id']);
+			if(count($fresult['fassg_id'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($fresult['fassg_id']); $i++) {
+					$find_wh_id .= $fresult['fassg_id'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -928,9 +1111,9 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-	    $lead_dependencies = $this->db->select('jb.lead_id, jb.invoice_no, ew.expect_worth_id, jb.lead_title,cs.customer_name as cfname, cc.company, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
+	    $lead_dependencies = $this->db->select('jb.lead_id, jb.invoice_no, ew.expect_worth_id, jb.lead_title, cs.customer_name as cfname, cc.company, jb.lead_assign, jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
-		$this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'users as usr',' FIND_IN_SET (usr.userid , jb.lead_assign) ');
 		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = cs.company_id');
@@ -939,7 +1122,8 @@ class Dashboard_model extends crm_model {
 		$this->db->where('jb.lead_status',1);
 		$this->db->where('usr.userid', $userid);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			// $reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -955,7 +1139,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 		}
 		if (!empty($fresult['fassg_id'])) {
-			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			$cnt = count($fresult['fassg_id']);
+			if(count($fresult['fassg_id'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($fresult['fassg_id']); $i++) {
+					$find_wh_id .= $fresult['fassg_id'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -990,19 +1189,19 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, jb.expect_worth_amount, jb.lead_indicator, jb.lead_assign, ls.lead_stage_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = cs.company_id');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
-		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
+		// $this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('ls.lead_stage_name', $leadStage, 'after');
 		$this->db->where('jb.lead_status', 1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -1018,7 +1217,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 		}
 		if (!empty($fresult['fassg_id'])) {
-			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			$cnt = count($fresult['fassg_id']);
+			if(count($fresult['fassg_id'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($fresult['fassg_id']); $i++) {
+					$find_wh_id .= $fresult['fassg_id'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -1044,6 +1258,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
+		$this->db->group_by('jb.lead_id');
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		// echo $this->db->last_query();
@@ -1057,7 +1272,7 @@ class Dashboard_model extends crm_model {
 			$fresult = $this->explod_arr($filters);
 		}
 		
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, reg.region_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, jb.lead_assign, jb.expect_worth_amount, jb.lead_indicator, reg.region_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
@@ -1066,11 +1281,12 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'state ste', 'ste.stateid = cc.add1_state');
 		$this->db->join($this->cfg['dbpref'].'location loc', 'loc.locationid = cc.add1_location');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
-		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
+		// $this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'] . 'users assi',' FIND_IN_SET (assi.userid , jb.lead_assign) ');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 
@@ -1107,7 +1323,7 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		//for advanced filter
@@ -1121,7 +1337,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 		}
 		if (!empty($fresult['fassg_id'])) {
-			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			$cnt = count($fresult['fassg_id']);
+			if(count($fresult['fassg_id'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($fresult['fassg_id']); $i++) {
+					$find_wh_id .= $fresult['fassg_id'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -1147,6 +1378,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
+		$this->db->group_by('jb.lead_id');
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
@@ -1155,29 +1387,33 @@ class Dashboard_model extends crm_model {
 	}
 	
 	public function getCurrentLeadActivity($lead_id) {
-	    $lead_dependencies = $this->db->select('jb.lead_id, ew.expect_worth_id, jb.lead_title, cs.customer_name as cfname, cc.company, jb.invoice_no, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, usr.first_name as usrfname, usr.last_name as usrlname, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
-							 $this->db->from($this->cfg['dbpref'].'leads jb');
-							 $this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
-							 $this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
-							 $this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
-							 $this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
-							 $this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
-							 $this->db->where_in('jb.lead_stage', $this->stg);
-							 $this->db->where('jb.lead_status',1);
-							 $this->db->where('jb.lead_id', $lead_id);
-							 $this->db->order_by('jb.lead_id', 'desc');
+	    $lead_dependencies = $this->db->select('jb.lead_id, ew.expect_worth_id, jb.lead_title, cs.customer_name as cfname, cc.company, jb.invoice_no, jb.lead_assign,jb.lead_indicator, jb.expect_worth_amount, jb.belong_to, ownr.first_name as ownrfname, ownr.last_name as ownrlname, ew.expect_worth_name');
+		$this->db->select('GROUP_CONCAT(CONCAT(usr.first_name, " " , usr.last_name) SEPARATOR ",") as usrfname', FALSE);
+		$this->db->from($this->cfg['dbpref'].'leads jb');
+		// $this->db->join($this->cfg['dbpref'].'users usr', 'usr.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'users as usr',' FIND_IN_SET (usr.userid , jb.lead_assign) ');
+		$this->db->join($this->cfg['dbpref'].'users ownr', 'ownr.userid = jb.belong_to');
+		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
+		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
+		$this->db->where_in('jb.lead_stage', $this->stg);
+		$this->db->where('jb.lead_status',1);
+		$this->db->where('jb.lead_id', $lead_id);
+		$this->db->order_by('jb.lead_id', 'desc');
 		$depend_query = $this->db->get();
 		return $depend_query;
 	}
 	
 	public function LeadDetails($jid) {
-		$this->db->select('jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
+		$this->db->select('jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, owr.first_name as owrfname, owr.last_name as owrlname, jb.expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
+		$this->db->select('GROUP_CONCAT(CONCAT(assi.first_name, " " , assi.last_name) SEPARATOR ",") as assifname', FALSE);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
-		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
+		// $this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'users as assi',' FIND_IN_SET (assi.userid , jb.lead_assign) ');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->where('jb.lead_id', $jid);
@@ -1272,9 +1508,10 @@ class Dashboard_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');
 		$this->db->where('lead_status', 4);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(j.belong_to = '.$this->userdata['userid'].' OR j.lead_assign = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(j.belong_to = '.$this->userdata['userid'].' OR j.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', j.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
+		
 		if ($this->userdata['level']!= 1) {
 			$this->db->where_in('cc.companyid',$cusId);
 		}
@@ -1288,7 +1525,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('j.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('j.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('j.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", j.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', j.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -1329,18 +1581,17 @@ class Dashboard_model extends crm_model {
 			$fresult = $this->explod_arr($filters);
 		}
 		if (!empty($jbid)) {
-			$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.pjt_status, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.actual_worth_amount as expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
+			$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.pjt_status, jb.lead_assign, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, jb.actual_worth_amount as expect_worth_amount, jb.lead_indicator, ls.lead_stage_name, ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref'].'leads jb');
 			$this->db->join($this->cfg['dbpref'].'lead_stage ls', 'ls.lead_stage_id = jb.lead_stage', "LEFT");
 			$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk', "LEFT");
 			$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id', "LEFT");
 			$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to', "LEFT");
-			$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign', "LEFT");
 			$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id', "LEFT");
 			$this->db->where_in('jb.lead_id', $jbid);
 			$this->db->where('jb.lead_status', 4);
 			if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-				$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+				$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 				$this->db->where($reseller_condn);
 			}
 			if (!empty($fresult['fstge'])) {
@@ -1353,7 +1604,22 @@ class Dashboard_model extends crm_model {
 				$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 			}
 			if (!empty($fresult['fassg_id'])) {
-				$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+				// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+				$cnt = count($fresult['fassg_id']);
+				if(count($fresult['fassg_id'])>1) {
+					$find_wh_id = '(';
+					for($i=0; $i<count($fresult['fassg_id']); $i++) {
+						$find_wh_id .= $fresult['fassg_id'][$i];
+						if($cnt != ($i+1)) {
+							$find_wh_id .= "|";
+						}
+					}
+					$find_wh_id .= ')';
+					$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+				} else {
+					$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+				}
+				$this->db->where($find_wh);
 			}
 			if (!empty($fresult['freg_id'])) {
 				$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -1398,7 +1664,7 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -1414,7 +1680,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -1456,7 +1737,7 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -1472,7 +1753,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -1514,7 +1810,7 @@ class Dashboard_model extends crm_model {
 		$this->db->where_in('jb.lead_stage', $this->stg);
 		$this->db->where('jb.lead_status',1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -1530,7 +1826,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $filter['owner']);
 		}
 		if (!empty($filter['leadassignee'])) {
-			$this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			// $this->db->where_in('jb.lead_assign', $filter['leadassignee']);
+			$cnt = count($filter['leadassignee']);
+			if(count($filter['leadassignee'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($filter['leadassignee']); $i++) {
+					$find_wh_id .= $filter['leadassignee'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$filter['leadassignee'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($filter['regionname'])) {
 			$this->db->where_in('cc.add1_region', $filter['regionname']);
@@ -1567,19 +1878,18 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.lead_source_name, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.lead_assign, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.lead_source_name, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_source ldsrc', 'ldsrc.lead_source_id = jb.lead_source');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
-		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('ldsrc.lead_source_name', $leadStage);
 		$this->db->where('jb.lead_status', 1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -1595,7 +1905,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 		}
 		if (!empty($fresult['fassg_id'])) {
-			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			$cnt = count($fresult['fassg_id']);
+			if(count($fresult['fassg_id'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($fresult['fassg_id']); $i++) {
+					$find_wh_id .= $fresult['fassg_id'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -1632,23 +1957,23 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.industry as lead_source_name, ew.expect_worth_name', false);
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title,  jb.lead_assign, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, jb.expect_worth_amount, jb.lead_indicator, ldsrc.industry as lead_source_name, ew.expect_worth_name', false);
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'industry ldsrc', 'ldsrc.id = jb.industry');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
-		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
+		$this->db->join($this->cfg['dbpref'].'users as assi',' FIND_IN_SET (assi.userid , jb.lead_assign)');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('ldsrc.industry', $leadStage);
 		$this->db->where('jb.lead_status', 1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
-			$this->db->where_in('cc.companyid',$cusId);
+			$this->db->where_in('cc.companyid', $cusId);
 		}
 		if (!empty($fresult['fstge'])) {
 			$this->db->where_in('jb.lead_stage', $fresult['fstge']);
@@ -1660,7 +1985,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 		}
 		if (!empty($fresult['fassg_id'])) {
-			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			$cnt = count($fresult['fassg_id']);
+			if(count($fresult['fassg_id'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($fresult['fassg_id']); $i++) {
+					$find_wh_id .= $fresult['fassg_id'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -1686,6 +2026,7 @@ class Dashboard_model extends crm_model {
 		if (!empty($fresult['flead_indic_id'])) {
 			$this->db->where_in('jb.lead_indicator', $fresult['flead_indic_id']);
 		}
+		$this->db->group_by('jb.lead_id');
 		$this->db->order_by('jb.lead_id', 'desc');
 		$query = $this->db->get();
 		// echo $this->db->last_query(); die;
@@ -1697,19 +2038,18 @@ class Dashboard_model extends crm_model {
 		if (!empty($filters)) {
 			$fresult = $this->explod_arr($filters);
 		}
-		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, assi.first_name as assifname, assi.last_name as assilname, jb.expect_worth_amount, jb.lead_indicator, jbc.services, ew.expect_worth_name');
+		$this->db->select('jb.lead_id, jb.invoice_no, jb.lead_title, jb.lead_assign, ew.expect_worth_id, cs.customer_name, cc.company, owr.first_name as owrfname, owr.last_name as owrlname, jb.expect_worth_amount, jb.lead_indicator, jbc.services, ew.expect_worth_name');
 		$this->db->from($this->cfg['dbpref'].'leads jb');
 		$this->db->join($this->cfg['dbpref'].'lead_services jbc', 'jbc.sid = jb.lead_service');
 		$this->db->join($this->cfg['dbpref'].'customers cs', 'cs.custid = jb.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cs.company_id');
 		$this->db->join($this->cfg['dbpref'].'users owr', 'owr.userid = jb.belong_to');
-		$this->db->join($this->cfg['dbpref'].'users assi', 'assi.userid = jb.lead_assign');
 		$this->db->join($this->cfg['dbpref'].'expect_worth ew', 'ew.expect_worth_id = jb.expect_worth_id');
 		$this->db->where_in('jb.lead_stage', $this->stg);
    		$this->db->like('jbc.services', $leadStage);
 		$this->db->where('jb.lead_status', 1);
 		if($this->userdata['role_id'] == 14) { /*Condition for Reseller user*/
-			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.lead_assign = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].')';
+			$reseller_condn = '(jb.belong_to = '.$this->userdata['userid'].' OR jb.assigned_to ='.$this->userdata['userid'].' OR FIND_IN_SET('.$this->userdata['userid'].', jb.lead_assign)) ';
 			$this->db->where($reseller_condn);
 		}
 		if ($this->userdata['level']!=1) {
@@ -1725,7 +2065,22 @@ class Dashboard_model extends crm_model {
 			$this->db->where_in('jb.belong_to', $fresult['fownr_id']);
 		}
 		if (!empty($fresult['fassg_id'])) {
-			$this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			// $this->db->where_in('jb.lead_assign', $fresult['fassg_id']);
+			$cnt = count($fresult['fassg_id']);
+			if(count($fresult['fassg_id'])>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($fresult['fassg_id']); $i++) {
+					$find_wh_id .= $fresult['fassg_id'][$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$fresult['fassg_id'][0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
 		if (!empty($fresult['freg_id'])) {
 			$this->db->where_in('cc.add1_region', $fresult['freg_id']);
@@ -1762,28 +2117,39 @@ class Dashboard_model extends crm_model {
 		// echo "<pre>"; print_r($filters); exit;
 		$fres = array();
 
-		if (isset($filters['stge']) && $filters['stge']!='')
+		if (isset($filters['stge']) && $filters['stge']!='') {
 			$fres['fstge'] 		= explode(',',$filters['stge']);
-		if (isset($filters['cust_id']) && $filters['cust_id']!='')
+		}
+		if (isset($filters['cust_id']) && $filters['cust_id']!='') {
 			$fres['fcust_id'] 	= explode(',',$filters['cust_id']);
-		if (isset($filters['ownr_id']) && $filters['ownr_id']!='')
+		}
+		if (isset($filters['ownr_id']) && $filters['ownr_id']!='') {
 			$fres['fownr_id'] 	= explode(',',$filters['ownr_id']);
-		if (isset($filters['assg_id']) && $filters['assg_id']!='')
+		}
+		if (isset($filters['assg_id']) && $filters['assg_id']!='') {
 			$fres['fassg_id'] 	= explode(',',$filters['assg_id']);
-		if (isset($filters['reg_id']) && $filters['reg_id']!='')
+		}
+		if (isset($filters['reg_id']) && $filters['reg_id']!='') {
 			$fres['freg_id']	= explode(',',$filters['reg_id']);
-		if (isset($filters['cntry_id']) && $filters['cntry_id']!='')
+		}
+		if (isset($filters['cntry_id']) && $filters['cntry_id']!='') {
 			$fres['fcntry_id']	= explode(',',$filters['cntry_id']);
-		if (isset($filters['stet_id']) && $filters['stet_id']!='')
+		}
+		if (isset($filters['stet_id']) && $filters['stet_id']!='') {
 			$fres['fstet_id'] 	= explode(',',$filters['stet_id']);
-		if (isset($filters['locn_id']) && $filters['locn_id']!='')
+		}
+		if (isset($filters['locn_id']) && $filters['locn_id']!='') {
 			$fres['flocn_id'] 	= explode(',',$filters['locn_id']);
-		if (isset($filters['servic_req']) && $filters['servic_req']!='')
+		}
+		if (isset($filters['servic_req']) && $filters['servic_req']!='') {
 			$fres['fser_req_id'] 	= explode(',',$filters['servic_req']);
-		if (isset($filters['lead_sour']) && $filters['lead_sour']!='')
+		}
+		if (isset($filters['lead_sour']) && $filters['lead_sour']!='') {
 			$fres['flead_src_id'] 	= explode(',',$filters['lead_sour']);
-		if (isset($filters['industry']) && $filters['industry']!='')
+		}
+		if (isset($filters['industry']) && $filters['industry']!='') {
 			$fres['findustry'] 	= explode(',',$filters['industry']);
+		}
 		if (isset($filters['lead_indic']) && $filters['lead_indic']!='') {
 			$fres['flead_indic_id'] 	= explode(',',$filters['lead_indic']);
 		}

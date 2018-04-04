@@ -103,14 +103,16 @@ class Request extends crm_controller {
 									
 									if(empty($arrLeadExistFolderAccess)) {
 
-										$read_access = 0;
-										$write_access = 0;
-										$delete_access = 0;									
-										// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-										if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-											$read_access = 1;
-											$write_access = 1;
-											$delete_access = 1;								
+										$read_access = $write_access = $delete_access = 0;
+										
+										$leadAssignArr = array();
+										if(!empty($arrLeadInfo['lead_assign'])) {
+											$leadAssignArr = @explode(', ', $arrLeadInfo['lead_assign']);
+										}
+										// Check this user is "Lead Owner", "Lead Assigned to", "Project Manager"
+										// if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+										if ($this->userdata['role_id'] == 1 || $arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || in_array($members['userid'], $arrLeadInfo['lead_assign'])) {
+											$read_access = $write_access = $delete_access = 1;							
 										}								
 
 										$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$listLeads['lead_id'],'folder_id'=>$listFolders['folder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>(int)$user_data['userid']);
@@ -153,8 +155,14 @@ class Request extends crm_controller {
 										$read_access = 0;
 										$write_access = 0;
 										$delete_access = 0;									
-										// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-										if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+										// Check this user is "Lead Owner", "Lead Assigned to", "Project Manager"
+										
+										$leadAssignArr = array();
+										if(!empty($arrLeadInfo['lead_assign'])) {
+											$leadAssignArr = @explode(', ', $arrLeadInfo['lead_assign']);
+										}
+										// if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+										if ($this->userdata['role_id'] == 1 || $arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || in_array($members['userid'], $arrLeadInfo['lead_assign'])) {
 											$read_access = 1;
 											$write_access = 1;
 											$delete_access = 1;								
@@ -2647,9 +2655,14 @@ EOD;
 			$status_select_1 = ($row->status == 1) ? ' selected="selected"' : '';
 			$status_select_2 = ($row->status == 2) ? ' selected="selected"' : '';
 			$qa = $this->db->query("select lead_assign, belong_to from ".$this->cfg['dbpref']."leads where lead_id = '".$row->jobid_fk."' ");
-			$lead_details = $qa->row_array();
-			//echo "<pre>"; print_r($lead_details);
-			if ($this->userdata['role_id'] == 1 || $lead_details['belong_to'] == $this->userdata['userid'] || $lead_details['lead_assign'] == $this->userdata['userid']) {
+			$lead_details  = $qa->row_array();
+			// echo "<pre>"; print_r($lead_details);
+			$leadAssignArr = array();
+			if(!empty($lead_details['lead_assign'])) {
+				$leadAssignArr = @explode(', ', $lead_details['lead_assign']);
+			}
+			// if ($this->userdata['role_id'] == 1 || $lead_details['belong_to'] == $this->userdata['userid'] || $lead_details['lead_assign'] == $this->userdata['userid']) {
+			if ($this->userdata['role_id'] == 1 || $lead_details['belong_to'] == $this->userdata['userid'] || in_array($this->userdata['userid'], $lead_details['lead_assign'])) {
 			$html .= '
 			<tr>
 				<td class="milestone">

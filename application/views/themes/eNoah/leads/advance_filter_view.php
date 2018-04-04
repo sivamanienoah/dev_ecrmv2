@@ -60,144 +60,144 @@ if(!empty($db_fields) && count($db_fields)>0){
 		</tr>
 		</thead>
 		<tbody>
-		<?php //echo'<pre>';print_r($filter_results);exit;
+		<?php
 			if(!empty($filter_results)) 
 			{
 				foreach($filter_results as $filter_result) 
 				{
-					if($filter_result['pjt_status']!=0)
-					{
-						$view_url=base_url().'project/view_project/'.$filter_result['lead_id'];
-						$view_lead_url=base_url().'project/view_project/'.$filter_result['lead_id'];
+					if($filter_result['pjt_status']!=0) {
+						$view_url		= base_url().'project/view_project/'.$filter_result['lead_id'];
+					} else {
+						$view_url		= base_url().'welcome/view_quote/'.$filter_result['lead_id'];
 					}
-					else
-					{
-						$view_url=base_url().'welcome/view_quote/'.$filter_result['lead_id'];
-						$view_lead_url=base_url().'welcome/view_quote/'.$filter_result['lead_id'].'/'.'draft';
-					}
+					
+					//get the lead assign names - changes based on multiple lead assign
+					$assign_names = get_lead_assigne_names($filter_result['lead_assign']);
 		?>
-				<tr id='<?php echo $filter_result['lead_id'] ?>'>
-					<td class="actions" align="center">
-						<?php if ($this->session->userdata('viewlead')==1) { ?>
-							<a target="_blank" href="<?php echo $view_url;?>" title='View'>
-								<img src="assets/img/view.png" alt='view' >
-							</a>
-						<?php } ?>
-						<?php 
-						if (($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $filter_result['lead_assign'] == $userdata['userid']) && $filter_result['pjt_status']==0) { ?>					
-							<a target="_blank" href="<?php echo base_url(); ?>welcome/edit_quote/<?php echo $filter_result['lead_id'] ?>" title='Edit'>
-								<img src="assets/img/edit.png" alt='edit' >
-							</a>
-						<?php } ?> 
-						<?php
-						if (($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2) && $filter_result['pjt_status']==0) { ?>
-							<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
-						<?php } ?>
-					</td>
-					<td><a target="_blank" href="<?php echo $view_lead_url;?>"><?php echo $filter_result['invoice_no']; ?></a></td>
-					<td><a target="_blank" href="<?php echo $view_lead_url;?>"><?php echo character_limiter($filter_result['lead_title'], 35) ?></a> </td>
-					<?php if($td_chk == false) { ?>
-					<td><?php echo $filter_result['company'].' - '.$filter_result['customer_name']; ?></td>
-					<td style="width:90px;"><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
-					<td><?php echo $filter_result['region_name']; ?></td>
-					<td><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
-					<td><?php echo $filter_result['ufname'].' '.$filter_result['ulname']; ?></td>
-					<td><?php echo date('d-m-Y',strtotime($filter_result['date_created'])); ?></td>
-					<td><?php echo date('d-m-Y',strtotime($filter_result['date_modified'])); ?></td>
-					<td><?php echo $filter_result['lead_stage_name']; ?></td>
-					<td>
-						<?php 
-							switch ($filter_result['lead_indicator'])
-							{
-								case 'HOT':
-									echo $status = '<span class=label-hot>Hot</span>';
-								break;
-								case 'WARM':
-									echo $status = '<span class=label-warm>Warm</span>';
-								break;
-								case 'COLD':
-									echo $status = '<span class=label-cold>Cold</span>';
-								break;
-							}
-						?>
-					</td>
-					<td style="width:90px;">		
-						<?php 
-							if($filter_result['pjt_status']!=0){
-								$filter_result['lead_status']=5;
-							}
-							switch ($filter_result['lead_status'])
-							{
-								case 1:
-									echo $status = '<span class=label-wip>Active</span>';
-								break;
-								case 2:
-									echo $status = '<span class=label-warning>On Hold</span>';
-								break;
-								case 3:
-									echo $status = '<span class=label-inactive>Dropped</span>';
-								break;
-								case 4:
-									echo $status = '<span class=label-success>Closed</span>';
-								break;
-								case 5:
-									echo $status = '<span class=label-success>Moved to Project</span>';
-								break;
-							}
-						?>
-					</td>
-					<?php } else { ?>
-						<td <?php echo $td_cn; ?>><?php echo $filter_result['company'].' - '.$filter_result['customer_name']; ?></td>
-						<td <?php echo $td_ew; ?>><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
-						<td <?php echo $td_reg; ?>><?php echo $filter_result['region_name']; ?></td>
-						<td <?php echo $td_lo; ?>><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
-						<td <?php echo $td_lat; ?>><?php echo $filter_result['ufname'].' '.$filter_result['ulname']; ?></td>
-						<td <?php echo $td_lat; ?>><?php echo date('d-m-Y',strtotime($filter_result['date_created'])); ?></td>
-						<td <?php echo $td_lat; ?>><?php echo date('d-m-Y',strtotime($filter_result['date_modified'])); ?></td>
-						<td <?php echo $td_stg; ?>><?php echo $filter_result['lead_stage_name']; ?></td>
-						<td <?php echo $td_ind; ?>>
-							<?php 
-								switch ($filter_result['lead_indicator'])
-								{
-									case 'HOT':
-										echo $status = '<span class=label-hot>Hot</span>';
-									break;
-									case 'WARM':
-										echo $status = '<span class=label-warm>Warm</span>';
-									break;
-									case 'COLD':
-										echo $status = '<span class=label-cold>Cold</span>';
-									break;
-								}
-							?>
+					<tr id='<?php echo $filter_result['lead_id'] ?>'>
+						<td class="actions" align="center">
+							<?php if ($this->session->userdata('viewlead')==1) { ?>
+								<a target="_blank" href="<?php echo $view_url;?>" title='View'>
+									<img src="assets/img/view.png" alt='view' >
+								</a>
+							<?php } ?>
+							<?php
+								$lead_assign_arr = array(0);
+								$lead_assign_arr = @explode(',',$filter_result['lead_assign']);
+							if (($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || (in_array($userdata['userid'], $lead_assign_arr))) && $filter_result['pjt_status']==0) { ?>				
+								<a target="_blank" href="<?php echo base_url(); ?>welcome/edit_quote/<?php echo $filter_result['lead_id'] ?>" title='Edit'>
+									<img src="assets/img/edit.png" alt='edit' >
+								</a>
+							<?php } ?> 
+							<?php
+							if (($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2) && $filter_result['pjt_status']==0) { ?>
+								<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
+							<?php } ?>
 						</td>
-						<td <?php echo $td_stat; ?>>
-							<?php 
-								if($filter_result['pjt_status']!=0){
-									$filter_result['lead_status']=5;
-								}
-								switch ($filter_result['lead_status'])
-								{
-									case 1:
-										echo $status = '<span class=label-wip>Active</span>';
-									break;
-									case 2:
-										echo $status = '<span class=label-warning>On Hold</span>';
-									break;
-									case 3:
-										echo $status = '<span class=label-inactive>Dropped</span>';
-									break;
-									case 4:
-										echo $status = '<span class=label-success>Closed</span>';
-									break;
-									case 5:
-										echo $status = '<span class=label-success>Moved to Project</span>';
-									break;
-								}
-							?>
-						</td>
-					<?php } ?>
-				</tr> 
+						<td><a target="_blank" href="<?php echo $view_url;?>"><?php echo $filter_result['invoice_no']; ?></a></td>
+						<td><a target="_blank" href="<?php echo $view_url;?>"><?php echo character_limiter($filter_result['lead_title'], 35) ?></a> </td>
+						<?php if($td_chk == false) { ?>
+							<td><?php echo $filter_result['company'].' - '.$filter_result['customer_name']; ?></td>
+							<td style="width:90px;"><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
+							<td><?php echo $filter_result['region_name']; ?></td>
+							<td><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
+							<td><?php echo $assign_names; ?></td>
+							<td><?php echo date('d-m-Y',strtotime($filter_result['date_created'])); ?></td>
+							<td><?php echo date('d-m-Y',strtotime($filter_result['date_modified'])); ?></td>
+							<td><?php echo $filter_result['lead_stage_name']; ?></td>
+							<td>
+								<?php 
+									switch ($filter_result['lead_indicator'])
+									{
+										case 'HOT':
+											echo $status = '<span class=label-hot>Hot</span>';
+										break;
+										case 'WARM':
+											echo $status = '<span class=label-warm>Warm</span>';
+										break;
+										case 'COLD':
+											echo $status = '<span class=label-cold>Cold</span>';
+										break;
+									}
+								?>
+							</td>
+							<td style="width:90px;">		
+								<?php 
+									if($filter_result['pjt_status']!=0){
+										$filter_result['lead_status']=5;
+									}
+									switch ($filter_result['lead_status'])
+									{
+										case 1:
+											echo $status = '<span class=label-wip>Active</span>';
+										break;
+										case 2:
+											echo $status = '<span class=label-warning>On Hold</span>';
+										break;
+										case 3:
+											echo $status = '<span class=label-inactive>Dropped</span>';
+										break;
+										case 4:
+											echo $status = '<span class=label-success>Closed</span>';
+										break;
+										case 5:
+											echo $status = '<span class=label-success>Moved to Project</span>';
+										break;
+									}
+								?>
+							</td>
+						<?php } else { ?>
+							<td <?php echo $td_cn; ?>><?php echo $filter_result['company'].' - '.$filter_result['customer_name']; ?></td>
+							<td <?php echo $td_ew; ?>><?php echo $filter_result['expect_worth_name'].' '.$filter_result['expect_worth_amount']; ?></td>
+							<td <?php echo $td_reg; ?>><?php echo $filter_result['region_name']; ?></td>
+							<td <?php echo $td_lo; ?>><?php echo $filter_result['ubfn'].' '.$filter_result['ubln']; ?></td>
+							<td <?php echo $td_lat; ?>><?php echo $assign_names; ?></td>
+							<td <?php echo $td_lat; ?>><?php echo date('d-m-Y',strtotime($filter_result['date_created'])); ?></td>
+							<td <?php echo $td_lat; ?>><?php echo date('d-m-Y',strtotime($filter_result['date_modified'])); ?></td>
+							<td <?php echo $td_stg; ?>><?php echo $filter_result['lead_stage_name']; ?></td>
+							<td <?php echo $td_ind; ?>>
+								<?php 
+									switch ($filter_result['lead_indicator'])
+									{
+										case 'HOT':
+											echo $status = '<span class=label-hot>Hot</span>';
+										break;
+										case 'WARM':
+											echo $status = '<span class=label-warm>Warm</span>';
+										break;
+										case 'COLD':
+											echo $status = '<span class=label-cold>Cold</span>';
+										break;
+									}
+								?>
+							</td>
+							<td <?php echo $td_stat; ?>>
+								<?php 
+									if($filter_result['pjt_status']!=0){
+										$filter_result['lead_status']=5;
+									}
+									switch ($filter_result['lead_status'])
+									{
+										case 1:
+											echo $status = '<span class=label-wip>Active</span>';
+										break;
+										case 2:
+											echo $status = '<span class=label-warning>On Hold</span>';
+										break;
+										case 3:
+											echo $status = '<span class=label-inactive>Dropped</span>';
+										break;
+										case 4:
+											echo $status = '<span class=label-success>Closed</span>';
+										break;
+										case 5:
+											echo $status = '<span class=label-success>Moved to Project</span>';
+										break;
+									}
+								?>
+							</td>
+						<?php } ?>
+					</tr> 
 		<?php 
 				} 
 			}

@@ -20,12 +20,15 @@ class Welcome_model extends crm_model {
 		j.department_id_fk, j.resource_type, j.project_type, j.project_category, j.cost_center, j.project_center, j.sow_status, 
 		j.date_start, j.date_due, j.practice, j.project_types, j.customer_type, 
 		c.*, c.customer_name AS cfn, cc.add1_region, cc.add1_country, cc.add1_state, cc.add1_location, cc.companyid, rg.region_name, coun.country_name, 
-		st.state_name, loc.location_name, ass.first_name as assfname, ass.last_name as asslname, us.first_name as usfname, us.last_name as usslname, 
+		st.state_name, loc.location_name, us.first_name as usfname, us.last_name as usslname, 
 		own.first_name as ownfname, own.last_name as ownlname, ls.lead_stage_name,ew.expect_worth_name, lsrc.lead_source_name, jbcat.services as lead_service, sadiv.division_name, i.industry');
+		$this->db->select('GROUP_CONCAT(CONCAT(ass.first_name, " " , ass.last_name) SEPARATOR ",") as assfname', FALSE);
+		// $this->db->select(' CONCAT(ass.first_name, " " , ass.last_name) as assfname', FALSE); 
 		$this->db->from($this->cfg['dbpref'] . 'leads as j');
 		$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 		$this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.companyid = c.company_id');		
-		$this->db->join($this->cfg['dbpref'] . 'users as ass', 'ass.userid = j.lead_assign');
+		// $this->db->join($this->cfg['dbpref'] . 'users as ass', 'ass.userid = j.lead_assign');
+		$this->db->join($this->cfg['dbpref'] . 'users as ass',' FIND_IN_SET (ass.userid , j.lead_assign) ');
 		$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
 		$this->db->join($this->cfg['dbpref'] . 'users as own', 'own.userid = j.belong_to');
 		$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
@@ -137,7 +140,7 @@ class Welcome_model extends crm_model {
     }
 	
 	function get_userlist($userList) {
-    	$this->db->select('userid,first_name,last_name,level,role_id,inactive');
+    	$this->db->select('userid,first_name,last_name,level,role_id,inactive,emp_id');
 		$this->db->where('inactive', 0);
 		if(!empty($userList))
 		$this->db->where_in('userid', $userList);
@@ -525,6 +528,7 @@ class Welcome_model extends crm_model {
 	public function get_filter_results($from_date,$to_date,$stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status,$lead_indi, $keyword, $proposal_expect_end)
 	{
 		$userdata 		= $this->session->userdata('logged_in_user');
+
 		 // echo "<pre>"; print_r($userdata); die;
 		if($from_date == '0000-00-00 00:00:00'){
 			$from_date = '';
@@ -532,8 +536,7 @@ class Welcome_model extends crm_model {
 		if($to_date == '0000-00-00 00:00:00'){
 			$to_date = '';
 		}
-		// $fromdate 		= $fromdate;
-		// $todate 		= $todate;
+
 		$stage 			= (count($stage)>0)?explode(',',$stage):'';
 		$owner 			= (count($owner)>0)?explode(',',$owner):'';
 		$customer 		= (count($customer)>0)?explode(',',$customer):'';
@@ -549,7 +552,7 @@ class Welcome_model extends crm_model {
 		$lead_status 	= (count($lead_status)>0)?explode(',',$lead_status):'';
 		$lead_indi 		= (count($lead_indi)>0)?explode(',',$lead_indi):'';
 		
-		// echo "<pre>"; print_r($lead_status); die;
+		// echo "<pre>"; print_r($this->userdata['role_id']); die;
 		
 		if(isset($proposal_expect_end) && ($proposal_expect_end == 'load_proposal_expect_end')) {
 			$proposal_notify_day = get_notify_status(1);
@@ -557,14 +560,16 @@ class Welcome_model extends crm_model {
  
 		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
-			c.customer_name, cc.company, c.email_1, c.phone_1, c.position_title, c.skype_name, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
+			c.customer_name, cc.company, c.email_1, c.phone_1, c.position_title, c.skype_name, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname, us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
+			$this->db->select('GROUP_CONCAT(CONCAT(u.first_name, " " , u.last_name)) as ufname', FALSE);
 			$this->db->from($this->cfg['dbpref']. 'leads as j');
 			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
 			// $this->db->where('j.pjt_status', 0);
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
 			$this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.companyid = c.company_id');
-			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
+			// $this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
+			$this->db->join($this->cfg['dbpref'] . 'users as u',' FIND_IN_SET (u.userid , j.lead_assign) ');
 			$this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
 			$this->db->join($this->cfg['dbpref'] . 'users as ub', 'ub.userid = j.belong_to');
 			$this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
@@ -634,7 +639,22 @@ class Welcome_model extends crm_model {
 			}
 			if(!empty($leadassignee) && count($leadassignee)>0){
 				if($leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
-					$this->db->where_in('j.lead_assign', $leadassignee);
+					// $this->db->where_in('j.lead_assign', $leadassignee);
+					$cnt = count($leadassignee);
+					if(count($leadassignee)>1) {
+						$find_wh_id = '(';
+						for($i=0; $i<count($leadassignee); $i++) {
+							$find_wh_id .= $leadassignee[$i];
+							if($cnt != ($i+1)) {
+								$find_wh_id .= "|";
+							}
+						}
+						$find_wh_id .= ')';
+						$find_wh 	= 'CONCAT(",", j.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+					} else {
+						$find_wh 	= "FIND_IN_SET('".$leadassignee[0]."', j.lead_assign)";
+					}
+					$this->db->where($find_wh);
 				}
 			}
 			if(!empty($regionname) && count($regionname)>0){
@@ -668,17 +688,16 @@ class Welcome_model extends crm_model {
 					$this->db->where($invwhere);
 				}
 			} 
-		} else if($this->userdata['role_id'] == 14) { 
+		} else if($this->userdata['role_id'] == 14) { //for reseller role
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
-						
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
 			c.customer_name, cc.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
 			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
+			$this->db->select('GROUP_CONCAT(CONCAT(u.first_name, " " , u.last_name)) as ufname', FALSE);
 			$this->db->from($this->cfg['dbpref']. 'leads as j');
-			
 			$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = j.custid_fk');
 			$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');			
-			$this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = j.lead_assign');
+			$this->db->join($this->cfg['dbpref'].'users as u',' FIND_IN_SET (u.userid , j.lead_assign) ');
 			$this->db->join($this->cfg['dbpref'].'users as us', 'us.userid = j.modified_by');
 			$this->db->join($this->cfg['dbpref'].'users as ub', 'ub.userid = j.belong_to');
 			$this->db->join($this->cfg['dbpref'].'region as rg', 'rg.regionid = cc.add1_region');
@@ -688,8 +707,7 @@ class Welcome_model extends crm_model {
 			$this->db->join($this->cfg['dbpref'].'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
 			$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			
-			// $this->db->where('j.belong_to', $curusid);
-			$reseller_condn = '(j.belong_to = '.$curusid.' OR j.lead_assign = '.$curusid.' OR j.assigned_to = '.$curusid.')';
+			$reseller_condn = '(j.belong_to = '.$curusid.' OR j.assigned_to ='.$curusid.' OR FIND_IN_SET('.$curusid.', j.lead_assign)) ';
 			$this->db->where($reseller_condn);
 			
 			$this->db->where('j.lead_id != "null" AND j.lead_stage IN ("'.$this->stages.'")');
@@ -752,7 +770,22 @@ class Welcome_model extends crm_model {
 			}
 			if(!empty($leadassignee) && count($leadassignee)>0){
 				if($leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
-					$this->db->where_in('j.lead_assign', $leadassignee);
+					// $this->db->where_in('j.lead_assign', $leadassignee);
+					$cnt = count($leadassignee);
+					if(count($leadassignee)>1) {
+						$find_wh_id = '(';
+						for($i=0; $i<count($leadassignee); $i++) {
+							$find_wh_id .= $leadassignee[$i];
+							if($cnt != ($i+1)) {
+								$find_wh_id .= "|";
+							}
+						}
+						$find_wh_id .= ')';
+						$find_wh 	= 'CONCAT(",", j.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+					} else {
+						$find_wh 	= "FIND_IN_SET('".$leadassignee[0]."', j.lead_assign)";
+					}
+					$this->db->where($find_wh);
 				}
 			}
 			if(!empty($keyword) && count($keyword)>0){
@@ -823,15 +856,14 @@ class Welcome_model extends crm_model {
 			/*Advanced filter*/
 		} else {
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
-						
-			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
-			c.customer_name, cc.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
-			us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
+			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry, c.customer_name, cc.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, us.first_name as usfname,	us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
+			$this->db->select('GROUP_CONCAT(CONCAT(u.first_name, " " , u.last_name)) as ufname', FALSE);
 			$this->db->from($this->cfg['dbpref']. 'leads as j');
 			
 			$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = j.custid_fk');
 			$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid = c.company_id');			
-			$this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = j.lead_assign');
+			// $this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = j.lead_assign');
+			$this->db->join($this->cfg['dbpref'].'users as u',' FIND_IN_SET (u.userid , j.lead_assign) ');
 			$this->db->join($this->cfg['dbpref'].'users as us', 'us.userid = j.modified_by');
 			$this->db->join($this->cfg['dbpref'].'users as ub', 'ub.userid = j.belong_to');
 			$this->db->join($this->cfg['dbpref'].'region as rg', 'rg.regionid = cc.add1_region');
@@ -902,7 +934,22 @@ class Welcome_model extends crm_model {
 			}
 			if(!empty($leadassignee) && count($leadassignee)>0){
 				if($leadassignee[0] != 'null' && $leadassignee[0] != 'all'){		
-					$this->db->where_in('j.lead_assign', $leadassignee);
+					// $this->db->where_in('j.lead_assign', $leadassignee);
+					$cnt = count($leadassignee);
+					if(count($leadassignee)>1) {
+						$find_wh_id = '(';
+						for($i=0; $i<count($leadassignee); $i++) {
+							$find_wh_id .= $leadassignee[$i];
+							if($cnt != ($i+1)) {
+								$find_wh_id .= "|";
+							}
+						}
+						$find_wh_id .= ')';
+						$find_wh 	= 'CONCAT(",", j.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+					} else {
+						$find_wh 	= "FIND_IN_SET('".$leadassignee[0]."', j.lead_assign)";
+					}
+					$this->db->where($find_wh);
 				}
 			}
 			if(!empty($keyword) && count($keyword)>0){
@@ -1000,8 +1047,11 @@ class Welcome_model extends crm_model {
 		if(isset($proposal_expect_end) && ($proposal_expect_end == 'load_proposal_expect_end')) {
 			$this->db->where('j.proposal_expected_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '.$proposal_notify_day.' DAY)) ');
 			$this->db->where('j.lead_status', 1);
-			$this->db->where('j.lead_assign', $userdata['userid']);
+			// $this->db->where('j.lead_assign', $userdata['userid']);
+			$lead_assign_condn = ' AND FIND_IN_SET('.$this->userdata['userid'].', j.lead_assign)';
+			$this->db->where($lead_assign_condn);
 		}
+		$this->db->group_by("j.lead_id");
 		$this->db->order_by("j.lead_id", "desc");
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;

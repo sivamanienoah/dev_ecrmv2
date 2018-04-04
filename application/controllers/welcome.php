@@ -21,7 +21,6 @@ class Welcome extends crm_controller {
 		$this->email->set_newline("\r\n");
 		
 		$this->load->helper('lead_stage_helper');
-		$this->load->helper('lead');
 		$this->stg 		= getLeadStage();
 		$this->stg_name = getLeadStageName();
 		$this->stages 	= @implode('","', $this->stg);
@@ -216,20 +215,20 @@ class Welcome extends crm_controller {
 		$arrLeadInfo = $this->request_model->get_lead_info($id);
 		
 		if(!empty($getLeadDet)) {
-            $data['quote_data'] = $getLeadDet[0];
+            $data['quote_data'] 	= $getLeadDet[0];
             $data['view_quotation'] = true;
-			$data['user_accounts'] = $this->welcome_model->get_users();
+			$data['user_accounts'] 	= $this->welcome_model->get_users();
 			
 			//get customers & company
 			$data['company_det'] = $this->welcome_model->get_company_det($getLeadDet[0]['companyid']);
 			$data['contact_det'] = $this->welcome_model->get_contact_det($getLeadDet[0]['companyid']);
 			// echo "<pre>"; print_r($data['contact_det']); die;
 			
-			$data['user_roles']		= $usid['role_id']; 
-			$data['login_userid']		= $usid['userid']; 
+			$data['user_roles']				= $usid['role_id']; 
+			$data['login_userid']			= $usid['userid']; 
 			$data['project_belong_to']		= $arrLeadInfo['belong_to']; 
-			$data['project_assigned_to']		= $arrLeadInfo['assigned_to']; 
-			$data['project_lead_assign']		= $arrLeadInfo['lead_assign']; 
+			$data['project_assigned_to']	= $arrLeadInfo['assigned_to']; 
+			$data['project_lead_assign']	= $arrLeadInfo['lead_assign'];
 
 			if (!strstr($data['quote_data']['log_view_status'], $this->userdata['userid']))
 			{
@@ -266,48 +265,18 @@ class Welcome extends crm_controller {
 				$ins    = array('lead_id'=>$id,'folder_name'=>$id,'parent'=>0,'created_by'=>$this->userdata['userid']);
 				$data['parent_ffolder_id'] = $this->request_model->get_id_by_insert_row('file_management', $ins);
 				
-			
 				$project_members = $this->request_model->get_project_members($id); // This array to get a project normal members(Developers) details.
 				$project_leaders = $this->request_model->get_project_leads($id); // This array to get "Lead Owner", "Lead Assigned to", ""Project Manager" details.
 				$arrProjectMembers = array_merge($project_members, $project_leaders); // Merge the project membes and project leaders array.				
 				$arrProjectMembers = array_unique($arrProjectMembers, SORT_REGULAR); // Remove the duplicated uses form arrProjectMembers array.					
-				$arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.		
-
-				/* if(isset($arrProjectMembers) && !empty($arrProjectMembers)) {
-					foreach($arrProjectMembers as $members) {
-						$arrLeadExistFolderAccess= $this->request_model->check_lead_file_access_by_id($id, 'folder_id', $data['parent_ffolder_id'], $members['userid']);						
-						
-						if(empty($arrLeadExistFolderAccess)) {
-								$read_access = 0;
-								$write_access = 0;
-								$delete_access = 0;									
-								// Check this user is "Lead Owner", "Lead Assigned to", ""Project Manager"
-								if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
-								$read_access = 1;
-								$write_access = 1;
-								$delete_access = 1;								
-								}
-							$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$id,'folder_id'=>$data['parent_ffolder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>0);
-							$insert_folder_permissions   = $this->request_model->insert_new_row('lead_file_access', $folder_permissions_contents); //Mani
-						}					
-					}
-				} */
+				$arrLeadInfo = $this->request_model->get_lead_info($id); // This function to get a current lead informations.
 			}
 			$data['query_files1_html'] = $this->welcome_model->get_query_files_list($id);
 
 			/**
-			 * Get URLs associated with this job
+			 * Get URLs associated with this job quote_data
 			 */
 			$data['job_urls_html'] = $this->welcome_model->get_job_urls($id);
-			
-			//this code will be reuse for calculate the actual worth of project
-			/*
-			$actual_worths = $this->db->query("SELECT SUM(`".$this->cfg['dbpref']."items`.`item_price`) AS `project_cost`
-								FROM `{$this->cfg['dbpref']}items`
-								WHERE `jobid_fk` = '{$id}' GROUP BY jobid_fk");
-			$data['actual_worth'] = $actual_worths->result_array();	
-			echo "<pre>"; print_r($data['actual_worth']);
-			*/
 
 			$data['lead_stat_history'] = $this->welcome_model->get_lead_stat_history($id);
 			
@@ -542,7 +511,7 @@ class Welcome extends crm_controller {
 			{
 				$this->db->delete($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $post_data['project_lead_id']));
 				foreach($project_team_members as $pusers){
-					$this->db->insert($this->cfg['dbpref']."contract_jobs",array("jobid_fk" => $post_data['project_lead_id'], "userid_fk" => $pusers,"modified_by"=>$this->userdata['userid']));
+					$this->db->insert($this->cfg['dbpref']."contract_jobs",array("jobid_fk"=>$post_data['project_lead_id'], "userid_fk"=>$pusers, "modified_by"=>$this->userdata['userid']));
 				}
 			}
 			
@@ -564,13 +533,13 @@ class Welcome extends crm_controller {
 	 */
 	function ajax_create_quote() {
 	
-		if (trim($this->input->post('lead_title')) == '' || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_service'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_source'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_assign'))))
+		if (trim($this->input->post('lead_title')) == '' || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_service'))) || !preg_match('/^[0-9]+$/', trim($this->input->post('lead_source'))))
         {
 			echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
 		}
         else if ( !preg_match('/^[0-9]+$/', trim($this->input->post('custid_fk'))) )
         {
-			echo "{error:true, errormsg:'Customer ID must be numeric!'}";
+			echo "{error:true, errormsg:'Customer cannot be empty!'}";
 		}
         else
         {   
@@ -582,7 +551,7 @@ class Welcome extends crm_controller {
 			$ins['custid_fk']       = $data['custid_fk'];
 			$ins['lead_service']    = $data['lead_service'];
 			$ins['lead_source']     = $data['lead_source'];
-			$ins['lead_assign']     = $data['lead_assign'];
+			$ins['lead_assign']     = @implode(",",$data['lead_assign']);
 			$ins['expect_worth_id'] = $data['expect_worth'];
 			if($data['expect_worth_amount'] == '') {
 				$ewa = '0.00';
@@ -677,7 +646,8 @@ class Welcome extends crm_controller {
 			$ins_log['userid_fk']   	= $this->userdata['userid'];
 			$insert_log = $this->welcome_model->insert_row('logs', $ins_log);
 			
-			$lead_assign_mail = $this->welcome_model->get_user_data_by_id($get_det['lead_assign']);
+			// $lead_assign_mail = $this->welcome_model->get_user_data_by_id($get_det['lead_assign']);
+			$lead_assign_mail = '';
 
 			$user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
 		
@@ -690,7 +660,7 @@ class Welcome extends crm_controller {
 			
 			$param['email_data'] = array('first_name'=>$customer['customer_name'],'last_name'=>'','company'=>$customer['company'],'base_url'=>$this->config->item('base_url'),'insert_id'=>$insert_id);
 
-			$param['to_mail'] = $mgmt_mail.','. $lead_assign_mail[0]['email'];
+			$param['to_mail'] = $mgmt_mail;
 			$param['bcc_mail'] = $admin_mail;
 			$param['from_email'] = $from;
 			$param['from_email_name'] = $user_name;
@@ -898,9 +868,7 @@ class Welcome extends crm_controller {
 	function ajax_edit_quote() {
 
 		$data = real_escape_array($this->input->post());
-		
-		// echo "<pre>"; print_r($data); exit;
-		
+
         if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_service']))) {
 			echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
 		} else if ( !preg_match('/^[0-9]+$/', trim($data['jobid_edit'])) ) {
@@ -922,11 +890,13 @@ class Welcome extends crm_controller {
 			if($data['actual_worth'] != $data['expect_worth_amount_dup']) {			
 				$ins['proposal_adjusted_date'] = date('Y-m-d H:i:s');
 			}
-			if($data['lead_assign_edit_hidden'] == null || $data['lead_assign_edit_hidden'] == 0) {
+			/* if($data['lead_assign_edit_hidden'] == null || $data['lead_assign_edit_hidden'] == 0) {
 				$ins['lead_assign'] = $data['lead_assign_edit'];
 			} else {
 				$ins['lead_assign'] = $data['lead_assign_edit_hidden'];
-			}
+			} */
+			
+			$ins['lead_assign']     = @implode(",",$data['lead_assign_edit']);
 			
 			// for lead status history - starts here
 			if($_POST['lead_status'] 			 != $_POST['lead_status_hidden']) {
@@ -992,7 +962,6 @@ class Welcome extends crm_controller {
 				$insert_log			  = $this->welcome_model->insert_row('logs', $inser);
 			}
 
-			
 			if ($updt_job)
 			{				
 				$his['lead_status'] = $data['lead_status']; //lead_stage_history - lead_status update
@@ -1036,7 +1005,7 @@ class Welcome extends crm_controller {
 				
 				$updt_lead_stage_his = $this->welcome_model->update_row('lead_stage_history', $his, $lead_id);
 				
-				if(($data['lead_assign_edit_hidden'] == $data['lead_assign_edit'])) 
+				/* if(($data['lead_assign_edit_hidden'] == $data['lead_assign_edit'])) 
 				{
 					$ins['userid_fk'] = $this->userdata['userid'];
 					$ins['jobid_fk']  = $lead_id;
@@ -1077,8 +1046,9 @@ class Welcome extends crm_controller {
 
 					$this->email_template_model->sent_email($param);
 
-				} /* lead owner edit mail notifiction starts here */
-				else if(($data['lead_owner_edit_hidden'] ==  $data['lead_owner_edit'])) 
+				}  */
+				/* lead owner edit mail notifiction starts here */
+				if(($data['lead_owner_edit_hidden'] ==  $data['lead_owner_edit'])) 
 				{
 					$ins['userid_fk'] = $this->userdata['userid'];
 					$ins['jobid_fk'] = $lead_id;
@@ -1720,6 +1690,9 @@ class Welcome extends crm_controller {
 	 */
 	public function excelExport() {
 		
+		ini_set('memory_limit', '-1');
+		ob_clean();
+		
 		$stage=null;
 		$customer=null;
 		$service=null;
@@ -1856,6 +1829,7 @@ class Welcome extends crm_controller {
 		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
 		$i=2;
 		foreach($filter_res as $excelarr) {
+			$phone_no 	   = (isset($excelarr['phone_1']) && (!empty($excelarr['phone_1']))) ? str_replace('=', '-', $excelarr['phone_1']) : '';
 			$lead_source   = isset($excelarr['lead_source'])?$leadSources[$excelarr['lead_source']]:'';
 			$lead_service  = isset($excelarr['lead_service'])?$leadServices[$excelarr['lead_service']]:'';
 			$lead_industry = isset($excelarr['industry'])?$leadIndustry[$excelarr['industry']]:'';
@@ -1869,7 +1843,7 @@ class Welcome extends crm_controller {
 			$this->excel->getActiveSheet()->setCellValue('G'.$i, $excelarr['location_name']);
 			$this->excel->getActiveSheet()->setCellValue('H'.$i, stripslashes($excelarr['customer_name']));
 			$this->excel->getActiveSheet()->setCellValue('I'.$i, stripslashes($excelarr['position_title']));
-			$this->excel->getActiveSheet()->setCellValue('J'.$i, $excelarr['phone_1']);
+			$this->excel->getActiveSheet()->setCellValue('J'.$i, $phone_no);
 			$this->excel->getActiveSheet()->setCellValue('K'.$i, $excelarr['email_1']);
 			$this->excel->getActiveSheet()->setCellValue('L'.$i, stripslashes($excelarr['skype_name']));
 			$this->excel->getActiveSheet()->setCellValue('M'.$i, $lead_source);
@@ -1902,7 +1876,7 @@ class Welcome extends crm_controller {
 			$this->excel->getActiveSheet()->setCellValue('W'.$i, $last_log);
 			$i++;
 		}
-		$this->excel->getActiveSheet()->getStyle('W2:W'.$i)->getAlignment()->setWrapText(true);
+		// $this->excel->getActiveSheet()->getStyle('W2:W'.$i)->getAlignment()->setWrapText(true);
 		//make the font become bold
 		$this->excel->getActiveSheet()->getStyle('A1:W1')->getFont()->setBold(true);
 		//merge cell A1 until D1
@@ -1940,7 +1914,9 @@ class Welcome extends crm_controller {
 		header('Content-Type: application/vnd.ms-excel'); //mime type
 		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 		header('Cache-Control: max-age=0'); //no cache
-					 
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private",false);
+
 		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
 		//if you want to save it as .XLSX Excel 2007 format
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
@@ -1955,9 +1931,9 @@ class Welcome extends crm_controller {
 		if(!empty($getLog) && count($getLog)>0){
 			$logs = stripslashes($getLog['log_content']);
 			$logs = str_replace(array('\r\n', '\n', '<br />', '<br>', '<br/>'), "\r", $logs);
+			$logs = str_replace('&#8230;', '', $logs);
 		}
 		
-	
 		return $logs;
 	}
 	

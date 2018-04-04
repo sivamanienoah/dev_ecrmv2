@@ -32,8 +32,23 @@ class Report_lead_ser_model extends crm_model {
 		}
     	if(!empty($options['leadassignee']) && $options['leadassignee'] != 'null')
 		{
-			$leadassignee = explode(',', $options['leadassignee']);
-			$this->db->where_in('jb.lead_assign',$leadassignee);
+			$leadassignee = @explode(',', $options['leadassignee']);
+			// $this->db->where_in('jb.lead_assign',$leadassignee);
+			$cnt = count($leadassignee);
+			if(count($leadassignee)>1) {
+				$find_wh_id = '(';
+				for($i=0; $i<count($leadassignee); $i++) {
+					$find_wh_id .= $leadassignee[$i];
+					if($cnt != ($i+1)) {
+						$find_wh_id .= "|";
+					}
+				}
+				$find_wh_id .= ')';
+				$find_wh 	= 'CONCAT(",", jb.lead_assign, ",") REGEXP "'.$find_wh_id.'" ';
+			} else {
+				$find_wh 	= "FIND_IN_SET('".$leadassignee[0]."', jb.lead_assign)";
+			}
+			$this->db->where($find_wh);
 		}
     	if(!empty($options['owner']) && $options['owner'] != 'null')
 		{
