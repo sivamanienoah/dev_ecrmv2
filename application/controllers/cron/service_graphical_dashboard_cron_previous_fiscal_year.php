@@ -42,9 +42,15 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 		$this->fiscal_month_arr 	= array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
 		$lastMonthArrCalcNoForEndmonth = array('04', '05');
 		
-		$curFiscalYear 	= getLastFiscalYear();
+		/* $curFiscalYear 	= getLastFiscalYear();
 		$start_date    	= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		$end_date    	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+		$end_date    	= ($curFiscalYear)."-03-31";  //eg.2013-04-01 */
+		
+		$curFiscalYearTemp 	= calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31"); 
+		$last_fiscal_year 	= ($curFiscalYearTemp-1);
+		$curFiscalYear 		= $last_fiscal_year;
+		$start_date    		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		$end_date    		= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 		
 		/* if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
 			$end_date = date('Y-m-t');
@@ -81,9 +87,12 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 		$bk_rates 	   	= get_book_keeping_rates();
 		$ins_result	   	= 0;
 		
-		$curFiscalYear 	= getLastFiscalYear();
-		$start_date    	= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		$end_date    	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+		$curFiscalYearTemp 	= calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31"); 
+		$last_fiscal_year 	= ($curFiscalYearTemp-1);
+		
+		$curFiscalYear 		= $last_fiscal_year;
+		$start_date    		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+		$end_date    		= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 
 		$start_date 	= date("Y-m-01",strtotime($start_date));
 		$end_date 		= date("Y-m-t", strtotime($end_date));

@@ -1901,9 +1901,15 @@ class Dashboard extends crm_controller
 			if($month_status == 2) {
 				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
 				if($fiscalStartMonth == $current_month) {
-					$curFiscalYear 	= getLastFiscalYear();
+					$curFiscalYearTemp 	= calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31"); 
+					$last_fiscal_year 	= ($curFiscalYearTemp-1);
+					$curFiscalYear 		= $last_fiscal_year;
+					$start_date    		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+					$end_date    		= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+					
+					/* $curFiscalYear 	= getLastFiscalYear();
 					$start_date		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-					$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+					$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01 */
 				} else {
 					$end_date = date('Y-m-d', strtotime('-1 month', $base_mon));
 				}
@@ -2533,9 +2539,15 @@ class Dashboard extends crm_controller
 			if($month_status == 2) {
 				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
 				if($fiscalStartMonth == $current_month) {
-					$curFiscalYear 	= getLastFiscalYear();
+					$curFiscalYearTemp 	= calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31"); 
+					$last_fiscal_year 	= ($curFiscalYearTemp-1);
+					$curFiscalYear 		= $last_fiscal_year;
+					$start_date    		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+					$end_date    		= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+					
+					/* $curFiscalYear 	= getLastFiscalYear();
 					$start_date		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-					$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+					$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01 */
 				} else {
 					$end_date = date('Y-m-t', strtotime('-1 month', $base_mon));
 				}

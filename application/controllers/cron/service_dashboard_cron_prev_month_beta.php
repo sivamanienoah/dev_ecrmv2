@@ -80,9 +80,15 @@ class Service_dashboard_cron_prev_month_beta extends crm_controller
 		$end_date   		= date("Y-m-t", strtotime($end_date));
 		
 		if($fiscalStartMonth == $current_month) {
-			$curFiscalYear 	= getLastFiscalYear();
+			$curFiscalYearTemp 	= calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31"); 
+			$last_fiscal_year 	= ($curFiscalYearTemp-1);
+			$curFiscalYear 		= $last_fiscal_year;
+			$start_date    		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+			$end_date    		= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+			
+			/* $curFiscalYear 	= getLastFiscalYear();
 			$start_date		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-			$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
+			$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01 */
 		}
 		
 		$data['bill_month'] = $month;
