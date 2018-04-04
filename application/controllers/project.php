@@ -369,7 +369,7 @@ class Project extends crm_controller {
 	 * @param int $id - Job Id
 	 */
 	public function view_project($id = 0)
-	{
+	{//echo'hereetree';
 		// ini_set("display_errors",1);
 		// error_reporting(1);
         $this->load->helper('text');
@@ -387,6 +387,7 @@ class Project extends crm_controller {
 		if(!empty($result)) {
 			
 			$data['quote_data']		= $result[0];
+			
 			$data['view_quotation'] = true;
 			
 			//get customers & company
@@ -630,6 +631,28 @@ class Project extends crm_controller {
 				$data['timesheet_variance'] = $res_pv;
 			}
 			$timesheet_db->close();
+			
+			/* Update estimated hours in leads with timesheet data if it is empty			 */
+			if(count($data['timesheet_variance'])>0 && !empty($data['timesheet_variance'])){
+				$tot_est_hours = 0;
+				$tot_act_hours = 0;
+				$tot_variant_hours = 0;
+			
+				foreach($data['timesheet_variance'] as $timevar ){
+				$variant=($timevar->actualHours)-$timevar->EstimatedHours;
+					$tot_est_hours+=$timevar->EstimatedHours;
+					$tot_act_hours+=$timevar->actualHours;
+					$tot_variant_hours+=$variant;
+				} 
+			}
+			
+			if($data['quote_data']['estimate_hour'] == ''){
+				$pjt_estimate_hour = $tot_est_hours;
+				$wh_condn = array('lead_id' => $data['quote_data']['lead_id']);
+				$updt = array('estimate_hour'=>$pjt_estimate_hour);
+				$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
+			}
+			/* End leads estimated hours update */
 			
 			/**
 			get the bug summary from the redmine
