@@ -243,16 +243,33 @@ function get_current_financial_year($year=false,$month=false)
 	return $financial_year;
 }
 
+function calculateFiscalYearForDateHelper($inputDate, $fyStart, $fyEnd) {
+	$date = strtotime($inputDate);
+	$inputyear = strftime('%Y',$date);
+ 
+	$fystartdate = strtotime($fyStart.'/'.$inputyear);
+	$fyenddate = strtotime($fyEnd.'/'.$inputyear);
+ 
+	if($date <= $fyenddate){
+		$fy = intval($inputyear);
+	}else{
+		$fy = intval(intval($inputyear) + 1);
+	}
+ 
+	return $fy;
+}
+
 // get last financial year
 function getLastFiscalYear() 
 {
     $currentYear = date('Y');
     // Check if it happened this year, AND it's not in the future.
     $today = new DateTime();
+	// echo $today->getTimestamp() . ' > '.mktime(0, 0, 0, 3, 31, $currentYear); die;
     if (checkdate(3, 31, $currentYear) && $today->getTimestamp() > mktime(0, 0, 0, 3, 31, $currentYear)) {
         return $currentYear;
     }
-
+	// echo $currentYear; die;
     while (--$currentYear) {
         if (checkdate(3, 31, $currentYear)) {
             return $currentYear;
