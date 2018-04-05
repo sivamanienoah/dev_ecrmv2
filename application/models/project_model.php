@@ -242,7 +242,9 @@ class Project_model extends crm_model
 	{
 		$this->db->select('lead_assign, assigned_to, belong_to');
 		$this->db->where('lead_id', $id);
-		$this->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
+		$where = '(belong_to = '.$uid.' OR assigned_to ='.$uid.' OR FIND_IN_SET('.$uid.', lead_assign)) ';
+		$this->db->where($where);
+		// $this->db->where("(lead_assign = '".$uid."' || assigned_to = '".$uid."' || belong_to = '".$uid."')");
 		$sql = $this->db->get($this->cfg['dbpref'] . 'leads');
 		$res1 = $sql->result_array();
 		if (empty($res1)) {

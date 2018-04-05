@@ -369,25 +369,22 @@ class Project extends crm_controller {
 	 * @param int $id - Job Id
 	 */
 	public function view_project($id = 0)
-	{//echo'hereetree';
+	{
 		// ini_set("display_errors",1);
 		// error_reporting(1);
         $this->load->helper('text');
 		$this->load->helper('fix_text');
 		$usernme = $this->session->userdata('logged_in_user');
-
 		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
 			$data['chge_access'] = 1;
 		} else {
 			$data['chge_access'] = $this->project_model->get_access($id, $usernme['userid']);
 		}
-		
 		$result = $this->project_model->get_quote_data($id);
-		
 		if(!empty($result)) {
 			
 			$data['quote_data']		= $result[0];
-			
+			// echo'<pre>';print_r($data['quote_data']);exit;
 			$data['view_quotation'] = true;
 			
 			//get customers & company
@@ -631,7 +628,7 @@ class Project extends crm_controller {
 				$data['timesheet_variance'] = $res_pv;
 			}
 			$timesheet_db->close();
-			
+			// echo'<pre>';print_r($data['quote_data']);exit;
 			/* Update estimated hours in leads with timesheet data if it is empty			 */
 			if(count($data['timesheet_variance'])>0 && !empty($data['timesheet_variance'])){
 				$tot_est_hours = 0;
@@ -645,8 +642,9 @@ class Project extends crm_controller {
 					$tot_variant_hours+=$variant;
 				} 
 			}
-			
-			if($data['quote_data']['estimate_hour'] == ''){
+			// $tot_est_hours=1000;
+			// echo'<pre>';print_r($tot_est_hours);exit;
+			if($data['quote_data']['estimate_hour'] == '' && !empty($tot_est_hours)){//echo'sdf';exit;
 				$pjt_estimate_hour = $tot_est_hours;
 				$wh_condn = array('lead_id' => $data['quote_data']['lead_id']);
 				$updt = array('estimate_hour'=>$pjt_estimate_hour);
