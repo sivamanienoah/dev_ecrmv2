@@ -53,7 +53,7 @@ class Project_model extends crm_model
 		// echo "<pre>"; print_r($customer); die;
 		
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) {
-		 
+		
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.customer_name as cfname, cc.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
@@ -129,7 +129,8 @@ class Project_model extends crm_model
 			
 			//Fetching Project Manager, Lead Assigned to & Lead owner jobids.
 			$this->db->select('lead_id');
-			$this->db->where("(assigned_to = '".$varSessionId."' OR lead_assign = '".$varSessionId."' OR belong_to = '".$varSessionId."')");
+			$where = '(belong_to = '.$varSessionId.' OR assigned_to ='.$varSessionId.' OR FIND_IN_SET('.$varSessionId.', lead_assign)) ';
+			$this->db->where($where);
 			$this->db->where("lead_status", 4);
 			if (empty($stage) && $stage=='null') {
 				$this->db->where("pjt_status", 1);
@@ -145,7 +146,7 @@ class Project_model extends crm_model
 			if($rowsJobs->num_rows()>0)	$data['jobids2'] = $rowsJobs->result_array();			
 			
 			$data = array_merge_recursive($data['jobids'], $data['jobids1'], $data['jobids2']);
- 
+
 			$res[] = 0;
 			if (is_array($data) && count($data) > 0) {
 				foreach ($data as $data) {
