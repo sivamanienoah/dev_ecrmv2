@@ -79,7 +79,7 @@ require (theme_url().'/tpl/header.php');
 		
 			<div>			
 				<div id="advance_search" style="float:left;width:100%;">
-					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:280px; width:100%;">
+					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:314px; width:100%;">
 						
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						
