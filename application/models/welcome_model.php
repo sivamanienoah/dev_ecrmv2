@@ -593,7 +593,7 @@ class Welcome_model extends crm_model {
 				$this->db->or_where($dt_mod_query);
 			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
 				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
-				$dt_mod_query = '(DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				$dt_mod_query = '(DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_modified) <= "'.date('Y-m-d', strtotime($to_date)).'")';
 				 // echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 				$this->db->or_where($dt_mod_query);
@@ -715,16 +715,19 @@ class Welcome_model extends crm_model {
 			if(isset($from_date) && !empty($from_date) && empty($to_date)) {
 				$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'"';
 				$dt_mod_query =  'DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'"';
+				// echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 				$this->db->or_where($dt_mod_query);
 			} else if(isset($to_date) && !empty($to_date) && empty($from_date)) {	
 				$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'"';
 				$dt_mod_query = 'DATE(j.date_modified) <= "'.date('Y-m-d', strtotime($to_date)).'"';
+				// echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 				$this->db->or_where($dt_mod_query);
 			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
 				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
-				$dt_mod_query = '(DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				$dt_mod_query = '(DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_modified) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				 // echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 				$this->db->or_where($dt_mod_query);
 			}
@@ -878,16 +881,19 @@ class Welcome_model extends crm_model {
 			if(isset($from_date) && !empty($from_date) && empty($to_date)) {
 				$dt_query =  'DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'"';
 				$dt_mod_query =  'DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'"';
+				// echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 				$this->db->or_where($dt_mod_query);
 			} else if(isset($to_date) && !empty($to_date) && empty($from_date)) {	
 				$dt_query = 'DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'"';
 				$dt_mod_query = 'DATE(j.date_modified) <= "'.date('Y-m-d', strtotime($to_date)).'"';
+				// echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 				$this->db->or_where($dt_mod_query);
 			} else if(isset($from_date) && !empty($from_date) && isset($to_date) && !empty($to_date)) {
 				$dt_query = '(DATE(j.date_created) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
-				$dt_mod_query = '(DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_created) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				$dt_mod_query = '(DATE(j.date_modified) >= "'.date('Y-m-d', strtotime($from_date)).'" AND DATE(j.date_modified) <= "'.date('Y-m-d', strtotime($to_date)).'")';
+				 // echo'<pre>';print_r($dt_query);exit;
 				$this->db->where($dt_query);
 				$this->db->or_where($dt_mod_query);
 			}
