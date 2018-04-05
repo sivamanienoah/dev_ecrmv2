@@ -141,6 +141,8 @@ class User extends crm_controller {
             }
 			if($update_data['role_id'] == 14) {
 				$update_data['contract_manager'] = $this->input->post('contract_manager');
+			} else {
+				$update_data['contract_manager'] = NULL;
 			}
             if ($this->input->post('new_user') || $this->input->post('update_password')) 
 			{
