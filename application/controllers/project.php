@@ -630,7 +630,7 @@ class Project extends crm_controller {
 			$timesheet_db->close();
 			// echo'<pre>';print_r($data['quote_data']);exit;
 			/* Update estimated hours in leads with timesheet data if it is empty			 */
-			if(count($data['timesheet_variance'])>0 && !empty($data['timesheet_variance'])){
+			if(count($data['timesheet_variance'])>0){
 				$tot_est_hours = 0;
 				$tot_act_hours = 0;
 				$tot_variant_hours = 0;
