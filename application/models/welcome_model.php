@@ -1054,7 +1054,7 @@ class Welcome_model extends crm_model {
 			$this->db->where('j.proposal_expected_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '.$proposal_notify_day.' DAY)) ');
 			$this->db->where('j.lead_status', 1);
 			// $this->db->where('j.lead_assign', $userdata['userid']);
-			$lead_assign_condn = ' AND FIND_IN_SET('.$this->userdata['userid'].', j.lead_assign)';
+			$lead_assign_condn = ' FIND_IN_SET('.$this->userdata['userid'].', j.lead_assign)';
 			$this->db->where($lead_assign_condn);
 		}
 		$this->db->group_by("j.lead_id");
