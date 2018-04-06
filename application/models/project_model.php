@@ -199,26 +199,26 @@ class Project_model extends crm_model
 				switch($datefilter) {
 					case 1:
 						if(!empty($to_date)) {
-							$this->db->where("(j.actual_date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.actual_date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
-							$this->db->where("(j.actual_date_start <='".date('Y-m-d', strtotime($to_date))."' OR j.actual_date_due <='".date('Y-m-d', strtotime($to_date))."')", NULL, FALSE);
+							$this->db->where("(j.date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
+							$this->db->where("(j.date_start <='".date('Y-m-d', strtotime($to_date))."' OR j.date_due <='".date('Y-m-d', strtotime($to_date))."')", NULL, FALSE);
 						} else {
-							$this->db->where("(j.actual_date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.actual_date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
+							$this->db->where("(j.date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
 						}
 					break;
 					case 2:
 						if(!empty($to_date)) {
-							$this->db->where('j.actual_date_start >=', date('Y-m-d', strtotime($from_date)));
-							$this->db->where('j.actual_date_start <=', date('Y-m-d', strtotime($to_date)));
+							$this->db->where('j.date_start >=', date('Y-m-d', strtotime($from_date)));
+							$this->db->where('j.date_start <=', date('Y-m-d', strtotime($to_date)));
 						} else {
-							$this->db->where('j.actual_date_start >=', date('Y-m-d', strtotime($from_date)));
+							$this->db->where('j.date_start >=', date('Y-m-d', strtotime($from_date)));
 						}
 					break;
 					case 3:
 						if(!empty($to_date)) {
-							$this->db->where('j.actual_date_due >=', date('Y-m-d', strtotime($from_date)));
-							$this->db->where('j.actual_date_due <=', date('Y-m-d', strtotime($to_date)));
+							$this->db->where('j.date_due >=', date('Y-m-d', strtotime($from_date)));
+							$this->db->where('j.date_due <=', date('Y-m-d', strtotime($to_date)));
 						} else {
-							$this->db->where('j.actual_date_due >=', date('Y-m-d', strtotime($from_date)));
+							$this->db->where('j.date_due >=', date('Y-m-d', strtotime($from_date)));
 						}
 					break;
 				}
