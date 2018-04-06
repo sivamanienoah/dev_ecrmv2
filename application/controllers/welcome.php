@@ -430,7 +430,7 @@ class Welcome extends crm_controller {
 	 *  Set the quote editing interface
 	 */
     function edit_quote($id = 0) 
-	{
+	{ECHO'<PRE>';PRINT_R($id);EXIT;
         if ( ($data['quote_data'] = $this->welcome_model->get_lead_all_detail($id)) !== FALSE )
         {	
             $data['edit_quotation'] = true;
@@ -868,7 +868,7 @@ class Welcome extends crm_controller {
 	function ajax_edit_quote() {
 
 		$data = real_escape_array($this->input->post());
-		ECHO'<PRE>';PRINT_R($data);EXIT;
+
         if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_service']))) {
 			echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
 		} else if ( !preg_match('/^[0-9]+$/', trim($data['jobid_edit'])) ) {
