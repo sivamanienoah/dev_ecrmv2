@@ -102,7 +102,7 @@ require (theme_url().'/tpl/header.php');
 										To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
 									</td>
 									<td>
-										<select style="width:180px" multiple="multiple" id="stage" name="stage[]">
+										<select style="width:148px" multiple="multiple" id="stage" name="stage[]">
 											<?php foreach($lead_stage as $ls) { ?>
 													<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
 											<?php } ?>					
@@ -190,7 +190,7 @@ require (theme_url().'/tpl/header.php');
 										</select> 
 									</td>
 									<td>
-										<select style="width:210px" multiple="multiple" id="regionname" name="regionname[]">
+										<select style="width:180px" multiple="multiple" id="regionname" name="regionname[]">
 											<?php foreach ($regions as $reg) {
 													if(!empty($reg['region_name'])) { ?>
 														<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
