@@ -282,7 +282,7 @@ button.ui-datepicker-current { display: none; }
 						</td>
 						<td width="115"><strong>Planned Start Date (SOW Start Date): <span class='mandatory_asterick'>*</span></strong></td>
 						<td width="200">
-							<input type="text" data-calendar="true" name="date_start" id="date_start" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" readonly tabindex="14" />
+							<input type="text" data-calendar="true" name="date_start" id="date_start" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_start'] != '') echo date('d-m-Y', strtotime($quote_data['date_start'])); else echo ''; ?>" tabindex="14" />
 							<div class="ajx_failure_msg" id="date_start_err"></div>
 						</td>
 					</tr>
@@ -306,7 +306,7 @@ button.ui-datepicker-current { display: none; }
 						</td>
 						<td width="115"><strong>Planned End Date (SOW End Date): <span class='mandatory_asterick'>*</span></strong></td>
 						<td width="200">
-							<input type="text" data-calendar="true" name="date_due" id="date_due" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" readonly tabindex="15" />
+							<input type="text" data-calendar="true" name="date_due" id="date_due" class="textfield" style=" width:200px" value="<?php if ($quote_data['date_due'] != '') echo date('d-m-Y', strtotime($quote_data['date_due'])); else echo ''; ?>" tabindex="15" />
 							<div class="ajx_failure_msg" id="date_due_err"></div>
 						</td>
 					</tr>
