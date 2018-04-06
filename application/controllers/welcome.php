@@ -868,7 +868,7 @@ class Welcome extends crm_controller {
 	function ajax_edit_quote() {
 
 		$data = real_escape_array($this->input->post());
-
+		echo'<pre>';print_r($data);exit;
         if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_service']))) {
 			echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
 		} else if ( !preg_match('/^[0-9]+$/', trim($data['jobid_edit'])) ) {
