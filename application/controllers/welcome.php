@@ -432,7 +432,7 @@ class Welcome extends crm_controller {
     function edit_quote($id = 0) 
 	{
         if ( ($data['quote_data'] = $this->welcome_model->get_lead_all_detail($id)) !== FALSE )
-        {	ECHO'<PRE>';PRINT_R($data['quote_data']);EXIT;
+        {	
             $data['edit_quotation'] = true;
 
 			$data['categories'] = $this->welcome_model->get_categories();
@@ -489,7 +489,6 @@ class Welcome extends crm_controller {
         }
         else
         {
-			ECHO'else';EXIT;
             $this->session->set_flashdata('header_messages', array("Status Changed Successfully."));
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
             //redirect('welcome/quotation');
