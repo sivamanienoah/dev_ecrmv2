@@ -11,7 +11,7 @@
 		$default_cur_id 	= '1';
 		$default_cur_name 	= 'USD';
 	}
-	
+	// echo'<pre>';print_r($quote_data);die;
 	$this->load->helper('lead');
 	$file_upload_access = get_file_access($quote_data['lead_id'], $this->userdata['userid']);
 ?>
@@ -101,7 +101,7 @@
 					<label class="practices">Project Title</label>
 					<input style="width:180px;" type="text" name="lead_title" id="lead_title" class="textfield" size="40" value="<?php echo isset($quote_data['lead_title']) ? $quote_data['lead_title'] : ''; ?>" <?php if ($readonly_status == true) { ?> disabled <?php } ?> />
 				</div>
-				<div>
+				<div><?php //echo'<pre>';print_r($chge_access);die; ?>
 				<?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
 					<div class="buttons">
 						<button type="submit" class="positive" style="margin:0 0 0 5px;" onclick="updateTitle(); return false;">Set</button>

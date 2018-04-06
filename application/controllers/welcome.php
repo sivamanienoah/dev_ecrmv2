@@ -1694,6 +1694,8 @@ class Welcome extends crm_controller {
 		ini_set('memory_limit', '-1');
 		ob_clean();
 		
+		$from_date =null; 
+		$to_date =null;
 		$stage=null;
 		$customer=null;
 		$service=null;
@@ -1791,7 +1793,7 @@ class Welcome extends crm_controller {
 			$keyword      = (!empty($exporttoexcel['keyword'])?$exporttoexcel['keyword']:'');
 		}
 
-		$filter_res = $this->welcome_model->get_filter_results($stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
+		$filter_res = $this->welcome_model->get_filter_results($from_date,$to_date,$stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
 		
 		// echo "<pre>"; print_r($filter_res); exit;
 

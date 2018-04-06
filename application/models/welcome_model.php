@@ -535,7 +535,7 @@ class Welcome_model extends crm_model {
 		$service 		= (count($service)>0)?explode(',',$service):'';
 		$lead_src 		= (count($lead_src)>0)?explode(',',$lead_src):'';
 		$industry 		= (count($industry)>0)?explode(',',$industry):'';
-		$worth 			= (count($worth)>0)?explode(',',$worth):'';
+		$worth 			= (count($worth)>0)?explode(',',$worth):'';//print_r($worth);exit;
 		$leadassignee 	= (count($leadassignee)>0)?explode(',',$leadassignee):'';
 		$regionname 	= (count($regionname)>0)?explode(',',$regionname):'';
 		$countryname 	= (count($countryname)>0)?explode(',',$countryname):'';
@@ -544,12 +544,11 @@ class Welcome_model extends crm_model {
 		$lead_status 	= (count($lead_status)>0)?explode(',',$lead_status):'';
 		$lead_indi 		= (count($lead_indi)>0)?explode(',',$lead_indi):'';
 		
-		// echo "<pre>"; print_r($worth); die;
 		
 		if(isset($proposal_expect_end) && ($proposal_expect_end == 'load_proposal_expect_end')) {
 			$proposal_notify_day = get_notify_status(1);
 		}
- 
+		// echo $this->userdata['role_id'];exit;
 		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
 			c.customer_name, cc.company, c.email_1, c.phone_1, c.position_title, c.skype_name, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname, us.first_name as usfname,
@@ -616,14 +615,39 @@ class Welcome_model extends crm_model {
 					$this->db->where_in('j.industry',$industry); 
 				}
 			}
-			if(!empty($worth) && count($worth)>0){
+			/* Expected Worth amount filter search starts */
+			if(!empty($worth) && count($worth)>0 && $worth[0] !='null'){//print_r($worth);exit;
+				$where_query='(';
+				foreach($worth as $key=>$worth_val)
+				{
+					$exploded_worth_val=explode('-',$worth_val);
+					$left_side=$exploded_worth_val[0];
+					$right_side=$exploded_worth_val[1];
+					if($right_side =='above')
+					{
+						$where_query .='j.expect_worth_amount >= '.$left_side;
+					}
+					else
+					{
+						$where_query .='j.expect_worth_amount BETWEEN '.$left_side.' AND '.$right_side;
+					}
+					if($key < count($worth)-1)
+					{
+					$where_query .=' OR ';
+					}
+					//$this->db->or_where('j.expect_worth_amount BETWEEN '.$left_side.' AND '.$right_side);
+				}
+				$where_query .=')';
+				$this->db->where($where_query);
+				/* 
 				if($worth[0] != 'null' && $worth[0] != 'all'){	
 					if($worth[1] == 'above')
 					$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
 					else
 					$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);	
-				}
+				} */
 			}
+			/* Expected Worth amount filter search ends */
 			if(!empty($owner) ){
 				if($owner[0] != 'null' && $owner[0] != 'all'){
 					$this->db->where_in('j.belong_to',$owner); 
@@ -680,6 +704,7 @@ class Welcome_model extends crm_model {
 					$this->db->where($invwhere);
 				}
 			} 
+			//echo $this->db->last_query();exit;
 		} else if($this->userdata['role_id'] == 14) { //for reseller role
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
@@ -749,15 +774,39 @@ class Welcome_model extends crm_model {
 					$this->db->where_in('j.industry',$industry);
 				}
 			}
-			if(!empty($worth) && count($worth)>0){
-				if($worth[0] != 'null' && $worth[0] != 'all') {
-					if($worth[1] == 'above') {
-						$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
-					} else {
-						$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);			
+			/* Expected Worth amount filter search starts */
+			if(!empty($worth) && count($worth)>0 && $worth[0] !='null'){//print_r($worth);exit;
+				$where_query='(';
+				foreach($worth as $key=>$worth_val)
+				{
+					$exploded_worth_val=explode('-',$worth_val);
+					$left_side=$exploded_worth_val[0];
+					$right_side=$exploded_worth_val[1];
+					if($right_side =='above')
+					{
+						$where_query .='j.expect_worth_amount >= '.$left_side;
 					}
+					else
+					{
+						$where_query .='j.expect_worth_amount BETWEEN '.$left_side.' AND '.$right_side;
+					}
+					if($key < count($worth)-1)
+					{
+					$where_query .=' OR ';
+					}
+					//$this->db->or_where('j.expect_worth_amount BETWEEN '.$left_side.' AND '.$right_side);
 				}
+				$where_query .=')';
+				$this->db->where($where_query);
+				/* 
+				if($worth[0] != 'null' && $worth[0] != 'all'){	
+					if($worth[1] == 'above')
+					$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
+					else
+					$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);	
+				} */
 			}
+			/* Expected Worth amount filter search ends */
 			if(!empty($owner) ){
 				if($owner[0] != 'null' && $owner[0] != 'all') {		
 					$this->db->where_in('j.belong_to',$owner); 
@@ -916,15 +965,39 @@ class Welcome_model extends crm_model {
 					$this->db->where_in('j.industry',$industry);
 				}
 			}
-			if(!empty($worth) && count($worth)>0){
-				if($worth[0] != 'null' && $worth[0] != 'all') {
-					if($worth[1] == 'above') {
-					$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
-					} else {
-					$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);			
+			/* Expected Worth amount filter search starts */
+			if(!empty($worth) && count($worth)>0 && $worth[0] !='null'){//print_r($worth);exit;
+				$where_query='(';
+				foreach($worth as $key=>$worth_val)
+				{
+					$exploded_worth_val=explode('-',$worth_val);
+					$left_side=$exploded_worth_val[0];
+					$right_side=$exploded_worth_val[1];
+					if($right_side =='above')
+					{
+						$where_query .='j.expect_worth_amount >= '.$left_side;
 					}
+					else
+					{
+						$where_query .='j.expect_worth_amount BETWEEN '.$left_side.' AND '.$right_side;
+					}
+					if($key < count($worth)-1)
+					{
+					$where_query .=' OR ';
+					}
+					//$this->db->or_where('j.expect_worth_amount BETWEEN '.$left_side.' AND '.$right_side);
 				}
+				$where_query .=')';
+				$this->db->where($where_query);
+				/* 
+				if($worth[0] != 'null' && $worth[0] != 'all'){	
+					if($worth[1] == 'above')
+					$this->db->where('j.expect_worth_amount >= '.$worth['0']);	
+					else
+					$this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);	
+				} */
 			}
+			/* Expected Worth amount filter search ends */
 			if(!empty($owner) ){
 				if($owner[0] != 'null' && $owner[0] != 'all') {		
 					$this->db->where_in('j.belong_to',$owner); 
@@ -1053,7 +1126,7 @@ class Welcome_model extends crm_model {
 		$this->db->group_by("j.lead_id");
 		$this->db->order_by("j.lead_id", "desc");
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		  //echo $this->db->last_query(); exit;
 		
 		$res =  $query->result_array();
 		return $res;
