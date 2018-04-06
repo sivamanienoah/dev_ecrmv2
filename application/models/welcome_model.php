@@ -1052,7 +1052,7 @@ class Welcome_model extends crm_model {
 		/*Load data from notification bell icon*/
 		if(isset($proposal_expect_end) && ($proposal_expect_end == 'load_proposal_expect_end')) {
 			$this->db->where('j.proposal_expected_date BETWEEN CURDATE() AND DATE(DATE_ADD(CURDATE(), INTERVAL '.$proposal_notify_day.' DAY)) ');
-			$this->db->where('j.lead_status =', 1);
+			$this->db->where('j.lead_status', 1);
 			// $lead_assign_condn = ' FIND_IN_SET('.$this->userdata['userid'].', j.lead_assign)';
 			$lead_assign_condn 	= "FIND_IN_SET('".$this->userdata['userid']."', j.lead_assign)";
 			$this->db->where($lead_assign_condn);
