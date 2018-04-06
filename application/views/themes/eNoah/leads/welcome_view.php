@@ -1115,7 +1115,7 @@ echo'if';echo'<pre>';print_r($userdata);exit;							?>
 									$('#lead_assign_edit_hidden').val(assign_mail);
 								});
 							</script>
-						<?php } else {	echo'else';echo'<pre>';print_r($lead_assign_edit);exit;?>
+						<?php } else {	echo'else';echo'<pre>';print_r($lead_assign_arr);exit;?>
 						
 							<input type="hidden" name="lead_assigned_to" id="lead_assigned_to" value="<?php echo $quote_data['custid_fk'] ?>" />
 						
