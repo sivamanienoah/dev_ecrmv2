@@ -563,7 +563,7 @@ function editQuoteDetails(arg) {
 	 if ($('#lead_source_edit').val() == 'not_select') {
         err.push('Lead Source must be selected');
     }
-	 if ($('#lead_assign_edit').val() == 'not_select') {
+	 if ($('#lead_assign_edit').val() == null) {
         err.push('Lead Assigned to must be selected');
     }
 	if ($('#job_division_edit').val() == 'not_select') {
