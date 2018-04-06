@@ -897,7 +897,7 @@ class Welcome extends crm_controller {
 			} */
 			
 			$ins['lead_assign']     = @implode(",",$data['lead_assign_edit_hidden']);
-			echo'<pre>';print_r($ins['lead_assign']);exit;
+			
 			// for lead status history - starts here
 			if($_POST['lead_status'] 			 != $_POST['lead_status_hidden']) {
 				$lead_stat_hist['lead_id'] 		  = $_POST['jobid_edit'];
@@ -923,7 +923,7 @@ class Welcome extends crm_controller {
 			$ins['date_modified'] 	 = date('Y-m-d H:i:s');
 			$ins['modified_by']		 = $this->userdata['userid'];
 			/* belong to assigned editing the lead owner */
-
+echo'<pre>';print_r($ins);exit;
 			/* for onhold reason insert */	
 			$inse['log_content']  = "Lead Onhold Reason: "; 
 			$inse['log_content'] .= $data['reason'];
