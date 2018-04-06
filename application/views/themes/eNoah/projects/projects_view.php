@@ -77,7 +77,7 @@ if (get_default_currency()) {
 							<th>By Customer Wise</th>
 							<th>By Services Wise</th>
 							<th>By Practices</th>
-							<th>By Date(Actual)</th>
+							<th>By Date(Planned)</th>
 						</tr>	
 					</thead>
 					<tbody>
