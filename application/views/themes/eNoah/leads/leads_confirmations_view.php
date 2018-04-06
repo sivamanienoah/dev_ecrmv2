@@ -3,6 +3,7 @@
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
+#ui-datepicker-div { z-index: 1082 !important; }
 </style>
 <?php
 	if($customer_data['add1_region'] != 0) 
