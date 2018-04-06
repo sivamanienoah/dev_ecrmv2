@@ -1101,8 +1101,7 @@ h3 .small {
 							$lead_assign_arr = @explode(',',$quote_data['lead_assign']);
 						?>
 						<p>
-						<?php if($quote_data['belong_to'] ==  $userdata['userid'] || $userdata['role_id'] == 1) {
-echo'if';echo'<pre>';print_r($userdata);exit;							?>
+						<?php if($quote_data['belong_to'] ==  $userdata['userid'] || $userdata['role_id'] == 1) { ?>
 							<select data-placeholder="Choose Assignee..." name="lead_assign_edit[]" multiple id="lead_assign_edit" class="chzn-select width300px">
 								<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
 									<option value="<?php echo $leadassignedit['userid'] ?>"<?php echo (in_array($leadassignedit['userid'], $lead_assign_arr) ) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] . " - " . $leadassignedit['emp_id']; ?></option>
