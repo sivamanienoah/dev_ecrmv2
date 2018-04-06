@@ -896,7 +896,8 @@ class Welcome extends crm_controller {
 				$ins['lead_assign'] = $data['lead_assign_edit_hidden'];
 			} */
 			
-			$ins['lead_assign']     = @implode(",",$data['lead_assign_edit_hidden']);
+			// $ins['lead_assign']     = @implode(",",$data['lead_assign_edit_hidden']);
+			$ins['lead_assign']     = $data['lead_assign_edit_hidden'];
 			
 			// for lead status history - starts here
 			if($_POST['lead_status'] 			 != $_POST['lead_status_hidden']) {
