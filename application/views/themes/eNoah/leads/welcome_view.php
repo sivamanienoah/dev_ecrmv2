@@ -1115,9 +1115,9 @@ echo'if';echo'<pre>';print_r($userdata);exit;							?>
 									$('#lead_assign_edit_hidden').val(assign_mail);
 								});
 							</script>
-						<?php } else {	//echo'else';?>
-							<?php $lead_assigned = implode(",",$lead_assign_arr); echo'<pre>';print_r($lead_assigned);exit;?>
-							<input type="hidden" name="lead_assigned_to" id="lead_assigned_to" value="<?php echo $quote_data['custid_fk'] ?>" />
+						<?php } else { ?>
+							<?php $lead_assigned = implode(",",$lead_assign_arr); ?>
+							<input type="hidden" name="lead_assigned_to" id="lead_assigned_to" value="<?php echo $lead_assigned ?>" />
 						
 							<select data-placeholder="Choose Assignee..." name="lead_assign_edit[]" multiple id="lead_assign_edit" disabled=true class="chzn-select width300px">
 								<?php foreach ($lead_assign_edit as $leadassignedit) { ?>
