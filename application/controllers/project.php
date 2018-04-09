@@ -644,7 +644,7 @@ class Project extends crm_controller {
 			}
 			// $tot_est_hours=1000;
 			// echo'<pre>';print_r($tot_est_hours);exit;
-			if(empty($data['quote_data']['estimate_hour'])){
+			if(empty($data['quote_data']['estimate_hour']) || $data['quote_data']['estimate_hour'] == 0){
 				$pjt_estimate_hour = sprintf('%0.2f', $tot_est_hours);
 				$wh_condn = array('lead_id' => $data['quote_data']['lead_id']);
 				$updt = array('estimate_hour'=> $pjt_estimate_hour);
