@@ -59,7 +59,7 @@ if(!empty($invoices) && count($invoices)>0) {
 		$invoiceArr[$inv_row['pjt_id']] = $inv_row['coverted_amt'];
 	}
 }
-echo '<pre>'; print_r($invoiceArr); echo '</pre>';
+// echo '<pre>'; print_r($invoiceArr); echo '</pre>';
 $timesheet_data = array();
 if(count($resdata)>0) {
 	// $rates = $this->report_lead_region_model->get_currency_rates_new();
@@ -187,10 +187,9 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								$directcost_arr[$resourceName] = $rec->direct_cost_per_hour;
 								
 								//FOR INVOICE
-								if(isset($sub_tot[$project_code]['invoices']))
-								$sub_tot[$project_code]['invoices'] +=  $duration_hours;
-								else
-								$sub_tot[$project_code]['invoices'] =  $duration_hours;
+								if(isset($invoiceArr[$project_code])) {
+									$sub_tot[$project_code]['invoices'] = $invoiceArr[$project_code];
+								}								
 								
 								//for project_code - sorting-directcost
 								if(isset($prjt_directcst[$project_code]))
@@ -318,7 +317,7 @@ if(!empty($sub_tot)) {
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
-				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
+				<td width='5%' align='right' class='rt-ali'>".isset($sub_tot[$p_name]['invoices'])?round($sub_tot[$p_name]['invoices'], 1):''."</td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</td>
 				<td width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</td>
 				<td width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
