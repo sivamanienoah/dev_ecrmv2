@@ -189,7 +189,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								//FOR INVOICE
 								if(isset($invoiceArr[$project_code])) {
 									$sub_tot[$project_code]['invoices'] = $invoiceArr[$project_code];
-								}								
+								}
 								
 								//for project_code - sorting-directcost
 								if(isset($prjt_directcst[$project_code]))
@@ -317,7 +317,7 @@ if(!empty($sub_tot)) {
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
-				<td width='5%' align='right' class='rt-ali'>tst</td>
+				<td width='5%' align='right' class='rt-ali'>".isset($sub_tot[$p_name]['invoices'])?round($sub_tot[$p_name]['invoices']):''."</td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</td>
 				<td width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</td>
 				<td width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
@@ -394,8 +394,9 @@ if(!empty($sub_tot)) {
 		}
 		
 	echo "<tr data-depth='0'>
-		<td width='15%' colspan=2 align='right' class='rt-ali'><b>TOTAL:</b></td>
+		<td width='15%' align='right' class='rt-ali'><b>TOTAL:</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b>".round($invoices_data['total_amt'])."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_directcost, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_othercost, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
