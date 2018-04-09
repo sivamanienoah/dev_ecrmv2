@@ -349,7 +349,7 @@ if(!empty($sub_tot)) {
 				}
 			} */
 			//other cost value with description
-			if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
+			/* if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
 				$e = 0;
 				foreach($other_cost_val['detail'] as $oc_key=>$oc_val) {
 					if($oc_val['amt'] != 0) {
@@ -377,7 +377,7 @@ if(!empty($sub_tot)) {
 						$e++;
 					}
 				}
-			}
+			} */
 		}
 		
 	echo "<tr data-depth='0'>
