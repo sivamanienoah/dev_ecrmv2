@@ -982,7 +982,7 @@ class Project_utilization_cost extends crm_controller
 		
 		$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 		$data['rag_data'] 	   = $rag_data;
-		echo '<pre>'; print_r($data['rag_data']); die;
+		// echo '<pre>'; print_r($data['rag_data']); die;
 		
 		$this->load->view('projects/project-utiliz-rpt/utilization-cost-drill-data', $data);
 	}
