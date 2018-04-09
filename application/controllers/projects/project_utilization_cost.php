@@ -978,9 +978,7 @@ class Project_utilization_cost extends crm_controller
 				}
 			}
 		}
-		
-		echo $this->load->view('projects/project-utiliz-rpt/utilization-cost-drill-data', $data);
-		exit;
+		$this->load->view('projects/project-utiliz-rpt/utilization-cost-drill-data', $data);
 	}	
 	
 	public function getProjectsDataByDefaultCurrency($records, $start_date, $end_date)
