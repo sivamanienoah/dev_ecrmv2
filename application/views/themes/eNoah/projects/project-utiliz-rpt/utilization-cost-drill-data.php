@@ -51,7 +51,15 @@ $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
 $tot_directcost = 0;
-echo '<pre>'; print_r($invoices_data); echo '</pre>';
+
+$invoiceArr = array();
+$invoices = (isset($invoices_data) && !empty($invoices_data) && count($invoices_data)>0) ? $invoices_data['invoices'] : array();
+if(!empty($invoices) && count($invoices)>0) {
+	foreach($invoices as $inv_row) {
+		$invoiceArr[$inv_row['pjt_id']] = $inv_row['coverted_amt'];
+	}
+}
+echo '<pre>'; print_r($invoiceArr); echo '</pre>';
 $timesheet_data = array();
 if(count($resdata)>0) {
 	// $rates = $this->report_lead_region_model->get_currency_rates_new();
@@ -178,6 +186,12 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								$cost_arr[$resourceName] = $rec->cost_per_hour;
 								$directcost_arr[$resourceName] = $rec->direct_cost_per_hour;
 								
+								//FOR INVOICE
+								if(isset($sub_tot[$project_code]['invoices']))
+								$sub_tot[$project_code]['invoices'] +=  $duration_hours;
+								else
+								$sub_tot[$project_code]['invoices'] =  $duration_hours;
+								
 								//for project_code - sorting-directcost
 								if(isset($prjt_directcst[$project_code]))
 								$prjt_directcst[$project_code] += $total_dc_cost;
@@ -257,6 +271,7 @@ if(!empty($sub_tot)) {
 			<tr>
 				<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
 				<th class='prac-dt' width='5%'><b>HOUR</b></th>
+				<th class='prac-dt' width='5%'><b>INVOICE</b></th>
 				<th class='prac-dt' width='5%'><b>RESOURCE COST</b></th>
 				<th class='prac-dt' width='5%'><b>OTHER COST</b></th>
 				<th class='prac-dt' width='5%'><b>TOTAL COST</b></th>
@@ -302,6 +317,7 @@ if(!empty($sub_tot)) {
 			
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
+				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</td>
 				<td width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</td>
