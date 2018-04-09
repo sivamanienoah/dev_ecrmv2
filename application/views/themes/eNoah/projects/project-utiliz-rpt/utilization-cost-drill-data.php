@@ -51,7 +51,7 @@ $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
 $tot_directcost = 0;
-
+echo '<pre>'; print_r($invoices_data); echo '</pre>';
 $timesheet_data = array();
 if(count($resdata)>0) {
 	// $rates = $this->report_lead_region_model->get_currency_rates_new();
