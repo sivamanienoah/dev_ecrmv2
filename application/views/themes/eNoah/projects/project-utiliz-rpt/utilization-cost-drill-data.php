@@ -278,9 +278,8 @@ if(!empty($sub_tot)) {
 				<th class='prac-dt' width='5%'><b>RESOURCE COST</b></th>
 				<th class='prac-dt' width='5%'><b>OTHER COST</b></th>
 				<th class='prac-dt' width='5%'><b>TOTAL COST</b></th>
-				<th class='prac-dt' width='5%'><b>% of HOUR</b></th>
-				<th class='prac-dt' width='5%'><b>% of RESOURCE COST</b></th>
-				<th class='prac-dt' width='5%'><b>% of TOTAL COST</b></th>
+				<th class='prac-dt' width='5%'><b>CONTRIBUTION</b></th>
+				<th class='prac-dt' width='5%'><b>RAG</b></th>
 			</tr>";
 		//foreach($tbl_data as $projectCode => $proj_ar) {
 		//asort($sub_tot);
@@ -318,6 +317,7 @@ if(!empty($sub_tot)) {
 			$calc_tot_directcost 	+= $sub_tot[$p_name]['sub_tot_directcost'];
 			$calc_tot_othercost 	+= $other_cost_val['value'];
 			$calc_tot_cost 			+= $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
+			$contri_val				 = (($inv_val-$sub_tot_pj_cost)/$inv_val)*100;
 			
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
@@ -326,9 +326,8 @@ if(!empty($sub_tot)) {
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</td>
 				<td width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</td>
 				<td width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
-				<td width='5%' align='right' class='rt-ali'>".round($per_sub_hr, 1)."</td>
+				<td width='5%' align='right' class='rt-ali'>".round($contri_val)."</td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot_pj_directcost, 2)."</td>
-				<td width='5%' align='right' class='rt-ali'>".round((($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100, 2)."</td>
 			</tr>";
 			//echo '<pre>';print_r($user_ar);
 			/* if(count($user_ar)>0 && !empty($user_ar)) {
@@ -407,7 +406,6 @@ if(!empty($sub_tot)) {
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_hr, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_directcost, 0)."</b></td>
-		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_cost, 0)."</b></td>
 		</tr>";
 	echo "</table>";
 }			
