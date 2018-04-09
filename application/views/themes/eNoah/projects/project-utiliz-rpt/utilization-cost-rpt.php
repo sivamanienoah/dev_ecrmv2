@@ -105,7 +105,7 @@ function getData(practice, clicktype)
 	var form_data = $('#advanceFilterServiceDashboard').serialize();
 	$.ajax({
 		type: "POST",
-		url: site_base_url+'projects/project_utilization_cost/service_dashboard_data/',
+		url: site_base_url+'projects/project_utilization_cost/project_uc_drill_data/',
 		data: form_data+'&practice='+practice+'&clicktype='+clicktype,
 		cache: false,
 		beforeSend:function() {
