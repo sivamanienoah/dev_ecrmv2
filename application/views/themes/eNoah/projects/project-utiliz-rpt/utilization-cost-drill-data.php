@@ -405,8 +405,8 @@ if(!empty($sub_tot)) {
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_directcost, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_othercost, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
-		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_hr, 0)."</b></td>
-		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_directcost, 0)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b></b></td>
+		<td width='5%' align='right' class='rt-ali'><b></b></td>
 		</tr>";
 	echo "</table>";
 }			
