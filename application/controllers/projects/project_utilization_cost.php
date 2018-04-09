@@ -937,12 +937,7 @@ class Project_utilization_cost extends crm_controller
 		if($project_status){
 			$this->db->where_in("l.pjt_status", $project_status);
 		}
-		if(isset($clicktype) && ($clicktype == 'rag')) {
-			$this->db->where_in("l.rag_status", 1);
-		}
-		if(isset($clicktype) && ($clicktype == 'rag_project_export')) {
-			$this->db->where_in("l.rag_status", 1);
-		}
+		
 		$query = $this->db->get();
 		// echo $this->db->last_query(); die;
 		$res = $query->result_array();
@@ -980,6 +975,7 @@ class Project_utilization_cost extends crm_controller
 				}
 			}
 		}
+		echo '<pre>'; print_r($data); die;
 		echo $this->load->view('projects/project-utiliz-rpt/utilization-cost-drill-data', $data);
 		exit;
 	}	
