@@ -426,6 +426,8 @@ $('#excel_lead').click(function() {
 	var search_type = $('#search_type').val();	
 	var url = site_base_url+"welcome/excelExport/";	
 	if(search_type == 'search'){
+		var from_date    = $("#from_date").val();
+		var to_date      = $("#to_date").val();
 		var stage        = $("#stage").val();
 		var customer     = $("#customer").val();
 		var service      = $("#service").val();
@@ -444,6 +446,8 @@ $('#excel_lead').click(function() {
 		
 		var form = $('<form action="' + url + '" method="post">' +
 		  '<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		  '<input id="from_date" type="hidden" name="from_date" value="'+from_date+'" />'+
+		  '<input id="to_date" type="hidden" name="to_date" value="'+to_date+'" />'+
 		  '<input id="project" type="hidden" name="stage" value="'+stage+'" />'+
 		  '<input id="customer" type="hidden" name="customer" value="'+customer+'" />'+
 		  '<input id="service" type="hidden" name="service" value="'+service+'" />'+

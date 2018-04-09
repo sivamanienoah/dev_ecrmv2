@@ -1689,7 +1689,7 @@ class Welcome extends crm_controller {
 	/*
 	 *Exporting data(leads) to the excel
 	 */
-	public function excelExport() {
+	public function excelExport() {//echo'here';exit;
 		
 		ini_set('memory_limit', '-1');
 		ob_clean();
@@ -1750,7 +1750,7 @@ class Welcome extends crm_controller {
 
 		// echo '<pre>';print_r($this->session->userdata); die;
 		$exporttoexcel = real_escape_array($this->input->post()); 
-		// echo '<pre>';print_r($exporttoexcel); exit;
+		// echo '<pre>qwqw';print_r($exporttoexcel); exit;
 		if($this->session->userdata("lead_search_by_default") || $this->session->userdata("lead_search_by_id")){
 			if($this->session->userdata("lead_search_by_id")){
 				$wh_condn = array('search_id'=>$this->session->userdata("lead_search_by_id"), 'search_for'=>1, 'user_id'=>$this->userdata['userid']);
@@ -1772,10 +1772,12 @@ class Welcome extends crm_controller {
 		}else{
 			$exporttoexcel['keyword'] = '';
 		}
-		//echo '<pre>';print_r($this->session->userdata);print_r($exporttoexcel);exit;
+		// echo '<pre>';print_r($this->session->userdata);print_r($exporttoexcel);exit;
 
 		if (count($exporttoexcel)>0) {
 
+			$from_date 	  = $exporttoexcel['from_date'];
+			$to_date 	  = $exporttoexcel['to_date'];
 			$stage 		  = $exporttoexcel['stage'];
 			$customer 	  = $exporttoexcel['customer'];
 			$service 	  = $exporttoexcel['service'];
