@@ -51,7 +51,7 @@ $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
 $tot_directcost = 0;
-
+echo '<pre>'; print_r($invoices_data); echo '</pre>';
 $invoiceArr = array();
 $invoices = (isset($invoices_data) && !empty($invoices_data) && count($invoices_data)>0) ? $invoices_data['invoices'] : array();
 if(!empty($invoices) && count($invoices)>0) {
@@ -59,7 +59,7 @@ if(!empty($invoices) && count($invoices)>0) {
 		$invoiceArr[$inv_row['pjt_id']] = $inv_row['coverted_amt'];
 	}
 }
-// echo '<pre>'; print_r($invoiceArr); echo '</pre>';
+
 $timesheet_data = array();
 if(count($resdata)>0) {
 	// $rates = $this->report_lead_region_model->get_currency_rates_new();
@@ -264,7 +264,7 @@ $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the oth
 <div>
 <?php
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $calc_tot_directcost =  $calc_tot_othercost = 0;
-// echo '<pre>';print_r($sub_tot); exit;
+
 if(!empty($sub_tot)) {
 	echo "<table id='cost_rpt_head' class='data-table'>
 			<tr>
