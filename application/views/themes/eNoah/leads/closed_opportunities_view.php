@@ -328,6 +328,8 @@ $('#excel_lead').click(function() {
 
 	var url = site_base_url+"welcome/excelExportClosedLeads/";
 
+	var from_date     = $("#from_date").val();
+	var to_date     = $("#to_date").val();
 	var customer     = $("#customer").val();
 	var service      = $("#service").val();
 	var lead_src     = $("#lead_src").val();
@@ -344,6 +346,8 @@ $('#excel_lead').click(function() {
 	
 	var form = $('<form action="' + url + '" method="post">' +
 	  '<input type="hidden" id="token" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+	  '<input id="from_date" type="hidden" name="from_date" value="'+from_date+'" />'+
+	  '<input id="to_date" type="hidden" name="to_date" value="'+to_date+'" />'+	  
 	  '<input type="hidden" id="customer" name="customer" value="'+customer+'" />'+
 	  '<input type="hidden" id="service" name="service" value="'+service+'" />'+
 	  '<input type="hidden" id="lead_src" name="lead_src" value="'+lead_src+'" />'+
