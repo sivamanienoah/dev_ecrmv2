@@ -956,7 +956,7 @@ class Project_utilization_cost extends crm_controller
 		}
 
 		$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
-		echo '<pre>'; print_r($data); die;
+		// echo '<pre>'; print_r($data); die;
 		$data['practices_name'] = $practice_arr[$practice];
 		$data['practices_id']   = $practice;
 		$data['start_date']   	= $start_date;
