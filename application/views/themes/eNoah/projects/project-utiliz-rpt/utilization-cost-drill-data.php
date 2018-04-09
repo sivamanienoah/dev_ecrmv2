@@ -306,7 +306,7 @@ if(!empty($sub_tot)) {
 			$i       = 0;
 			$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
 			$name    				= isset($project_master[$p_name]) ? $project_master[$p_name] : $p_name;
-			$inv_val    			= isset($sub_tot[$p_name]['invoices']) ? round($sub_tot[$p_name]['invoices'],2) : '';
+			$inv_val    			= isset($sub_tot[$p_name]['invoices']) ? round($sub_tot[$p_name]['invoices']) : '';
 			$per_sub_hr 	 		= ($sub_tot[$p_name]['sub_tot_hour']/$tot_hour)*100;
 			$sub_tot_pj_cost 		= (($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100;
 			$sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_directcost)*100;
@@ -322,7 +322,7 @@ if(!empty($sub_tot)) {
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
-				<td width='5%' align='right' class='rt-ali'>".$inv_val."</td>
+				<td width='5%' align='right' class='rt-ali'>".sprintf('%0.2f', $inv_val)."</td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</td>
 				<td width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</td>
 				<td width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
