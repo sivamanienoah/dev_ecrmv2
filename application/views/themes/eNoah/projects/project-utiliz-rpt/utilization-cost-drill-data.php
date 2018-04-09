@@ -430,9 +430,9 @@ if(!empty($sub_tot)) {
 $(document).ready(function () {
 	$("#btnExport").click(function () {
 		$("#cost_rpt_head").btechco_excelexport({
-			containerid: "cost_rpt_head"
-		   , datatype: $datatype.Table
-		   , filename: 'projectwisedata'
+			containerid: "cost_rpt_head", 
+			datatype: $datatype.Table, 
+			filename: 'practice_wise_utilization_data'
 		});
 	});
 });
