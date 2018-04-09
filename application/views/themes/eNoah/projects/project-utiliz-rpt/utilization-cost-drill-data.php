@@ -1,5 +1,6 @@
 <style>
 .prac-dt{ text-align:center !important; }
+#it_cost_grid{ border-bottom:0px; width:100%;}
 </style>
 <div class="clear"></div>
 <?php
@@ -280,7 +281,7 @@ $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the oth
 $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $calc_tot_directcost =  $calc_tot_othercost = 0;
 
 if(!empty($sub_tot)) {
-	echo "<table id='cost_rpt_head' class='data-table'>
+	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<tr>
 				<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
 				<th class='prac-dt' width='5%'><b>HOUR</b></th>
@@ -425,25 +426,4 @@ if(!empty($sub_tot)) {
 </div>
 <script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport.js"></script>
 <script type="text/javascript" src="assets/js/excelexport/jquery.base64.js"></script>
-<script>
-//export
-$(document).ready(function () {
-	$("#btnExport").click(function () {
-		$("#cost_rpt_head").btechco_excelexport({
-			containerid: "cost_rpt_head", 
-			datatype: $datatype.Table, 
-			filename: 'practice_wise_utilization_data'
-		});
-	});
-});
-$('#cost_rpt_head').dataTable({
-	"bInfo": false,
-	"bFilter": false,
-	"bPaginate": false,
-	"bProcessing": false,
-	"bServerSide": false,
-	"bLengthChange": false,
-	"bDestroy": true,
-	'bAutoWidth': true
-});
-</script>
+<script type="text/javascript" src="assets/js/projects/cost_report_grid.js"></script>
