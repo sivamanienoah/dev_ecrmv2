@@ -658,6 +658,22 @@ class Project extends crm_controller {
 			}
 			/* End leads estimated hours update */
 			
+			/* Update actual date field with planned date in metrics tab if it is empty */
+			// echo'<pre>';print_r($data['quote_data']);exit;
+			if(empty($data['quote_data']['actual_date_start'])){
+				$actual_date = $data['quote_data']['date_start'];
+				$wh_condn = array('lead_id' => $data['quote_data']['lead_id']);
+				$updt = array('actual_date_start'=> $actual_date);
+				$updt_data = $this->project_model->update_row('leads', $updt, $wh_condn);
+				if($updt_data){
+					$get_lead_res = $this->project_model->get_lead_det($data['quote_data']['lead_id']);
+					// echo'<pre>';print_r($get_lead_res);exit;
+					$data['quote_data']['actual_date_start'] = $get_lead_res['actual_date_start'];
+				}				
+				
+			}
+			/* End actual date update */
+			
 			/**
 			get the bug summary from the redmine
 			**/
