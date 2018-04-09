@@ -317,7 +317,8 @@ if(!empty($sub_tot)) {
 			$calc_tot_directcost 	+= $sub_tot[$p_name]['sub_tot_directcost'];
 			$calc_tot_othercost 	+= $other_cost_val['value'];
 			$calc_tot_cost 			+= $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
-			$contri_val				 = (($inv_val-$sub_tot_pj_cost)/$inv_val)*100;
+			$pjt_tot_cost			 = $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
+			$contri_val				 = (($inv_val-$pjt_tot_cost)/$inv_val)*100;
 			
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
