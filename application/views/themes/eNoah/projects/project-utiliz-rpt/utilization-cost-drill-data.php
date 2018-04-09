@@ -423,19 +423,27 @@ if(!empty($sub_tot)) {
 }			
 ?>
 </div>
+<script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport.js"></script>
+<script type="text/javascript" src="assets/js/excelexport/jquery.base64.js"></script>
 <script>
 //export
 $(document).ready(function () {
 	$("#btnExport").click(function () {
-		$("#project_dash").btechco_excelexport({
-			containerid: "project_dash"
+		$("#cost_rpt_head").btechco_excelexport({
+			containerid: "cost_rpt_head"
 		   , datatype: $datatype.Table
 		   , filename: 'projectwisedata'
 		});
 	});
 });
+$('#cost_rpt_head').dataTable({
+	"bInfo": false,
+	"bFilter": false,
+	"bPaginate": false,
+	"bProcessing": false,
+	"bServerSide": false,
+	"bLengthChange": false,
+	"bDestroy": true,
+	'bAutoWidth': true
+});
 </script>
-<script type="text/javascript" src="assets/js/projects/table_collapse.js"></script>
-<script type="text/javascript" src="assets/js/projects/project_drilldown_data.js"></script>
-<script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport.js"></script>
-<script type="text/javascript" src="assets/js/excelexport/jquery.base64.js"></script>
