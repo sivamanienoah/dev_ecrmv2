@@ -964,11 +964,11 @@ class Project_utilization_cost extends crm_controller
 		//*for other cost value projects only*//
 		$data['othercost_projects'] = array();
 		
-		$this->db->select("pjt_id, lead_id, practice, lead_title");
+		$this->db->select("pjt_id, lead_id, practice, lead_title, rag_status");
 		$this->db->where_in('department_id_fk', array(10,11)); //only eads & eqad projects only
 		$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("practice" => $practice));
 		$oc_res = $ocres->result_array();
-		
+		$rag_data = array();
 		if(!empty($oc_res)) {
 			foreach($oc_res as $ocrow) {
 				if (isset($data['othercost_projects'][$practice_arr[$practice]])) {						
@@ -976,13 +976,16 @@ class Project_utilization_cost extends crm_controller
 				} else {
 					$data['othercost_projects'][$practice_arr[$practice]][] = $ocrow['pjt_id'];
 				}
+				$rag_data[$ocrow['pjt_id']] = $ocrow['rag_status'];
 			}
 		}
 		
 		$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
+		$data['rag_data'] 	   = $rag_data;
+		echo '<pre>'; print_r($data['rag_data']); die;
 		
 		$this->load->view('projects/project-utiliz-rpt/utilization-cost-drill-data', $data);
-	}	
+	}
 	
 	public function getProjectsDataByDefaultCurrency($records, $start_date, $end_date)
 	{  
