@@ -306,7 +306,7 @@ if(!empty($sub_tot)) {
 			$i       = 0;
 			$pj_tot_cost = $per_sub_hr = $sub_tot_pj_cost = 0;
 			$name    				= isset($project_master[$p_name]) ? $project_master[$p_name] : $p_name;
-			$inv_val    			= isset($sub_tot[$p_name]['invoices']) ? round($sub_tot[$p_name]['invoices']) : '';
+			$inv_val    			= isset($sub_tot[$p_name]['invoices']) ? round($sub_tot[$p_name]['invoices'],2) : '';
 			$per_sub_hr 	 		= ($sub_tot[$p_name]['sub_tot_hour']/$tot_hour)*100;
 			$sub_tot_pj_cost 		= (($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100;
 			$sub_tot_pj_directcost 	= ($sub_tot[$p_name]['sub_tot_directcost']/$tot_directcost)*100;
