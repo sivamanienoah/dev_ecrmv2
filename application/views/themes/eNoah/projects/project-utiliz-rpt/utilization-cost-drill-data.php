@@ -254,6 +254,7 @@ $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the oth
 <div class="page-title-head">
 	<h2 class="pull-left borderBtm"><?php echo $practices_name; ?> - Project</h2>
 	<div class="section-right">
+		<!--
 		<div class="buttons add-new-button">
 			<button id='expand_tr' class="positive" type="button">
 				Expand
@@ -264,6 +265,7 @@ $tot_cost 	 = $tot_cost + $other_cost_arr['other_cost_total']; //merging the oth
 				Collapse
 			</button>
 		</div>
+		-->
 		<div class="buttons export-to-excel">
 			<button type="button" class="positive" id="btnExport">
 				Export to Excel
