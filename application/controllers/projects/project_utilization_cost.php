@@ -980,7 +980,7 @@ class Project_utilization_cost extends crm_controller
 				}
 			}
 		}
-		$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
+		$this->load->view('projects/project-utiliz-rpt/utilization-cost-drill-data', $data);
 	}	
 	
 	public function getProjectsDataByDefaultCurrency($records, $start_date, $end_date)
