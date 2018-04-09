@@ -282,6 +282,7 @@ $perc_tot_hr = $perc_tot_cost = $calc_tot_hour = $calc_tot_cost = $calc_tot_dire
 
 if(!empty($sub_tot)) {
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
+			<thead>
 			<tr>
 				<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
 				<th class='prac-dt' width='5%'><b>HOUR</b></th>
@@ -292,6 +293,7 @@ if(!empty($sub_tot)) {
 				<th class='prac-dt' width='5%'><b>CONTRIBUTION</b></th>
 				<th class='prac-dt' width='5%'><b>RAG</b></th>
 			</tr>";
+		echo "</thead><tbody>";
 		//foreach($tbl_data as $projectCode => $proj_ar) {
 		//asort($sub_tot);
 		function cmp($a, $b) {
@@ -410,7 +412,7 @@ if(!empty($sub_tot)) {
 			} */
 		}
 		
-	echo "<tr data-depth='0'>
+	echo "<tfoot><tr data-depth='0'>
 		<td width='15%' align='right' class='rt-ali'><b>TOTAL:</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($invoices_data['total_amt'])."</b></td>
@@ -419,8 +421,8 @@ if(!empty($sub_tot)) {
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b></b></td>
 		<td width='5%' align='right' class='rt-ali'><b></b></td>
-		</tr>";
-	echo "</table>";
+		</tr></tfoot>";
+	echo "</tbody></table>";
 }			
 ?>
 </div>
