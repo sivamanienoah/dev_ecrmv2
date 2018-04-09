@@ -50,14 +50,14 @@ class Project_utilization_cost extends crm_controller
 			$start_date = date("Y-m-01",strtotime($start_date));
 		} else {
 			$default_fy_start_month = '04';
-			$start_date    = calc_fy_dates($curFiscalYear, $default_fy_start_month, 'start');
+			$start_date = calc_fy_dates($curFiscalYear, $default_fy_start_month, 'start');
 		}
 		if($this->input->post("month_year_to_date")) {
 			$end_date = $this->input->post("month_year_to_date");
 			$end_date = date("Y-m-t",strtotime($end_date));	
 		} else {
-			$default_fy_end_month 	= date('m');
-			$end_date 			 	= calc_fy_dates($curFiscalYear, $default_fy_end_month, 'end');
+			$default_fy_end_month = date('m');
+			$end_date 			  = calc_fy_dates($curFiscalYear, $default_fy_end_month, 'end');
 		}
 		
 		$data['start_date']  = $start_date;
@@ -879,72 +879,30 @@ class Project_utilization_cost extends crm_controller
     	return $rates;
 	}
 	
-	public function service_dashboard_data()
+	public function project_uc_drill_data()
 	{
-		/* $curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
-		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
-		//default billable_month
-		$month 			= date('Y-m-01 00:00:00');
-		if($this->input->post("billable_month")) {
-			$bill_month = $this->input->post("billable_month");
-			$month      = date("Y-m-01 00:00:00", strtotime($bill_month));
-		}
-		$month_status = $this->input->post("month_status");
-		$current_month 		= date('m');
-		$fiscalStartMonth 	= '04';
-		$month_status = $this->input->post("month_status");
-		
-		if(!empty($month_status)) {
-			if($month_status == 2) {
-				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-				if($fiscalStartMonth == $current_month) {
-					$curFiscalYear 	= getLastFiscalYear();
-					$start_date		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-					$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
-				} else {
-					$end_date = date('Y-m-t', strtotime('-1 month', $base_mon));
-				}
-				$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
-			} else {
-				$end_date  	= date('Y-m-t');
-				$month    	= date("Y-m-01 00:00:00");
-			}
-		}
-		$data['bill_month'] = $month;
-		$data['start_date'] = $start_date;
-		$data['end_date']   = $end_date; */
-		
 		$post_data 	= $this->input->post();
+		echo '<pre>'; print_r($post_data); die;
 		$data 		= array();
 		
-		// dates - start
-		$curFiscalYear 	  = getFiscalYearForDate(date("m/d/y"), "4/1", "3/31");
-		if(!empty($post_data['fy_name'])) {
-			$curFiscalYear = $post_data['fy_name'];
+		$curFiscalYear = calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31");
+		if($this->input->post("month_year_from_date")) {
+			$start_date = $this->input->post("month_year_from_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+		} else {
+			$default_fy_start_month = '04';
+			$start_date = calc_fy_dates($curFiscalYear, $default_fy_start_month, 'start');
+		}
+		if($this->input->post("month_year_to_date")) {
+			$end_date = $this->input->post("month_year_to_date");
+			$end_date = date("Y-m-t",strtotime($end_date));	
+		} else {
+			$default_fy_end_month = date('m');
+			$end_date 			  = calc_fy_dates($curFiscalYear, $default_fy_end_month, 'end');
 		}
 		
-		$default_fy_start_month = '04';
-		$data['start_month'] 	= $default_fy_start_month;
-		if(!empty($post_data['start_month'])) {
-			$data['start_month'] = $post_data['start_month'];
-		}
-		$start_date 	= calc_fy_dates($curFiscalYear, $data['start_month'], 'start');
-		
-		$default_fy_end_month 	= date('m');
-		$data['end_month']  	= $default_fy_end_month;
-		if(!empty($post_data['end_month'])) {
-			$data['end_month']  = $post_data['end_month'];
-		}
-		$end_date 		= calc_fy_dates($curFiscalYear, $data['end_month'], 'end');
-		
-		$month = $data['bill_month'] = ($end_date != "") ? date('Y-m-01 00:00:00', strtotime($end_date)) : date('Y-m-01 00:00:00'); //set the default billing & billable month.
 		$data['start_date']  = $start_date;
 		$data['end_date']    = $end_date;
-		$data['fy_name']     = $curFiscalYear;
-		$data['start_month'] = date('m', strtotime($start_date));
-		$data['end_month']   = date('m', strtotime($end_date));
-		// dates - end
 		
 		if($this->input->post("practice")) {
 			$practice = $this->input->post("practice");
@@ -1000,158 +958,29 @@ class Project_utilization_cost extends crm_controller
 			}
 		}
 
-		switch($clicktype){
-			case 'noprojects':
-				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
-				$this->db->select('project_billing_type, id');
-				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
-				$ptquery = $this->db->get();
-				$data['project_type'] = $ptquery->result();
-				$data['practices_id'] = $practice;
-				$data['excelexporttype'] = "inprogress_project_export";
-				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
-			break;
-			case 'rag':
-				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
-				$this->db->select('project_billing_type, id');
-				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
-				$ptquery = $this->db->get();
-				$data['project_type'] = $ptquery->result();
-				$data['practices_id'] = $practice;
-				$data['excelexporttype'] = "rag_project_export";
-				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
-			break;
-			case 'inprogress_project_export':
-				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
-				$res = $this->excelexport($data['projects_data']);
-			break;
-			case 'rag_project_export':
-				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($res, $start_date, $end_date);
-				$res = $this->excelexport($data['projects_data']);
-			break;
-			case 'cm_billing':
-				$data['invoices_data'] = $this->getCMIRData($practice, $month);
-				$data['practices_id'] = $practice;
-				$data['excelexporttype'] = "cm_billing_export";
-				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
-			break;
-			case 'cm_billing_export':
-				$data['invoices_data'] = $this->getCMIRData($practice, $month);
-				$result = $this->excelexportinvoice($data['invoices_data']);
-			break;
-			case 'irval':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
-				$data['practices_id'] = $practice;
-				$data['excelexporttype'] = "inv_project_export";
-				$this->load->view('projects/service_dashboard_invoice_drill_data', $data);
-			break;
-			case 'inv_project_export':
-				$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
-				$result = $this->excelexportinvoice($data['invoices_data']);
-			break;
-			case 'cm_eff':
-				$data = $this->get_billable_efforts_beta($practice, $month); 
-				$data['practices_name'] = $practice_arr[$practice];
-				$data['practices_id'] = $practice;
-				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
-			break;
-			case 'ytd_eff':
-				$data = $this->get_billable_efforts_beta($practice, "", $start_date, $end_date);
-				$data['practices_name'] = $practice_arr[$practice];
-				$data['practices_id'] = $practice;
-				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
-			break;
-			case 'dc_value':
-				$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
-				$data['practices_name'] = $practice_arr[$practice];
-				$data['practices_id']   = $practice;
-				$data['start_date']   	= $start_date;
-				$data['end_date']   	= $end_date;
-				//*for other cost value projects only*//
-				$data['othercost_projects'] = array();
-				
-				$this->db->select("pjt_id, lead_id, practice, lead_title");
-				$this->db->where_in('department_id_fk', array(10,11)); //only eads & eqad projects only
-				$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("practice" => $practice));
-				$oc_res = $ocres->result_array();
-				
-				if(!empty($oc_res)) {
-					foreach($oc_res as $ocrow) {
-						if (isset($data['othercost_projects'][$practice_arr[$practice]])) {						
-							$data['othercost_projects'][$practice_arr[$practice]][] = $ocrow['pjt_id'];
-						} else {
-							$data['othercost_projects'][$practice_arr[$practice]][] = $ocrow['pjt_id'];
-						}
-					}
+		$data = $this->get_direct_cost_val($practice, "", $start_date, $end_date);
+		$data['practices_name'] = $practice_arr[$practice];
+		$data['practices_id']   = $practice;
+		$data['start_date']   	= $start_date;
+		$data['end_date']   	= $end_date;
+		//*for other cost value projects only*//
+		$data['othercost_projects'] = array();
+		
+		$this->db->select("pjt_id, lead_id, practice, lead_title");
+		$this->db->where_in('department_id_fk', array(10,11)); //only eads & eqad projects only
+		$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("practice" => $practice));
+		$oc_res = $ocres->result_array();
+		
+		if(!empty($oc_res)) {
+			foreach($oc_res as $ocrow) {
+				if (isset($data['othercost_projects'][$practice_arr[$practice]])) {						
+					$data['othercost_projects'][$practice_arr[$practice]][] = $ocrow['pjt_id'];
+				} else {
+					$data['othercost_projects'][$practice_arr[$practice]][] = $ocrow['pjt_id'];
 				}
-				$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
-			break;
-			case 'fixedbid':
-				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
-				$pcodes = $billable_ytd['project_code'];
-				$project_codes = array();
-				if(!empty($pcodes) && count($pcodes)>0){
-					foreach($pcodes as $rec){
-						if(!in_array($rec, $project_codes)){
-							$project_codes[] = $rec;
-						}
-					}
-				}
-				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title, l.complete_status, l.project_type');
-				$this->db->from($this->cfg['dbpref']. 'leads as l');
-				// $pt_not_in_array = array('4','8');
-				$this->db->where("l.project_type", 1);
-				$client_not_in_array = array('ENO','NOA');
-				$this->db->where_not_in("l.client_code", $client_not_in_array);
-				// $this->db->where("l.pjt_id", $rec);
-				// $this->db->where("l.billing_type", 1);
-				$this->db->where("l.practice", $practice);
-				$this->db->where_in("l.pjt_id", $project_codes);
-				$query3 = $this->db->get();
-				$pro_data = $query3->result_array();
-				
-				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);
-				$this->db->select('project_billing_type, id');
-				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
-				$ptquery = $this->db->get();
-				$data['project_type'] = $ptquery->result();
-				$data['practices_id'] = $practice;
-				$data['excelexporttype'] = "fixedbid_project_export";
-				$this->load->view('projects/service_dashboard_projects_drill_data', $data);
-			break;
-			case 'fixedbid_project_export':
-				$billable_ytd = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
-				$pcodes = $billable_ytd['project_code'];
-				$project_codes = array();
-				if(!empty($pcodes) && count($pcodes)>0){
-					foreach($pcodes as $rec){
-						if(!in_array($rec, $project_codes)){
-							$project_codes[] = $rec;
-						}
-					}
-				}
-				$this->db->select('l.lead_id, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.division, l.billing_type, l.lead_title, l.complete_status, l.project_type');
-				$this->db->from($this->cfg['dbpref']. 'leads as l');
-				// $pt_not_in_array = array('4','8');
-				$this->db->where("l.project_type", 1);
-				$client_not_in_array = array('ENO','NOA');
-				$this->db->where_not_in("l.client_code", $client_not_in_array);
-				// $this->db->where("l.pjt_id", $rec);
-				// $this->db->where("l.billing_type", 1);
-				$this->db->where("l.practice", $practice);
-				$this->db->where_in("l.pjt_id", $project_codes);
-				$query3 = $this->db->get();
-				$pro_data = $query3->result_array();
-				
-				$this->db->select('project_billing_type, id');
-				$this->db->from($this->cfg['dbpref']. 'project_billing_type');
-				$ptquery = $this->db->get();
-				$data['project_type'] = $ptquery->result();
-				
-				$data['projects_data'] = $this->getProjectsDataByDefaultCurrency($pro_data, $start_date, $end_date);		
-				$res = $this->excelexport($data['projects_data']);
-			break;
+			}
 		}
+		$this->load->view('projects/service_dashboard_billable_drill_data_beta', $data);
 	}	
 	
 	public function getProjectsDataByDefaultCurrency($records, $start_date, $end_date)
