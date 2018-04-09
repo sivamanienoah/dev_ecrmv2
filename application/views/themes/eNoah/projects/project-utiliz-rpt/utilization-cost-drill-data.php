@@ -313,7 +313,7 @@ if(!empty($sub_tot)) {
 				<th width='5%' align='right' class='rt-ali'>".round((($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100, 2)."</th>
 			</tr>";
 			//echo '<pre>';print_r($user_ar);
-			if(count($user_ar)>0 && !empty($user_ar)):
+			/* if(count($user_ar)>0 && !empty($user_ar)) {
 				$i=1;
 				$j = 0;
 				foreach($user_ar as $ukey=>$pval) {
@@ -347,7 +347,7 @@ if(!empty($sub_tot)) {
 					endif;
 					$user_ar = array();
 				}
-			endif;
+			} */
 			//other cost value with description
 			if((!empty($other_cost_val['detail'])) && count($other_cost_val['detail'])>0) {
 				$e = 0;
