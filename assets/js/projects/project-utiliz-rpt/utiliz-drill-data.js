@@ -32,7 +32,7 @@ $(function() {
 	//data table
 	$('#it_cost_grid').dataTable({
 		"bInfo": false,
-		"bFilter": true,
+		"bFilter": false,
 		"bPaginate": false,
 		"bProcessing": false,
 		"bServerSide": false,
