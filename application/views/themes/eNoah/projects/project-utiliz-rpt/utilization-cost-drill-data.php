@@ -256,7 +256,6 @@ if(!empty($sub_tot)) {
 	echo "<table id='project_dash' class='data-table'>
 			<tr>
 				<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
-				<th class='prac-dt' width='15%'><b>USER NAME</b></th>
 				<th class='prac-dt' width='5%'><b>HOUR</b></th>
 				<th class='prac-dt' width='5%'><b>RESOURCE COST</b></th>
 				<th class='prac-dt' width='5%'><b>OTHER COST</b></th>
@@ -302,8 +301,7 @@ if(!empty($sub_tot)) {
 			$calc_tot_cost 			+= $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
 			
 			echo "<tr data-depth='".$i."' class='collapse'>
-				<th width='15%' align='left' class='collapse lft-ali'><span class='toggle'> ".strtoupper($name)."</span></th>
-				<th width='15%' align='right' class='rt-ali'>SUB TOTAL(PROJECT WISE):</th>
+				<th width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></th>
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</th>
 				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</th>
 				<th width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</th>
@@ -381,7 +379,7 @@ if(!empty($sub_tot)) {
 		}
 		
 	echo "<tr data-depth='0'>
-		<td width='80%' colspan='2' align='right' class='rt-ali'><b>TOTAL:</b></td>
+		<td width='80%'  align='right' class='rt-ali'><b>TOTAL:</b></td>
 		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></th>
 		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_directcost, 0)."</b></th>
 		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_othercost, 0)."</b></th>
