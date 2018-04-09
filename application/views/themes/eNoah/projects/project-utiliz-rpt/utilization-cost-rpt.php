@@ -45,11 +45,11 @@ table.bu-tbl-inr th{ text-align:center; }
 				</div>				
 			</div>
 			
-			<div class="buttons export-to-excel pull-right mrgin0">
+			<!--div class="buttons export-to-excel pull-right mrgin0">
 				<button type="button" class="positive" id="btnExportITServices">
 					Export to Excel
 				</button>
-			</div>
+			</div-->
 		</div>
 		<?php #echo "<pre>"; print_r($practice_data); echo "</pre>"; ?>
 		<div class="clearfix"></div>
