@@ -40,35 +40,28 @@ class Project_utilization_cost extends crm_controller
 		
 		$post_data 		  = $this->input->post();
 		// echo '<pre>'; print_r($post_data); die;
-		// dates - start
-		$curFiscalYear 	  = getFiscalYearForDate(date("m/d/y"), "4/1", "3/31");
-		if(!empty($post_data['fy_name'])) {
-			$curFiscalYear = $post_data['fy_name'];
+		
+		// $start_date = date("Y-m-d", strtotime('01-04-2017'));
+		// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
+		
+		$curFiscalYear = calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31");
+		if($this->input->post("month_year_from_date")) {
+			$start_date = $this->input->post("month_year_from_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+		} else {
+			$default_fy_start_month = '04';
+			$start_date    = calc_fy_dates($curFiscalYear, $default_fy_start_month, 'start');
+		}
+		if($this->input->post("month_year_to_date")) {
+			$end_date = $this->input->post("month_year_to_date");
+			$end_date = date("Y-m-t",strtotime($end_date));	
+		} else {
+			$default_fy_end_month 	= date('m');
+			$end_date 			 	= calc_fy_dates($curFiscalYear, $default_fy_end_month, 'end');
 		}
 		
-		// assign month & dates based on start month
-		
-		$default_fy_start_month = '04';
-		$data['start_month'] 	= $default_fy_start_month;
-		if(!empty($post_data['start_month'])) {
-			$data['start_month'] = $post_data['start_month'];
-		}
-		$start_date 			= calc_fy_dates($curFiscalYear, $data['start_month'], 'start');
-		
-		$default_fy_end_month 	= date('m');
-		$data['end_month']  	= $default_fy_end_month;
-		if(!empty($post_data['end_month'])) {
-			$data['end_month']  = $post_data['end_month'];
-		}
-		$end_date 			 = calc_fy_dates($curFiscalYear, $data['end_month'], 'end');
-		
-		$month = $data['bill_month'] = ($end_date != "") ? date('Y-m-01 00:00:00', strtotime($end_date)) : date('Y-m-01 00:00:00'); //set the default billing & billable month.
 		$data['start_date']  = $start_date;
 		$data['end_date']    = $end_date;
-		$data['fy_name']     = $curFiscalYear;
-		$data['start_month'] = date('m', strtotime($start_date));
-		$data['end_month']   = date('m', strtotime($end_date));
-		// dates - end
 		
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
@@ -141,7 +134,6 @@ class Project_utilization_cost extends crm_controller
 				}
 			}
 			$data['dashboard_det'] = $dashboard_det;
-
 		} else {
 			
 			$bk_rates = get_book_keeping_rates();
