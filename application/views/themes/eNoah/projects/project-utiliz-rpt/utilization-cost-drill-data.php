@@ -64,6 +64,9 @@ if(!empty($invoices) && count($invoices)>0) {
 	}
 }
 
+// $rag_clr_arr = array(1=>'#ff1313',2=>'#f8deb3',3=>'#ccecbf');
+$rag_clr_arr = array(1=>'Red',2=>'Amber',3=>'Green');
+
 $timesheet_data = array();
 if(count($resdata)>0) {
 	// $rates = $this->report_lead_region_model->get_currency_rates_new();
@@ -193,6 +196,11 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								//FOR INVOICE
 								if(isset($invoiceArr[$project_code])) {
 									$sub_tot[$project_code]['invoices'] = $invoiceArr[$project_code];
+								}
+								
+								//FOR RAG
+								if(isset($rag_data[$project_code])) {
+									$sub_tot[$project_code]['rag'] = isset($rag_clr_arr[$rag_data[$project_code]])? $rag_clr_arr[$rag_data[$project_code]] : '';
 								}
 								
 								//for project_code - sorting-directcost
