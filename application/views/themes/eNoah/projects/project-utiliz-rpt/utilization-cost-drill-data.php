@@ -428,4 +428,4 @@ if(!empty($sub_tot)) {
 </div>
 <script type="text/javascript" src="assets/js/excelexport/jquery.btechco.excelexport.js"></script>
 <script type="text/javascript" src="assets/js/excelexport/jquery.base64.js"></script>
-<script type="text/javascript" src="assets/js/projects/cost_report_grid.js"></script>
+<script type="text/javascript" src="assets/js/projects/project-utiliz-rpt/utiliz-drill-data.js"></script>
