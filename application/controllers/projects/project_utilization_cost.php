@@ -904,6 +904,8 @@ class Project_utilization_cost extends crm_controller
 		$data['start_date']  = $start_date;
 		$data['end_date']    = $end_date;
 		
+		echo $start_date . ' = '.$end_date; die;
+		
 		if($this->input->post("practice")) {
 			$practice = $this->input->post("practice");
 		}
