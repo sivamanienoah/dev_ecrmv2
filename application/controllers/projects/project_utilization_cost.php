@@ -882,7 +882,7 @@ class Project_utilization_cost extends crm_controller
 	public function project_uc_drill_data()
 	{
 		$post_data 	= $this->input->post();
-		echo '<pre>'; print_r($post_data); die;
+		// echo '<pre>'; print_r($post_data); die;
 		$data 		= array();
 		
 		$curFiscalYear = calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31");
