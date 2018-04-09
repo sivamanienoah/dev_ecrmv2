@@ -191,7 +191,7 @@ class Project_utilization_cost extends crm_controller
 			}
 			
 			//for current month ir
-			$this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
+			/* $this->db->select('sfv.job_id, sfv.type, sfv.milestone_name, sfv.for_month_year, sfv.milestone_value, cc.company, c.customer_name, l.lead_title, l.expect_worth_id, l.practice, l.pjt_id, enti.division_name, enti.base_currency, ew.expect_worth_name');
 			$this->db->from($this->cfg['dbpref'].'view_sales_forecast_variance as sfv');
 			$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = sfv.job_id');
 			$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid  = l.custid_fk');
@@ -222,17 +222,17 @@ class Project_utilization_cost extends crm_controller
 						$projects['cm_irval'][$practice_arr[$cm_ir['practice']]] = $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($cm_ir['for_month_year'])),"4/1","3/31")][$cm_ir['base_currency']][$this->default_cur_id]);
 					}
 				}
-			}
+			} */
 			
 			// echo "After Invoices " . date('d-m-Y H:i:s') . "<br>";
 			
 			//for current month EFFORTS
-			$projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
-			$projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
+			// $projects['billable_month'] = $this->get_timesheet_data($practice_arr, "", "", $month);
+			// $projects['billable_ytd']   = $this->get_timesheet_data($practice_arr, $start_date, $end_date, "");
 
 			//for effort variance
 			$pcodes = array();
-			$pcodes = $projects['billable_ytd']['project_code'];
+			// $pcodes = $projects['billable_ytd']['project_code'];
 			
 			//the effort variance calculation
 			// $projects['eff_var'] = $this->do_eff_variance_calculation($pcodes, $practice_arr);
@@ -578,7 +578,7 @@ class Project_utilization_cost extends crm_controller
 					$projects['cm_other_cost'][$prarr] = $cm_other_cost_val;
 				}
 				if($prarr != 'Infra Services' || $prarr != 'Testing') {
-					$totCM_Irval += $projects['cm_irval'][$prarr];
+					// $totCM_Irval += $projects['cm_irval'][$prarr];
 					$tot_Irval   += $projects['irval'][$prarr];
 					// echo "$prarr " . $tot_Irval . "<br>";
 				}
@@ -594,14 +594,14 @@ class Project_utilization_cost extends crm_controller
 				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
 				
 				$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
-				$cm_billval = (($projects['billable_month'][$prarr]['Billable']['hour'])/$projects['billable_month'][$prarr]['totalhour'])*100;
-				$ins_array['billable_month'] = ($cm_billval != 0) ? round($cm_billval) : '-';
+				// $cm_billval = (($projects['billable_month'][$prarr]['Billable']['hour'])/$projects['billable_month'][$prarr]['totalhour'])*100;
+				// $ins_array['billable_month'] = ($cm_billval != 0) ? round($cm_billval) : '-';
 				
-				$billval = (($projects['billable_ytd'][$prarr]['Billable']['hour'])/$projects['billable_ytd'][$prarr]['totalhour'])*100;
-				$ins_array['ytd_billable']   = ($billval != 0) ? round($billval) : '-';
+				// $billval = (($projects['billable_ytd'][$prarr]['Billable']['hour'])/$projects['billable_ytd'][$prarr]['totalhour'])*100;
+				// $ins_array['ytd_billable']   = ($billval != 0) ? round($billval) : '-';
 				
-				$eff_var = (($projects['eff_var'][$prarr]['total_actual_hrs'] - $projects['eff_var'][$prarr]['tot_estimate_hrs'])/$projects['eff_var'][$prarr]['tot_estimate_hrs'])*100;
-				$ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
+				// $eff_var = (($projects['eff_var'][$prarr]['total_actual_hrs'] - $projects['eff_var'][$prarr]['tot_estimate_hrs'])/$projects['eff_var'][$prarr]['tot_estimate_hrs'])*100;
+				// $ins_array['effort_variance'] = ($eff_var != 0) ? round($eff_var) : '-';
 				
 				$temp_cm_utd_cost = $projects['cm_direct_cost'][$prarr]['total_cm_direct_cost'] + $projects['cm_other_cost'][$prarr];
 				if($temp_cm_utd_cost){
@@ -612,14 +612,14 @@ class Project_utilization_cost extends crm_controller
 				$ins_array['ytd_contribution'] = ($dc_val != 0) ? round($dc_val) : '-';
 				$ins_array['month_status'] 	   = 1;
 				
-				$tot_billhour += $projects['billable_month'][$prarr]['Billable']['hour'];
-				$tot_tothours += $projects['billable_month'][$prarr]['totalhour'];
+				// $tot_billhour += $projects['billable_month'][$prarr]['Billable']['hour'];
+				// $tot_tothours += $projects['billable_month'][$prarr]['totalhour'];
 				
 				$tot_billval += $projects['billable_ytd'][$prarr]['Billable']['hour'];
 				$tot_totbillval += $projects['billable_ytd'][$prarr]['totalhour'];
 			
-				$tot_actual_hr += $projects['eff_var'][$prarr]['total_actual_hrs'];
-				$tot_estimated_hrs += $projects['eff_var'][$prarr]['tot_estimate_hrs'];
+				// $tot_actual_hr += $projects['eff_var'][$prarr]['total_actual_hrs'];
+				// $tot_estimated_hrs += $projects['eff_var'][$prarr]['tot_estimate_hrs'];
 				
 				// echo '<br>'.$prarr.'<br>tot_cm_irvals';
 				$tot_cm_irvals += $projects['cm_irval'][$prarr];
@@ -635,17 +635,17 @@ class Project_utilization_cost extends crm_controller
 			
 			//for total
 			// $tot['practice_name']		 = ;
-			$show_arr['Total']['billing_month'] 	   	= $totCM_Irval;
+			// $show_arr['Total']['billing_month'] 	   	= $totCM_Irval;
 			$show_arr['Total']['ytd_billing']   	   	= $tot_Irval;
 			$show_arr['Total']['ytd_utilization_cost'] 	= $tot_dc_tots;
-			$show_arr['Total']['billable_month'] 	   	= round(($tot_billhour/$tot_tothours)*100);
-			$show_arr['Total']['ytd_billable'] 		 	= round(($tot_billval/$tot_totbillval)*100);
-			$show_arr['Total']['effort_variance'] 	 	= round((($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs)*100);
-			$cmonth						 			 	= '-';
+			// $show_arr['Total']['billable_month'] 	   	= round(($tot_billhour/$tot_tothours)*100);
+			// $show_arr['Total']['ytd_billable'] 		 	= round(($tot_billval/$tot_totbillval)*100);
+			// $show_arr['Total']['effort_variance'] 	 	= round((($tot_actual_hr-$tot_estimated_hrs)/$tot_estimated_hrs)*100);
+			// $cmonth						 			 	= '-';
 			//if($tot_cm_dc_tot){
-			$cmonth 					 			 	= round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);	
+			// $cmonth 					 			 	= round((($tot_cm_irvals-$tot_cm_dc_tot)/$tot_cm_irvals)*100);	
 			//}
-			$show_arr['Total']['contribution_month'] 	= $cmonth;
+			// $show_arr['Total']['contribution_month'] 	= $cmonth;
 			$show_arr['Total']['ytd_contribution'] 	 	= round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
 			
 			$data['dashboard_det'] = $show_arr;
