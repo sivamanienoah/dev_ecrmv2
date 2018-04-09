@@ -648,10 +648,11 @@ class Project extends crm_controller {
 				$pjt_estimate_hour = sprintf('%0.2f', $tot_est_hours);
 				$wh_condn = array('lead_id' => $data['quote_data']['lead_id']);
 				$updt = array('estimate_hour'=> $pjt_estimate_hour);
-				$updt_date = $this->project_model->update_row('leads', $updt, $wh_condn);
-				if($updt_date){
-					$updt_date = $this->project_model->get_lead_det($data['quote_data']['lead_id']);
-					echo'<pre>';print_r($updt_date);exit;
+				$updt_data = $this->project_model->update_row('leads', $updt, $wh_condn);
+				if($updt_data){
+					$get_lead_res = $this->project_model->get_lead_det($data['quote_data']['lead_id']);
+					// echo'<pre>';print_r($get_lead_res);exit;
+					$data['quote_data']['estimate_hour'] = $get_lead_res['estimate_hour'];
 				}				
 				
 			}
