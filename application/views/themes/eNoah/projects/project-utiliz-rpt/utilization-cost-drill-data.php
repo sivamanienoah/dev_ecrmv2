@@ -339,7 +339,7 @@ if(!empty($sub_tot)) {
 				<td width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</td>
 				<td width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
 				<td width='5%' align='right' class='rt-ali'>".round($contri_val)."</td>
-				<td width='5%' align='right' class='rt-ali'>".$rag_status."</td>
+				<td width='5%'>".$rag_status."</td>
 			</tr>";
 			//echo '<pre>';print_r($user_ar);
 			/* if(count($user_ar)>0 && !empty($user_ar)) {
