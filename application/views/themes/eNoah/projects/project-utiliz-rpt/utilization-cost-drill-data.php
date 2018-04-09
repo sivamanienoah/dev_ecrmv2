@@ -301,14 +301,14 @@ if(!empty($sub_tot)) {
 			$calc_tot_cost 			+= $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
 			
 			echo "<tr data-depth='".$i."' class='collapse'>
-				<th width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</th>
-				<th width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</th>
-				<th width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round($per_sub_hr, 1)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round($sub_tot_pj_directcost, 2)."</th>
-				<th width='5%' align='right' class='rt-ali'>".round((($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100, 2)."</th>
+				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
+				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
+				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</td>
+				<td width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</td>
+				<td width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
+				<td width='5%' align='right' class='rt-ali'>".round($per_sub_hr, 1)."</td>
+				<td width='5%' align='right' class='rt-ali'>".round($sub_tot_pj_directcost, 2)."</td>
+				<td width='5%' align='right' class='rt-ali'>".round((($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'])/$tot_cost)*100, 2)."</td>
 			</tr>";
 			//echo '<pre>';print_r($user_ar);
 			/* if(count($user_ar)>0 && !empty($user_ar)) {
@@ -380,13 +380,13 @@ if(!empty($sub_tot)) {
 		
 	echo "<tr data-depth='0'>
 		<td width='15%'  align='right' class='rt-ali'><b>TOTAL:</b></td>
-		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></th>
-		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_directcost, 0)."</b></th>
-		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_othercost, 0)."</b></th>
-		<th width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></th>
-		<th width='5%' align='right' class='rt-ali'><b>".round($perc_tot_hr, 0)."</b></th>
-		<th width='5%' align='right' class='rt-ali'><b>".round($perc_tot_directcost, 0)."</b></th>
-		<th width='5%' align='right' class='rt-ali'><b>".round($perc_tot_cost, 0)."</b></th>
+		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_directcost, 0)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_othercost, 0)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_hr, 0)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_directcost, 0)."</b></td>
+		<td width='5%' align='right' class='rt-ali'><b>".round($perc_tot_cost, 0)."</b></td>
 		</tr>";
 	echo "</table>";
 }			
