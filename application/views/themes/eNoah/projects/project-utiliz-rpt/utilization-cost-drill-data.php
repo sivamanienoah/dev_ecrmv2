@@ -394,7 +394,7 @@ if(!empty($sub_tot)) {
 		}
 		
 	echo "<tr data-depth='0'>
-		<td width='15%'  align='right' class='rt-ali'><b>TOTAL:</b></td>
+		<td width='15%' colspan=2 align='right' class='rt-ali'><b>TOTAL:</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_directcost, 0)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_othercost, 0)."</b></td>
