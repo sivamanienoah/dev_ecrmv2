@@ -978,6 +978,9 @@ class Project_utilization_cost extends crm_controller
 				}
 			}
 		}
+		
+		$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
+		
 		$this->load->view('projects/project-utiliz-rpt/utilization-cost-drill-data', $data);
 	}	
 	
