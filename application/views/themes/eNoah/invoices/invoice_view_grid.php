@@ -3,6 +3,8 @@
 		<tr>
 			<th>Invoice Date</th>
 			<th>Month & Year</th>
+			<th>Entity</th>
+			<th>Practice</th>
 			<th>Customer Name</th>
 			<th>Project Title</th>
 			<th>Project Code</th>
@@ -22,6 +24,8 @@
 			<tr>
 				<td><?php echo date('d-m-Y', strtotime($inv['invoice_generate_notify_date'])); ?></td>
 				<td><?php echo ($inv['month_year']!='0000-00-00 00:00:00') ? date('M Y', strtotime($inv['month_year'])) : ''; ?></td>
+				<td><?php echo $inv['division_name']; ?></td>
+				<td><?php echo $inv['practices']; ?></td>
 				<td><?php echo $inv['customer']; ?></td>
 				<td><a title='View' href="project/view_project/<?php echo $inv['lead_id'] ?>"><?php echo character_limiter($inv['lead_title'], 30); ?></a></td>
 				<td><?php echo isset($inv['pjt_id']) ? $inv['pjt_id'] : '-'; ?></td>
@@ -37,7 +41,7 @@
 	</tbody>
 	<tfoot>
 		<tr>
-			<td colspan='8' align='right'><strong>Total Value</strong></td><td align='right'><?php echo sprintf('%0.2f', $total_amt); ?></td>
+			<td colspan='10' align='right'><strong>Total Value</strong></td><td align='right'><?php echo sprintf('%0.2f', $total_amt); ?></td>
 		</tr>
 	</tfoot>
 </table>
