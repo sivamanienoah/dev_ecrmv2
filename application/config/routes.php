@@ -44,7 +44,6 @@ $route['scaffolding_trigger'] = "";
 
 $route['projects/dashboard/list'] = "project";
 $route['projects/dashboard/utilization_metrics'] = "projects/dashboard";
-$route['projects/project_p&l_report'] = "projects/project_pl_report";
 $route['projects/dashboard/sevice_graph_dashboard'] = "projects/service_graphical_dashboard";
 
 // $route['invoice'] = "welcome/quotation/approved";
