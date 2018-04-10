@@ -36,7 +36,7 @@ class Project_utilization_cost extends crm_controller
 		}
 		$data  				  = array();
 		$projects  			  = array();
-		$data['page_heading'] = "IT - Project Utilization Cost Report";
+		$data['page_heading'] = "IT - Project P&L Report";
 		
 		$post_data 		  = $this->input->post();
 		// echo '<pre>'; print_r($post_data); die;
@@ -919,8 +919,10 @@ class Project_utilization_cost extends crm_controller
 		
 		$project_status = 1; // default - always in progress project only
 		
-		$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division');
+		$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division, c.customer_name, cc.company');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		
