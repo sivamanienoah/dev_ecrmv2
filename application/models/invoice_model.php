@@ -48,7 +48,7 @@ class Invoice_model extends crm_model {
 		}
 		//Access control RESTIRCTION
 		
-		$this->db->select('expm.received, expm.expectid, expm.invoice_status, expm.amount, expm.project_milestone_name, expm.invoice_generate_notify_date, expm.expected_date, expm.month_year, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, ew.expect_worth_name, c.customer_name, cc.company, sd.base_currency');
+		$this->db->select('expm.received, expm.expectid, expm.invoice_status, expm.amount, expm.project_milestone_name, expm.invoice_generate_notify_date, expm.expected_date, expm.month_year, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, ew.expect_worth_name, c.customer_name, cc.company, sd.base_currency, sd.division_name, p.practices');
 
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
@@ -56,6 +56,7 @@ class Invoice_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = l.division');
+		$this->db->join($this->cfg['dbpref'].'practices as p', 'p.id = l.practice');
 		
 		if(!empty($job_ids) && count($job_ids)>0) {
 			$this->db->where_in('expm.jobid_fk', $job_ids);
