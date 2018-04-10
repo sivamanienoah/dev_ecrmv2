@@ -6,7 +6,7 @@ $(function() {
 		$("#it_cost_grid").btechco_excelexport({
 			containerid: "it_cost_grid"
 		   , datatype: $datatype.Table
-		   , filename: 'practice_wise_uc'
+		   , filename: 'practice_wise_pl_projects'
 		});
 	});
 	
