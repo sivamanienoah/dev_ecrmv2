@@ -73,7 +73,6 @@ class Request extends crm_controller {
 	
 	function update_existing_file_permissions()
 	{
-	
 		$arrLeads = $this->request_model->get_all_lead_info();
 		$user_data = $this->session->userdata('logged_in_user');
 		
@@ -110,10 +109,10 @@ class Request extends crm_controller {
 											$leadAssignArr = @explode(', ', $arrLeadInfo['lead_assign']);
 										}
 										// Check this user is "Lead Owner", "Lead Assigned to", "Project Manager"
-										// if($arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || $arrLeadInfo['lead_assign'] == $members['userid']) {
+										
 										if ($this->userdata['role_id'] == 1 || $arrLeadInfo['belong_to'] == $members['userid'] || $arrLeadInfo['assigned_to'] == $members['userid'] || in_array($members['userid'], $arrLeadInfo['lead_assign'])) {
 											$read_access = $write_access = $delete_access = 1;							
-										}								
+										}
 
 										$folder_permissions_contents  = array('userid'=>$members['userid'],'lead_id'=>$listLeads['lead_id'],'folder_id'=>$listFolders['folder_id'],'lead_file_access_read'=>$read_access,'lead_file_access_delete'=>$delete_access,'lead_file_access_write'=>$write_access,'lead_file_access_created'=>time(),'lead_file_access_created_by'=>(int)$user_data['userid']);
 										$insert_folder_permissions   = $this->request_model->insert_new_row('lead_file_access', $folder_permissions_contents); //Mani
@@ -1065,7 +1064,7 @@ class Request extends crm_controller {
 		else
 		$data['chge_access'] = $this->project_model->get_access($leadid, $this->userdata['userid']);
 		
-		echo $this->load->view("projects/folder_write_actions.php", $data, true);
+		echo $this->load->view("projects/folder_write_actions", $data, true);
 		exit;
 	}
 	
