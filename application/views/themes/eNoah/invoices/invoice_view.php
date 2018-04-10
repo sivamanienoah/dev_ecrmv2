@@ -144,7 +144,7 @@ button.ui-datepicker-current { display: none; }
 		</div>
 		<div class="clear"></div>
 		<div id='results'>
-			<?php echo $this->load->view('invoices/invoice_view_grid', $res_data, true); ?>
+			<?php echo $this->load->view('invoices/invoice_view_grid', $invoices, true); ?>
 		</div>
 		<?php 
 		}
