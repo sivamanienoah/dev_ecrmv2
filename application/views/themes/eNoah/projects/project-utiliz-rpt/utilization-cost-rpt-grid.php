@@ -56,7 +56,7 @@
 						?>
 					</td>
 						<?php
-							$dc_val = ($dashboard_det[$prac->practices]['ytd_contribution']!='-') ? round($dashboard_det[$prac->practices]['ytd_contribution']) : '';
+							$dc_val = ($dashboard_det[$prac->practices]['ytd_contribution']!='-') ? round($dashboard_det[$prac->practices]['ytd_contribution']) : '-';
 							$arrow_val = 'down_arrow';
 							if(round($dc_val, 0) >= 45){
 								$arrow_val = 'up_arrow';
@@ -68,7 +68,7 @@
 									$dc_val = round($dc_val, 0); 
 								}
 							} else {
-								$dc_val = '';
+								$dc_val = '-';
 							}
 						?>
 					<td>
