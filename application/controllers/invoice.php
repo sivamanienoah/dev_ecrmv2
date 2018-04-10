@@ -407,7 +407,7 @@ class Invoice extends CRM_Controller {
 		$this->excel->getActiveSheet()->setCellValue('J1', 'Value('.$default_currency.')');
 		
 		//change the font size
-		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
+		$this->excel->getActiveSheet()->getStyle('A1:J1')->getFont()->setSize(10);
 		$i=2;		
 		$total_amt = '';
 		if(count($invoices_res)>0) {
@@ -417,7 +417,7 @@ class Invoice extends CRM_Controller {
 				$this->excel->getActiveSheet()->setCellValue('B'.$i, date('M Y', strtotime($excelarr['month_year'])));
 				$this->excel->getActiveSheet()->setCellValue('C'.$i, $excelarr['division_name']);
 				$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['practices']);
-				$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['first_name'].' '.$excelarr['last_name'].' - '.$excelarr['company']);
+				$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['company'].' - '.$excelarr['customer_name']);
 				$this->excel->getActiveSheet()->setCellValue('F'.$i, $excelarr['lead_title']);
 				$this->excel->getActiveSheet()->setCellValue('G'.$i, $excelarr['pjt_id']);
 				$this->excel->getActiveSheet()->setCellValue('H'.$i, $excelarr['project_milestone_name']);
