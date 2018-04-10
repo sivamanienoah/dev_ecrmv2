@@ -209,6 +209,11 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 									$sub_tot[$project_code]['customer_name'] = isset($customer_data[$project_code])? $customer_data[$project_code] : '-';
 								}
 								
+								//FOR ENTITY
+								if(isset($entity_data[$project_code])) {
+									$sub_tot[$project_code]['entity_name'] = isset($entity_data[$project_code])? $entity_data[$project_code] : '';
+								}
+								
 								//for project_code - sorting-directcost
 								if(isset($prjt_directcst[$project_code]))
 								$prjt_directcst[$project_code] += $total_dc_cost;
@@ -291,6 +296,7 @@ if(!empty($sub_tot)) {
 			<tr>
 				<th class='prac-dt' width='15%'><b>CUSTOMER NAME</b></th>
 				<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
+				<th class='prac-dt' width='15%'><b>ENTITY</b></th>
 				<th class='prac-dt' width='5%'><b>HOURS</b></th>
 				<th class='prac-dt' width='5%'><b>INVOICE (USD)</b></th>
 				<th class='prac-dt' width='5%'><b>TOTAL COST (USD)</b></th>
@@ -338,10 +344,13 @@ if(!empty($sub_tot)) {
 			$contri_val				 = (($inv_val-$pjt_tot_cost)/$inv_val)*100;
 			$rag_status				 = isset($sub_tot[$p_name]['rag']) ? $sub_tot[$p_name]['rag'] : '';
 			$customer_name			 = (isset($sub_tot[$p_name]['customer_name']) && $sub_tot[$p_name]['customer_name'] !='-') ? ucfirst($sub_tot[$p_name]['customer_name']) : '-';
+			$entity_name			 = (isset($sub_tot[$p_name]['entity_name']) && !empty($sub_tot[$p_name]['entity_name']) ? $sub_tot[$p_name]['entity_name'] : '-';
+			
 			$bg_rag_color_status	 = isset($rag_clr_arr[$rag_status]) ? 'bgcolor='.$rag_clr_arr[$rag_status] : '';
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<td width='15%' align='left' class='collapse lft-ali'>".ucfirst($customer_name)."</span></td>
 				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
+				<td width='15%' align='left' class='collapse lft-ali'>".$entity_name."</span></td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
 				<td width='5%' align='right' class='rt-ali'>".sprintf('%0.2f', $inv_val)."</td>
 				<td width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
