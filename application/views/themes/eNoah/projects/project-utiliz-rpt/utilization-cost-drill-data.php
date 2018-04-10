@@ -228,6 +228,8 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 	}
 }
 
+echo '<pre>'; print_r($sub_tot); die;
+
 //**Get the other cost value projects only**//
 $resource_cost_not_value_project = array_diff($othercost_projects[$practices_name], $timesheet_projects);
 // echo "<pre>"; print_r($othercost_projects[$practices_name]);
