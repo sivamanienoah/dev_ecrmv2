@@ -344,7 +344,7 @@ if(!empty($sub_tot)) {
 			$contri_val				 = (($inv_val-$pjt_tot_cost)/$inv_val)*100;
 			$rag_status				 = isset($sub_tot[$p_name]['rag']) ? $sub_tot[$p_name]['rag'] : '';
 			$customer_name			 = (isset($sub_tot[$p_name]['customer_name']) && $sub_tot[$p_name]['customer_name'] !='-') ? ucfirst($sub_tot[$p_name]['customer_name']) : '-';
-			$entity_name			 = (isset($sub_tot[$p_name]['entity_name']) && !empty($sub_tot[$p_name]['entity_name']) ? $sub_tot[$p_name]['entity_name'] : '-';
+			$entity_name			 = (isset($sub_tot[$p_name]['entity_name']) && !empty($sub_tot[$p_name]['entity_name'])) ? $sub_tot[$p_name]['entity_name'] : '-';
 			
 			$bg_rag_color_status	 = isset($rag_clr_arr[$rag_status]) ? 'bgcolor='.$rag_clr_arr[$rag_status] : '';
 			echo "<tr data-depth='".$i."' class='collapse'>
