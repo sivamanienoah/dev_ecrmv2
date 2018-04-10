@@ -65,8 +65,8 @@ if(!empty($invoices) && count($invoices)>0) {
 	}
 }
 
-// $rag_clr_arr = array(1=>'#ff1313',2=>'#f8deb3',3=>'#ccecbf');
-$rag_clr_arr = array(1=>'Red',2=>'Amber',3=>'Green');
+$rag_clr_arr = array('Red'=>'#ff1313','Amber'=>'#f8deb3','Green'=>'#ccecbf');
+$rag_clr_disp_arr = array(1=>'Red',2=>'Amber',3=>'Green');
 
 $timesheet_data = array();
 if(count($resdata)>0) {
@@ -201,7 +201,12 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 								
 								//FOR RAG
 								if(isset($rag_data[$project_code])) {
-									$sub_tot[$project_code]['rag'] = isset($rag_clr_arr[$rag_data[$project_code]])? $rag_clr_arr[$rag_data[$project_code]] : '';
+									$sub_tot[$project_code]['rag'] = isset($rag_clr_disp_arr[$rag_data[$project_code]])? $rag_clr_disp_arr[$rag_data[$project_code]] : '';
+								}
+								
+								//FOR CUSTOMER
+								if(isset($customer_data[$project_code])) {
+									$sub_tot[$project_code]['customer_name'] = isset($customer_data[$project_code])? $customer_data[$project_code] : '-';
 								}
 								
 								//for project_code - sorting-directcost
@@ -284,13 +289,12 @@ if(!empty($sub_tot)) {
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
 			<tr>
+				<th class='prac-dt' width='15%'><b>CUSTOMER NAME</b></th>
 				<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
-				<th class='prac-dt' width='5%'><b>HOUR</b></th>
-				<th class='prac-dt' width='5%'><b>INVOICE</b></th>
-				<th class='prac-dt' width='5%'><b>RESOURCE COST</b></th>
-				<th class='prac-dt' width='5%'><b>OTHER COST</b></th>
-				<th class='prac-dt' width='5%'><b>TOTAL COST</b></th>
-				<th class='prac-dt' width='5%'><b>CONTRIBUTION</b></th>
+				<th class='prac-dt' width='5%'><b>HOURS</b></th>
+				<th class='prac-dt' width='5%'><b>INVOICE (USD)</b></th>
+				<th class='prac-dt' width='5%'><b>TOTAL COST (USD)</b></th>
+				<th class='prac-dt' width='5%'><b>CONTRIBUTION %</b></th>
 				<th class='prac-dt' width='5%'><b>RAG</b></th>
 			</tr>";
 		echo "</thead><tbody>";
@@ -333,16 +337,16 @@ if(!empty($sub_tot)) {
 			$pjt_tot_cost			 = $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
 			$contri_val				 = (($inv_val-$pjt_tot_cost)/$inv_val)*100;
 			$rag_status				 = isset($sub_tot[$p_name]['rag']) ? $sub_tot[$p_name]['rag'] : '';
+			$customer_name			 = (isset($sub_tot[$p_name]['customer_name']) && $sub_tot[$p_name]['customer_name'] !='-') ? ucfirst($sub_tot[$p_name]['customer_name']) : '-';
 			
 			echo "<tr data-depth='".$i."' class='collapse'>
+				<td width='15%' align='left' class='collapse lft-ali'>".ucfirst($customer_name)."</span></td>
 				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
 				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
 				<td width='5%' align='right' class='rt-ali'>".sprintf('%0.2f', $inv_val)."</td>
-				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_directcost'], 2)."</td>
-				<td width='5%' align='right' class='rt-ali'>".$other_cost_val['value']."</td>
 				<td width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
 				<td width='5%' align='right' class='rt-ali'>".round($contri_val)."</td>
-				<td width='5%'>".$rag_status."</td>
+				<td width='5%' bgcolor=".$rag_clr_arr[$rag_status].">".$rag_status."</td>
 			</tr>";
 			//echo '<pre>';print_r($user_ar);
 			/* if(count($user_ar)>0 && !empty($user_ar)) {

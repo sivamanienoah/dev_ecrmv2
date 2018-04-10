@@ -2,8 +2,8 @@
 	<tr>
 		<thead>
 			<th>Practice</th>
-			<th>Revenue Cost</th>
-			<th>Total Cost</th>
+			<th>Revenue Cost (USD)</th>
+			<th>Total Cost (USD)</th>
 			<th>Contribution %</th>
 		</thead>
 	</tr>
