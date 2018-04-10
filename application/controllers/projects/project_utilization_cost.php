@@ -919,10 +919,8 @@ class Project_utilization_cost extends crm_controller
 		
 		$project_status = 1; // default - always in progress project only
 		
-		$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division, c.customer_name, cc.company');
+		$this->db->select('l.lead_id, l.lead_title, l.complete_status, l.estimate_hour, l.pjt_id, l.lead_status, l.pjt_status, l.rag_status, l.practice, l.actual_worth_amount, l.estimate_hour, l.expect_worth_id, l.project_type, l.division');
 		$this->db->from($this->cfg['dbpref']. 'leads as l');
-		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
-		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->where("l.lead_id != ", 'null');
 		$this->db->where("l.pjt_id  != ", 'null');
 		
@@ -966,11 +964,22 @@ class Project_utilization_cost extends crm_controller
 		//*for other cost value projects only*//
 		$data['othercost_projects'] = array();
 		
-		$this->db->select("pjt_id, lead_id, practice, lead_title, rag_status");
+		/* $this->db->select("pjt_id, lead_id, practice, lead_title, rag_status");
 		$this->db->where_in('department_id_fk', array(10,11)); //only eads & eqad projects only
 		$ocres  = $this->db->get_where($this->cfg['dbpref']."leads", array("practice" => $practice));
+		$oc_res = $ocres->result_array(); */
+		
+		$this->db->select("l.pjt_id, l.lead_id, l.practice, l.lead_title, l.rag_status, c.customer_name, cc.company");
+		$this->db->from($this->cfg['dbpref']. 'leads as l');
+		$this->db->join($this->cfg['dbpref'].'customers as c', 'c.custid = l.custid_fk');
+		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
+		$this->db->where_in('department_id_fk', array(10,11)); //only eads & eqad projects only
+		$this->db->where("l.practice", $practice);
+		$ocres  = $this->db->get();
 		$oc_res = $ocres->result_array();
-		$rag_data = array();
+		
+		$rag_data 		= array();
+		$customer_data 	= array();
 		if(!empty($oc_res)) {
 			foreach($oc_res as $ocrow) {
 				if (isset($data['othercost_projects'][$practice_arr[$practice]])) {						
@@ -978,12 +987,14 @@ class Project_utilization_cost extends crm_controller
 				} else {
 					$data['othercost_projects'][$practice_arr[$practice]][] = $ocrow['pjt_id'];
 				}
-				$rag_data[$ocrow['pjt_id']] = $ocrow['rag_status'];
+				$rag_data[$ocrow['pjt_id']] 	 = $ocrow['rag_status'];
+				$customer_data[$ocrow['pjt_id']] = $ocrow['company'].' - '.$ocrow['customer_name'];
 			}
 		}
 		
 		$data['invoices_data'] = $this->getIRData($res, $start_date, $end_date, $practice);
 		$data['rag_data'] 	   = $rag_data;
+		$data['customer_data'] = $customer_data;
 		// echo '<pre>'; print_r($data['rag_data']); die;
 		
 		$this->load->view('projects/project-utiliz-rpt/utilization-cost-drill-data', $data);
