@@ -428,7 +428,7 @@ if(!empty($sub_tot)) {
 		}
 		
 	echo "<tfoot><tr data-depth='0'>
-		<td width='15%' colspan='2' align='right' class='rt-ali'><b>TOTAL:</b></td>
+		<td width='15%' colspan='3' align='right' class='rt-ali'><b>TOTAL:</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($invoices_data['total_amt'])."</b></td>
 		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
