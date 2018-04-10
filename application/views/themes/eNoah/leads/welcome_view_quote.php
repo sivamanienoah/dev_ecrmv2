@@ -921,7 +921,12 @@ $(function(){
 							<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
 						</form>
 					</div>
-					<?php if ($quote_data['belong_to'] == $userdata['userid'] || $quote_data['lead_assign'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
+					<?php
+						$lead_assign_arr = array(0);
+						$lead_assign_arr = @explode(',',$quote_data['lead_assign']);
+					?>
+					
+					<?php if ($quote_data['belong_to'] == $userdata['userid'] || (in_array($userdata['userid'], $lead_assign_arr)) || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) { ?>
 					<div class="pull-left pad-right">
 						<form name="ajax_file_upload" class="pull-left pad-right">
 							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
