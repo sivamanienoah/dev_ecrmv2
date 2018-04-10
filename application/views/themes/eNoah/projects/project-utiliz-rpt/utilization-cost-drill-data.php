@@ -296,7 +296,7 @@ if(!empty($sub_tot)) {
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
 			<tr>
-				<th class='prac-dt'><b>CUSTOMER NAME</b></th>
+				<th width='200px' class='prac-dt'><b>CUSTOMER NAME</b></th>
 				<th class='prac-dt'><b>PROJECT NAME</b></th>
 				<th class='prac-dt'><b>ENTITY</b></th>
 				<th class='prac-dt'><b>HOURS</b></th>
