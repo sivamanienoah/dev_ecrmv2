@@ -9,6 +9,7 @@ button.ui-datepicker-current { display: none; }
 table.bu-tbl th{ text-align:center; }
 table.bu-tbl{ width:85%; }
 table.bu-tbl-inr th{ text-align:center; }
+.hide {display:none;}
 </style>
 <div id="content">
     <div class="inner">

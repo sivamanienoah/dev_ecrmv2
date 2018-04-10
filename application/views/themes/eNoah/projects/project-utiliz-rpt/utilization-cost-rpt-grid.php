@@ -1,12 +1,15 @@
-<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' class="data-table proj-dash-table bu-tbl">
-	<tr>
-		<thead>
+<table cellspacing="0" cellpadding="0" border="0" id='it_services_dash' style="width:80%" class="data-tbl dashboard-heads dataTable it_cost_grid">
+	<thead>
+		<tr>
+		
 			<th>Practice</th>
 			<th>Revenue Cost (USD)</th>
 			<th>Total Cost (USD)</th>
 			<th>Contribution %</th>
-		</thead>
-	</tr>
+		
+		</tr>
+	</thead>
+	<tbody>
 	<?php if(!empty($practice_data)) { ?>
 		<?php foreach($practice_data as $prac) { ?>
 			<?php if($prac->id != 7 && $prac->id != 13) { ?>
@@ -52,38 +55,49 @@
 							}
 						?>
 					</td>
-					<td>
-							<?php
+						<?php
 							$dc_val = ($dashboard_det[$prac->practices]['ytd_contribution']!='-') ? round($dashboard_det[$prac->practices]['ytd_contribution']) : '-';
 							$arrow_val = 'down_arrow';
 							if(round($dc_val, 0) >= 45){
 								$arrow_val = 'up_arrow';
 							}
-							if($dc_val!='-'){
-							?>
-								<?php if($prac->practices=='Infra Services') { 
-									echo '-';
+							if($dc_val!='-') {
+								if($prac->practices=='Infra Services') { 
+									$dc_val = '-';
 								} else {
-								?>
-								<span class="<?php echo "itser_".$arrow_val;?>">
-									<?php echo round($dc_val, 0); ?>
-								</span>
-								<?php 
+									$dc_val = round($dc_val, 0); 
 								}
 							} else {
-								echo '-';
+								$dc_val = '-';
 							}
 						?>
+					<td>
+						<?php echo $dc_val; ?>
 					</td>
 				</tr>
 				
 			<?php }	?>
 		<?php } ?>
-			<tr>
+			<tfoot><tr>
 				<td align='right'><strong>Total</strong></td>
 				<td><?php echo ($dashboard_det['Total']['ytd_billing']!='-') ? round($dashboard_det['Total']['ytd_billing']) : '-'; ?></td>
 				<td><?php echo ($dashboard_det['Total']['ytd_utilization_cost']!='-') ? round($dashboard_det['Total']['ytd_utilization_cost']) : '-'; ?> </td>
 				<td><?php echo ($dashboard_det['Total']['ytd_contribution']!='-') ? round($dashboard_det['Total']['ytd_contribution']) : '-'; ?></td>
-			</tr>
+			</tr></tfoot></tbody>
 	<?php } ?>
 </table>
+<script>
+$('#it_services_dash').dataTable({
+	"bInfo": false,
+	"bFilter": false,
+	"bPaginate": false,
+	"bProcessing": false,
+	"bServerSide": false,
+	"bLengthChange": false,
+	"bDestroy": true,
+	'bAutoWidth': true,
+	/* "aoColumnDefs": [
+		{ 'type': 'numeric-comma', 'aTargets': [ 3 ] }
+	] */
+});
+</script>
