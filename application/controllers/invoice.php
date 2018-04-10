@@ -397,12 +397,14 @@ class Invoice extends CRM_Controller {
 		//set cell A1 content with some text
 		$this->excel->getActiveSheet()->setCellValue('A1', 'Invoice Date');
 		$this->excel->getActiveSheet()->setCellValue('B1', 'Month & Year');
-		$this->excel->getActiveSheet()->setCellValue('C1', 'Customer Name');
-		$this->excel->getActiveSheet()->setCellValue('D1', 'Project Title');
-		$this->excel->getActiveSheet()->setCellValue('E1', 'Project Code');
-		$this->excel->getActiveSheet()->setCellValue('F1', 'Milestone Name');
-		$this->excel->getActiveSheet()->setCellValue('G1', 'Actual Value');
-		$this->excel->getActiveSheet()->setCellValue('H1', 'Value('.$default_currency.')');
+		$this->excel->getActiveSheet()->setCellValue('C1', 'Entity');
+		$this->excel->getActiveSheet()->setCellValue('D1', 'Practice');
+		$this->excel->getActiveSheet()->setCellValue('E1', 'Customer Name');
+		$this->excel->getActiveSheet()->setCellValue('F1', 'Project Title');
+		$this->excel->getActiveSheet()->setCellValue('G1', 'Project Code');
+		$this->excel->getActiveSheet()->setCellValue('H1', 'Milestone Name');
+		$this->excel->getActiveSheet()->setCellValue('I1', 'Actual Value');
+		$this->excel->getActiveSheet()->setCellValue('J1', 'Value('.$default_currency.')');
 		
 		//change the font size
 		$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(10);
@@ -413,16 +415,18 @@ class Invoice extends CRM_Controller {
 				//display only date
 				$this->excel->getActiveSheet()->setCellValue('A'.$i, date('d-m-Y', strtotime($excelarr['invoice_generate_notify_date'])));
 				$this->excel->getActiveSheet()->setCellValue('B'.$i, date('M Y', strtotime($excelarr['month_year'])));
-				$this->excel->getActiveSheet()->setCellValue('C'.$i, $excelarr['first_name'].' '.$excelarr['last_name'].' - '.$excelarr['company']);
-				$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['lead_title']);
-				$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['pjt_id']);
-				$this->excel->getActiveSheet()->setCellValue('F'.$i, $excelarr['project_milestone_name']);
-				$this->excel->getActiveSheet()->setCellValue('G'.$i, $excelarr['expect_worth_name'].' '.$excelarr['amount']);
+				$this->excel->getActiveSheet()->setCellValue('C'.$i, $excelarr['division_name']);
+				$this->excel->getActiveSheet()->setCellValue('D'.$i, $excelarr['practices']);
+				$this->excel->getActiveSheet()->setCellValue('E'.$i, $excelarr['first_name'].' '.$excelarr['last_name'].' - '.$excelarr['company']);
+				$this->excel->getActiveSheet()->setCellValue('F'.$i, $excelarr['lead_title']);
+				$this->excel->getActiveSheet()->setCellValue('G'.$i, $excelarr['pjt_id']);
+				$this->excel->getActiveSheet()->setCellValue('H'.$i, $excelarr['project_milestone_name']);
+				$this->excel->getActiveSheet()->setCellValue('I'.$i, $excelarr['expect_worth_name'].' '.$excelarr['amount']);
 				// $this->excel->getActiveSheet()->setCellValue('H'.$i, $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]));
 				// converting based on base currency
 				$base_conversion_amt = $this->conver_currency($excelarr['amount'], $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['expect_worth_id']][$excelarr['base_currency']]);
 				// $amt = $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['base_currency']][$this->default_cur_id]);
-				$this->excel->getActiveSheet()->setCellValue('H'.$i, $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['base_currency']][$this->default_cur_id]));
+				$this->excel->getActiveSheet()->setCellValue('J'.$i, $this->conver_currency($base_conversion_amt, $bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($excelarr['month_year'])),"4/1","3/31")][$excelarr['base_currency']][$this->default_cur_id]));
 				
 				// $amt 	   = $this->conver_currency($excelarr['amount'], $rates[$excelarr['expect_worth_id']][$this->default_cur_id]);
 				
@@ -434,12 +438,12 @@ class Invoice extends CRM_Controller {
 				$i++;
 			}
 		}
-		$this->excel->getActiveSheet()->setCellValue('H'.$i, $total_amt);
+		$this->excel->getActiveSheet()->setCellValue('I'.$i, $total_amt);
 		
-		$this->excel->getActiveSheet()->getStyle('G2:G'.$i)->getNumberFormat()->setFormatCode('0.00');
-		$this->excel->getActiveSheet()->getStyle('H2:H'.$i)->getNumberFormat()->setFormatCode('0.00');
+		$this->excel->getActiveSheet()->getStyle('I2:I'.$i)->getNumberFormat()->setFormatCode('0.00');
+		$this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getNumberFormat()->setFormatCode('0.00');
 		//make the font become bold
-		$this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+		$this->excel->getActiveSheet()->getStyle('A1:J1')->getFont()->setBold(true);
 		//merge cell A1 until D1
 		//$this->excel->getActiveSheet()->mergeCells('A1:D1');
 		//set aligment to center for that merged cell (A1 to D1)
@@ -448,18 +452,13 @@ class Invoice extends CRM_Controller {
 		$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
 		$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
 		$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
-		$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
-		$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(20);			
+		$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
 		$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
-		$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-		$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+		$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(20);			
+		$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
 		$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
-		$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
-		$this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(25);
-		$this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(25);
-		$this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
-		$this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
-		$this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
+		$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(20);
 		
 		//cell format
 		$this->excel->getActiveSheet()->getStyle('A2:A'.$i)->getNumberFormat()->setFormatCode('00000');
@@ -470,7 +469,6 @@ class Invoice extends CRM_Controller {
 		header('Content-Type: application/vnd.ms-excel'); //mime type
 		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 		header('Cache-Control: max-age=0'); //no cache
-					 
 		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
 		//if you want to save it as .XLSX Excel 2007 format
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
