@@ -65,7 +65,7 @@ if(!empty($invoices) && count($invoices)>0) {
 	}
 }
 
-$rag_clr_arr = array('Red'=>'#ff1313','Amber'=>'#f8deb3','Green'=>'#ccecbf');
+$rag_clr_arr = array('Red'=>'#c21706','Amber'=>'#ff7e00','Green'=>'#468847');
 $rag_clr_disp_arr = array(1=>'Red',2=>'Amber',3=>'Green');
 
 $timesheet_data = array();
