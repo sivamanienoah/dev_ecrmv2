@@ -296,14 +296,14 @@ if(!empty($sub_tot)) {
 	echo "<table id='it_cost_grid' class='data-tbl dashboard-heads dataTable it_cost_grid'>
 			<thead>
 			<tr>
-				<th class='prac-dt' width='15%'><b>CUSTOMER NAME</b></th>
-				<th class='prac-dt' width='15%'><b>PROJECT NAME</b></th>
-				<th class='prac-dt' width='15%'><b>ENTITY</b></th>
-				<th class='prac-dt' width='5%'><b>HOURS</b></th>
-				<th class='prac-dt' width='5%'><b>INVOICE (USD)</b></th>
-				<th class='prac-dt' width='5%'><b>TOTAL COST (USD)</b></th>
-				<th class='prac-dt' width='5%'><b>CONTRIBUTION %</b></th>
-				<th class='prac-dt' width='5%'><b>RAG</b></th>
+				<th class='prac-dt'><b>CUSTOMER NAME</b></th>
+				<th class='prac-dt'><b>PROJECT NAME</b></th>
+				<th class='prac-dt'><b>ENTITY</b></th>
+				<th class='prac-dt'><b>HOURS</b></th>
+				<th class='prac-dt'><b>INVOICE (USD)</b></th>
+				<th class='prac-dt'><b>TOTAL COST (USD)</b></th>
+				<th class='prac-dt'><b>CONTRIBUTION %</b></th>
+				<th class='prac-dt'><b>RAG</b></th>
 			</tr>";
 		echo "</thead><tbody>";
 		//foreach($tbl_data as $projectCode => $proj_ar) {
@@ -350,14 +350,14 @@ if(!empty($sub_tot)) {
 			
 			$bg_rag_color_status	 = isset($rag_clr_arr[$rag_status]) ? 'bgcolor='.$rag_clr_arr[$rag_status] : '';
 			echo "<tr data-depth='".$i."' class='collapse'>
-				<td width='15%' align='left' class='collapse lft-ali'>".ucfirst($customer_name)."</span></td>
-				<td width='15%' align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
-				<td width='15%' align='left' class='collapse lft-ali'>".$entity_name."</span></td>
-				<td width='5%' align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
-				<td width='5%' align='right' class='rt-ali'>".sprintf('%0.2f', $inv_val)."</td>
-				<td width='5%' align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
-				<td width='5%' align='right' class='rt-ali'>".round($contri_val)."</td>
-				<td width='5%' ".$bg_rag_color_status.">".$rag_status."</td>
+				<td align='left' class='collapse lft-ali'>".ucfirst($customer_name)."</span></td>
+				<td align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
+				<td align='left' class='collapse lft-ali'>".$entity_name."</span></td>
+				<td align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
+				<td align='right' class='rt-ali'>".sprintf('%0.2f', $inv_val)."</td>
+				<td align='right' class='rt-ali'>".round(($sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value']), 2)."</td>
+				<td align='right' class='rt-ali'>".round($contri_val)."</td>
+				<td ".$bg_rag_color_status.">".$rag_status."</td>
 			</tr>";
 			//echo '<pre>';print_r($user_ar);
 			/* if(count($user_ar)>0 && !empty($user_ar)) {
@@ -374,18 +374,18 @@ if(!empty($sub_tot)) {
 					
 					echo "<tr data-depth='".$i."' class='collapse'>";
 						if($j==0){
-							echo "<td width='15%' align='right'><b>Resources</b></td>";
+							echo "<td  align='right'><b>Resources</b></td>";
 						} else {
-							echo "<td width='15%'></td>";
+							echo "<td ></td>";
 						}
-						echo "<td width='15%'>".$timesheet_data[$ukey]['empname']."</td>
-						<td width='5%' align='right'>".round($pval['hour'], 1)."</td>
-						<td width='5%' align='right'>".round($pval['directcost'], 2)."</td>
-						<td width='5%' align='right'>-</td>
-						<td width='5%' align='right'>".round($pval['cost'], 2)."</td>
-						<td width='5%' align='right'>".round($per_hr, 1)."</td>
-						<td width='5%' align='right'>".round($per_directcost, 2)."</td>
-						<td width='5%' align='right'>".round($per_cost, 2)."</td>
+						echo "<td >".$timesheet_data[$ukey]['empname']."</td>
+						<td align='right'>".round($pval['hour'], 1)."</td>
+						<td align='right'>".round($pval['directcost'], 2)."</td>
+						<td align='right'>-</td>
+						<td align='right'>".round($pval['cost'], 2)."</td>
+						<td align='right'>".round($per_hr, 1)."</td>
+						<td align='right'>".round($per_directcost, 2)."</td>
+						<td align='right'>".round($per_cost, 2)."</td>
 					</tr>";
 					$per_hr		= '';
 					$rate_pr_hr = 0;
@@ -407,18 +407,18 @@ if(!empty($sub_tot)) {
 						}
 						echo "<tr data-depth='".$i."' class='collapse'>";
 						if($e==0){
-							echo "<td width='15%' align='right'><b>Other Cost</b></td>";
+							echo "<td  align='right'><b>Other Cost</b></td>";
 						} else {
-							echo "<td width='15%'></td>";
+							echo "<td ></td>";
 						}
-						echo "<td width='15%'>".ucfirst($oc_val['desc'])."</td>
-							<td width='5%' align='right'>-</td>
-							<td width='5%' align='right'>-</td>
-							<td width='5%' align='right'>".round($oc_val['amt'], 2)."</td>
-							<td width='5%' align='right'>".round($oc_val['amt'], 2)."</td>
-							<td width='5%' align='right'>-</td>
-							<td width='5%' align='right'>-</td>
-							<td width='5%' align='right'>".round($per_cost, 2)."</td>
+						echo "<td >".ucfirst($oc_val['desc'])."</td>
+							<td align='right'>-</td>
+							<td align='right'>-</td>
+							<td align='right'>".round($oc_val['amt'], 2)."</td>
+							<td align='right'>".round($oc_val['amt'], 2)."</td>
+							<td align='right'>-</td>
+							<td align='right'>-</td>
+							<td align='right'>".round($per_cost, 2)."</td>
 						</tr>";
 						$p++;
 						$e++;
@@ -428,12 +428,12 @@ if(!empty($sub_tot)) {
 		}
 		
 	echo "<tfoot><tr data-depth='0'>
-		<td width='15%' colspan='3' align='right' class='rt-ali'><b>TOTAL:</b></td>
-		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
-		<td width='5%' align='right' class='rt-ali'><b>".round($invoices_data['total_amt'])."</b></td>
-		<td width='5%' align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
-		<td width='5%' align='right' class='rt-ali'><b></b></td>
-		<td width='5%' align='right' class='rt-ali'><b></b></td>
+		<td  colspan='3' align='right' class='rt-ali'><b>TOTAL:</b></td>
+		<td align='right' class='rt-ali'><b>".round($calc_tot_hour, 1)."</b></td>
+		<td align='right' class='rt-ali'><b>".round($invoices_data['total_amt'])."</b></td>
+		<td align='right' class='rt-ali'><b>".round($calc_tot_cost, 0)."</b></td>
+		<td align='right' class='rt-ali'><b></b></td>
+		<td align='right' class='rt-ali'><b></b></td>
 		</tr></tfoot>";
 	echo "</tbody></table>";
 }			
