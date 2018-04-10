@@ -81,7 +81,7 @@ $( "#advance_search" ).on( "click", "#advance", function(e) {
 	var form_data = $('#advanceFilterServiceDashboard').serialize();	
 	$.ajax({
 		type: "POST",
-		url: site_base_url+"projects/project_utilization_cost/",
+		url: site_base_url+"projects/project_pl_report/",
 		dataType: "html",
 		data: form_data,
 		beforeSend:function() {
@@ -106,7 +106,7 @@ function getData(practice, clicktype)
 	var form_data = $('#advanceFilterServiceDashboard').serialize();
 	$.ajax({
 		type: "POST",
-		url: site_base_url+'projects/project_utilization_cost/project_uc_drill_data/',
+		url: site_base_url+'projects/project_pl_report/project_uc_drill_data/',
 		data: form_data+'&practice='+practice+'&clicktype='+clicktype,
 		cache: false,
 		beforeSend:function() {
