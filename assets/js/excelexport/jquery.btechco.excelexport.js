@@ -29,9 +29,6 @@
 
     $.fn.btechco_excelexport = function (options) {
         $settings = $.extend({}, $defaults, options);
-		
-		console.info($("#" + $settings.containerid).parent().html());
-		return false;
 
         switch ($settings.datatype) {
             case 1:
