@@ -1,14 +1,16 @@
 $(function() {
 	
 	//export
-	$("#btnExport").click(function () {
+	/* $("#btnExport").click(function () {
 		// document.getElementById("it_cost_grid").deleteTFoot();
 		$("#it_cost_grid").btechco_excelexport({
 			containerid: "it_cost_grid"
 		   , datatype: $datatype.Table
 		   , filename: 'cost_report'
 		});
-	});
+	}); */
+	
+	
 	
 	$("#reset_drilldown").click(function(){
 		$('#filter_group_by').prop('selectedIndex',0);
