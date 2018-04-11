@@ -2106,7 +2106,7 @@ function addURLtoJob()
 		}
 
 		function timerfadeout()
-		{alert(123)
+		{
 			$('#paymentfadeout').fadeOut();
 			$('#rec_paymentfadeout').fadeOut();
 			$('#pjt_lead_errormsg').fadeOut();
@@ -3238,24 +3238,24 @@ function getTemplate(temp_id)
 /* To get email signature by id */
 function getSignature(sign_id)
 {
-	       params ={'sign_id':sign_id};
-		   params[csrf_token_name] = csrf_hash_token;
-			$.ajax({
-			async: false,
-			type: "POST",
-			url : site_base_url + 'project/get_signature_content/',
-			cache : false,
-			data :params,
-			success : function(response){
-				response = JSON.parse(response);
+	params ={'sign_id':sign_id};
+	params[csrf_token_name] = csrf_hash_token;
+	$.ajax({
+		async: false,
+		type: "POST",
+		url : site_base_url + 'project/get_signature_content/',
+		cache : false,
+		data :params,
+		success : function(response){
+			response = JSON.parse(response);
+			
+			if(response != null && response.sign_content !=null) {
 				
-				if(response != null && response.sign_content !=null) {
-					
-					tinymce.get('signature').setContent(response.sign_content);
-					//tinymce.triggerSave();
-                } else {
-					tinymce.get('signature').setContent('');
-				}
+				tinymce.get('signature').setContent(response.sign_content);
+				//tinymce.triggerSave();
+			} else {
+				tinymce.get('signature').setContent('');
 			}
-		});
+		}
+	});
 }
