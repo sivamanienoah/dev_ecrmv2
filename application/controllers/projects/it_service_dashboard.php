@@ -897,40 +897,6 @@ class It_service_dashboard extends crm_controller
 	
 	public function service_dashboard_data()
 	{
-		/* $curFiscalYear = $this->calculateFiscalYearForDate(date("m/d/y"),"4/1","3/31");
-		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		$end_date  	   = date('Y-m-d'); //eg.2014-03-01
-		//default billable_month
-		$month 			= date('Y-m-01 00:00:00');
-		if($this->input->post("billable_month")) {
-			$bill_month = $this->input->post("billable_month");
-			$month      = date("Y-m-01 00:00:00", strtotime($bill_month));
-		}
-		$month_status = $this->input->post("month_status");
-		$current_month 		= date('m');
-		$fiscalStartMonth 	= '04';
-		$month_status = $this->input->post("month_status");
-		
-		if(!empty($month_status)) {
-			if($month_status == 2) {
-				$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
-				if($fiscalStartMonth == $current_month) {
-					$curFiscalYear 	= getLastFiscalYear();
-					$start_date		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-					$end_date   	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
-				} else {
-					$end_date = date('Y-m-t', strtotime('-1 month', $base_mon));
-				}
-				$month 	  = date('Y-m-01 00:00:00', strtotime('-1 month', $base_mon));
-			} else {
-				$end_date  	= date('Y-m-t');
-				$month    	= date("Y-m-01 00:00:00");
-			}
-		}
-		$data['bill_month'] = $month;
-		$data['start_date'] = $start_date;
-		$data['end_date']   = $end_date; */
-		
 		$post_data 	= $this->input->post();
 		$data 		= array();
 		
@@ -968,10 +934,6 @@ class It_service_dashboard extends crm_controller
 		if($this->input->post("clicktype")) {
 			$clicktype = $this->input->post("clicktype");
 		}
-		
-		/* echo '<pre>'; print_r($post_data); echo '<br>';
-		print_r($data); echo '</pre>';
-		die; */
 		
 		$project_status = 1; // default - always in progress project only
 		
