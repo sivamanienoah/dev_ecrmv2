@@ -228,7 +228,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 	}
 }
 
-// echo '<pre>'; print_r($sub_tot); die;
+echo '<pre>'; print_r($sub_tot); die;
 
 //**Get the other cost value projects only**//
 $resource_cost_not_value_project = array_diff($othercost_projects[$practices_name], $timesheet_projects);
@@ -347,6 +347,8 @@ if(!empty($sub_tot)) {
 			$rag_status				 = isset($sub_tot[$p_name]['rag']) ? $sub_tot[$p_name]['rag'] : '';
 			$customer_name			 = (isset($sub_tot[$p_name]['customer_name']) && $sub_tot[$p_name]['customer_name'] !='-') ? ucfirst($sub_tot[$p_name]['customer_name']) : '-';
 			$entity_name			 = (isset($sub_tot[$p_name]['entity_name']) && !empty($sub_tot[$p_name]['entity_name'])) ? $sub_tot[$p_name]['entity_name'] : '-';
+			
+			// $monthly_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view' ></a> ";
 			
 			$bg_rag_color_status	 = isset($rag_clr_arr[$rag_status]) ? 'bgcolor='.$rag_clr_arr[$rag_status] : '';
 			echo "<tr data-depth='".$i."' class='collapse'>
