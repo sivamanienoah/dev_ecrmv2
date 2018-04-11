@@ -79,7 +79,7 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 								<!--<option value=''>--Select--</option>-->
 								<?php if(!empty($fy_year) && count($fy_year)>0) { ?>
 									<?php foreach($fy_year as $fy_rec) { ?>
-										<option value='<?php echo $fy_rec['financial_yr']; ?>' <?php echo $yr_select = ($fy_name == $fy_rec['financial_yr']) ? 'selected="selected"' : ''; ?>><?php echo $fy_rec['fy_name']; ?></option>
+										<option value='<?php echo $fy_rec['financial_yr']; ?>' <?php echo $yr_select = ($fiscal_year_status == $fy_rec['financial_yr']) ? 'selected="selected"' : ''; ?>><?php echo $fy_rec['fy_name']; ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>
