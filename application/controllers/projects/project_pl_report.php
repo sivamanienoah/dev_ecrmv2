@@ -36,7 +36,7 @@ class Project_pl_report extends crm_controller
 		}
 		$data  				  = array();
 		$projects  			  = array();
-		$data['page_heading'] = "IT - Project P&L Report";
+		$data['page_heading'] = "IT - Billable Project P&L Report";
 		
 		$post_data 		  = $this->input->post();
 		// echo '<pre>'; print_r($post_data); die;
