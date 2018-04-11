@@ -3789,7 +3789,7 @@ class Dashboard extends crm_controller
 			$entity_ids = array();
 		}
 		$other_cost_arr   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
-		echo '<pre>123'; print_r($other_cost_arr); die;
+		// echo '<pre>123'; print_r($other_cost_arr); die;
 
 		//for practices		
 		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date);
@@ -3943,7 +3943,7 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
-		echo '<pre>'; print_r($other_cost_arr); die;
+		// echo '<pre>'; print_r($other_cost_arr); die;
 		//other cost
 		if(!empty($other_cost_arr)) {
 			foreach($other_cost_arr as $oc_pjt_code=>$oc_pjtArr) {
