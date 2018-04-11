@@ -177,6 +177,7 @@ if(!empty($other_cost_arr)) {
 	}
 }
 //other cost
+$overall_hour = $overall_cost = 0;
 ?>
 <div class="it_cost_grid_div">
 <?php
@@ -221,6 +222,7 @@ if(!empty($other_cost_arr)) {
 																		$tempCls	 	 = 'tr_othercost';
 																		$tot_cost	    += $resrcNmeArr['cost'];
 																	}
+																	
 																	$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
 																	echo "<tr class='".$tempCls."' data-depth='".$i."'>
 							<td width='10%' align='left' class='collapse lft-ali'><span class='toggle'>".$entiyKey."</b></span></td>
@@ -233,7 +235,10 @@ if(!empty($other_cost_arr)) {
 							<td width='7%'>".$tempresrcNmeKey."</td>
 							<td width='5%' align='right' class='rt-ali'>".$tempResrcHour."</td>
 							<td width='5%' align='right' class='rt-ali'>".round($resrcNmeArr['cost'], 2)."</td>
-						</tr>"; $i++;
+						</tr>";
+																	$overall_hour	+= $tempResrcHour;
+																	$overall_cost	+= round($resrcNmeArr['cost'], 2);
+																	$i++;
 																}
 															}
 														}
@@ -251,8 +256,8 @@ if(!empty($other_cost_arr)) {
 		}
 	}
 	echo "<tfoot id='exp_hide'><tr>
-			<td align='right' class='rt-ali'></td>
-			<td align='right' class='rt-ali'></td>
+			<td align='right' class='rt-ali'>".$overall_hour."</td>
+			<td align='right' class='rt-ali'>".$overall_cost."</td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
