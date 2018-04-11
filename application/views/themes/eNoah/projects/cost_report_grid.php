@@ -256,8 +256,8 @@ $overall_hour = $overall_cost = 0;
 		}
 	}
 	echo "<tfoot id='exp_hide'><tr>
-			<td align='right' class='rt-ali'>".$overall_hour."</td>
-			<td align='right' class='rt-ali'>".$overall_cost."</td>
+			<td align='right' class='rt-ali'>".round($overall_hour, 1)."</td>
+			<td align='right' class='rt-ali'>".round($overall_cost, 2)."</td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
