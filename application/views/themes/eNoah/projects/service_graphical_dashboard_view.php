@@ -1,6 +1,14 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <style>
 .jqplot-title { display: none; }
+
+.adv_filter_it_service{
+	background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 1px 10px;
+    padding: 2px 5px 0px;
+}
 </style>
 <?php
 //for total inv bar value charts
@@ -35,18 +43,18 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
     <div class="inner">
         <?php if($this->session->userdata('viewPjt')==1) { ?>
 		
-		<div id="filter_section">
+		<!--<div id="filter_section">
 			<div class="clear"></div>
 			<div id="advance_search" style="padding-bottom:15px;">
 				<form name="service_graph_dashboard" id="fiscal_year_filter" action="projects/dashboard/sevice_graph_dashboard" method="post">
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					<input type="hidden" name="<?php //echo $this->security->get_csrf_token_name(); ?>" value="<?php //echo $this->security->get_csrf_hash(); ?>" />
 					
 					<div class="pull-right">
 						<table style="width:300px;" cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 							<tr>
 								<td align="left">
-									<label><input <?php echo ($fiscal_year_status=='current')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" class="fiscal_year_status" value="current" />&nbsp;Current Financial Year &nbsp;&nbsp;</label>
-									<label><input <?php echo ($fiscal_year_status=='last')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" class="fiscal_year_status" value="last" />&nbsp;Last Financial Year</label>
+									<label><input <?php //echo ($fiscal_year_status=='current')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" class="fiscal_year_status" value="current" />&nbsp;Current Financial Year &nbsp;&nbsp;</label>
+									<label><input <?php //echo ($fiscal_year_status=='last')?'checked="checked"':'';?> type="radio" name="fiscal_year_status" class="fiscal_year_status" value="last" />&nbsp;Last Financial Year</label>
 								</td>
 								<input type="submit" class="positive input-font" name="advance" id="fiscal_year_filter_submit" value="Search" style="display:none;"/>							
 							</tr>
@@ -54,56 +62,87 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 					</div>
 				</form>
 			</div>
+		</div>-->
+		
+		<div id="filter_section" class="pull-right">
+			<div class="clear"></div>
+			<div id="advance_search" style="padding-bottom:15px;">
+				<form name="service_graph_dashboard" id="fiscal_year_filter" action="projects/dashboard/sevice_graph_dashboard" method="post">
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					
+					<div class="pull-left adv_filter_it_service">
+						<div class='pull-left'>
+							<label>Financial Year</label>
+						</div><?php //echo'<pre>';print_r($fy_year);exit;?>
+						<div class="pull-left">
+							<select name='fy_name' id='fy_name'>
+								<!--<option value=''>--Select--</option>-->
+								<?php if(!empty($fy_year) && count($fy_year)>0) { ?>
+									<?php foreach($fy_year as $fy_rec) { ?>
+										<option value='<?php echo $fy_rec['financial_yr']; ?>' <?php echo $yr_select = ($fy_name == $fy_rec['financial_yr']) ? 'selected="selected"' : ''; ?>><?php echo $fy_rec['fy_name']; ?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+						</div>
+						
+						<div class='pull-left'>
+							<span id='show_srch_btn'><input type="submit" class="positive input-font" name="advance" id="advance" value="Search"/></span>
+							<span id='show_load_btn' style="display:none;"><img src="<?php echo base_url().'assets/images/loading.gif'; ?>" style="margin-left: 6px; width: 65px;"></span>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
 		
 		<div class="clearfix">
-			<!--Summary Container - Start -->
-			<div class="uc-head">
-				<div class="it_service_summary_det_container clearfix">
-					<h5 class="revenue_compare_head_bar">
-						<span class="forecast-heading"><?php echo "IT Performance Summary" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></span>
-					</h5>
-					<div id="it_service_summary_det" class="it_service_summary_det">
-						<div class="summary_box">							
-							<div class="boxshadow">
-								<div class="content clearfix" id="value_contribution">
-							<div class="numberCircle">
-								<?php echo isset($contri_tot_val['tot_contri']) ? $contri_tot_val['tot_contri'] . " %" : ''; ?>
-							</div>
-							<div class="height_fix">
-								<p>Contribution</p>
-							</div>
-							</div>
+		<!--Summary Container - Start -->
+		<div class="uc-head">
+			<div class="it_service_summary_det_container clearfix">
+				<h5 class="revenue_compare_head_bar">
+					<span class="forecast-heading"><?php echo "IT Performance Summary" . " (".date('F Y', strtotime($start_date))." - ".date('F Y', strtotime($end_date)).")" ?></span>
+				</h5>
+				<?php //echo'<pre>';print_r($contri_tot_val['tot_contri']);exit; ?>
+				<div id="it_service_summary_det" class="it_service_summary_det">
+					<div class="summary_box">							
+						<div class="boxshadow">
+							<div class="content clearfix" id="value_contribution">
+								<div class="numberCircle">
+									<?php echo isset($contri_tot_val['tot_contri']) ? $contri_tot_val['tot_contri'] . " %" : ''; ?>
+								</div>
+								<div class="height_fix">
+									<p>Contribution</p>
+								</div>
 							</div>
 						</div>
-						<div class="summary_box">
-							<?php
-							//converting to million
-							$curr_revenue = '';
-							if( $inv_compare['curr_yr']['tot_inv_value'] > 0 ) {
-								$curr_revenue = $inv_compare['curr_yr']['tot_inv_value'] / CONST_TEN_LAKH;
-							}
-							?>
-							<div class="boxshadow">
+					</div>
+					<div class="summary_box">
+						<?php
+						//converting to million
+						$curr_revenue = '';
+						if( $inv_compare['curr_yr']['tot_inv_value'] > 0 ) {
+							$curr_revenue = $inv_compare['curr_yr']['tot_inv_value'] / CONST_TEN_LAKH;
+						}
+						?>
+						<div class="boxshadow">
 							<div class="content clearfix" id="value_revenue">
 								<div class="numberCircle">
 									<?php echo '$ '.round($curr_revenue, 2); ?>
 								</div>
 								<div class="height_fix"><p>Revenue</p><span class="cur_name"><?php echo '(Million '. $this->default_cur_name.')'; ?></span></div>								
 							</div>
-							</div>
-						</div>
-						<div class="summary_box">
-						<div class="boxshadow">
-							<div class="content clearfix" id="value_utilization">							
-							<div class="numberCircle">
-								<?php echo $uc_graph_val['total']['ytd_billable'] . " %"; ?>
-							</div>
-							<div class="height_fix"><p>Utilization</p><span class="cur_name"><?php echo '(Cost)'; ?></span></div>
-						</div>
 						</div>
 					</div>
-					
+					<div class="summary_box">
+						<div class="boxshadow">
+							<div class="content clearfix" id="value_utilization">							
+								<div class="numberCircle">
+									<?php echo $uc_graph_val['total']['ytd_billable'] . " %"; ?>
+								</div>
+								<div class="height_fix"><p>Utilization</p><span class="cur_name"><?php echo '(Cost)'; ?></span></div>
+							</div>
+						</div>
+					</div>
+				
 				</div>
 			</div>
 			<!--Summary Container - End-->

@@ -15,6 +15,7 @@ class Service_graphical_dashboard extends crm_controller
 		$this->load->helper('lead_stage');
 		$this->load->helper('url');
 		$this->load->model('projects/service_graphical_dashboard_model');
+		$this->load->model('projects/dashboard_model');
 		if (get_default_currency()) {
 			$this->default_currency = get_default_currency();
 			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
@@ -37,24 +38,25 @@ class Service_graphical_dashboard extends crm_controller
 	}
 
 	public function index()
-	{	
+	{
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
 		
 		$data  				  = array();
-		$data['fiscal_year_status'] = 'current';
+		$data['fiscal_year_status'] = $data['fy_year'][0]['financial_yr'];
 		$data['page_heading'] = "IT Service Graphical Dashboard";
+		$data['fy_year']  = $this->dashboard_model->get_records($tbl='financial_year', $wh_condn=array(), $order=array('id'=>'desc'));
 		if ($this->input->server('REQUEST_METHOD') === 'POST')
         {
-			$post_data = real_escape_array($this->input->post());
-			$data['fiscal_year_status'] = $post_data['fiscal_year_status'];
+			$post_data = real_escape_array($this->input->post());//echo'<pre>test';print_r($post_data);exit;
+			$data['fiscal_year_status'] = $post_data['fy_name'];
 		}
 		$res 				  = array();
 		$res['result']		  = false;
 		
-		if($data['fiscal_year_status']=='current') {
-			$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		if($data['fiscal_year_status']==$data['fy_year'][0]['financial_yr']) {//echo'current';
+			$curFiscalYear = $data['fiscal_year_status'];
 			$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 			
 			$lastMonthArrCalcNoForEndmonth = array('04', '05');
@@ -67,19 +69,31 @@ class Service_graphical_dashboard extends crm_controller
 			
 			$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
 			// echo $last_yr_end_date   = date('Y-m-t', strtotime($end_date.' +11 months')); upto Last date of last financial year
+			
 			if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
 				$last_yr_end_date = date('Y-m-t');
 			} else {
 				$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year')); //upto current month of last financial year
 			}
-		} else if($data['fiscal_year_status']=='last') {
-			$curFiscalYear = getLastFiscalYear();
+			
+		} else if($data['fiscal_year_status']==$data['fy_year'][1]['financial_yr']) {//echo'last';
+			$curFiscalYear = $data['fiscal_year_status'];
 			$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 			$end_date 	   = $curFiscalYear.'-03-31';
 			
 			$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year')); 
 			$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year'));
 			$this->upto_month   = date('M', strtotime($end_date));
+			
+		} else if($data['fiscal_year_status']==$data['fy_year'][2]['financial_yr']){//echo'last before';
+			$curFiscalYear = $data['fiscal_year_status'];
+			$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
+			$end_date 	   = $curFiscalYear.'-03-31';
+			
+			$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year')); 
+			$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year'));
+			$this->upto_month   = date('M', strtotime($end_date));
+			
 		}
 
 		$uc_filter_by   = 'cost'; //default_value
@@ -89,14 +103,14 @@ class Service_graphical_dashboard extends crm_controller
 		$data['end_date']   	= $end_date;
 		$data['uc_filter_by'] 	= $uc_filter_by;
 		$data['inv_filter_by'] 	= $inv_filter_by;
-
+		$data['fy_name']     	= $curFiscalYear;
 		//practice
 		$data['practice_arr'] = $this->service_graphical_dashboard_model->get_practices();
 		// $data['practice_arr']['practice_array']; //normal practice array
 		// $data['practice_arr']['practice_arr']; //key value practice array
 		
 		//get utilization cost values from service graphical dashboard table
-		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'cost', $data['fiscal_year_status']);
+		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'cost', $data['fiscal_year_status'],$data['fy_year']);
 		// echo "<pre>"; print_r($data['uc_graph_val']); exit;
 		
 		//get current fiscal ytd invoice records
@@ -167,9 +181,9 @@ class Service_graphical_dashboard extends crm_controller
 		}
 		// echo $sel_values; exit;
 		$data['contri_graph_val'] = $this->service_graphical_dashboard_model->getContributionRecords($sel_values, $data['fiscal_year_status']);
-		// echo "<pre>"; print_r($data['contri_graph_val']); exit;
+		// echo "<pre>hi"; print_r($data['fiscal_year_status']); exit;
 		
-		$data['contri_tot_val'] = $this->service_graphical_dashboard_model->getTotalContributionRecord($data['fiscal_year_status']);
+		$data['contri_tot_val'] = $this->service_graphical_dashboard_model->getTotalContributionRecord($data['fiscal_year_status'],$data['fy_year']);
 		// echo "<pre>"; print_r($data); exit;
 		$this->load->view('projects/service_graphical_dashboard_view', $data);
 	}

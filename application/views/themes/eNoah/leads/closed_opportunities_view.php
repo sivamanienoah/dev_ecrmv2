@@ -128,7 +128,7 @@ button.ui-datepicker-current { display: none; }
 										</select>
 									</td>
 									<td>
-										<select multiple="multiple" id="industry" name="industry[]" >
+										<select multiple="multiple" id="industry" name="industry[]" style="width:140px" >
 											<?php
 												if(isset($industry) && count($industry)>0){
 													foreach($industry as $ind){ ?>
@@ -165,7 +165,7 @@ button.ui-datepicker-current { display: none; }
 										</select> 
 									</td>
 									<td>
-										<select style="width:210px" multiple="multiple" id="regionname" name="regionname[]">
+										<select style="width:180px" multiple="multiple" id="regionname" name="regionname[]">
 											<?php foreach ($regions as $reg) {
 													if(!empty($reg['region_name'])) { ?>
 														<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>

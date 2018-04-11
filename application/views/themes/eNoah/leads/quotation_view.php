@@ -168,7 +168,7 @@ require (theme_url().'/tpl/header.php');
 								</tr>
 								<tr>
 									<td>
-										<select multiple="multiple" id="industry" name="industry[]" >
+										<select multiple="multiple" id="industry" name="industry[]" style="width:140px;" >
 											<?php
 												if(isset($industry) && count($industry)>0){
 													foreach($industry as $ind){ ?>

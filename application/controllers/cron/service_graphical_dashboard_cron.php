@@ -536,6 +536,56 @@ class Service_graphical_dashboard_cron extends crm_controller
 			
 			$ended_at = date("Y-m-d H:i:s");
 			
+			/* insert or update data in services_graphical_dashboard_last_fiscal_year table from services_graphical_dashboard table */
+			$this->db->select('sgd.*');
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard as sgd');
+			$sgd_res = $this->db->get();
+			$res_data = $sgd_res->result();	
+			
+			if(!empty($res_data) && count($res_data)>0) {
+				foreach($res_data as $each_res){
+					$this->db->select('sgdlast.*');
+					$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year as sgdlast');
+					$this->db->where('sgdlast.practice_name', $each_res->practice_name);
+					$this->db->where('sgdlast.fiscal_year', $curFiscalYear);
+					$sgdlast_res = $this->db->get();
+					$sgdlast_data = $sgdlast_res->result();
+					
+					$inser_data = array();
+					
+					
+					$inser_data['ytd_billable'] = $each_res->ytd_billable;
+					$inser_data['ytd_billable_utilization_cost'] = $each_res->ytd_billable_utilization_cost;
+					$inser_data['contri_Apr'] = $each_res->contri_Apr;
+					$inser_data['contri_May'] = $each_res->contri_May;
+					$inser_data['contri_Jun'] = $each_res->contri_Jun;
+					$inser_data['contri_Jul'] = $each_res->contri_Jul;
+					$inser_data['contri_Aug'] = $each_res->contri_Aug;
+					$inser_data['contri_Sep'] = $each_res->contri_Sep;
+					$inser_data['contri_Oct'] = $each_res->contri_Oct;
+					$inser_data['contri_Nov'] = $each_res->contri_Nov;
+					$inser_data['contri_Dec'] = $each_res->contri_Dec;
+					$inser_data['contri_Jan'] = $each_res->contri_Jan;
+					$inser_data['contri_Feb'] = $each_res->contri_Feb;
+					$inser_data['contri_Mar'] = $each_res->contri_Mar;
+					$inser_data['tot_contri'] = $each_res->tot_contri;
+					
+					if(empty($sgdlast_data)){
+						
+						$inser_data['practice_name'] = $each_res->practice_name;
+						$inser_data['fiscal_year'] = $curFiscalYear;
+						
+						$ins_res = $this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inser_data);
+					} else if(!empty($sgdlast_data) && count($sgdlast_data)>0){
+						
+						$this->db->where('practice_name',$sgdlast_data->practice_name);
+						$this->db->where('fiscal_year',$curFiscalYear);
+						$upd_res = $this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inser_data);
+					}
+				}
+			}
+			/* insert or update ends */
+			
 			if($ins_result) {
 				$upload_status = "Updated Successfully";
 				$this->load->model('email_template_model');

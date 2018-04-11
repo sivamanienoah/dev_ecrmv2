@@ -35,21 +35,18 @@ class Service_graphical_dashboard_model extends crm_model {
 	*/
 	public function getUcRecords($uc_filter_by, $fiscal_year_status)
 	{
+		// echo'<pre>';print_r($fiscal_year_status);
 		if($uc_filter_by == 'hour') {
 			$this->db->select('practice_name, ytd_billable');
 		} else if ($uc_filter_by == 'cost') {
 			$this->db->select('practice_name, ytd_billable_utilization_cost as ytd_billable');
 		}
-		
-		if($fiscal_year_status == 'current') {
-			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
-		} else if($fiscal_year_status == 'last') {
-			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
-		} else {
-			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
-		}
-		
+		// $where = ("fiscal_year", $fiscal_year_status);
+		$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
+		$this->db->where('fiscal_year', $fiscal_year_status);
 		$sql = $this->db->get();
+		// echo'<pre>';print_r($sql->result_array());exit;
+		// print_r($this->db->last_query());exit;
 		$uc_graph_res = $sql->result_array();
 		
 		$uc_graph_val = array();
@@ -205,12 +202,13 @@ class Service_graphical_dashboard_model extends crm_model {
 	/*
 	*getTotalContributionRecord
 	*/
-	public function getTotalContributionRecord($fiscal_year_status)
-	{
+	public function getTotalContributionRecord($fiscal_year_status,$fy_year)
+	{//echo'<pre>';print_r($fiscal_year_status);
+	//echo'<pre>';print_r($fy_year);exit;
     	$this->db->select('tot_contri');
-		if($fiscal_year_status == 'current') {
+		if($fiscal_year_status == $fy_year[0]['financial_yr']) {
 			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
-		} else if($fiscal_year_status == 'last') {
+		} else if($fiscal_year_status == $fy_year[1]['financial_yr']) {
 			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
 		} else {
 			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
