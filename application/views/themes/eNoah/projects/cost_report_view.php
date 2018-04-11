@@ -211,6 +211,27 @@ $(function() {
 	$('#entity_ids').change(function(){
 		$("#filter_area_status").val('1');
 	});
+	
+	$('#btnExport').on('click',function(e) {
+		e.preventDefault();
+		var url 	= site_base_url+"projects/dashboard/cost_report_export";
+		
+		var form = $('<form action="' + url + '" method="post">' +
+		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
+		'<input type="hidden" name="month_year_from_date" id="hidden_month_year_from_date" value="'+$('#month_year_from_date').val()+ '" />' +
+		'<input type="hidden" name="month_year_to_date" id="hidden_month_year_to_date" value="'+$('#month_year_to_date').val()+ '" />' +
+		'<input type="hidden" name="exclude_leave" id="hidden_exclude_leave" value="'+$('#exclude_leave').val()+'" />' +
+		'<input type="hidden" name="exclude_holiday" id="hidden_exclude_holiday" value="' +$('#exclude_holiday').val()+ '" />' +
+		'<input type="hidden" name="entity_ids" id="hidden_entity_ids" value="' +$('#entity_ids').val()+ '" />' +
+		'<input type="hidden" name="department_ids" id="hidden_department_ids" value="' +$('#department_ids').val()+ '" />' +
+		'<input type="hidden" name="practice_ids" id="hidden_practice_ids" value="' +$('#practice_ids').val()+ '" />' +
+		'<input type="hidden" name="skill_ids" id="hidden_skill_ids" value="' +$('#skill_ids').val()+ '" />' +
+		'<input type="hidden" name="member_ids" id="hidden_member_ids" value="' +$('#member_ids').val()+ '" />' +
+		'</form>');
+		$('body').append(form);
+		$(form).submit();
+		return false;
+	});
 });	
 $(document).ready(function(){
 	
