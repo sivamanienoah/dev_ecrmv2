@@ -772,6 +772,7 @@ class Project_pl_report extends crm_controller
 				$rag_data[$ocrow['pjt_id']] 	 = $ocrow['rag_status'];
 				$customer_data[$ocrow['pjt_id']] = $ocrow['company'].' - '.$ocrow['customer_name'];
 				$entity_data[$ocrow['pjt_id']]   = $ocrow['division_name'];
+				$lead_id_data[$ocrow['pjt_id']]  = $ocrow['lead_id'];
 			}
 		}
 		
@@ -779,6 +780,7 @@ class Project_pl_report extends crm_controller
 		$data['rag_data'] 	   = $rag_data;
 		$data['customer_data'] = $customer_data;
 		$data['entity_data']   = $entity_data;
+		$data['lead_id_data']  = $lead_id_data;
 		// echo '<pre>'; print_r($data['rag_data']); die;
 		
 		$this->load->view('projects/project-utiliz-rpt/utilization-cost-drill-data', $data);
