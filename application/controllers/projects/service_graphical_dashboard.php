@@ -54,6 +54,13 @@ class Service_graphical_dashboard extends crm_controller
 			$base_mon = strtotime(date('Y-m',time()) . '-01 00:00:01');
 			$end_date = date('Y-m-t', strtotime('-1 month', $base_mon)); // changed upto last month only
 		}
+		$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
+		// echo $last_yr_end_date   = date('Y-m-t', strtotime($end_date.' +11 months')); upto Last date of last financial year
+		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
+			$last_yr_end_date = date('Y-m-t');
+		} else {
+			$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year')); //upto current month of last financial year
+		}
 		
 		$data['fiscal_year_status'] = $curFiscalYear;
 		$data['fy_year']  = $this->service_graphical_dashboard_model->get_records($tbl='financial_year', $wh_condn=array(), $order=array('id'=>'desc'));
@@ -64,6 +71,11 @@ class Service_graphical_dashboard extends crm_controller
 			$post_data = real_escape_array($this->input->post());
 			echo '<pre>'; print_r($post_data); die;
 			$data['fiscal_year_status'] = $post_data['fy_name'];
+			$start_date    = ($data['fiscal_year_status']-1)."-04-01";  //eg.2013-04-01
+			$end_date 	   = $data['fiscal_year_status'].'-03-31';
+			
+			$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
+			$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year'));
 		}
 		$res 				  = array();
 		$res['result']		  = false;
