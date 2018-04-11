@@ -8,6 +8,8 @@
 </style>
 <div class="clear"></div>
 <?php
+set_time_limit(0);
+ini_set('display_errors', 1);
 $tbl_data = array();
 $sub_tot  = array();
 $sub_tot_hr    = array();
@@ -256,16 +258,16 @@ $overall_hour = $overall_cost = 0;
 		}
 	}
 	echo "<tfoot id='exp_hide'><tr>
-			<td align='right' class='rt-ali'>".round($overall_hour, 1)."</td>
-			<td align='right' class='rt-ali'>".round($overall_cost, 2)."</td>
+			<td align='right' class='rt-ali'></td>
+			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'></td>
 			<td align='right' class='rt-ali'><b>Total:</b></td>
-			<td width='5%' align='right' id='tfoot_hour' class='rt-ali'>".round($tot_hour, 1)."</td>
-			<td width='5%' align='right' id='tfoot_cost' class='rt-ali'>".round($tot_cost, 2)."</td>
+			<td width='5%' align='right' id='tfoot_hour' class='rt-ali'>".round($overall_hour, 1)."</td>
+			<td width='5%' align='right' id='tfoot_cost' class='rt-ali'>".round($overall_cost, 2)."</td>
 		</tr></tfoot>";		
 	echo "</tbody></table>";
 ?>
