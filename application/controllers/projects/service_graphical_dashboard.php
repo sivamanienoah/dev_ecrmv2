@@ -62,6 +62,7 @@ class Service_graphical_dashboard extends crm_controller
 		if ($this->input->server('REQUEST_METHOD') === 'POST')
         {
 			$post_data = real_escape_array($this->input->post());
+			echo '<pre>'; print_r($post_data); die;
 			$data['fiscal_year_status'] = $post_data['fy_name'];
 		}
 		$res 				  = array();
