@@ -64,7 +64,7 @@ class Service_graphical_dashboard extends crm_controller
 		
 		$data['fiscal_year_status'] = $curFiscalYear;
 		$data['fy_year']  = $this->service_graphical_dashboard_model->get_records($tbl='financial_year', $wh_condn=array(), $order=array('id'=>'desc'));
-		
+
 		$data['page_heading'] = "IT Service Graphical Dashboard";
 		if ($this->input->server('REQUEST_METHOD') === 'POST')
         {
@@ -76,6 +76,7 @@ class Service_graphical_dashboard extends crm_controller
 			
 			$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
 			$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year'));
+			$this->upto_month   = date('M', strtotime($end_date));
 		}
 		$res 				  = array();
 		$res['result']		  = false;
@@ -197,7 +198,7 @@ class Service_graphical_dashboard extends crm_controller
 		// echo "<pre>"; print_r($data['contri_graph_val']); exit;
 		
 		$data['contri_tot_val'] = $this->service_graphical_dashboard_model->getTotalContributionRecord($data['fiscal_year_status']);
-		echo "<pre>"; print_r($data); exit;
+		// echo "<pre>"; print_r($data); exit;
 		$this->load->view('projects/service_graphical_dashboard_view', $data);
 	}
 
