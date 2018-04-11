@@ -3638,7 +3638,7 @@ class Dashboard extends crm_controller
 			$end_date = $this->input->post("month_year_to_date");
 			$end_date = date("Y-m-t",strtotime($end_date));	
 		}
-		
+		echo $end_date; die;
 		$resource_type  = $this->input->post("resource_type");
 		$department_ids = $this->input->post("department_ids");
 		$practice_ids   = $this->input->post("practice_ids");
