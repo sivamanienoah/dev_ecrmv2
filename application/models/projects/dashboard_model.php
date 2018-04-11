@@ -92,7 +92,7 @@ class Dashboard_model extends crm_model
 			$this->db->where_in('l.practice', $practice_ids);
 		}
 		$query 	= $this->db->get();
-		echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
 		$data	= $query->result_array();
 		
 		$departments 	= $this->get_departments();
