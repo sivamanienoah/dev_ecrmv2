@@ -3638,7 +3638,7 @@ class Dashboard extends crm_controller
 			$end_date = $this->input->post("month_year_to_date");
 			$end_date = date("Y-m-t",strtotime($end_date));	
 		}
-		echo $end_date; die;
+		
 		$resource_type  = $this->input->post("resource_type");
 		$department_ids = $this->input->post("department_ids");
 		$practice_ids   = $this->input->post("practice_ids");
@@ -3711,6 +3711,8 @@ class Dashboard extends crm_controller
 		$data['dept_type']     		= $dept_type;
 		$data['resource_type'] 		= $resource_type;
 		$conversion_rates 	= $this->get_currency_rates();
+		
+		echo '<pre>'; print_r($resdata); die;
 		
 		// get all projects from timesheet
 		$timesheet_db = $this->load->database("timesheet", true);
@@ -3811,7 +3813,7 @@ class Dashboard extends crm_controller
 		$sub_tot_entity_dircst 	= array();
 		$tot_hour = 0;
 		$tot_cost = 0;
-		// echo '<pre>'; print_r($resdata); die;
+		echo '<pre>'; print_r($resdata); die;
 		if(!empty($resdata)) {
 			foreach($resdata as $rec) {
 				$rates 				= $conversion_rates;
