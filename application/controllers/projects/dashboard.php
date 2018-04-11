@@ -247,8 +247,8 @@ class Dashboard extends crm_controller
 				
 		$start_date = date("Y-m-1");
 		$end_date   = date("Y-m-d");
-		$start_date = date("Y-m-d", strtotime('01-04-2017'));
-		$end_date   = date("Y-m-d", strtotime('30-04-2017'));
+		// $start_date = date("Y-m-d", strtotime('01-04-2017'));
+		// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
 		
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
@@ -3596,7 +3596,7 @@ class Dashboard extends crm_controller
 			$mem_qry = $this->db->get();
 			$data['member_ids_selected'] = $mem_qry->result();
 		}
-		
+
 		//get other costs
 		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
 
@@ -3607,10 +3607,358 @@ class Dashboard extends crm_controller
 		$data['start_date'] 	  = $start_date;
 		$data['end_date']   	  = $end_date;
 		$data['results']    	  = $arr_depts;
-		
-		
+
 		// echo "<pre>"; print_r($data); die;
 		$this->load->view("projects/cost_report_view", $data);
+	}
+	
+	public function cost_report_export()
+	{
+		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
+			redirect('project');
+		}
+		$data  				  = array();
+		$dept   			  = array();
+		$data['page_heading'] = "IT Cost Report";
+		$data['filter_area_status'] = $this->input->post("filter_area_status");
+		
+		$start_date = date("Y-m-1");
+		$end_date   = date("Y-m-d");
+		// $start_date = date("Y-m-d", strtotime('01-04-2017'));
+		// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
+		
+		if($this->input->post("month_year_from_date")) {
+			$start_date = $this->input->post("month_year_from_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+			if($this->input->post("month_year_to_date")== "") {
+				$end_date   = date("Y-m-t",strtotime($start_date));
+			}
+		}
+		if($this->input->post("month_year_to_date")) {
+			$end_date = $this->input->post("month_year_to_date");
+			$end_date = date("Y-m-t",strtotime($end_date));	
+		}
+		
+		$resource_type  = $this->input->post("resource_type");
+		$department_ids = $this->input->post("department_ids");
+		$practice_ids   = $this->input->post("practice_ids");
+		$dept_type      = $this->input->post("dept_type");
+		$skill_ids 		= $this->input->post("skill_ids");
+		$member_ids		= $this->input->post("member_ids");
+		$entity_ids 	= $this->input->post("entity_ids");
+		
+		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, p.id as practice_id, p.practices as practice_name');
+		// t.practice_id, t.practice_name
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
+		$this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice', 'LEFT');
+		$this->db->where("t.resoursetype !=", '');
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."')", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
+		}
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")!=1) {
+			$this->db->where_not_in("t.project_code", array('Leave'));
+			$data['exclude_leave'] = 1;
+			$data['filter_area_status'] = 1;
+		}
+		if(($this->input->post("exclude_holiday")==1) && $this->input->post("exclude_leave")!=1) {
+			$this->db->where_not_in("t.project_code", array('HOL'));
+			$data['exclude_holiday'] = 1;
+			$data['filter_area_status'] = 1;
+		}
+		if(($this->input->post("exclude_leave")==1) && $this->input->post("exclude_holiday")==1) {
+			$this->db->where_not_in("t.project_code", array('HOL','Leave'));
+			$data['exclude_leave']   = 1;
+			$data['exclude_holiday'] = 1;
+		}
+		if(!empty($entity_ids) && count($entity_ids)>0) {
+			$data['entity_ids'] = $entity_ids;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('t.entity_id', $entity_ids);
+		}
+		if(!empty($practice_ids) && count($practice_ids)>0) {
+			$data['sel_practice_ids'] = $practice_ids;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('l.practice', $practice_ids);
+		}
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$data['department_ids'] = $department_ids;
+			$data['filter_area_status'] = 1;
+			$dids = implode(",",$department_ids);
+			if(!empty($dids)) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}
+		} else {
+			$deptwhere = "t.dept_id IN ('10','11')";
+			$this->db->where($deptwhere);
+		}
+		if(count($skill_ids)>0 && !empty($skill_ids)) {
+			$data['skill_ids'] = $skill_ids;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('t.skill_id', $skill_ids);
+		}
+		if(count($member_ids)>0 && !empty($member_ids)) {
+			$data['member_ids'] = $member_ids;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('t.username', $member_ids);
+		}
+		$this->db->where('l.practice is not null');
+		$query 						= $this->db->get();		
+		// echo $this->db->last_query(); exit;
+		$resdata 	   		= $query->result();
+		$data['heading'] 	   		= $heading;
+		$data['dept_type']     		= $dept_type;
+		$data['resource_type'] 		= $resource_type;
+		$data['conversion_rates'] 	= $this->get_currency_rates();
+		
+		// get all projects from timesheet
+		$timesheet_db = $this->load->database("timesheet", true);
+		$proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
+		if($proj_mas_qry->num_rows()>0){
+			$project_res = $proj_mas_qry->result();
+		}
+		$project_master = array();
+		if(!empty($project_res)){
+			foreach($project_res as $prec)
+			$project_master[$prec->project_code] = $prec->title;
+		}
+		$data['project_master']  = $project_master;
+		
+		/* $this->db->select('department_id, department_name');
+		$this->db->where_in('department_id', array('10','11'));
+		$dept = $this->db->get($timesheet_db->dbprefix . 'department');
+		$data['departments'] = $dept->result(); */
+		
+		$depts_res = array();
+		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
+		if($dept->num_rows()>0){
+			$depts_res = $dept->result();
+		}
+		$data['departments'] = $depts_res;
+		
+		$timesheet_db->close();
+		
+		if(!empty($data['departments']) && count($data['departments'])>0) {
+			$this->db->select('t.skill_id, t.skill_name as name');
+			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+			$this->db->where("t.practice_id !=", 0);
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			if(!empty($department_ids) && count($department_ids)>0) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}
+			if(!empty($practice_ids) && count($practice_ids)>0) {
+				$this->db->where_in('t.practice_id', $practice_ids);
+			}
+			$this->db->group_by('t.skill_id');
+			$this->db->order_by('t.skill_name');
+			$skquery = $this->db->get();
+			$data['skill_ids_selected'] = $skquery->result();
+		}
+		
+		if(!empty($data['member_ids']) && count($data['member_ids'])>0) {
+			$this->db->select("t.empname as emp_name, t.username");
+			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+			$this->db->where("t.practice_id !=", 0);
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			if(!empty($department_ids) && count($department_ids)>0) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}				
+			if(!empty($practice_ids) && count($practice_ids)>0) {
+				$this->db->where_in('t.practice_id', $practice_ids);
+			}
+			/* if(!empty($data['member_ids'])) {
+				$this->db->where_in("t.skill_id", $data['member_ids']);
+			} */
+			$this->db->group_by('t.empname');
+			$mem_qry = $this->db->get();
+			$data['member_ids_selected'] = $mem_qry->result();
+		}
+		
+		//get other costs
+		$other_cost_arr   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
+
+		//for practices		
+		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date);
+		$data['entitys'] 	  	  = $this->dashboard_model->get_entities();
+
+		$data['start_date'] 	  = $start_date;
+		$data['end_date']   	  = $end_date;
+		$data['results']    	  = $arr_depts;
+		
+		$tbl_data = array();
+		$sub_tot  = array();
+		$sub_tot_hr    = array();
+		$sub_tot_cst   = array();
+		$pr_usercnt    = array();
+		$sk_usercnt    = array();
+		$skil_sub_tot  = array();
+		$skil_sort_hr  = array();
+		$skil_sort_cst = array();
+		$user_hr 	   = array();
+		$user_cst 	   = array();
+		$cost_arr 	   = array();
+		$prac = array();
+		$dept = array();
+		$skil = array();
+		$proj = array();
+		$user_data 		= array();
+		$timesheet_data = array();
+		$sub_tot_entity_hr 		= array();
+		$sub_tot_entity_cst 	= array();
+		$sub_tot_entity_dircst 	= array();
+		$tot_hour = 0;
+		$tot_cost = 0;
+		// echo '<pre>'; print_r($resdata); die;
+		if(!empty($resdata)) {
+			foreach($resdata as $rec) {
+				$rates 				= $conversion_rates;
+				$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
+				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id,$financialYear);
+				
+				$user_data[$rec->username]['emp_name'] 		= $rec->empname;
+				$user_data[$rec->username]['max_hours'] 	= $max_hours_resource->practice_max_hours;
+				$user_data[$rec->username]['dept_name'] 	= $rec->dept_name;
+				$user_data[$rec->username]['prac_id'] 		= $rec->practice_id; 
+				
+				$rateCostPerHr 			= round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
+				$directrateCostPerHr 	= round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
+				
+				if(isset($timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'])) {
+					$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] += $rec->duration_hours;
+				} else {
+					$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'] = $rec->duration_hours;
+				}
+				
+				$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
+				$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->resoursetype][$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr']        = $rateCostPerHr;
+				
+				$timesheet_data[$rec->entity_name][$rec->dept_name][$rec->practice_name][$rec->skill_name][$rec->username][$rec->yr][$rec->month_name]['total_hours'] = get_timesheet_hours_by_user($rec->username, $rec->yr, $rec->month_name, array('Leave','Hol'));
+			}
+			
+			// echo "<pre>"; print_r($timesheet_data); echo "</pre>"; die;
+			
+			if(!empty($timesheet_data) && count($timesheet_data)>0) {
+				foreach($timesheet_data as $entity_key=>$entity_arr) {
+					if(!empty($entity_arr) && count($entity_arr)>0) {
+						foreach($entity_arr as $dept_key=>$prac_arr) {
+							if(!empty($prac_arr) && count($prac_arr)>0) {
+								foreach($prac_arr as $prac_key=>$skill_arr) { 
+								#echo "dept key " .$dept_key . " practice ".$prac_key; print_r($skill_arr); echo "</pre>"; die;
+									if(!empty($skill_arr) && count($skill_arr)>0) {
+										foreach($skill_arr as $skill_key=>$resrc_type_arr) {
+											if(!empty($resrc_type_arr) && count($resrc_type_arr)>0) {
+												foreach($resrc_type_arr as $resrc_type_key=>$resrc_data) {
+													if(!empty($resrc_data) && count($resrc_data)>0) {
+														foreach($resrc_data as $resrc_name=>$recval_data) {
+															$resource_name 	= $resrc_name;
+															$emp_name 		= $user_data[$resrc_name]['emp_name'];
+															$max_hours 		= $user_data[$resrc_name]['max_hours'];
+															$dept_name 		= $user_data[$resrc_name]['dept_name'];
+															$prac_id 		= $user_data[$resrc_name]['prac_id']; 
+															if(count($recval_data)>0 && !empty($recval_data)) { 
+																foreach($recval_data as $key2=>$value2) {
+																	$year = $key2;
+																	if(count($value2)>0 && !empty($value2)) {
+																		// echo '<pre>'; print_r($value2); die;
+																		foreach($value2 as $key3=>$value3) {
+																			$individual_billable_hrs = 0;
+																			$ts_month		 	  	 = $key3;
+																			$individual_billable_hrs = $resrc_type_arr[$resrc_name][$year][$ts_month]['total_hours'];
+																			if(is_array($value3) && count($value3)>0 && !empty($value3)) {
+																				foreach($value3 as $pjt_code=>$value4) {
+																					$duration_hours			 = $value4['duration_hours'];
+																					$rate				 	 = $value4['rateperhr'];
+																					$direct_rateperhr	 	 = $value4['direct_rateperhr'];
+																					$rate1 					 = $rate;
+																					$direct_rateperhr1 		 = $direct_rateperhr;
+																					if($individual_billable_hrs>$max_hours) {
+																						$percentage 		= ($max_hours/$individual_billable_hrs);
+																						$rate1 				= number_format(($percentage*$direct_rateperhr),2);
+																						$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+																					}
+																					if($prac_id == 0) {
+																						$direct_rateperhr1  = $direct_rateperhr;
+																					}
+																					/*calc*/
+																					$rateHour = $duration_hours * $direct_rateperhr1;
+																					
+																					//hour;
+																					if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour'])) {
+																						$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour'] += $duration_hours;
+																					} else {
+																						$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['hour']  = $duration_hours;
+																					}
+																					//cost
+																					if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['cost'])) {
+																						$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][$pjt_code][$emp_name]['cost'] += $rateHour;
+																					} else {
+																						$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['cost'] = $rateHour;
+																					}
+																					//direct_cost
+																					if(isset($tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['directcost'])) {
+																						$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['directcost'] += $rateHour;
+																					} else {
+																						$tbl_data[$entity_key][$dept_key][$prac_key][$skill_key][$resrc_type_key][substr($ts_month,0,3).' '.$year][$pjt_code][$emp_name]['directcost'] = $rateHour;
+																					}
+																					
+																					//total
+																					$tot_hour 		= $tot_hour + $duration_hours;
+																					$tot_cost 		= $tot_cost + $rateHour;
+																					$tot_directcost = $tot_directcost + $rateHour;
+																					
+																					//cost
+																					$cost_arr[$emp_name] 		= $rateHour;
+																					$directcost_arr[$emp_name] 	= $rateHour;
+																				}
+																				
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//other cost
+		if(!empty($other_cost_arr)) {
+			foreach($other_cost_arr as $oc_pjt_code=>$oc_pjtArr) {
+				if(!empty($oc_pjtArr) && count($oc_pjtArr)>0) {
+					foreach($oc_pjtArr as $ocYrKey=>$ocYrArr) {
+						if(!empty($ocYrArr) && count($ocYrArr)>O) {
+							foreach($ocYrArr as $ocMonthKey=>$ocArrDet) {
+								if(!empty($ocArrDet) && count($ocArrDet)>O) {
+									foreach($ocArrDet as $no=>$ocArrRow) {
+										$oc_entity_key 	= $ocArrRow['oc_entity'];
+										$oc_dept_key 	= $ocArrRow['oc_dept'];
+										$oc_prac_key 	= $ocArrRow['oc_practice'];
+										$oc_mon_yr 		= substr($ocMonthKey,0,3).' '.$ocYrKey;
+										$oc_other_cost_resrc_type = 'Other Cost';
+										$tbl_data[$oc_entity_key][$oc_dept_key][$oc_prac_key]['oc_skill'][$oc_other_cost_resrc_type][$oc_mon_yr][$oc_pjt_code][$ocArrRow['oc_descrptn']]['cost'] = $ocArrRow['oc_val'];
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		echo "<pre>"; print_r($tbl_data); die;
+		// $this->load->view("projects/cost_report_view", $data);
 	}
 	
 	
