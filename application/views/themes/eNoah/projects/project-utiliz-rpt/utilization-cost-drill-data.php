@@ -52,7 +52,7 @@ $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
 $tot_directcost = 0;
-// echo '<pre>'; print_r($invoices_data); echo '</pre>';
+echo '<pre>'; print_r($resdata); echo '</pre>';
 $invoiceArr = array();
 $invoices = (isset($invoices_data) && !empty($invoices_data) && count($invoices_data)>0) ? $invoices_data['invoices'] : array();
 if(!empty($invoices) && count($invoices)>0) {
