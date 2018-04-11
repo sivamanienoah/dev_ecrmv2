@@ -3627,7 +3627,7 @@ class Dashboard extends crm_controller
 		// $start_date = date("Y-m-d", strtotime('01-04-2017'));
 		// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
 		
-		echo '<pre>'; print_r($this->input->post()); die;
+		// echo '<pre>'; print_r($this->input->post()); die;
 		
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
@@ -3786,8 +3786,11 @@ class Dashboard extends crm_controller
 		
 		//get other costs
 		if($entity_ids == 'null') {
+			echo 'asdf';
 			$entity_ids = array();
-		}
+		} else {
+			echo '123';
+		}die;
 		$other_cost_arr   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
 		// echo '<pre>123'; print_r($other_cost_arr); die;
 
