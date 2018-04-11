@@ -1176,10 +1176,13 @@ class Project_pl_report extends crm_controller
 			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
 			$this->db->where("t.start_time <= ", date('Y-m-t', strtotime($end_date)));
 		}
+		//exclude internal projects
+		$client_not_in_arr = array('ENO','NOA');
+		$this->db->where_not_in("t.client_code", $client_not_in_arr);
 		$excludewhere = "t.project_code NOT IN ('HOL','Leave')";
 		$this->db->where($excludewhere);
-		$resrc = 't.resoursetype IS NOT NULL';
-		$deptwhere = "t.dept_id IN ('10','11')";
+		$resrc 		= 't.resoursetype IS NOT NULL';
+		$deptwhere 	= "t.dept_id IN ('10','11')";
 		$this->db->where($deptwhere);
 		$this->db->where($resrc);
 		if($practice == 10) { //Infra services & tecting practice values are merged with others practices
