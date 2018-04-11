@@ -46,7 +46,7 @@ class Service_graphical_dashboard_model extends crm_model {
 		$this->db->where('fiscal_year', $fiscal_year_status);
 		$sql = $this->db->get();
 		// echo'<pre>';print_r($sql->result_array());exit;
-		// print_r($this->db->last_query());exit;
+		print_r($this->db->last_query());exit;
 		$uc_graph_res = $sql->result_array();
 		
 		$uc_graph_val = array();
