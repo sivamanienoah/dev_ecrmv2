@@ -3673,46 +3673,56 @@ class Dashboard extends crm_controller
 			$data['exclude_holiday'] = 1;
 		}
 		if(!empty($entity_ids) && count($entity_ids)>0) {
-			$data['entity_ids'] = $entity_ids;
-			$data['filter_area_status'] = 1;
-			$this->db->where_in('t.entity_id', $entity_ids);
+			if($entity_ids != 'null') {
+				$data['entity_ids'] = $entity_ids;
+				$data['filter_area_status'] = 1;
+				$this->db->where_in('t.entity_id', $entity_ids);
+			}
 		}
 		if(!empty($practice_ids) && count($practice_ids)>0) {
-			$data['sel_practice_ids'] = $practice_ids;
-			$data['filter_area_status'] = 1;
-			$this->db->where_in('l.practice', $practice_ids);
+			if($practice_ids != 'null') {
+				$data['sel_practice_ids'] = $practice_ids;
+				$data['filter_area_status'] = 1;
+				$this->db->where_in('l.practice', $practice_ids);
+			}
 		}
 		if(count($department_ids)>0 && !empty($department_ids)) {
-			$data['department_ids'] = $department_ids;
-			$data['filter_area_status'] = 1;
-			$dids = implode(",",$department_ids);
-			if(!empty($dids)) {
-				$this->db->where_in("t.dept_id", $department_ids);
+			if($department_ids != 'null') {
+				$data['department_ids'] = $department_ids;
+				$data['filter_area_status'] = 1;
+				$dids = implode(",",$department_ids);
+				if(!empty($dids)) {
+					$this->db->where_in("t.dept_id", $department_ids);
+				}
 			}
 		} else {
 			$deptwhere = "t.dept_id IN ('10','11')";
 			$this->db->where($deptwhere);
 		}
 		if(count($skill_ids)>0 && !empty($skill_ids)) {
-			$data['skill_ids'] = $skill_ids;
-			$data['filter_area_status'] = 1;
-			$this->db->where_in('t.skill_id', $skill_ids);
+			if($skill_ids != 'null') {
+				$data['skill_ids'] = $skill_ids;
+				$data['filter_area_status'] = 1;
+				$this->db->where_in('t.skill_id', $skill_ids);
+			}
 		}
 		if(count($member_ids)>0 && !empty($member_ids)) {
-			$data['member_ids'] = $member_ids;
-			$data['filter_area_status'] = 1;
-			$this->db->where_in('t.username', $member_ids);
+			if($member_ids != 'null') {
+				$data['member_ids'] = $member_ids;
+				$data['filter_area_status'] = 1;
+				$this->db->where_in('t.username', $member_ids);
+			}
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$resdata  = $query->result();
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
 		$data['resource_type'] 		= $resource_type;
 		$conversion_rates 	= $this->get_currency_rates();
 		
-		echo '<pre>'; print_r($resdata); die;
+		// echo '<pre>'; print_r($resdata); die;
 		
 		// get all projects from timesheet
 		$timesheet_db = $this->load->database("timesheet", true);
@@ -3813,7 +3823,7 @@ class Dashboard extends crm_controller
 		$sub_tot_entity_dircst 	= array();
 		$tot_hour = 0;
 		$tot_cost = 0;
-		echo '<pre>'; print_r($resdata); die;
+		// echo '<pre>'; print_r($resdata); die;
 		if(!empty($resdata)) {
 			foreach($resdata as $rec) {
 				$rates 				= $conversion_rates;
