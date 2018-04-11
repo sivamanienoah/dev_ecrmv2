@@ -202,7 +202,7 @@ class Service_graphical_dashboard_model extends crm_model {
 	/*
 	*getTotalContributionRecord
 	*/
-	public function getTotalContributionRecord($fiscal_year_status,$fy_year)
+	/* public function getTotalContributionRecord($fiscal_year_status,$fy_year)
 	{//echo'<pre>';print_r($fiscal_year_status);
 	//echo'<pre>';print_r($fy_year);exit;
     	$this->db->select('tot_contri');
@@ -213,6 +213,18 @@ class Service_graphical_dashboard_model extends crm_model {
 		} else {
 			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
 		}
+		$this->db->where('practice_name', 'Total');
+		$sql = $this->db->get();
+		// echo $this->db->last_query(); exit;
+		$con_res = $sql->row_array();
+		return $con_res;
+    } */
+	
+	public function getTotalContributionRecord($fiscal_year_status)
+	{
+    	$this->db->select('tot_contri');
+		$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
+		$this->db->where('fiscal_year', $fiscal_year_status);
 		$this->db->where('practice_name', 'Total');
 		$sql = $this->db->get();
 		// echo $this->db->last_query(); exit;
