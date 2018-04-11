@@ -112,8 +112,8 @@ class Service_graphical_dashboard extends crm_controller
 		$uc_filter_by   = 'cost'; //default_value
 		$inv_filter_by  = 'inv_month'; //default_value
 
-		echo $data['start_date'] 	= $start_date;
-		echo $data['end_date']   	= $end_date; die;
+		$data['start_date'] 	= $start_date;
+		$data['end_date']   	= $end_date;
 		$data['uc_filter_by'] 	= $uc_filter_by;
 		$data['inv_filter_by'] 	= $inv_filter_by;
 
