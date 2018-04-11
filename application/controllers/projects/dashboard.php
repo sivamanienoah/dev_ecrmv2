@@ -3946,7 +3946,7 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
-		echo '<pre>'; print_r($other_cost_arr); die;
+		// echo '<pre>'; print_r($other_cost_arr); die;
 		//other cost
 		if(!empty($other_cost_arr)) {
 			foreach($other_cost_arr as $oc_pjt_code=>$oc_pjtArr) {
