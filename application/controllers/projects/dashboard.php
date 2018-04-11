@@ -3788,6 +3788,9 @@ class Dashboard extends crm_controller
 		if($entity_ids == 'null') {
 			$entity_ids = array();
 		}
+		if($practice_ids == 'null') {
+			$practice_ids = array();
+		}
 		$other_cost_arr   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
 		echo '<pre>123'.$this->db->last_query();; print_r($other_cost_arr); die;
 
