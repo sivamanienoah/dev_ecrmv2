@@ -3627,6 +3627,8 @@ class Dashboard extends crm_controller
 		// $start_date = date("Y-m-d", strtotime('01-04-2017'));
 		// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
 		
+		// echo '<pre>'; print_r($this->input->post()); die;
+		
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
 			$start_date = date("Y-m-01",strtotime($start_date));
@@ -3674,15 +3676,11 @@ class Dashboard extends crm_controller
 		}
 		if(!empty($entity_ids) && count($entity_ids)>0) {
 			if($entity_ids != 'null') {
-				$data['entity_ids'] = $entity_ids;
-				$data['filter_area_status'] = 1;
 				$this->db->where_in('t.entity_id', $entity_ids);
 			}
 		}
 		if(!empty($practice_ids) && count($practice_ids)>0) {
 			if($practice_ids != 'null') {
-				$data['sel_practice_ids'] = $practice_ids;
-				$data['filter_area_status'] = 1;
 				$this->db->where_in('l.practice', $practice_ids);
 			}
 		}
@@ -3694,6 +3692,9 @@ class Dashboard extends crm_controller
 				if(!empty($dids)) {
 					$this->db->where_in("t.dept_id", $department_ids);
 				}
+			} else {
+				$deptwhere = "t.dept_id IN ('10','11')";
+				$this->db->where($deptwhere);
 			}
 		} else {
 			$deptwhere = "t.dept_id IN ('10','11')";
@@ -3735,12 +3736,6 @@ class Dashboard extends crm_controller
 			foreach($project_res as $prec)
 			$project_master[$prec->project_code] = $prec->title;
 		}
-		$data['project_master']  = $project_master;
-		
-		/* $this->db->select('department_id, department_name');
-		$this->db->where_in('department_id', array('10','11'));
-		$dept = $this->db->get($timesheet_db->dbprefix . 'department');
-		$data['departments'] = $dept->result(); */
 		
 		$depts_res = array();
 		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
@@ -3968,9 +3963,113 @@ class Dashboard extends crm_controller
 				}
 			}
 		}
-
-		echo "<pre>"; print_r($tbl_data); die;
+		$res = $this->exportCRXls($tbl_data, $project_master);
+		// echo "<pre>"; print_r(); die;
 		// $this->load->view("projects/cost_report_view", $data);
+	}
+	
+	public function exportCRXls($tbl_data, $project_master)
+	{
+		if(!empty($tbl_data) && count($tbl_data)>0) {
+			
+			$this->load->library('excel');
+			//activate worksheet number 1
+			$this->excel->setActiveSheetIndex(0);
+			//name the worksheet
+			$this->excel->getActiveSheet()->setTitle('Cost Report');
+			//set cell A1 content with some text
+			$this->excel->getActiveSheet()->setCellValue('A1', 'ENTITY');
+			$this->excel->getActiveSheet()->setCellValue('B1', 'DEPARTMENT');
+			$this->excel->getActiveSheet()->setCellValue('C1', 'PRACTICE');
+			$this->excel->getActiveSheet()->setCellValue('D1', 'SKILL');
+			$this->excel->getActiveSheet()->setCellValue('E1', 'RESOURCE TYPE');
+			$this->excel->getActiveSheet()->setCellValue('F1', 'MONTH YEAR');
+			$this->excel->getActiveSheet()->setCellValue('G1', 'PROJECT');
+			$this->excel->getActiveSheet()->setCellValue('H1', 'RESOURCE');
+			$this->excel->getActiveSheet()->setCellValue('I1', 'HOUR');
+			$this->excel->getActiveSheet()->setCellValue('J1', 'COST');
+			
+			$this->excel->getActiveSheet()->getStyle('A1:J1')->getFont()->setSize(10);
+			$i=2;
+			
+			foreach($tbl_data as $entiyKey=>$entiyArr) {
+				if(!empty($entiyArr) && count($entiyArr)>0) {
+					foreach($entiyArr as $deptKey=>$deptArr) {
+						if(!empty($deptArr) && count($deptArr)>0) {
+							foreach($deptArr as $pracKey=>$pracArr) {
+								if(!empty($pracArr) && count($pracArr)>0) {
+									foreach($pracArr as $skilKey=>$skilArr) {
+										if(!empty($skilArr) && count($skilArr)>0) {
+											foreach($skilArr as $resrcTypeKey=>$resrcTypeArr) {
+												if(!empty($resrcTypeArr) && count($resrcTypeArr)>0) {
+													foreach($resrcTypeArr as $yrMonKey=>$yrMonArr) {
+														if(!empty($yrMonArr) && count($yrMonArr)>0) {
+															foreach($yrMonArr as $pjtCdeKey=>$pjtCdeArr) {
+																if(!empty($pjtCdeArr) && count($pjtCdeArr)>0) {
+																	foreach($pjtCdeArr as $resrcNmeKey=>$resrcNmeArr) {
+																		$tempSkilKey 	 = $skilKey;
+																		$tempresrcNmeKey = $resrcNmeKey;
+																		$tempResrcHour 	 = round($resrcNmeArr['hour'], 1);
+																		$tempCls		 = '';
+																		if('Other Cost'==$resrcTypeKey) {
+																			$tempSkilKey 	 = $tempResrcHour = '-';
+																			$tempCls	 	 = 'tr_othercost';
+																			$tot_cost	    += $resrcNmeArr['cost'];
+																		}
+																		
+																		$pjt_nme = isset($project_master[$pjtCdeKey]) ? $project_master[$pjtCdeKey] : $pjtCdeKey;
+																		$this->excel->getActiveSheet()->setCellValue('A'.$i, $entiyKey);
+																		$this->excel->getActiveSheet()->setCellValue('B'.$i, $deptKey);
+																		$this->excel->getActiveSheet()->setCellValue('C'.$i, $pracKey);
+																		$this->excel->getActiveSheet()->setCellValue('D'.$i, $tempSkilKey);
+																		$this->excel->getActiveSheet()->setCellValue('E'.$i, $resrcTypeKey);
+																		$this->excel->getActiveSheet()->setCellValue('F'.$i, $yrMonKey);
+																		$this->excel->getActiveSheet()->setCellValue('G'.$i, $pjt_nme);
+																		$this->excel->getActiveSheet()->setCellValue('H'.$i, $tempresrcNmeKey);
+																		$this->excel->getActiveSheet()->setCellValue('I'.$i, $tempResrcHour);
+																		$this->excel->getActiveSheet()->setCellValue('J'.$i, round($resrcNmeArr['cost'], 2));
+																		$overall_hour	+= $tempResrcHour;
+																		$overall_cost	+= round($resrcNmeArr['cost'], 2);
+																		$i++;
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		$this->excel->getActiveSheet()->getStyle('I2:I'.$i)->getNumberFormat()->setFormatCode('0.00');
+		//make the font become bold
+		$this->excel->getActiveSheet()->getStyle('A1:J1')->getFont()->setBold(true);
+		
+		$this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+		$this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(25);
+		$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+		$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(30);
+		$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+		$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(10);
+		$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(10);
+		
+		$this->excel->getActiveSheet()->getStyle('A1:J1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			
+		$filename='cost_report_'.time().'.xls'   ; //save our workbook as this file name
+		header('Content-Type: application/vnd.ms-excel'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+		$objWriter->save('php://output');
 	}
 	
 	
