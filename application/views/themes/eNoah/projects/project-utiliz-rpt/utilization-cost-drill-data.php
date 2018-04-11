@@ -52,7 +52,7 @@ $proj = array();
 $tot_hour = 0;
 $tot_cost = 0;
 $tot_directcost = 0;
-echo '<pre>'; print_r($resdata); echo '</pre>';
+// echo '<pre>'; print_r($resdata); echo '</pre>';
 $invoiceArr = array();
 $invoices = (isset($invoices_data) && !empty($invoices_data) && count($invoices_data)>0) ? $invoices_data['invoices'] : array();
 if(!empty($invoices) && count($invoices)>0) {
@@ -65,7 +65,7 @@ if(!empty($invoices) && count($invoices)>0) {
 	}
 }
 
-$rag_clr_arr = array('Red'=>'#c21706','Amber'=>'#ff7e00','Green'=>'#468847');
+$rag_clr_arr 	  = array('Red'=>'#c21706','Amber'=>'#ff7e00','Green'=>'#468847');
 $rag_clr_disp_arr = array(1=>'Red',2=>'Amber',3=>'Green');
 
 $timesheet_data = array();
@@ -214,6 +214,11 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 									$sub_tot[$project_code]['entity_name'] = isset($entity_data[$project_code])? $entity_data[$project_code] : '';
 								}
 								
+								//FOR LEAD ID
+								if(isset($lead_id_data[$project_code])) {
+									$sub_tot[$project_code]['lead_id'] = isset($lead_id_data[$project_code])? $lead_id_data[$project_code] : '';
+								}
+								
 								//for project_code - sorting-directcost
 								if(isset($prjt_directcst[$project_code]))
 								$prjt_directcst[$project_code] += $total_dc_cost;
@@ -228,7 +233,7 @@ if(count($resource_cost)>0 && !empty($resource_cost)){
 	}
 }
 
-echo '<pre>'; print_r($sub_tot); die;
+echo '<pre>'; print_r($sub_tot); echo '</pre>';
 
 //**Get the other cost value projects only**//
 $resource_cost_not_value_project = array_diff($othercost_projects[$practices_name], $timesheet_projects);
@@ -347,13 +352,12 @@ if(!empty($sub_tot)) {
 			$rag_status				 = isset($sub_tot[$p_name]['rag']) ? $sub_tot[$p_name]['rag'] : '';
 			$customer_name			 = (isset($sub_tot[$p_name]['customer_name']) && $sub_tot[$p_name]['customer_name'] !='-') ? ucfirst($sub_tot[$p_name]['customer_name']) : '-';
 			$entity_name			 = (isset($sub_tot[$p_name]['entity_name']) && !empty($sub_tot[$p_name]['entity_name'])) ? $sub_tot[$p_name]['entity_name'] : '-';
-			
-			// $monthly_content .= "<a title='View' href='project/view_project/".$record['lead_id']."'><img src='assets/img/view.png' alt='view' ></a> ";
+			$lead_id = (isset($sub_tot[$p_name]['lead_id'])) ? $sub_tot[$p_name]['lead_id'] : '';
 			
 			$bg_rag_color_status	 = isset($rag_clr_arr[$rag_status]) ? 'bgcolor='.$rag_clr_arr[$rag_status] : '';
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<td align='left' class='collapse lft-ali'>".ucfirst($customer_name)."</span></td>
-				<td align='left' class='collapse lft-ali'>".strtoupper($name)."</span></td>
+				<td align='left' class='collapse lft-ali'><a target='_blank' href=".$base_url.'project/view_project/'.$lead_id." title='View Project'>".ucfirst($name)."</a></span></td>
 				<td align='left' class='collapse lft-ali'>".$entity_name."</span></td>
 				<td align='right' class='rt-ali'>".round($sub_tot[$p_name]['sub_tot_hour'], 1)."</td>
 				<td align='right' class='rt-ali'>".sprintf('%0.2f', $inv_val)."</td>
