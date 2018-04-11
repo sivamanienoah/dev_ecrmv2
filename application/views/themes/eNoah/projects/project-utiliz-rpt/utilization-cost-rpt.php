@@ -23,7 +23,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					<form name="advanceFilterServiceDashboard" id="advanceFilterServiceDashboard" method="post">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						<input type="hidden" name="filter" value="filter" />
-						<div class="pull-left adv_filter_it_service">
+						<div class="pull-right adv_filter_it_service">
 							<div class='pull-left'>
 								<label>From</label>
 							</div>
