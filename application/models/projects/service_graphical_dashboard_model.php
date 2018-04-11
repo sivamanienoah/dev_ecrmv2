@@ -219,6 +219,21 @@ class Service_graphical_dashboard_model extends crm_model {
 		$con_res = $sql->row_array();
 		return $con_res;
     }
+	
+	public function get_records($tbl, $wh_condn='', $order='') {
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].$tbl);
+		if(!empty($wh_condn))
+		$this->db->where($wh_condn);
+		if(!empty($order)) {
+			foreach($order as $key=>$value) {
+				$this->db->order_by($key,$value);
+			}
+		}
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		return $query->result_array();
+    }
 
 }
 
