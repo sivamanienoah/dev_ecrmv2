@@ -69,7 +69,7 @@ class Service_graphical_dashboard extends crm_controller
 		if ($this->input->server('REQUEST_METHOD') === 'POST')
         {
 			$post_data = real_escape_array($this->input->post());
-			echo '<pre>'; print_r($post_data); die;
+			// echo '<pre>'; print_r($post_data); die;
 			$data['fiscal_year_status'] = $post_data['fy_name'];
 			$start_date    = ($data['fiscal_year_status']-1)."-04-01";  //eg.2013-04-01
 			$end_date 	   = $data['fiscal_year_status'].'-03-31';
