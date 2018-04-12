@@ -3,9 +3,6 @@ ob_start();
 require (theme_url().'/tpl/header.php');
 ?>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
-<style>
-.tas-flw { padding: 0 5px 10px 5px; }
-</style>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript">var this_is_home = true;</script>
 <script type="text/javascript">var curr_job_id = 0;</script>
@@ -27,7 +24,6 @@ $(function(){
 	}
 });
 </script>
-
 <div id="content">
     <div class="inner" id="jv-tab-4">
 		<?php include theme_url() . '/tpl/user_accounts_options.php'; ?>
@@ -427,7 +423,7 @@ $(function(){
 					</td>
 					<td colspan="2">
 						<div class="buttons">
-							<label><input type="checkbox" name="follow_up" id="follow_up_task" value="1" /><span class="tas-flw">Follow Up</span></label>
+							<label><input type="checkbox" name="follow_up" id="follow_up_task" value="1" /><span class="tas-flw">Create Follow Up</span></label>
 						</div>
 					</td>
 				</tr>
@@ -438,12 +434,139 @@ $(function(){
 		<form style="display:none;" class="random-task-tables" onsubmit="return false;">
 		</form>
 	</div>
+	<form id="add-follow-job-task" style="display:none;" onsubmit="return false;">
+			<input id="token" type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+		<!-- edit task -->
+			
+			<table border="0" cellpadding="0" cellspacing="0" class="task-add-follow">
+				<tr>
+					<td colspan="4">
+						<strong>All fields are required!</strong>						
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80">
+						<br /><br />Task Desc
+					</td>
+					<td colspan="3">
+						<strong><span id="edit-task-desc-countdown">1000</span></strong> characters left.<br />
+						<textarea name="job_task" id="follow-job-task-desc" class="edit-job-task-desc width420px" ></textarea>
+						<input type="hidden" name="jobid_fk" id="jobid_fk_follow_up" value="" />
+					</td>
+				</tr>
+				<tr>
+					<td>Task Owner</td>
+					<td><input type="text" id="tast_user_lbl" class="edit-task-owner textfield" value="<?php echo $this->userdata['first_name'].' '.$this->userdata['last_name']; ?>" readonly="readonly"></td>					
+				</tr>
+				<tr >
+					<td style="padding-bottom:10px;" ><br/>Category</td>
+					<td>
+						<select name="task_category" data-placeholder="Choose category." class="chzn-select edit-task-category" id="follow_taskCategory" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($category_listing_ls as $ua)
+								{
+									echo '<option value="'.$ua['id'].'">'.$ua['task_category'].'</option>';
+								}
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="padding-bottom:10px;">Priority</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Priority." class="chzn-select edit-task-priority" id="follow_taskpriority" style="width:140px;">
+							<option value=""></option>
+							<option value="1">Critical</option>
+							<option value="2">High</option>
+							<option value="3">Medium</option>
+							<option value="4">Low</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Allocate to
+					</td>
+					<td style="padding: 5px 0;">
+						<select name="task_user" id="follow_task_user" class="chzn-select edit-task-allocate textfield width100px" >
+							<?php						
+							echo $remind_options, $remind_options_all;
+							?>						
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="padding-bottom:10px;">Status</td>
+					<td>
+						<select name="task_priority" data-placeholder="Choose Status." class="chzn-select edit-task-stages" id="follow_taskstages" style="width:140px;">
+							<option value=""></option>
+							<?php
+								foreach($task_stages as $tstag)
+								{
+									echo '<option value="'.$tstag['task_stage_id'].'">'.$tstag['task_stage_name'].'</option>';
+								}
+							?>
+						</select>
+						<input type="hidden" name="task_complete_status" value='0' />	
+					</td>
+				</tr>
+				<tr>
+					<td>Estimated Hours</td>
+					<td><input type="text" name="estimated_hours" class="edit-job-est-hr textfield width100px" onkeypress="return isPaymentVal(event)" style="margin-top:5px;" maxlength="5"/></td>
+				</tr>
+				<tr>
+					<td>
+						Planned Start Date
+					</td>
+					<td>
+						<input type="text" name="task_start_date" id="follow-edit-start-date" class="follow-edit-start-date textfield pick-date width100px" style="margin-top:5px;"/>
+					</td>		
+					<td>
+						Planned End Date
+					</td>
+					<td>
+						<input type="text" name="task_end_date" id="follow-edit-end-date" class="follow-edit-end-date textfield pick-date width100px" />
+					</td>
+				</tr>
+				<tr>
+					<td>Remarks</td>
+					<td colspan="3">
+						<?php 
+						if($created_by['jobid_fk'] == $remind_options) {
+						?>
+							<textarea name="remarks" id="follow-task-remarks" class="edit-task-remarks" width="420px" readonly ></textarea>
+						<?php
+						} else {
+						?>
+							<textarea name="remarks" id="follow-task-remarks" class="edit-task-remarks" width="420px"  ></textarea>
+						<?php
+						}
+						?>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div class="buttons">
+							<button type="submit" class="positive" onclick="addNewFollowTask('random','<?php echo $this->security->get_csrf_token_name()?>','<?php echo $this->security->get_csrf_hash(); ?>');">Add</button>
+						</div>
+						<div class="buttons">
+							<button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<script>
+			$('select').chosen( { width: '100%' } );
+			</script>
+		</form>
 	
 </div>
 <script type="text/javascript">
 	var task_userid = '<?php echo $userdata['userid'] ?>';
 	var get_type 	= '<?php echo isset($_GET['type']) ? $_GET['type'] : '' ?>';
 	var get_id      = '<?php echo isset($_GET['id']) ? $_GET['id'] : '' ?>';
+	var job_id      = '<?php echo isset($_GET['job_id']) ? $_GET['job_id'] : '' ?>';
 </script>
 <script type="text/javascript" src="assets/js/tasks/main_view.js"></script>
 <?php
