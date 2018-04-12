@@ -69,17 +69,19 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 			<div id="advance_search" style="padding-bottom:15px;">
 				<form name="service_graph_dashboard" id="fiscal_year_filter" action="projects/dashboard/sevice_graph_dashboard" method="post">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-					
+					<?php //echo'<pre>';print_r($fiscal_year_status);exit;?>
 					<div class="pull-left adv_filter_it_service">
 						<div class='pull-left'>
 							<label>Financial Year</label>
-						</div><?php //echo'<pre>';print_r($fy_year);exit;?>
+						</div>
 						<div class="pull-left">
 							<select name='fy_name' id='fy_name'>
 								<!--<option value=''>--Select--</option>-->
 								<?php if(!empty($fy_year) && count($fy_year)>0) { ?>
 									<?php foreach($fy_year as $fy_rec) { ?>
-										<option value='<?php echo $fy_rec['financial_yr']; ?>' <?php echo $yr_select = ($fiscal_year_status == $fy_rec['financial_yr']) ? 'selected="selected"' : ''; ?>><?php echo $fy_rec['fy_name']; ?></option>
+										<?php if($fy_rec['financial_yr'] <= $current_year_val){ ?>
+											<option value='<?php echo $fy_rec['financial_yr']; ?>' <?php echo $yr_select = ($fiscal_year_status == $fy_rec['financial_yr']) ? 'selected="selected"' : ''; ?>><?php echo $fy_rec['fy_name']; ?></option>
+										<?php } ?>
 									<?php } ?>
 								<?php } ?>
 							</select>

@@ -48,7 +48,7 @@ class Service_graphical_dashboard extends crm_controller
 		
 		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
-		
+		$data['current_year_val'] = $curFiscalYearTemp;
 		$lastMonthArrCalcNoForEndmonth = array('04', '05');
 		if(in_array(date('m'), $lastMonthArrCalcNoForEndmonth)) {
 			$end_date = date('Y-m-t');
