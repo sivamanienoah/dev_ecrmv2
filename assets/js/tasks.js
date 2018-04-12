@@ -749,7 +749,7 @@ function addNewFollowTask(random,ci_csrf_token,csrf_hasf)
 	}
 	// $('#jv-tab-4').blockUI({
 	// $(this).blockUI({
-	$('#jv-tab-4').block({
+	$('.blockUI .task-add-follow').block({
 		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
 		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
 	}).delay(1);
@@ -776,7 +776,7 @@ function addNewFollowTask(random,ci_csrf_token,csrf_hasf)
 			}
 			$("#follow_taskCategory").val('').trigger("liszt:updated");
 			$("#follow_taskpriority").val('').trigger("liszt:updated");
-			$('#add-follow-job-task').unblock();
+			$('.blockUI .task-add-follow').unblock();
 		},
 		'json'
 	);
