@@ -1565,6 +1565,10 @@ HDOC;
 		$this->load->model('user_model');
 		$this->load->library('email');
 		$errors = array();
+		$follow_up_id = 0;
+		$post_data = $this->input->post();
+		
+		// echo '<pre>'; print_r($post_data); die;
 		
 		if ($random != 'NO')
 		{
@@ -1573,15 +1577,15 @@ HDOC;
 		
 		$json['error'] = FALSE;
 		if($update == 'NO') {
-			$ins['jobid_fk'] = (int) $_POST['lead_id'];
+			$ins['jobid_fk'] = (int) $post_data['lead_id'];
 		}
-		$ins['task'] 		= $_POST['job_task'];
-		$ins['userid_fk'] 	= $_POST['task_user'];
-		$ins['remarks'] 	= $_POST['remarks'];
-		$ins['task_category'] 	= $_POST['task_category'];
-		$ins['task_priority'] 	= $_POST['task_priority'];
-		$ins['estimated_hours'] = $_POST['estimated_hours'];
-		$ins['task_stage']	    = isset($_POST['task_stage']) ? $_POST['task_stage'] : 1;
+		$ins['task'] 		= $post_data['job_task'];
+		$ins['userid_fk'] 	= $post_data['task_user'];
+		$ins['remarks'] 	= $post_data['remarks'];
+		$ins['task_category'] 	= $post_data['task_category'];
+		$ins['task_priority'] 	= $post_data['task_priority'];
+		$ins['estimated_hours'] = $post_data['estimated_hours'];
+		$ins['task_stage']	    = isset($post_data['task_stage']) ? $post_data['task_stage'] : 1;
 		if($update == 'NO') {
 			$ins['approved'] = 1;
 		}
@@ -1590,8 +1594,8 @@ HDOC;
 		}			
 		$ins['created_on'] 	= date('Y-m-d H:i:s');
 		
-		$task_start_date 	= explode('-', trim($_POST['task_start_date']));
-		$task_end_date 		= explode('-', trim($_POST['task_end_date']));
+		$task_start_date 	= explode('-', trim($post_data['task_start_date']));
+		$task_end_date 		= explode('-', trim($post_data['task_end_date']));
 		
 		
 		if (count($task_start_date) != 3 || ! $start_date = mktime(0, 0, 0, $task_start_date[1], $task_start_date[0], $task_start_date[2]))
@@ -1615,7 +1619,7 @@ HDOC;
 							'17:00:00'	=> '5:00PM',
 							'18:00:00'	=> '6:00PM',
 							'19:00:00'	=> '7:00PM'
-						 );
+						);
 		
 		/*if (isset($_POST['task_end_hour']) && ! array_key_exists($_POST['task_end_hour'], $time_range))
 		{
@@ -1654,24 +1658,24 @@ HDOC;
 			
 			$dtask_start_date	= date('d-m-Y H:i:s', $start_date);
 			$dtask_end_date		= date('d-m-Y H:i:s' , $end_date);
-			if (isset($_POST['task_end_hour']))
+			if (isset($post_data['task_end_hour']))
 			{
 				$ins['end_date'] = date('Y-m-d H:i:s', $end_date);
 			}
 			
-			$ins['require_qc'] 	= (isset($_POST['require_qc']) && $_POST['require_qc'] == 'YES') ? '1' : '0';
-			$ins['priority'] 	= (isset($_POST['priority']) && $_POST['priority'] == 'YES') ? '1' : '0';
+			$ins['require_qc'] 	= (isset($post_data['require_qc']) && $post_data['require_qc'] == 'YES') ? '1' : '0';
+			$ins['priority'] 	= (isset($post_data['priority']) && $post_data['priority'] == 'YES') ? '1' : '0';
 			
 			if ($update != 'NO' && $old_task = $this->get_task($update))
 			{
 				$updatedby = $this->user_model->updatedby($old_task->taskid);
 				$ins['created_by'] = $updatedby[0]['created_by'];				
-				$task_actualstart_date = explode('-', trim($_POST['actualstart_date']));
+				$task_actualstart_date = explode('-', trim($post_data['actualstart_date']));
 				
 				if (count($task_actualstart_date) != 3 || ! $actualtask_date = mktime(0, 0, 0, $task_actualstart_date[1], $task_actualstart_date[0], $task_actualstart_date[2])) {
 					$errors[] = 'Invalid Actual Start Date!';
 				}
-				if($_POST['actualstart_date'] =='0000-00-00') {
+				if($post_data['actualstart_date'] =='0000-00-00' || $post_data['actualstart_date'] == 'Not Assigned') {
 					$ins['actualstart_date']	= '0000-00-00 00:00:00';
 				} else {
 					$ins['actualstart_date'] 	= date('Y-m-d H:i:s', $actualtask_date);
@@ -1680,10 +1684,25 @@ HDOC;
 				$this->db->where('taskid', $update);
 				$this->db->update($this->cfg['dbpref'].'tasks', $ins);
 				
+				//for follow up task
+				if(isset($post_data['follow_up']) && $post_data['follow_up']==1) {
+					$follow_up_arr = $this->request_model->get_task_info_by_id($update);
+					unset($follow_up_arr['taskid']);
+					$follow_up_arr['userid_fk']  = $ins['userid_fk'];
+					$follow_up_arr['start_date'] = $follow_up_arr['created_on'] = date('Y-m-d H:i:s');
+					$follow_up_arr['created_by'] = $this->userdata['userid'];
+					$follow_up_arr['end_date']   = date('Y-m-d H:i:s');
+					$follow_up_arr['actualstart_date'] = '0000-00-00 00:00:00';
+					$follow_up_arr['remarks']	= '';
+					// echo '<pre>'; print_r($task_det); die;
+					$this->db->insert($this->cfg['dbpref'].'tasks', $follow_up_arr);
+					$follow_up_id =  $this->db->insert_id();
+				}
+				
 				//echo $this->db->last_query();exit;
-				$ins['user_label'] 	= $_POST['user_label'];
+				$ins['user_label'] 	= $post_data['user_label'];
 				$ins['status'] 		= $ins['is_complete'] = 0;
-				$ins['taskid'] 		= $update;
+				$ins['taskid'] 		= $update; 
 				$ins['userid'] 		= $ins['userid_fk'];
 				$taskowner 			= $this->user_model->get_user($ins['userid']);
 				$taskAssignedTo		= $taskowner[0]['first_name'].'&nbsp;'.$taskowner[0]['last_name'];
@@ -1738,7 +1757,7 @@ HDOC;
 				//email sent by email template
 				$param = array();
 
-				$param['email_data'] = array('job_task'=>$_POST['job_task'],'taskAssignedTo'=>$taskAssignedTo,'remarks'=>$task_owners[0]['remarks'],'start_date'=>date('d-m-Y', strtotime($dtask_start_date)),'end_date'=>date('d-m-Y', strtotime($dtask_end_date)),'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'status'=>$ins['status']);
+				$param['email_data'] = array('job_task'=>$post_data['job_task'],'taskAssignedTo'=>$taskAssignedTo,'remarks'=>$task_owners[0]['remarks'],'start_date'=>date('d-m-Y', strtotime($dtask_start_date)),'end_date'=>date('d-m-Y', strtotime($dtask_end_date)),'first_name'=>$task_owners[0]['first_name'],'last_name'=>$task_owners[0]['last_name'],'status'=>$ins['status']);
 
 				$param['to_mail'] 		= $taskAssignedToEmail;
 				// $param['bcc_mail'] 	= $admin_mail;
@@ -1759,7 +1778,7 @@ HDOC;
 				}
 				else
 				{
-					$ins['user_label'] 	= $_POST['user_label'];
+					$ins['user_label'] 	= $post_data['user_label'];
 					$ins['status'] 		= $ins['is_complete'] = 0;
 					$ins['taskid'] 		= $this->db->insert_id();
 					$ins['userid'] 		= $ins['userid_fk'];
@@ -1806,7 +1825,7 @@ HDOC;
 					//email sent by using email template
 					$param = array();
 
-					$param['email_data'] = array('job_task'=>$_POST['job_task'], 'taskSetTo'=>$taskSetTo, 'remarks'=>$task_owners[0]['remarks'], 'start_date'=>date('d-m-Y', strtotime($dtask_start_date)), 'end_date'=>date('d-m-Y', strtotime($dtask_end_date)), 'first_name'=>$task_owners[0]['first_name'], 'last_name'=>$task_owners[0]['last_name'], 'status'=>$ins['status']);
+					$param['email_data'] = array('job_task'=>$post_data['job_task'], 'taskSetTo'=>$taskSetTo, 'remarks'=>$task_owners[0]['remarks'], 'start_date'=>date('d-m-Y', strtotime($dtask_start_date)), 'end_date'=>date('d-m-Y', strtotime($dtask_end_date)), 'first_name'=>$task_owners[0]['first_name'], 'last_name'=>$task_owners[0]['last_name'], 'status'=>$ins['status']);
 
 					// $param['to_mail'] 			= $taskSetToEmail.','.$admin_mail;
 					$param['to_mail'] 			= $taskSetToEmail;
@@ -1825,7 +1844,7 @@ HDOC;
 				$json['errormsg'] = 'Task insert or edit error';
 			}
 		}
-		
+		$json['follow_up_id'] = $follow_up_id;
 		echo json_encode($json);
 	}
 	
@@ -3357,6 +3376,13 @@ EOD;
 	}
 	
 	public function get_task_edit_form()
+	{
+		$task_det = array();
+		$task_det = $this->request_model->get_task_info_by_id($this->input->post('taskid'));
+		echo json_encode($task_det); exit;
+	}
+	
+	public function get_task_edit_form_by_id()
 	{
 		$task_det = array();
 		$task_det = $this->request_model->get_task_info_by_id($this->input->post('taskid'));
