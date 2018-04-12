@@ -44,6 +44,8 @@ class Service_graphical_dashboard extends crm_controller
 		
 		$data  				  = array();
 		
+		$curFiscalYearTemp = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
+		
 		$curFiscalYear = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$start_date    = ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		
@@ -77,6 +79,10 @@ class Service_graphical_dashboard extends crm_controller
 			$last_yr_start_date = date('Y-m-d', strtotime($start_date.' -1 year'));
 			$last_yr_end_date   = date('Y-m-t', strtotime($end_date.' -1 year'));
 			$this->upto_month   = date('M', strtotime($end_date));
+			if($curFiscalYearTemp == $data['fiscal_year_status']) {
+				$cur_date = date('Y-m-t');
+				$this->upto_month = date('M', strtotime($cur_date));
+			}
 		}
 		$res 				  = array();
 		$res['result']		  = false;
