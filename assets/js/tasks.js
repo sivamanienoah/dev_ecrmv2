@@ -309,7 +309,7 @@ function editTask()
 	if (task_being_edited == 0) return;
 	
 	var edit_table_el = $('.blockUI .task-edit');
-	
+	var follow_up = 0;
 	var errors = [],
 		job_task = $('.edit-job-task-desc', edit_table_el).val(),
 		task_owner = $('.edit-task-owner', edit_table_el).val(),
@@ -329,8 +329,9 @@ function editTask()
 		task_estimated_hour = $('.edit-job-est-hr', edit_table_el).val(),
 		task_stages = $('#taskstages', edit_table_el).val(),
 		task_complete_status = $('#edit_complete_status', edit_table_el).val(),
-		require_qc = ($('.task-require-qc', edit_table_el).is(':checked')) ? 'YES' : 'NO';;
-		priority = ($('.priority', edit_table_el).is(':checked')) ? 'YES' : 'NO';;
+		require_qc = ($('.task-require-qc', edit_table_el).is(':checked')) ? 'YES' : 'NO';
+		priority = ($('.priority', edit_table_el).is(':checked')) ? 'YES' : 'NO';
+		follow_up = ($('#follow_up_task', edit_table_el).is(':checked')) ? 1 : 0;
 		
 	if (job_task == '')
 	{
@@ -386,25 +387,29 @@ function editTask()
 		random_task_url = '/YES';
 	}
 
-	var param =	{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner,'task_category': taskCategory, 'task_priority': taskpriority, 'estimated_hours': task_estimated_hour , 'task_stage': task_stages };
+	var param =	{'lead_id': curr_job_id, 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'actualstart_date': actualstart_date, 'task_owner': task_owner,'task_category': taskCategory, 'task_priority': taskpriority, 'estimated_hours': task_estimated_hour , 'task_stage': task_stages , 'follow_up': follow_up };
 	param[csrf_token_name] = csrf_hash_token;
 	$.post(
 		'ajax/request/add_job_task/' + task_being_edited + random_task_url,
 		param,
 		function (data)
 		{
+			// console.info(data); return;
 			if (data.error)
 			{
 				alert(data.errormsg);
-			}
-			else
-			{				
-				$('#task-table-' + task_being_edited).replaceWith(data.html);
+			} else if(follow_up == 1) {
+				window.location.href = site_base_url+'tasks/all/?id='+data.follow_up_id+'&type=random';
+				return false;
+			} else {
+				window.location.href = site_base_url+'tasks/all/';
+				return false;
+				/* $('#task-table-' + task_being_edited).replaceWith(data.html);
 				if (random_task_url != '')
 				{
 					// window.location.href = window.location.href;
 					window.location.href = site_base_url+'tasks/all/';
-				}
+				} */
 			}
 			$('.blockUI .task-add.task-edit').unblock();
 			$.unblockUI();
