@@ -352,7 +352,7 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 					}
 		
 		
-					$project_td ='<td style="padding:10px;">'. $lead_title.'</td>';
+					$project_td ='<td style="padding:10px;"><span class="hide">'.$row['taskid'].'</span>'.$lead_title.'</td>';
 		
 				}
 				// if userid equals the task created user or task assigned user it enters the condition
@@ -366,8 +366,8 @@ function datatable_structure($task_category,$permission,$category_title,$categor
 				}
 	
 				echo '<tr>
-					'.$project_td.'					
-					<td style="padding:10px;">'. $row['task'].'</td>
+					'.$project_td.'
+					<td style="padding:10px;">'.$row['task'].'</td>
 					<td style="padding:10px;" id="'.$row['task_priority'].'">'. priority_name_define($row['task_priority']).'</td>
 					<td style="padding:10px;" id="'.$row['taskcreated_by'].'" >'. $createdUser[0]['first_name'].'</td>
 					<td style="padding:10px;" id="'.$row['userid_fk'].'" >'. $allocatedUser[0]['first_name'].'</td>
