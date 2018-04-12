@@ -55,6 +55,7 @@ var service	 	= $("#services").val();
 var practice 	= $("#practices").val();
 var keyword	 	= $("#keywordpjt").val(); 
 var divisions	= $("#divisions").val();
+var pm			= $("#pm").val();
  	
 if(keyword == "Project Title, Name or Company")
 keyword = 'null';
@@ -73,7 +74,8 @@ function advanced_filter_pjt(){
 		var customer	= $("#customer1").val(); 
 		var service	 	= $("#services").val();
 		var practice 	= $("#practices").val();	
-		var divisions 	= $("#divisions").val();					
+		var divisions 	= $("#divisions").val();
+		var pm 			= $("#pm").val();
 	} else {
 		$("#pjt_stage").val("");
 		// $("#pm_acc").val("");
@@ -81,6 +83,7 @@ function advanced_filter_pjt(){
 		$("#services").val("");
 		$("#practices").val("");
 		$("#divisions").val("");
+		$("#pm").val("");
 	}
 }
 
@@ -95,12 +98,13 @@ $('#pjt_search_form').submit(function() {
 	var from_date   	= $("#from_date").val();
 	var to_date  		= $("#to_date").val();
 	var divisions  		= $("#divisions").val();
+	var pm 				= $("#pm").val();
 	var customer_type 	= $("#customer_type").val();
 	if(keyword == "Project Title, Name or Company") {
 		keyword = '';
 	}
 	
-	var params = {'pjtstage':pjtstage,'customer':customer,'service':service,'practice':practice,'divisions':divisions,'customer_type':customer_type,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+	var params = {'pjtstage':pjtstage,'customer':customer,'service':service,'practice':practice,'divisions':divisions,'customer_type':customer_type,'pm':pm,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 	params[csrf_token_name] = csrf_hash_token; 
 	if($(this).attr("id") == 'advanceFilters_pjt'){
 		$('#advance').hide();
@@ -138,12 +142,13 @@ $("#search_advance").click(function() {
 	var from_date   	= $("#from_date").val();
 	var to_date  		= $("#to_date").val();
 	var divisions  		= $("#divisions").val();
+	var pm  			= $("#pm").val();
 	var customer_type 	= $("#customer_type").val();
 	if(keyword == "Project Title, Name or Company") {
 		keyword = '';
 	}
 	
-	var params = {'pjtstage':pjtstage,'customer':customer,'service':service,'practice':practice,'divisions':divisions,'customer_type':customer_type,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+	var params = {'pjtstage':pjtstage,'customer':customer,'service':service,'practice':practice,'divisions':divisions,'customer_type':customer_type,'pm':pm,'keyword':encodeURIComponent(keyword),'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 	params[csrf_token_name] = csrf_hash_token; 
 	if($(this).attr("id") == 'advanceFilters_pjt'){
 		$('#search_advance').hide();
@@ -237,12 +242,13 @@ function save_search() {
 	var from_date   	= $("#from_date").val();
 	var to_date  		= $("#to_date").val();
 	var divisions  		= $("#divisions").val();
+	var pm  			= $("#pm").val();
 	var customer_type 	= $("#customer_type").val();
 	if(keyword == "Project Title, Name or Company") {
 		keyword = '';
 	}
 	
-	var params = {'pjtstage':pjtstage,'customer':customer,'service':service,'practice':practice,'divisions':divisions,'customer_type':customer_type,'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+	var params = {'pjtstage':pjtstage,'customer':customer,'service':service,'practice':practice,'divisions':divisions,'customer_type':customer_type,'pm':pm,'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 	params[csrf_token_name] = csrf_hash_token; 
 	
 	//Save the search criteria
@@ -252,7 +258,7 @@ function save_search() {
 		dataType: 'json',
 		url: site_base_url+"project/save_search/2",
 		cache: false,
-		data: "search_name="+search_name+"&is_default="+is_default+"&pjtstage="+pjtstage+"&customer="+customer+"&service="+service+"&divisions="+divisions+"&customer_type="+customer_type+"&datefilter="+datefilter+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: "search_name="+search_name+"&is_default="+is_default+"&pjtstage="+pjtstage+"&customer="+customer+"&service="+service+"&divisions="+divisions+"&customer_type="+customer_type+"&pm="+pm+"&datefilter="+datefilter+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+'&'+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
 			$('#popupGetSearchName').html('<div style="margin:10px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
@@ -297,12 +303,13 @@ function show_search_results(search_id) {
 	var from_date   	= $("#from_date").val();
 	var to_date  		= $("#to_date").val();
 	var divisions  		= $("#divisions").val();
+	var pm  			= $("#pm").val();
 	var customer_type 	= $("#customer_type").val();
 	if(keyword == "Project Title, Name or Company") {
 		keyword = '';
 	}
 	
-	var params = {'pjtstage':pjtstage,'customer':customer,'service':service,'practice':practice,'divisions':divisions,'customer_type':customer_type,'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
+	var params = {'pjtstage':pjtstage,'customer':customer,'service':service,'practice':practice,'divisions':divisions,'customer_type':customer_type,'pm':pm,'datefilter':datefilter,'from_date':from_date,'to_date':to_date};
 	params[csrf_token_name] = csrf_hash_token; 
 
 	$.ajax({

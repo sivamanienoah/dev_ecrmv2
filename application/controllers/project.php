@@ -58,8 +58,9 @@ class Project extends crm_controller {
 		$data['services']    = $this->project_model->get_services();
 		$data['practices']   = $this->project_model->get_practices();
 		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
-		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=2);
-		$db_fields 			  = $this->project_model->get_dashboard_field($this->userdata['userid']);
+		$data['all_pm'] 		 = $this->project_model->get_all_pm();
+		$data['saved_search'] 	 = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=2);
+		$db_fields 			  	 = $this->project_model->get_dashboard_field($this->userdata['userid']);
 		if(!empty($db_fields) && count($db_fields)>0) {
 			foreach($db_fields as $record) {
 				$data['db_fields'][] = $record['column_name'];
@@ -84,6 +85,7 @@ class Project extends crm_controller {
 		$from_date			= '';
 		$to_date  			= '';
 		$divisions  		= '';
+		$pm			  		= '';
 		$customer_type  	= '';
 		$data['val_export'] = 'no_search';
 
@@ -99,6 +101,7 @@ class Project extends crm_controller {
 			$from_date		= $inputData['from_date'];
 			$to_date  		= $inputData['to_date'];
 			$divisions  	= $inputData['divisions'];
+			$pm  			= $inputData['pm'];
 			$customer_type  = $inputData['customer_type'];
 			
 			$data['val_export']  = 'search';
@@ -138,6 +141,7 @@ class Project extends crm_controller {
 				$from_date		= $inputData['from_date'];
 				$to_date  		= $inputData['to_date'];
 				$divisions  	= $inputData['divisions'];
+				$pm  			= $inputData['pm'];
 				$customer_type  = $inputData['customer_type'];
 				
 				if(!empty($pjtstage) && $pjtstage!='null') {
@@ -164,6 +168,11 @@ class Project extends crm_controller {
 					$divisions = @explode(",",$divisions);
 				} else {
 					$divisions = '';
+				}
+				if(!empty($pm) && $pm!='null') {
+					$pm = @explode(",",$pm);
+				} else {
+					$pm = '';
 				}
 				if(!empty($customer_type) && $customer_type!='null') {
 					$customer_type = @explode(",",$customer_type);
@@ -204,6 +213,7 @@ class Project extends crm_controller {
 				$from_date		= $inputData['from_date'];
 				$to_date  		= $inputData['to_date'];
 				$divisions  	= $inputData['divisions'];
+				$pm  			= $inputData['pm'];
 				$customer_type  = $inputData['customer_type'];
 				
 				if(!empty($pjtstage) && $pjtstage!='null') {
@@ -231,6 +241,11 @@ class Project extends crm_controller {
 				} else {
 					$divisions = '';
 				}
+				if(!empty($pm) && $pm!='null') {
+					$pm = @explode(",",$pm);
+				} else {
+					$pm = '';
+				}
 				if(!empty($customer_type) && $customer_type!='null') {
 					$customer_type = @explode(",",$customer_type);
 				} else {
@@ -245,7 +260,7 @@ class Project extends crm_controller {
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions,$customer_type);
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions,$customer_type,$pm);
 		
 		// echo $this->db->last_query(); die;
 
@@ -5370,6 +5385,7 @@ HDOC;
 		$ins['customer']	 = $post_data['customer'];
 		$ins['service']		 = $post_data['service'];
 		$ins['divisions']	 = $post_data['divisions'];
+		$ins['pm']	 		 = $post_data['pm'];
 		$ins['customer_type']= $post_data['customer_type'];
 		$ins['practice']     = $post_data['practice'];
 		$ins['datefilter']   = $post_data['datefilter'];

@@ -138,7 +138,7 @@ if (get_default_currency()) {
 							<tr>
 								<th>By Entity</th>
 								<th>By Customer Type</th>
-								<th></th>
+								<th>By Project Manager</th>
 								<th></th>
 								<th></th>
 							</tr>	
@@ -154,11 +154,25 @@ if (get_default_currency()) {
 									<?php } ?>
 								</select> 
 							</td>
-							<td colspan="5">
+							<td>
 								<select multiple="multiple" id="customer_type" name="customer_type[]" class="advfilter" style="width:140px;">
 									<option value="0">Internal</option>
 									<option value="1">External</option>
 								</select> 
+							</td>
+							<td colspan="4">
+								<select style="width:210px;" multiple="multiple" id="pm" name="pm[]">
+									<?php 
+										if(!empty($all_pm)) {
+											foreach($all_pm as $pm) {												
+												$pm_name = $pm['first_name'].(($pm['last_name']!='') ? ' '.$pm['last_name'].' ' : ' ').(($pm['emp_id']!='') ? '- '.$pm['emp_id'].' ' : ' ');
+										?>
+													<option value="<?php echo $pm['userid']; ?>"><?php echo $pm_name; ?></option>	
+										<?php 
+										} 
+									}
+									?>
+								</select>
 							</td>
 						</tr>
 						<tr align="right" >

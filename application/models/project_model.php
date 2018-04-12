@@ -27,7 +27,7 @@ class Project_model extends crm_model
 	}
 
 	//advance search functionality for projects in home page.
-	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false,$divisions=false,$customer_type=false) {
+	public function get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,$billing_type=false,$divisions=false,$customer_type=false,$pm=false) {
 		
 		$userdata   = $this->session->userdata('logged_in_user');
 		
@@ -50,7 +50,7 @@ class Project_model extends crm_model
 		$to_date	= $to_date;
 		$divisions	= $divisions;
 		
-		// echo "<pre>"; print_r($customer); die;
+		// echo "<pre>"; print_r($pm); die;
 		
 		if (($this->userdata['role_id'] == '1' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '2' && $this->userdata['level'] == '1') || ($this->userdata['role_id'] == '4')) {
 		
@@ -61,63 +61,7 @@ class Project_model extends crm_model
 			$this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
 			$this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.assigned_to' , "LEFT");
 			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
-			
-			if (!empty($stage) && $stage!='null') {
-				$this->db->where("j.lead_status", '4');
-				$this->db->where_in("j.pjt_status", $stage);
-			} else {
-				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
-			}
-			if (!empty($customer) && $customer!='null') {
-				$this->db->where_in('cc.companyid',$customer); 
-			}
-			/* if(!empty($pm)){		
-				$this->db->where_in('j.assigned_to',$pm); 
-			} */
-			if(!empty($services) && $services!='null'){		
-				$this->db->where_in('j.lead_service',$services);
-			}
-			if(!empty($practices) && $practices!='null'){	
-				$this->db->where_in('j.practice',$practices);
-			}
-			if(!empty($divisions) && $divisions!='null'){		
-				$this->db->where_in('j.division',$divisions);
-			}
-			if(!empty($billing_type)) {
-				$this->db->where("j.billing_type", $billing_type);
-			}
-			if(!empty($customer_type) && $customer_type!='null'){		
-				$this->db->where_in('j.customer_type', $customer_type);
-			}
-			if(!empty($from_date)) {
-				switch($datefilter) {
-					case 1:
-						if(!empty($to_date)) {
-							$this->db->where("(j.date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
-							$this->db->where("(j.date_start <='".date('Y-m-d', strtotime($to_date))."' OR j.date_due <='".date('Y-m-d', strtotime($to_date))."')", NULL, FALSE);
-						} else {
-							$this->db->where("(j.date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
-						}
-					break;
-					case 2:
-						if(!empty($to_date)) {
-							$this->db->where('j.date_start >=', date('Y-m-d', strtotime($from_date)));
-							$this->db->where('j.date_start <=', date('Y-m-d', strtotime($to_date)));
-						} else {
-							$this->db->where('j.date_start >=', date('Y-m-d', strtotime($from_date)));
-						}
-					break;
-					case 3:
-						if(!empty($to_date)) {
-							$this->db->where('j.date_due >=', date('Y-m-d', strtotime($from_date)));
-							$this->db->where('j.date_due <=', date('Y-m-d', strtotime($to_date)));
-						} else {
-							$this->db->where('j.date_due >=', date('Y-m-d', strtotime($from_date)));
-						}
-					break;
-				}
-			}
-			
+		
 		} else {
 			$varSessionId = $this->userdata['userid']; //Current Session Id.
 
@@ -156,7 +100,6 @@ class Project_model extends crm_model
 			$result_ids = array_unique($res);
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			
-			
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.division, j.expect_worth_id, j.expect_worth_amount, j.actual_worth_amount, ew.expect_worth_name, j.lead_stage, j.pjt_id, j.assigned_to, j.date_start, j.date_due, j.complete_status, j.pjt_status, j.estimate_hour, j.project_type, j.rag_status, j.billing_type, pbt.project_billing_type, c.customer_name as cfname, cc.company, u.first_name as fnm, u.last_name as lnm, j.actual_date_start, j.actual_date_due');
 			$this->db->from($this->cfg['dbpref'] . 'leads as j');
 			$this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
@@ -166,62 +109,62 @@ class Project_model extends crm_model
 			$this->db->join($this->cfg['dbpref'] . 'project_billing_type as pbt', 'pbt.id = j.project_type' , "LEFT");
 			//For Regionwise filtering
 			$this->db->where_in('j.lead_id', $result_ids);
+		}
 		
-			if (!empty($stage) && $stage!='null') {
-				$this->db->where("j.lead_status", '4');
-				$this->db->where_in("j.pjt_status", $stage);
-			} else {
-				$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
-			}
-			if (!empty($customer) && $customer!='null') {
-				$this->db->where_in('cc.companyid',$customer); 
-			}
-			/* if(!empty($pm)){		
-				$this->db->where_in('j.assigned_to',$pm); 
-			} */
-			if(!empty($services) && $services!='null'){
-				$this->db->where_in('j.lead_service',$services);
-			}
-			if(!empty($practices) && $practices!='null'){	
-				$this->db->where_in('j.practice',$practices);
-			}
-			if(!empty($divisions) && $divisions!='null'){		
-				$this->db->where_in('j.division',$divisions);
-			}
-			if(!empty($billing_type)) {
-				$this->db->where("j.billing_type", $billing_type);
-			}
-			if(!empty($customer_type) && $customer_type!='null'){		
-				$this->db->where_in('j.customer_type',$customer_type);
-			}
-			
-			if(!empty($from_date)) {
-				switch($datefilter) {
-					case 1:
-						if(!empty($to_date)) {
-							$this->db->where("(j.date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
-							$this->db->where("(j.date_start <='".date('Y-m-d', strtotime($to_date))."' OR j.date_due <='".date('Y-m-d', strtotime($to_date))."')", NULL, FALSE);
-						} else {
-							$this->db->where("(j.date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
-						}
-					break;
-					case 2:
-						if(!empty($to_date)) {
-							$this->db->where('j.date_start >=', date('Y-m-d', strtotime($from_date)));
-							$this->db->where('j.date_start <=', date('Y-m-d', strtotime($to_date)));
-						} else {
-							$this->db->where('j.date_start >=', date('Y-m-d', strtotime($from_date)));
-						}
-					break;
-					case 3:
-						if(!empty($to_date)) {
-							$this->db->where('j.date_due >=', date('Y-m-d', strtotime($from_date)));
-							$this->db->where('j.date_due <=', date('Y-m-d', strtotime($to_date)));
-						} else {
-							$this->db->where('j.date_due >=', date('Y-m-d', strtotime($from_date)));
-						}
-					break;
-				}
+		//common filters
+		if (!empty($stage) && $stage!='null') {
+			$this->db->where("j.lead_status", '4');
+			$this->db->where_in("j.pjt_status", $stage);
+		} else {
+			$this->db->where("j.lead_id != 'null' AND j.lead_status IN ('4') AND j.pjt_status = 1 ");
+		}
+		if (!empty($customer) && $customer!='null') {
+			$this->db->where_in('cc.companyid',$customer); 
+		}
+		if(!empty($services) && $services!='null'){		
+			$this->db->where_in('j.lead_service',$services);
+		}
+		if(!empty($practices) && $practices!='null'){	
+			$this->db->where_in('j.practice',$practices);
+		}
+		if(!empty($divisions) && $divisions!='null'){		
+			$this->db->where_in('j.division',$divisions);
+		}
+		if(!empty($billing_type)) {
+			$this->db->where("j.billing_type", $billing_type);
+		}
+		if(!empty($customer_type) && $customer_type!='null'){		
+			$this->db->where_in('j.customer_type', $customer_type);
+		}
+		if(!empty($pm) && $pm!='null'){		
+			$this->db->where_in('j.assigned_to', $pm);
+		}
+		if(!empty($from_date)) {
+			switch($datefilter) {
+				case 1:
+					if(!empty($to_date)) {
+						$this->db->where("(j.date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
+						$this->db->where("(j.date_start <='".date('Y-m-d', strtotime($to_date))."' OR j.date_due <='".date('Y-m-d', strtotime($to_date))."')", NULL, FALSE);
+					} else {
+						$this->db->where("(j.date_start >='".date('Y-m-d', strtotime($from_date))."' OR j.date_due >='".date('Y-m-d', strtotime($from_date))."')", NULL, FALSE);
+					}
+				break;
+				case 2:
+					if(!empty($to_date)) {
+						$this->db->where('j.date_start >=', date('Y-m-d', strtotime($from_date)));
+						$this->db->where('j.date_start <=', date('Y-m-d', strtotime($to_date)));
+					} else {
+						$this->db->where('j.date_start >=', date('Y-m-d', strtotime($from_date)));
+					}
+				break;
+				case 3:
+					if(!empty($to_date)) {
+						$this->db->where('j.date_due >=', date('Y-m-d', strtotime($from_date)));
+						$this->db->where('j.date_due <=', date('Y-m-d', strtotime($to_date)));
+					} else {
+						$this->db->where('j.date_due >=', date('Y-m-d', strtotime($from_date)));
+					}
+				break;
 			}
 		}
 		
@@ -233,7 +176,7 @@ class Project_model extends crm_model
 		
 		$this->db->order_by("j.lead_id", "desc");
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+		// echo $this->db->last_query();
 		$pjts =  $query->result_array();
 		return $pjts;
 	}
@@ -1226,5 +1169,18 @@ class Project_model extends crm_model
 			$successful .= 'This log has been emailed to:<br />'.$send_to;
 		}
 	}
+	
+	function get_all_pm() 
+	{
+    	$this->db->select('u.userid,u.first_name,u.last_name,u.username,u.level,u.role_id,u.inactive,u.emp_id');
+		$this->db->from($this->cfg['dbpref'].'users as u');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.assigned_to = u.userid');
+		$this->db->where('u.username != ',"admin.enoah");
+    	$this->db->order_by('u.first_name',"asc");
+		$this->db->group_by('u.userid');
+		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
+		return $query->result_array();
+    }
 }
 ?>
