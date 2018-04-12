@@ -2,8 +2,8 @@ $(function() {
 	$('.data-tbls').dataTable({
 		"language": {
 				"search": "Search :",
-				},
-		"aaSorting": [ ],
+		},
+		
 		"iDisplayLength": 5,
 		"aoColumnDefs": [
 			{
@@ -15,6 +15,8 @@ $(function() {
 				aTargets: [ -3 ]
 			}
 		],
+		"aaSorting": [ [0, 'desc'] ],
+
 		"sPaginationType": "full_numbers",
 		"bInfo": true,
 		"bPaginate": true,
@@ -59,18 +61,17 @@ btnActions.prototype.doAction = function() {
 			data: params,		
 			cache: false,
 			success: function (html){
-			 
-						$( ".ui-tabs-nav li" ).each(function( index ) {
+				$( ".ui-tabs-nav li" ).each(function( index ) {
 
-						if($( this ).attr('aria-controls')=='jv-tab-4')
-						{
-							
-							$('.ui-tabs-nav li').eq(0).find("a").trigger('click');
-						    $('.ui-tabs-nav li').eq(index).find("a").trigger('click');
-						}
+				if($( this ).attr('aria-controls')=='jv-tab-4')
+				{
+					
+					$('.ui-tabs-nav li').eq(0).find("a").trigger('click');
+					$('.ui-tabs-nav li').eq(index).find("a").trigger('click');
+				}
 
-						});
-							if ( $( "#search-job-task" ).length  ||  $('#dashboard').val()==1 ) 
+				});
+				if ( $( "#search-job-task" ).length  ||  $('#dashboard').val()==1 ) 
 				{
 					resetpage();
 				}

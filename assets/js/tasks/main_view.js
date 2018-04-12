@@ -4,7 +4,7 @@
  *@task variable : task_userid,uio,created_by
 */
 
-$(function(){
+$(function(){ 
 
 	loadajaxwithurl('tasks/index/extend');
 	$('#set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0', maxDate: '+6M'});
@@ -112,24 +112,31 @@ function loadEditTables(){
 		}
 		$('#jv-tab-4').unblock();
 		//on click by from floating div
-		if(!isNaN(get_id) && (get_type=='random')) {
+		/* if(!isNaN(get_id) && (get_type=='random')) {
 			openEditTask(get_id, get_type);
-		}
+		} */
 	});
+
 }
-	
+
+
 function loadajaxwithurl(url)
 {
-		var params    		     = {};	
+	var params    		     = {};	
 	params[csrf_token_name]  = csrf_hash_token;
 	
 	//$('.all-tasks').load('tasks/index/extend #task-page .task-contents', params, check());
 	
- 	    $(".all-tasks").load(url,params, function(responseTxt, statusTxt, xhr){
-        if(statusTxt == "success")
-          // alert("External content loaded successfully!");
-        if(statusTxt == "error")
+	$(".all-tasks").load(url,params, function(responseTxt, statusTxt, xhr) {
+        if(statusTxt == "success") {
+			// alert("External content loaded successfully!");
+			if(!isNaN(get_id)) {
+				openEditTask(get_id, 'random');
+			}
+		}
+        if(statusTxt == "error") {
             alert("Error: " + xhr.status + ": " + xhr.statusText);
+		}
     }); 
 }
 
@@ -145,5 +152,6 @@ function isPaymentVal(evt) {
 	return false;
 	else
 	return true;
-}	
+}
+
 //////////////////////////////////////////////////////////////////// end ///////////////////////////////////////////////////
