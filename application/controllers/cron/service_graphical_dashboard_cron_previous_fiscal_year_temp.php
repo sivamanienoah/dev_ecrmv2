@@ -93,7 +93,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 		$start_date    		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$end_date    		= ($curFiscalYear)."-03-31";  //eg.2013-04-01 */
 		
-		$curFiscalYear 	= getLastFiscalYear();
+		$curFiscalYear 	= 2019;
 		$start_date    	= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$end_date    	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 
