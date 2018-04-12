@@ -42,7 +42,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 		$this->fiscal_month_arr 	= array('Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar');
 		$lastMonthArrCalcNoForEndmonth = array('04', '05');
 		
-		$curFiscalYear 	= getLastFiscalYear();
+		$curFiscalYear 	= 2017;
 		$start_date    	= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$end_date    	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 		
@@ -103,52 +103,6 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
 		
-		echo'<pre>';print_r($curFiscalYear);
-		
-		/* insert or update data in services_graphical_dashboard_last_fiscal_year table from services_graphical_dashboard table */
-		
-			$this->db->select('*');
-			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
-			$sgd_res = $this->db->get();
-			$res_data = $sgd_res->result();	
-			// echo'<pre>';print_r($res_data);exit;
-			if(!empty($res_data) && count($res_data)>0) {
-				foreach($res_data as $each_res){
-					$inser_data = array();
-										
-					$inser_data['ytd_billable'] = $each_res->ytd_billable;
-					$inser_data['ytd_billable_utilization_cost'] = $each_res->ytd_billable_utilization_cost;
-					$inser_data['contri_Apr'] = $each_res->contri_Apr;
-					$inser_data['contri_May'] = $each_res->contri_May;
-					$inser_data['contri_Jun'] = $each_res->contri_Jun;
-					$inser_data['contri_Jul'] = $each_res->contri_Jul;
-					$inser_data['contri_Aug'] = $each_res->contri_Aug;
-					$inser_data['contri_Sep'] = $each_res->contri_Sep;
-					$inser_data['contri_Oct'] = $each_res->contri_Oct;
-					$inser_data['contri_Nov'] = $each_res->contri_Nov;
-					$inser_data['contri_Dec'] = $each_res->contri_Dec;
-					$inser_data['contri_Jan'] = $each_res->contri_Jan;
-					$inser_data['contri_Feb'] = $each_res->contri_Feb;
-					$inser_data['contri_Mar'] = $each_res->contri_Mar;
-					$inser_data['tot_contri'] = $each_res->tot_contri;
-					
-					$inser_data['practice_name'] = $each_res->practice_name;
-					$inser_data['fiscal_year'] = $curFiscalYear;
-					
-					$ins_res = $this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year_temp', $inser_data);
-					if($ins_res == true){
-						echo'inserted';
-					}
-				}
-			}
-			/* insert or update ends */
-		exit;
-		
-		
-		
-		
-		
-
 		$project_status = 1;
 		
 		$project_code 	= array();
@@ -584,6 +538,56 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 			// echo $this->db->last_query() . "<br />";
 			
 			$ended_at = date("Y-m-d H:i:s");
+			
+			/* insert or update data in services_graphical_dashboard_last_fiscal_year table from services_graphical_dashboard_last_fiscal_year_temp table */
+			$this->db->select('*');
+			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year_temp');
+			$sgdlast_temp_res = $this->db->get();
+			$last_res_data = $sgdlast_temp_res->result();	
+			
+			if(!empty($last_res_data) && count($last_res_data)>0) {
+				foreach($last_res_data as $each_res){
+					$this->db->select('sgdlast.*');
+					$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year as sgdlast');
+					$this->db->where('sgdlast.practice_name', $each_res->practice_name);
+					$this->db->where('sgdlast.fiscal_year', $curFiscalYear);
+					$sgdlast_res = $this->db->get();
+					$sgdlast_data = $sgdlast_res->result();
+					
+					$inser_data = array();
+					
+					
+					$inser_data['ytd_billable'] = $each_res->ytd_billable;
+					$inser_data['ytd_billable_utilization_cost'] = $each_res->ytd_billable_utilization_cost;
+					$inser_data['contri_Apr'] = $each_res->contri_Apr;
+					$inser_data['contri_May'] = $each_res->contri_May;
+					$inser_data['contri_Jun'] = $each_res->contri_Jun;
+					$inser_data['contri_Jul'] = $each_res->contri_Jul;
+					$inser_data['contri_Aug'] = $each_res->contri_Aug;
+					$inser_data['contri_Sep'] = $each_res->contri_Sep;
+					$inser_data['contri_Oct'] = $each_res->contri_Oct;
+					$inser_data['contri_Nov'] = $each_res->contri_Nov;
+					$inser_data['contri_Dec'] = $each_res->contri_Dec;
+					$inser_data['contri_Jan'] = $each_res->contri_Jan;
+					$inser_data['contri_Feb'] = $each_res->contri_Feb;
+					$inser_data['contri_Mar'] = $each_res->contri_Mar;
+					$inser_data['tot_contri'] = $each_res->tot_contri;
+					
+					if(empty($sgdlast_data)){
+						
+						$inser_data['practice_name'] = $each_res->practice_name;
+						$inser_data['fiscal_year'] = $curFiscalYear;
+						
+						$ins_res = $this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inser_data);
+					} else if(!empty($sgdlast_data) && count($sgdlast_data)>0){
+						
+						$this->db->where('practice_name',$sgdlast_data->practice_name);
+						$this->db->where('fiscal_year',$curFiscalYear);
+						$upd_res = $this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inser_data);
+					}
+				}
+			}
+			/* insert or update ends */
 			
 			if($ins_result) {
 				$upload_status = "Updated Successfully";
