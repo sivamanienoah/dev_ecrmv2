@@ -468,6 +468,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$inse_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
+					$inse_array['fiscal_year'] 			  	  = $curFiscalYear;
 					$this->db->where(array('practice_name' => $parr));
 					$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year_temp', $inse_array);
 					// echo $this->db->last_query() . "<br />";
@@ -520,6 +521,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 					$tot_bill_eff     += $projects['billable_ytd'][$parr]['Billable']['hour'];
 					$tot_tot_bill_eff += $projects['billable_ytd'][$parr]['totalhour'];
 				}			
+				$ins_array['fiscal_year'] 			  	  = $curFiscalYear;
 				
 				$this->db->where(array('practice_name' => $parr));
 				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year_temp', $ins_array);
