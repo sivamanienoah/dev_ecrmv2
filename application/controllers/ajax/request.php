@@ -1686,17 +1686,8 @@ HDOC;
 				
 				//for follow up task
 				if(isset($post_data['follow_up']) && $post_data['follow_up']==1) {
-					$follow_up_arr = $this->request_model->get_task_info_by_id($update);
-					unset($follow_up_arr['taskid']);
-					$follow_up_arr['userid_fk']  = $ins['userid_fk'];
-					$follow_up_arr['start_date'] = $follow_up_arr['created_on'] = date('Y-m-d H:i:s');
-					$follow_up_arr['created_by'] = $this->userdata['userid'];
-					$follow_up_arr['end_date']   = date('Y-m-d H:i:s');
-					$follow_up_arr['actualstart_date'] = '0000-00-00 00:00:00';
-					$follow_up_arr['remarks']	= '';
-					// echo '<pre>'; print_r($task_det); die;
-					$this->db->insert($this->cfg['dbpref'].'tasks', $follow_up_arr);
-					$follow_up_id =  $this->db->insert_id();
+					$follow_up_arr = $this->request_model->get_task_info_by_id($update);					
+					$follow_up_id  = $follow_up_arr['jobid_fk'];
 				}
 				
 				//echo $this->db->last_query();exit;
