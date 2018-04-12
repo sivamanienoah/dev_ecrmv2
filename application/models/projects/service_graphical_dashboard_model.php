@@ -228,17 +228,16 @@ class Service_graphical_dashboard_model extends crm_model {
     }
 	
 	public function get_records($tbl, $wh_condn='', $order='') {
+		$cur_Fiscal_Year = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].$tbl);
-		if(!empty($wh_condn))
-		$this->db->where($wh_condn);
+		$this->db->where('financial_yr <=', $cur_Fiscal_Year);
 		if(!empty($order)) {
 			foreach($order as $key=>$value) {
 				$this->db->order_by($key,$value);
 			}
 		}
 		$query = $this->db->get();
-		// echo $this->db->last_query();
 		return $query->result_array();
     }
 

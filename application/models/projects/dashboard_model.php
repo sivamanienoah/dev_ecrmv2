@@ -142,8 +142,10 @@ class Dashboard_model extends crm_model
 	}	
 	
 	public function get_records($tbl, $wh_condn='', $order='') {
+		$cur_Fiscal_Year = getFiscalYearForDate(date("m/d/y"),"4/1","3/31");
 		$this->db->select('*');
 		$this->db->from($this->cfg['dbpref'].$tbl);
+		$this->db->where('financial_yr <=', $cur_Fiscal_Year);
 		if(!empty($wh_condn))
 		$this->db->where($wh_condn);
 		if(!empty($order)) {
