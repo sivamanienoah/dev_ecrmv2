@@ -349,12 +349,12 @@ if(!empty($sub_tot)) {
 			$calc_tot_cost 			+= $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
 			$pjt_tot_cost			 = $sub_tot[$p_name]['sub_tot_cost']+$other_cost_val['value'];
 			$contri_val				 = (($inv_val-$pjt_tot_cost)/$inv_val)*100;
-			$rag_status				 = isset($sub_tot[$p_name]['rag']) ? $sub_tot[$p_name]['rag'] : '';
+			$rag_status				 = isset($sub_tot[$p_name]['rag']) ? $sub_tot[$p_name]['rag'] : 'Red';
 			$customer_name			 = (isset($sub_tot[$p_name]['customer_name']) && $sub_tot[$p_name]['customer_name'] !='-') ? ucfirst($sub_tot[$p_name]['customer_name']) : '-';
 			$entity_name			 = (isset($sub_tot[$p_name]['entity_name']) && !empty($sub_tot[$p_name]['entity_name'])) ? $sub_tot[$p_name]['entity_name'] : '-';
 			$lead_id = (isset($sub_tot[$p_name]['lead_id'])) ? $sub_tot[$p_name]['lead_id'] : '';
 			
-			$bg_rag_color_status	 = isset($rag_clr_arr[$rag_status]) ? 'bgcolor='.$rag_clr_arr[$rag_status] : '';
+			$bg_rag_color_status	 = isset($rag_clr_arr[$rag_status]) ? 'bgcolor='.$rag_clr_arr[$rag_status] : 'bgcolor="#c21706"';
 			echo "<tr data-depth='".$i."' class='collapse'>
 				<td align='left' class='collapse lft-ali'>".ucfirst($customer_name)."</span></td>
 				<td align='left' class='collapse lft-ali'><a target='_blank' href=".$base_url.'project/view_project/'.$lead_id." title='View Project'>".ucfirst($name)."</a></span></td>
