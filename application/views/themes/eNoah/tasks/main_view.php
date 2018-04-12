@@ -3,6 +3,9 @@ ob_start();
 require (theme_url().'/tpl/header.php');
 ?>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
+<style>
+.tas-flw { padding: 0 5px 10px 5px; }
+</style>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript">var this_is_home = true;</script>
 <script type="text/javascript">var curr_job_id = 0;</script>
@@ -414,12 +417,17 @@ $(function(){
 					</td>
 				</tr>
 				<tr>
-					<td colspan="4">
+					<td colspan="2">
 						<div class="buttons">
 							<button type="submit" class="positive" onclick="editTask();">Update</button>
 						</div>
 						<div class="buttons">
 							<button type="submit" class="negative" onclick="$.unblockUI();">Cancel</button>
+						</div>
+					</td>
+					<td colspan="2">
+						<div class="buttons">
+							<label><input type="checkbox" name="follow_up" id="follow_up_task" value="1" /><span class="tas-flw">Follow Up</span></label>
 						</div>
 					</td>
 				</tr>

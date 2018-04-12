@@ -1,3 +1,6 @@
+<style>
+.hide { display: none; }
+</style>
 <?php
 ob_start();
 $cfg = $this->config->item('crm');
