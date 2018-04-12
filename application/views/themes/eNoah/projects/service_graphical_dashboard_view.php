@@ -85,10 +85,10 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 							</select>
 						</div>
 						
-						<div class='pull-left'>
+						<!--<div class='pull-left'>
 							<span id='show_srch_btn'><input type="submit" class="positive input-font" name="advance" id="advance" value="Search"/></span>
-							<span id='show_load_btn' style="display:none;"><img src="<?php echo base_url().'assets/images/loading.gif'; ?>" style="margin-left: 6px; width: 65px;"></span>
-						</div>
+							<span id='show_load_btn' style="display:none;"><img src="<?php //echo base_url().'assets/images/loading.gif'; ?>" style="margin-left: 6px; width: 65px;"></span>
+						</div>-->
 					</div>
 				</form>
 			</div>
@@ -296,4 +296,12 @@ var con_pra_month_value = [];
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_practice_compare_bar.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_practice_month_line.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_contrib_practice_month_line.js"></script>
+
+<script>
+   $("#fy_name").change(function () {
+        var end = this.value;
+        service_graph_dashboard.submit();
+    });
+</script>
+
 <?php require (theme_url().'/tpl/footer.php'); ?>
