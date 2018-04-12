@@ -579,11 +579,17 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 						$inser_data['fiscal_year'] = $curFiscalYear;
 						
 						$ins_res = $this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inser_data);
+						if($ins_res == true){
+							echo'inserted' . "<br />";
+						}
 					} else if(!empty($sgdlast_data) && count($sgdlast_data)>0){
 						
 						$this->db->where('practice_name',$sgdlast_data->practice_name);
 						$this->db->where('fiscal_year',$curFiscalYear);
 						$upd_res = $this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inser_data);
+						if($upd_res == true){
+							echo'updated' . "<br />";
+						}
 					}
 				}
 			}
