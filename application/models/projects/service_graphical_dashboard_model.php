@@ -164,13 +164,8 @@ class Service_graphical_dashboard_model extends crm_model {
 	public function getContributionRecords($select_values, $fiscal_year_status)
 	{
     	$this->db->select($select_values);
-		if($fiscal_year_status == 'current') {
-			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
-		} else if($fiscal_year_status == 'last') {
-			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
-		} else {
-			$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard');
-		}
+		$this->db->from($this->cfg['dbpref']. 'services_graphical_dashboard_last_fiscal_year');
+		$this->db->where('fiscal_year', $fiscal_year_status);
 		
 		$sql = $this->db->get();
 		$con_graph_res = $sql->result_array();
