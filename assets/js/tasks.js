@@ -75,7 +75,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 		{
 			if (data.error)
 			{
-				alert(data.errormsg);
+				// alert(data.errormsg);
 			}
 			else
 			{
@@ -91,7 +91,7 @@ function addNewTask(random,ci_csrf_token,csrf_hasf)
 				}
 				if (random_task_url != '')
 				{
-					window.location.href = window.location.href;
+					window.location.href = site_base_url+'tasks/all/';
 				}
 				$('#set-job-task')[0].reset();
 			}
@@ -397,9 +397,9 @@ function editTask()
 			// console.info(data); return;
 			if (data.error)
 			{
-				alert(data.errormsg);
+				// alert(data.errormsg);
 			} else if(follow_up == 1) {
-				window.location.href = site_base_url+'tasks/all/?id='+data.follow_up_id+'&type=random';
+				window.location.href = site_base_url+'tasks/all/?type=follow_up&job_id='+data.follow_up_id;
 				return false;
 			} else {
 				window.location.href = site_base_url+'tasks/all/';
@@ -538,7 +538,7 @@ function setTaskStatus(taskid, el)
 			{
 				if (data.error)
 				{
-					alert(data.errormsg);
+					// alert(data.errormsg);
 				}
 				else
 				{
@@ -675,6 +675,111 @@ function tabselector()
 	}
 	); */
 	
+}
+
+function openAddFollowUpTask(random='follow_up', job_id)
+{
+	// alert(random)
+	var params			    = {'taskid':'follow_up', 'random':random,};
+	params[csrf_token_name] = csrf_hash_token;
+	$('#jobid_fk_follow_up').val(job_id);
+	$.blockUI({
+		message:$('#add-follow-job-task table'),			
+		css: {background:'#fff', border: '2px solid #999', padding:'8px', color:'#333', width: '500px', marginLeft: '-250px', left: '50%', position:'absolute'}
+	});
+}
+
+
+
+function addNewFollowTask(random,ci_csrf_token,csrf_hasf)
+{
+	var errors = [],
+	job_task = $('#follow-job-task-desc').val(),
+	task_user = $('#follow_task_user').val(),
+	user_label = $('#tast_user_lbl').val(),
+	remarks = $('#follow-task-remarks').val(),	
+	task_hours = $('#add-follow-job-task input[name="task_hours"]').val(),
+	task_estimated_hours = $('#add-follow-job-task input[name="estimated_hours"]').val(),
+	task_mins = $('#add-follow-job-task select[name="task_mins"]').val(),
+	task_start_date = $('#follow-edit-start-date').val(),
+	task_end_date = $('#follow-edit-end-date').val(),
+	taskCategory = $("#follow_taskCategory").val(),
+	taskpriority = $("#follow_taskpriority").val(),
+	require_qc = 'NO';
+	priority =  'NO';
+	task_end_hour =  0;
+	
+	if (job_task == '')
+	{
+		errors.push('Task is required!');
+	}
+	
+	if ( ! /^[0-9]+$/.test(task_hours) && task_mins < 15)
+	{
+		errors.push('Valid hours required!');
+	}
+	
+	if ( ! /^[0-9]+$/.test(task_user))
+	{
+		errors.push('Task user required!');
+	}
+	if ( ! /^[0-9]+$/.test(taskpriority))
+	{
+		errors.push('Task Priority required!');
+	}
+	if ( ! /^[0-9]+$/.test(taskCategory))
+	{
+		errors.push('Task Category required!');
+	}	
+	
+	if ( ! /^[0-9]{2}-[0-9]{2}-[0-9]{4}$/.test(task_start_date))
+	{
+		errors.push('Valid start date is required!');
+	}
+	
+	if ( ! /^[0-9]{2}-[0-9]{2}-[0-9]{4}$/.test(task_end_date))
+	{
+		errors.push('Valid end date is required!');
+	}
+	
+	if (errors.length > 0)
+	{
+		alert(errors.join('\n'));
+		return false;
+	}
+	// $('#jv-tab-4').blockUI({
+	// $(this).blockUI({
+	$('#jv-tab-4').block({
+		message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+		css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+	}).delay(1);
+	
+	var random_task_url = '';
+	if (random == 'random')
+	{
+		random_task_url = '/NO/YES';
+	}
+	
+	$.post(
+		'ajax/request/add_job_task' + random_task_url,
+		{'lead_id': $('#jobid_fk_follow_up').val(), 'job_task': job_task, 'task_user': task_user, 'user_label':  user_label, 'task_hours': task_hours, 'task_mins': task_mins, 'task_start_date': task_start_date, 'task_end_date': task_end_date, 'task_end_hour': task_end_hour, 'require_qc': require_qc, 'priority': priority, 'remarks': remarks, 'task_category': taskCategory, 'task_priority': taskpriority, 'estimated_hours': task_estimated_hours,'ci_csrf_token': csrf_hasf},
+		function (data)
+		{
+			// console.info(data); return;
+			if (data.error)
+			{
+				// alert(data.errormsg);
+			}
+			else
+			{
+				window.location.href = site_base_url+'tasks/all/';
+			}
+			$("#follow_taskCategory").val('').trigger("liszt:updated");
+			$("#follow_taskpriority").val('').trigger("liszt:updated");
+			$('#add-follow-job-task').unblock();
+		},
+		'json'
+	);
 }
 
 

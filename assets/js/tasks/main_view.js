@@ -7,7 +7,7 @@
 $(function(){ 
 
 	loadajaxwithurl('tasks/index/extend');
-	$('#set-job-task .pick-date, #edit-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0', maxDate: '+6M'});
+	$('#set-job-task .pick-date, #edit-job-task .pick-date, #add-follow-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: '0', maxDate: '+6M'});
 	$('#search-job-task .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
 	
 	$('#task_search_user').val(task_userid);
@@ -111,10 +111,6 @@ function loadEditTables(){
 			$('form.random-task-tables').html(data);
 		}
 		$('#jv-tab-4').unblock();
-		//on click by from floating div
-		/* if(!isNaN(get_id) && (get_type=='random')) {
-			openEditTask(get_id, get_type);
-		} */
 	});
 
 }
@@ -130,8 +126,11 @@ function loadajaxwithurl(url)
 	$(".all-tasks").load(url,params, function(responseTxt, statusTxt, xhr) {
         if(statusTxt == "success") {
 			// alert("External content loaded successfully!");
-			if(!isNaN(get_id)) {
+			/* if(!isNaN(get_id)) {
 				openEditTask(get_id, 'random');
+			} */
+			if(!isNaN(job_id) && (get_type=='follow_up')) {
+				openAddFollowUpTask(get_type, job_id);
 			}
 		}
         if(statusTxt == "error") {
