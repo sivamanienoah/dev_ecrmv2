@@ -137,7 +137,7 @@ require (theme_url().'/tpl/header.php');
 										<select style="width:110px" multiple="multiple" id="leadassignee" name="leadassignee[]">
 											<?php foreach ($lead_owner as $owner) {
 													if(!empty($owner['first_name'])) { ?>		
-														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' - '. $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
 											<?php 	} 
 												}
 											?>
