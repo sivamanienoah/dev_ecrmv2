@@ -117,10 +117,10 @@ require (theme_url().'/tpl/header.php');
 									</td>  
 									<td>
 										<select style="width:110px" multiple="multiple" id="worth" name="worth[]">
-											<option value="0-10000"> < 10000 </option>
-											<option value="10000-20000"> > 10000 < 20000 </option>
-											<option value="20000-50000"> > 20000 < 50000 </option>
-											<option value="50000-above"> > 50000 </option>
+											<option value="0-10000" title="< 10000"> < 10000 </option>
+											<option value="10000-20000" title="> 10000 < 20000"> > 10000 < 20000 </option>
+											<option value="20000-50000" title="> 20000 < 50000"> > 20000 < 50000 </option>
+											<option value="50000-above" title="> 50000"> > 50000 </option>
 										</select> 
 									</td>
 									<td>
