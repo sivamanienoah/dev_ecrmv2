@@ -128,6 +128,7 @@ function save_search() {
 	var to_date  	= $("#to_date").val();
 	var month_year_from_date = $("#month_year_from_date").val();
 	var month_year_to_date   = $("#month_year_to_date").val();
+	var pm   = $("#pm").val();
 	
 	//Save the search criteria
 	
@@ -136,7 +137,7 @@ function save_search() {
 		dataType: 'json',
 		url: site_base_url+"invoice/save_search/3",
 		cache: false,
-		data: "search_name="+search_name+"&is_default="+is_default+"&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+"&month_year_from_date="+month_year_from_date+"&month_year_to_date="+month_year_to_date+'&'+csrf_token_name+'='+csrf_hash_token,
+		data: "search_name="+search_name+"&is_default="+is_default+"&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+"&month_year_from_date="+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&pm="+pm+'&'+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
 			$('#popupGetSearchName').html('<div style="margin:10px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
 		},
@@ -150,7 +151,7 @@ function save_search() {
 				type: "POST",
 				url: site_base_url+"invoice/index/search",
 				cache: false,
-				data: "&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+"&month_year_from_date="+month_year_from_date+"&month_year_to_date="+month_year_to_date+'&'+csrf_token_name+'='+csrf_hash_token,
+				data: "&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+"&month_year_from_date="+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&pm="+pm+'&'+csrf_token_name+'='+csrf_hash_token,
 				success: function(data){
 					$.unblockUI();
 					$('#advance_search_results').html(data);

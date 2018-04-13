@@ -228,6 +228,7 @@ class Invoice extends CRM_Controller {
 		$ins['project']	  			 = $post_data['project'];
 		$ins['divisions'] 			 = $post_data['divisions'];
 		$ins['practice'] 			 = $post_data['practice'];
+		$ins['pm'] 					 = $post_data['pm'];
 		if($post_data['from_date']!='')
 		$ins['from_date']			 = date('Y-m-d H:i:s', strtotime($post_data['from_date']));
 		else
