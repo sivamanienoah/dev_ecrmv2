@@ -104,7 +104,7 @@ require (theme_url().'/tpl/header.php');
 									<td>
 										<select style="width:148px" multiple="multiple" id="stage" name="stage[]">
 											<?php foreach($lead_stage as $ls) { ?>
-													<option value="<?php echo $ls['lead_stage_id']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
+													<option value="<?php echo $ls['lead_stage_id']; ?>" title="<?php echo $ls['lead_stage_name']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
 											<?php } ?>					
 										</select> 
 									</td>
@@ -172,7 +172,7 @@ require (theme_url().'/tpl/header.php');
 											<?php
 												if(isset($industry) && count($industry)>0){
 													foreach($industry as $ind){ ?>
-														<option value="<?php echo $ind['id'] ?>"><?php echo $ind['industry'] ?></option>
+														<option value="<?php echo $ind['id'] ?>" title="<?php echo $ind['industry'] ?>"><?php echo $ind['industry'] ?></option>
 													<?php }
 												}
 											?>
