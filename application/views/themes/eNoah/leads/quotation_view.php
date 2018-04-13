@@ -216,18 +216,18 @@ require (theme_url().'/tpl/header.php');
 									</td>
 									<td>
 										<select style="width:120px" multiple="multiple" id="lead_status" name="lead_status[]">
-											<option value="1">Active</option>
-											<option value="2">OnHold</option>
-											<option value="3">Dropped</option>
-											<option value="4">Closed</option>
-											<option value="5">Moved to Project</option>
+											<option value="1" title="Active">Active</option>
+											<option value="2" title="OnHold">OnHold</option>
+											<option value="3" title="Dropped">Dropped</option>
+											<option value="4" title="Closed">Closed</option>
+											<option value="5" title="Moved to Project">Moved to Project</option>
 										</select> 
 									</td>
 									<td>
 										<select style="width:85px" multiple="multiple" id="lead_indi" name="lead_indi[]">
-											<option value="HOT">Hot</option>
-											<option value="WARM">Warm</option>
-											<option value="COLD">Cold</option>
+											<option value="HOT" title="Hot">Hot</option>
+											<option value="WARM" title="Warm">Warm</option>
+											<option value="COLD" title="Cold">Cold</option>
 										</select> 
 									</td>
 									
