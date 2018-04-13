@@ -111,7 +111,7 @@ require (theme_url().'/tpl/header.php');
 									<td>
 										<select style="width:180px" multiple="multiple" id="customer" name="customer[]">
 										<?php foreach($customers as $customer) { ?>
-											<option value="<?php echo $customer['companyid']; ?>"><?php echo $customer['company']; ?></option>	
+											<option value="<?php echo $customer['companyid']; ?>" title="<?php echo $customer['company']; ?>"><?php echo $customer['company']; ?></option>	
 										<?php } ?>
 										</select> 
 									</td>  
@@ -127,7 +127,7 @@ require (theme_url().'/tpl/header.php');
 										<select style="width:110px" multiple="multiple" id="owner" name="owner[]">
 											<?php foreach ($lead_owner as $owner) { 
 													if(!empty($owner['first_name'])) { ?>
-														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'] ?></option>
+														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' - '.$owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
 											<?php 	} 
 												} 
 											?>
@@ -148,7 +148,7 @@ require (theme_url().'/tpl/header.php');
 											<?php
 												if(isset($services) && count($services)>0){
 													foreach($services as $se){ ?>
-														<option value="<?php echo $se['sid'] ?>"><?php echo $se['services'] ?></option>
+														<option value="<?php echo $se['sid'] ?>" title="<?php echo $se['services'] ?>"><?php echo $se['services'] ?></option>
 													<?php }
 												}
 											?>
@@ -183,7 +183,7 @@ require (theme_url().'/tpl/header.php');
 											<?php
 												if(isset($sources) && count($sources)>0){
 													foreach($sources as $srcs){ ?>
-														<option value="<?php echo $srcs['lead_source_id'] ?>"><?php echo $srcs['lead_source_name'] ?></option>
+														<option value="<?php echo $srcs['lead_source_id'] ?>" title="<?php echo $srcs['lead_source_name'] ?>"><?php echo $srcs['lead_source_name'] ?></option>
 													<?php }
 												}
 											?>
@@ -193,7 +193,7 @@ require (theme_url().'/tpl/header.php');
 										<select style="width:180px" multiple="multiple" id="regionname" name="regionname[]">
 											<?php foreach ($regions as $reg) {
 													if(!empty($reg['region_name'])) { ?>
-														<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
+														<option value="<?php echo $reg['regionid'] ?>" title="<?php echo $reg['region_name'] ?>"><?php echo $reg['region_name'] ?></option>
 											<?php 	}
 												}
 											?>
