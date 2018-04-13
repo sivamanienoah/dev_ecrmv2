@@ -86,6 +86,7 @@ button.ui-datepicker-current { display: none; }
 								<td class="tblheadbg">By Practices</td>								
 								<td class="tblheadbg">By Date</td>
 								<td class="tblheadbg">Month & Year</td>
+								<td class="tblheadbg">By Project Manager</td>
 							</tr>
 							<tr>	
 								<td>
@@ -126,9 +127,20 @@ button.ui-datepicker-current { display: none; }
 									<br />
 									To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 13px;" />
 								</td>
+								<td colspan="4">
+									<select style="width:210px;" multiple="multiple" id="pm" name="pm[]">
+										<?php if(!empty($all_pm)) {
+											foreach($all_pm as $pm) {												
+												$pm_name = $pm['first_name'].(($pm['last_name']!='') ? ' '.$pm['last_name'].' ' : ' ').(($pm['emp_id']!='') ? '- '.$pm['emp_id'].' ' : ' ');
+											?>
+											<option value="<?php echo $pm['userid']; ?>"><?php echo $pm_name; ?></option>	
+											<?php } ?>
+										<?php } ?>
+									</select>
+								</td>
 							</tr>
 							<tr align="right" >
-								<td colspan="6">
+								<td colspan="7">
 									<input type="reset" class="positive input-font" name="advance" id="filter_reset" value="Reset" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="search_advance" value="Search" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="save_advance" value="Save & Search" />

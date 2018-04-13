@@ -48,7 +48,7 @@ class Invoice_model extends crm_model {
 		}
 		//Access control RESTIRCTION
 		
-		$this->db->select('expm.received, expm.expectid, expm.invoice_status, expm.amount, expm.project_milestone_name, expm.invoice_generate_notify_date, expm.expected_date, expm.month_year, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, ew.expect_worth_name, c.customer_name, cc.company, sd.base_currency, sd.division_name, p.practices');
+		$this->db->select('expm.received, expm.expectid, expm.invoice_status, expm.amount, expm.project_milestone_name, expm.invoice_generate_notify_date, expm.expected_date, expm.month_year, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, ew.expect_worth_name, c.customer_name, cc.company, sd.base_currency, sd.division_name, p.practices,l.assigned_to');
 
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
@@ -57,6 +57,7 @@ class Invoice_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'customers_company as cc', 'cc.companyid  = c.company_id');
 		$this->db->join($this->cfg['dbpref'].'sales_divisions as sd', 'sd.div_id = l.division');
 		$this->db->join($this->cfg['dbpref'].'practices as p', 'p.id = l.practice');
+		$this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = l.assigned_to' , "LEFT");
 		
 		if(!empty($job_ids) && count($job_ids)>0) {
 			$this->db->where_in('expm.jobid_fk', $job_ids);
@@ -91,6 +92,11 @@ class Invoice_model extends crm_model {
 		if (!empty($filter['practice']) && $filter['practice']!='null') {
 			$filter['practice'] = @explode(',',$filter['practice']);
 			$this->db->where_in('l.practice', $filter['practice']);
+		}
+		
+		if (!empty($filter['pm']) && $filter['pm']!='null') {
+			$filter['pm'] = explode(',',$filter['pm']);
+			$this->db->where_in('l.assigned_to', $filter['pm']);
 		}
 		
 		if(!$invoice){
@@ -362,6 +368,19 @@ class Invoice_model extends crm_model {
 	    $query = $this->db->get();
 	    return $query->result_array();
 	}
+	
+	function get_all_pm() 
+	{
+    	$this->db->select('u.userid,u.first_name,u.last_name,u.username,u.level,u.role_id,u.inactive,u.emp_id');
+		$this->db->from($this->cfg['dbpref'].'users as u');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.assigned_to = u.userid');
+		$this->db->where('u.username != ',"admin.enoah");
+    	$this->db->order_by('u.first_name',"asc");
+		$this->db->group_by('u.userid');
+		$query = $this->db->get();
+		// echo $this->db->last_query(); die;
+		return $query->result_array();
+    }
 }
 
 ?>

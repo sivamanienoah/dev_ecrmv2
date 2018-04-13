@@ -50,12 +50,13 @@ $("#search_advance").click(function() {
 	var to_date   = $("#to_date").val();
 	var month_year_from_date = $("#month_year_from_date").val();
 	var month_year_to_date   = $("#month_year_to_date").val();
+	var pm   = $("#pm").val();
 
 	$.ajax({
 		type: "POST",	
 		url: site_base_url+"invoice/index/search",
 		// dataType: "json",
-		data: "filter=filter"+"&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+"&"+csrf_token_name+'='+csrf_hash_token,
+		data: "filter=filter"+"&project="+project+"&customer="+customer+"&divisions="+divisions+"&practice="+practice+"&from_date="+from_date+"&to_date="+to_date+'&month_year_from_date='+month_year_from_date+"&month_year_to_date="+month_year_to_date+'&pm='+pm+"&"+csrf_token_name+'='+csrf_hash_token,
 		beforeSend:function(){
 			$('#results').empty();
 			$('#results').html('<div style="margin:20px;" align="center">Loading Content.<br><img alt="wait" src="'+site_base_url+'assets/images/ajax_loader.gif"><br>Thank you for your patience!</div>');
@@ -311,7 +312,6 @@ $(function() {
 
 $('#inv_excel').click(function() {
 	var export_inv_type = $("#val_export").val();
-	
 	if(!isNaN(export_inv_type)) {
 		export_inv_type = 'number';
 	}
@@ -327,6 +327,7 @@ $('#inv_excel').click(function() {
 			var to_date  	= $("#to_date").val();
 			var month_year_from_date = $("#month_year_from_date").val();
 			var month_year_to_date   = $("#month_year_to_date").val();
+			var pm   		= $("#pm").val();
 			
 			var url = site_base_url+"invoice/invExcelExport";
 			
@@ -339,6 +340,7 @@ $('#inv_excel').click(function() {
 			  '<input id="from_date" type="hidden" name="from_date" value="'+from_date+'" />'+
 			  '<input id="to_date" type="hidden" name="to_date" value="'+to_date+'" />'+
 			  '<input type="hidden" name="month_year_from_date" id="month_year_from_date" value="'+month_year_from_date+ '" />' +
+			  '<input id="pm" type="hidden" name="pm" value="'+pm+'" />'+
 			  '<input type="hidden" name="month_year_to_date" id="month_year_to_date" value="'+month_year_to_date+ '" /></form>');
 			$('body').append(form);
 			$(form).submit();

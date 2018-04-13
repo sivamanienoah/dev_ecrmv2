@@ -60,6 +60,7 @@ class Invoice extends CRM_Controller {
 		$data['practices'] 		 = $this->invoice_model->get_practices();
 		$data['sales_divisions'] = $this->invoice_model->get_sales_divisions();
 		$data['saved_search']    = $this->invoice_model->get_saved_search($this->userdata['userid'], $search_for=3);
+		$data['all_pm'] 		 = $this->invoice_model->get_all_pm();
 		
 		$project   = 'null';
 		$customer  = 'null';
@@ -69,6 +70,7 @@ class Invoice extends CRM_Controller {
 		$to_date   = 'null';
 		$month_year_from_date = 'null';
 		$month_year_to_date   = 'null';
+		$pm   = 'null';
 		
 		$filter =  array();
 		$data['val_export'] = 'no_search';
@@ -333,7 +335,7 @@ class Invoice extends CRM_Controller {
 		} else {
 			$filter = real_escape_array($this->input->post());
 		}
-	
+		
 		$rates 	  = $this->get_currency_rates();
 		$default_currency = $this->default_cur_name;
 		
@@ -383,6 +385,11 @@ class Invoice extends CRM_Controller {
 		$filter['month_year_to_date'] = $filter['month_year_to_date'];
 		else
 		$filter['month_year_to_date'] = '';
+	
+		if(!empty($filter['pm']))
+		$filter['pm'] = $filter['pm'];
+		else
+		$filter['pm'] = '';
 		
 		$invoices_res = $this->invoice_model->get_invoices($filter,0);
 		
