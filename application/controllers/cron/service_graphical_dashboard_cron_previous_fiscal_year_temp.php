@@ -21,7 +21,7 @@ Modified By     : Sriram.S
 // error_reporting(E_ALL);
 // error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 // ini_set('display_errors',1);
-class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controller
+class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_controller
 {	
     public function __construct()
 	{
