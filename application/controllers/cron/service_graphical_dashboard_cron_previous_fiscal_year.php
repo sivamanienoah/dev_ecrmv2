@@ -417,7 +417,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 			}
 		}
 		
-		echo '<pre>'; print_r($contribution_trend_arr); die;
+		
 		
 		$projects['contribution_trend_arr'] = $contribution_trend_arr;
 		foreach($directcost2 as $practiceId => $val1) {
@@ -436,7 +436,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 		}
 		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
-		
+		echo '<pre>'; print_r($projects); die;
 		$ins_array    = array();
 		$tot 		  = array();
 		$tot_bill_eff = $tot_tot_bill_eff = $tot_temp_ytd_uc = $tot_temp_billable_ytd_uc = 0;
