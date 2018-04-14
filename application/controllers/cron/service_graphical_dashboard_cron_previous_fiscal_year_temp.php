@@ -86,7 +86,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 		$bk_rates 	   	= get_book_keeping_rates();
 		$ins_result	   	= 0;
 		
-		$curFiscalYear 		= 2018;
+		$curFiscalYear 		= 2017;
 		$start_date    		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$end_date    		= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 
