@@ -31,6 +31,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 		$this->load->helper('custom');
 		$this->load->helper('url');
 		$this->load->model('projects/service_graphical_dashboard_model');
+		$this->load->model('projects/dashboard_model');
 		if (get_default_currency()) {
 			$this->default_currency = get_default_currency();
 			$this->default_cur_id   = $this->default_currency['expect_worth_id'];
@@ -190,11 +191,15 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 		$data['projects']           = $projects; //billable efforts
 		
 		//for utiliztion cost calculation - start
-		$this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, t.entry_month as month_name, t.entry_year as yr, t.start_time');
+		/* $this->db->select('t.dept_id, t.dept_name, t.practice_id, t.practice_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost, t.entry_month as month_name, t.entry_year as yr, t.start_time');
 		$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left'); */
 		// $this->db->where_in("l.pjt_id", array('ITS-ULT-04-0916')); // for temporary use
 		// $this->db->where_in("l.pjt_id", array("ITS-ERS-07-1016","ITS-SVM-03-0916","ITS-ULT-04-0916","ITS-SVM-02-0716","ITS-ULT-03-0716","COS-ENO-49-0616","COS-ENO-46-0616","COS-ENO-44-0616","COS-ENO-34-0616","ITS-PAW-01-0716","ITS-ULT-02-0416","ITS-SVM-01-0416","ITS-ULT-01-0416","ITS-MAG-01-0416","ITS-TON-01-0316","COS-NOA-05-0216","ITS-ENO-19-1015","ITS-ENO-09-0415","ITS-RPT-01-1115")); // for temporary use
+		
+		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.resource_total_hours, t.practice_id, t.practice_name, t.start_time');		
+		$this->db->from($this->cfg['dbpref'].'timesheet_month_data as t');
+		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.pjt_id = t.project_code', 'left');
 		
 		if(!empty($start_date) && !empty($end_date)) {
 			$this->db->where("t.start_time >= ", date('Y-m-d', strtotime($start_date)));
@@ -237,14 +242,22 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 		if(count($resdata)>0) {
 			$rates = $this->get_currency_rates();
 			foreach($resdata as $rec) {
-				$financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
-				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id, $financialYear);
+				/* $financialYear      = get_current_financial_year($rec->yr, $rec->month_name);
+				$max_hours_resource = get_practice_max_hour_by_financial_year($rec->practice_id, $financialYear); */
+				
+				$financialYear 			= get_current_financial_year($rec->yr, $rec->month_name);
+				$max_hrs 				= 0;
+				if(isset($practice_id_year_array[$rec->practice_id][$financialYear])) {
+					$max_hrs = $practice_id_year_array[$rec->practice_id][$financialYear];
+				} else if(isset($practice_id_array[$rec->practice_id])) {
+					$max_hrs = $practice_id_array[$rec->practice_id];
+				}
 				
 				$timesheet_data[$rec->username]['practice_id'] = $rec->practice_id;
-				$timesheet_data[$rec->username]['max_hours']   = isset($max_hours_resource->practice_max_hours) ? $max_hours_resource->practice_max_hours : 0;
+				$timesheet_data[$rec->username]['max_hours']   = $max_hrs;
 				$timesheet_data[$rec->username]['dept_name']   = $rec->dept_name;
 				
-				$rateCostPerHr = round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
+				$rateCostPerHr 		 = round($rec->cost_per_hour * $rates[1][$this->default_cur_id], 2);
 				$directrateCostPerHr = round($rec->direct_cost_per_hour * $rates[1][$this->default_cur_id], 2);
 				
 				if(isset($timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['duration_hours'])) {
@@ -256,8 +269,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['direct_rateperhr'] = $directrateCostPerHr;	
 					$timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['rateperhr'] 		= $rateCostPerHr;
 				}
-				$get_total_hours = get_timesheet_hours_by_user($rec->username,$rec->yr,$rec->month_name,array('Leave','Hol'));
-				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = $get_total_hours;
+				$timesheet_data[$rec->username][$rec->yr][$rec->month_name]['total_hours'] = $rec->resource_total_hours;
 				
 				if($rec->resoursetype == 'Billable') {
 					if(isset($timesheet_data[$rec->username][$rec->yr][$rec->month_name][$rec->project_code]['billable_hours'])) {
@@ -295,6 +307,9 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 													$percentage 		= ($max_hours/$individual_billable_hrs);
 													$rate1 				= number_format(($percentage*$direct_rateperhr),2);
 													$direct_rateperhr1  = number_format(($percentage*$direct_rateperhr),2);
+												}
+												if($value1['practice_id'] == 0) {
+													$direct_rateperhr1  = $direct_rateperhr;
 												}
 												if(isset($resource_cost[$resource_name][$year][$month][$key4]['duration_hours'])){
 													$resource_cost[$resource_name][$year][$month][$key4]['duration_hours'] += $duration_hours;
