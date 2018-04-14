@@ -90,14 +90,14 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 		$ins_result	   	= 0;
 		
 		$curFiscalYearTemp 	= calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31"); 
-		echo $last_fiscal_year 	= ($curFiscalYearTemp-1);
+		$last_fiscal_year 	= ($curFiscalYearTemp-1);
 		
 		$curFiscalYear 		= $last_fiscal_year;
 		$start_date    		= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$end_date    		= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 
-		echo $start_date 	= date("Y-m-01",strtotime($start_date));
-		echo $end_date 		= date("Y-m-t", strtotime($end_date)); die;
+		$start_date 	= date("Y-m-01",strtotime($start_date));
+		$end_date 		= date("Y-m-t", strtotime($end_date));
 
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
@@ -467,13 +467,13 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 
 		if(!empty($practice_array)){
 			//truncate the table & inserting the practices name from table.
-			$this->db->truncate($this->cfg['dbpref'].'services_graphical_dashboard_last_fiscal_year');
+			// $this->db->truncate($this->cfg['dbpref'].'services_graphical_dashboard_last_fiscal_year');
 			foreach($practice_array as $parr) {
 				$ins_data['practice_name'] = $parr;
-				$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_data);
+				// $this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_data);
 			}
 			$ins_data['practice_name'] = 'Total';
-			$this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_data);
+			// $this->db->insert($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_data);
 			
 			// for total contribution & total revenue
 			$overall_revenue = $overall_contrib = 0;
@@ -492,16 +492,16 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$inse_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
-					// echo $parr.'-  Mon - '. $fis_mon . ' Revenue - ' .$mon_revenue . ' Contribu - ' .$mon_contrib; echo '<br />';
-					// echo '<pre>'; print_r($inse_array); echo '</pre>';
+					echo $parr.'-  Mon - '. $fis_mon . ' Revenue - ' .$mon_revenue . ' Contribu - ' .$mon_contrib; echo '<br />';
+					echo '<pre>'; print_r($inse_array); echo '</pre>';
 					$this->db->where(array('practice_name' => $parr));
-					$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inse_array);
+					// $this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inse_array);
 					// echo $this->db->last_query() . "<br />";
 					$inse_array = array();
 					if($fis_mon == $this->upto_month) { break; }
 				}
 			}
-			// echo '<br>**************************************************';
+			echo '<br>**************************************************';
 			
 			foreach($practice_array as $parr){
 				/**other cost data*/
@@ -549,7 +549,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 				}			
 				
 				$this->db->where(array('practice_name' => $parr));
-				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_array);
+				// $this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $ins_array);
 				// echo $this->db->last_query() . "<br />";
 				echo '<pre>'; print_r($ins_array); echo '</pre>';
 				$ins_array = array();
