@@ -98,8 +98,8 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 		$start_date    	= ($curFiscalYear-1)."-04-01";  //eg.2013-04-01
 		$end_date    	= ($curFiscalYear)."-03-31";  //eg.2013-04-01
 
-		$start_date 	= date("Y-m-01",strtotime($start_date));
-		$end_date 		= date("Y-m-t", strtotime($end_date));
+		echo $start_date 	= date("Y-m-01",strtotime($start_date));
+		echo $end_date 		= date("Y-m-t", strtotime($end_date));die;
 
 		$data['start_date'] = $start_date;
 		$data['end_date']   = $end_date;
