@@ -202,7 +202,6 @@ class It_service_dashboard extends crm_controller
 					} else {
 						$projects['irval'][$practice_arr[$ir['practice']]] = $this->conver_currency($base_conver_amt,$bk_rates[$this->calculateFiscalYearForDate(date('m/d/y', strtotime($ir['for_month_year'])),"4/1","3/31")][$ir['base_currency']][$this->default_cur_id]);
 					}
-					
 				}
 			}
 			
@@ -606,7 +605,7 @@ class It_service_dashboard extends crm_controller
 				
 				$ins_array['billing_month'] = ($projects['cm_irval'][$prarr] != '') ? round($projects['cm_irval'][$prarr]) : '-';
 				$ins_array['ytd_billing']   = ($projects['irval'][$prarr] != '') ? round($projects['irval'][$prarr]) : '-';
-				$temp_ytd_utilization_cost = $projects['direct_cost'][$prarr]['total_direct_cost'] + $projects['other_cost'][$prarr];
+				$temp_ytd_utilization_cost  = $projects['direct_cost'][$prarr]['total_direct_cost'] + $projects['other_cost'][$prarr];
 				$ins_array['ytd_utilization_cost'] = ($temp_ytd_utilization_cost != '') ? round($temp_ytd_utilization_cost) : '-';
 				
 				$cm_billval = $billval = $eff_var = $cm_dc_val = $dc_val = 0;
@@ -648,7 +647,7 @@ class It_service_dashboard extends crm_controller
 				
 				$show_arr[$prarr] = $ins_array;
 			}
-			
+			echo '<pre>'; print_r($projects); die;
 			//for total
 			// $tot['practice_name']		 = ;
 			$show_arr['Total']['billing_month'] 	   	= $totCM_Irval;
