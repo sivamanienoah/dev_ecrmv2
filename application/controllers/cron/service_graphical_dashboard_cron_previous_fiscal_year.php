@@ -436,7 +436,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 		}
 		$projects['direct_cost'] = $directcost;
 		//for utiliztion cost calculation -end
-		echo '<pre>'; print_r($projects); die;
+		
 		$ins_array    = array();
 		$tot 		  = array();
 		$tot_bill_eff = $tot_tot_bill_eff = $tot_temp_ytd_uc = $tot_temp_billable_ytd_uc = 0;
@@ -468,6 +468,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$inse_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
+					echo '<pre> Mon - '. $fis_mon . ' Revenue - ' .$mon_revenue . ' Contribu - ' .$mon_contrib; echo '<br />';
 					/* $this->db->where(array('practice_name' => $parr));
 					$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inse_array); */
 					// echo $this->db->last_query() . "<br />";
@@ -527,7 +528,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 				$ins_array = array();
 				$ins_result = 1;
 			}
-			
+			echo '<pre>'; print_r($projects); die;
 			$tot['ytd_billable'] 		 		  = round(($tot_bill_eff/$tot_tot_bill_eff)*100);
 			$tot['ytd_billable_utilization_cost'] = round(($tot_temp_billable_ytd_uc/$tot_temp_ytd_uc)*100);
 			$tot['tot_contri'] 			  		  = round((($overall_revenue-$overall_contrib)/$overall_revenue)*100);
