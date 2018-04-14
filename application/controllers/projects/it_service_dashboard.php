@@ -647,7 +647,7 @@ class It_service_dashboard extends crm_controller
 				
 				$show_arr[$prarr] = $ins_array;
 			}
-			echo '<pre>'; print_r($show_arr); die;
+			// echo '<pre>'; print_r($show_arr); die;
 			//for total
 			// $tot['practice_name']		 = ;
 			$show_arr['Total']['billing_month'] 	   	= $totCM_Irval;
