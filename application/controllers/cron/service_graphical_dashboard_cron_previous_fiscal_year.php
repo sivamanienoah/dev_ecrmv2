@@ -492,8 +492,8 @@ class Service_graphical_dashboard_cron_previous_fiscal_year extends crm_controll
 					if(isset($mon_revenue) && $mon_revenue != 0) {
 						$inse_array[$con_month] = round((($mon_revenue - $mon_contrib)/$mon_revenue)*100);
 					}
-					// echo $parr.'-  Mon - '. $fis_mon . ' Revenue - ' .$mon_revenue . ' Contribu - ' .$mon_contrib; echo '<br />';
-					// echo '<pre>'; print_r($inse_array); echo '</pre>';
+					echo $parr.'-  Mon - '. $fis_mon . ' Revenue - ' .$mon_revenue . ' Contribu - ' .$mon_contrib; echo '<br />';
+					echo '<pre>'; print_r($inse_array); echo '</pre>';
 					/* $this->db->where(array('practice_name' => $parr));
 					$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inse_array); */
 					// echo $this->db->last_query() . "<br />";
