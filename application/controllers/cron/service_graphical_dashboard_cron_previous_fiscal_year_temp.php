@@ -538,7 +538,7 @@ class Service_graphical_dashboard_cron_previous_fiscal_year_temp extends crm_con
 				
 				$this->db->where(array('practice_name' => $parr));
 				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year_temp', $ins_array);
-				echo '<pre>'; print_r($inse_array); echo '</pre>';
+				echo '<pre>'; print_r($ins_array); echo '</pre>';
 				// echo $this->db->last_query() . "<br />";
 				$ins_array = array();
 				$ins_result = 1;
