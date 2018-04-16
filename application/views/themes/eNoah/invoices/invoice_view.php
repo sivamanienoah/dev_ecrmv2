@@ -6,6 +6,12 @@ $userdata = $this->session->userdata('logged_in_user');
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
+
+#content .inner {
+	padding: 15px 24px;
+	overflow: auto;
+	clear: left;
+}
 </style>
 <div id="content">
 	<div class="inner">	
