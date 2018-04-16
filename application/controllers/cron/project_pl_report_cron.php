@@ -426,6 +426,7 @@ class Project_pl_report_cron extends crm_controller
 					$udpate_arr_pr['practice_name'] = $ins_pr_key;
 					$ins_res = $this->db->insert($this->cfg['dbpref'] . 'project_pl_report', $udpate_arr_pr);
 				}
+				echo $this->db->last_query() . '<br>';
 			}
 		}
 	}
