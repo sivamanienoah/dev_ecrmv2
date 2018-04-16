@@ -541,7 +541,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 				
 				$this->db->where(array('practice_name' => $parr));
 				$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard', $ins_array);
-				echo $this->db->last_query() . "<br />";
+				// echo $this->db->last_query() . "<br />";
 				$ins_array = array();
 				$ins_result = 1;
 			}
@@ -554,7 +554,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 			//updating the total values
 			$this->db->where(array('practice_name' => 'Total'));
 			$this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard', $tot);
-			echo $this->db->last_query() . "<br />";
+			// echo $this->db->last_query() . "<br />";
 			
 			$ended_at = date("Y-m-d H:i:s");
 			
@@ -604,7 +604,7 @@ class Service_graphical_dashboard_cron extends crm_controller
 						$this->db->where('fiscal_year',$curFiscalYear);
 						$upd_res = $this->db->update($this->cfg['dbpref'] . 'services_graphical_dashboard_last_fiscal_year', $inser_data);
 					}
-					echo $this->db->last_query() . '<br>';
+					// echo $this->db->last_query() . '<br>';
 				}
 			}
 			/* insert or update ends */
