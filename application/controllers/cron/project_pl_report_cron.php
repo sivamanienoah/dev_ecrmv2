@@ -339,10 +339,10 @@ class Project_pl_report_cron extends crm_controller
 			$cm_other_cost_val  = 0;
 			if(isset($projects['othercost_projects']) && !empty($projects['othercost_projects'][$prarr]) && count($projects['othercost_projects'][$prarr])>0) {
 				foreach($projects['othercost_projects'][$prarr] as $pro_id) {
-					$val 	= getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $start_date, $end_date);
+					$val 	   = getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $start_date, $end_date);
 					$cm_st_mon = date('Y-m-01 H:i:s', strtotime($month));
 					$cm_ed_mon = date('Y-m-t H:i:s', strtotime($month));
-					$cm_val = getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $cm_st_mon, $cm_ed_mon);
+					$cm_val    = getOtherCostByLeadIdByDateRange($pro_id, $this->default_cur_id, $cm_st_mon, $cm_ed_mon);
 					$other_cost_val    += $val;
 					$cm_other_cost_val += $cm_val;
 				}
@@ -397,9 +397,36 @@ class Project_pl_report_cron extends crm_controller
 		$show_arr['Total']['ytd_contribution'] 	 	= round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
 		
 		$data['dashboard_det'] = $show_arr;
-		echo '<pre>'; print_r($data); die;
 		
-		
+		if(!empty($show_arr) && count($show_arr)>0) {
+			foreach($show_arr as $ins_pr_key=>$ins_pr_val) {
+				
+				$this->db->select('*');
+				$this->db->from($this->cfg['dbpref']. 'project_pl_report');
+				$this->db->where('practice_name', $ins_pr_key);
+				$exist_res = $this->db->get();
+				$exist_data = $exist_res->result();
+				
+				$udpate_arr_pr = array('billing_month'=>$ins_pr_val['billing_month'],
+											'ytd_billing'=>$ins_pr_val['ytd_billing'],
+											'ytd_utilization_cost'=>$ins_pr_val['ytd_utilization_cost'],
+											'contribution_month'=>$ins_pr_val['contribution_month'],
+											'ytd_contribution'=>$ins_pr_val['ytd_contribution'],
+											'month_status'=>$ins_pr_val['month_status'],
+											'ytd_billable_bours'=>'-',
+											'billable_month'=>'-',
+											'ytd_billable'=>'-',
+											'effort_variance'=>'-');
+				
+				if(!empty($sgdlast_data) && count($exist_data)>0){
+					$this->db->where('practice_name', $ins_pr_key);
+					$this->db->update($this->cfg['dbpref'] . 'project_pl_report', $udpate_arr_pr);
+				} else {
+					$udpate_arr_pr['practice_name'] = $ins_pr_key;
+					$ins_res = $this->db->insert($this->cfg['dbpref'] . 'project_pl_report', $udpate_arr_pr);
+				}
+			}
+		}
 	}
 	
 	/*
