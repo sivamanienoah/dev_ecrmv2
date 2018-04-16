@@ -123,7 +123,7 @@ class Project_pl_report extends crm_controller
 			$month_status = 1;
 			//get values from services dashboard table
 			$this->db->select('practice_name, billing_month, ytd_billing, ytd_utilization_cost, billable_month, ytd_billable, effort_variance, contribution_month, ytd_contribution');
-			$this->db->from($this->cfg['dbpref']. 'services_dashboard_beta');
+			$this->db->from($this->cfg['dbpref']. 'project_pl_report');
 			$this->db->where("month_status",$month_status);
 			$sql = $this->db->get();
 			$dashboard_details = $sql->result_array();
