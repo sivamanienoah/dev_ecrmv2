@@ -93,7 +93,7 @@ class Invoice_model extends crm_model {
 			$this->db->where_in('l.practice', $filter['practice']);
 		}
 		
-		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2 || $this->userdata['role_id'] == 3) {
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
 			if (!empty($filter['pm']) && $filter['pm']!='null') {
 				$filter['pm'] = explode(',',$filter['pm']);
 				$this->db->where_in('l.assigned_to', $filter['pm']);

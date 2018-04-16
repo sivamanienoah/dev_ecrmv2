@@ -92,7 +92,7 @@ button.ui-datepicker-current { display: none; }
 								<td class="tblheadbg">By Practices</td>								
 								<td class="tblheadbg">By Date</td>
 								<td class="tblheadbg">Month & Year</td>
-								<?php if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2|| $this->userdata['role_id'] == 3) { ?>
+								<?php if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) { ?>
 									<td class="tblheadbg">By Project Manager</td>
 								<?php } ?>
 							</tr>
@@ -135,7 +135,7 @@ button.ui-datepicker-current { display: none; }
 									<br />
 									To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 28px;" />
 								</td>
-								<?php if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2 || $this->userdata['role_id'] == 3) { ?>
+								<?php if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) { ?>
 									<td colspan="4">
 										<select style="width:195px;" multiple="multiple" id="pm" name="pm[]">
 											<?php if(!empty($all_pm)) {
