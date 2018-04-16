@@ -67,9 +67,6 @@ class Project_pl_report_cron extends crm_controller
 		$post_data 		  = $this->input->post();
 		// echo '<pre>'; print_r($post_data); die;
 		
-		// $start_date = date("Y-m-d", strtotime('01-04-2017'));
-		// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
-		
 		$curFiscalYear = calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31");
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
@@ -382,7 +379,7 @@ class Project_pl_report_cron extends crm_controller
 		$show_arr['Total']['ytd_contribution'] 	 	= round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
 		
 		$data['dashboard_det'] = $show_arr;
-		echo '<pre>'; print_r($data); die;
+		echo '<pre>'; print_r($show_arr); die;
 	}
 	
 	/*
