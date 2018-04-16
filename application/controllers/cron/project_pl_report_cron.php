@@ -67,7 +67,7 @@ class Project_pl_report_cron extends crm_controller
 		$post_data 		  = $this->input->post();
 		// echo '<pre>'; print_r($post_data); die;
 		$post_data['month_year_from_date'] = '2017-04-01';
-		$post_data['month_year_to_date']   = '2018-08-01';
+		$post_data['month_year_to_date']   = '2018-03-31';
 		
 		$curFiscalYear = calculateFiscalYearForDateHelper(date("m/d/y"),"4/1","3/31");
 		if($post_data['month_year_from_date']) {
