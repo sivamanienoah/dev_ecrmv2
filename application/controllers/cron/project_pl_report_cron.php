@@ -416,6 +416,7 @@ class Project_pl_report_cron extends crm_controller
 											'ytd_billable_bours'=>'-',
 											'billable_month'=>'-',
 											'ytd_billable'=>'-',
+											'billing_month'=>'-',
 											'effort_variance'=>'-');
 				
 				if(!empty($sgdlast_data) && count($exist_data)>0){
