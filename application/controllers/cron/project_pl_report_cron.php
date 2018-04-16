@@ -407,12 +407,12 @@ class Project_pl_report_cron extends crm_controller
 				$exist_res = $this->db->get();
 				$exist_data = $exist_res->result();
 				
-				$udpate_arr_pr = array('billing_month'=>$ins_pr_val['billing_month'],
-											'ytd_billing'=>$ins_pr_val['ytd_billing'],
-											'ytd_utilization_cost'=>$ins_pr_val['ytd_utilization_cost'],
-											'contribution_month'=>$ins_pr_val['contribution_month'],
-											'ytd_contribution'=>$ins_pr_val['ytd_contribution'],
-											'month_status'=>$ins_pr_val['month_status'],
+				$udpate_arr_pr = array('billing_month'=>isset($ins_pr_val['billing_month'])?$ins_pr_val['billing_month']:'-',
+											'ytd_billing'=>isset($ins_pr_val['ytd_billing'])?$ins_pr_val['ytd_billing']:'-',
+											'ytd_utilization_cost'=>isset($ins_pr_val['ytd_utilization_cost'])?$ins_pr_val['ytd_utilization_cost']:'-',
+											'contribution_month'=>isset($ins_pr_val['contribution_month'])?$ins_pr_val['contribution_month']:'-',
+											'ytd_contribution'=>isset($ins_pr_val['ytd_contribution'])?$ins_pr_val['ytd_contribution']:'-',
+											'month_status'=>1,
 											'ytd_billable_bours'=>'-',
 											'billable_month'=>'-',
 											'ytd_billable'=>'-',
