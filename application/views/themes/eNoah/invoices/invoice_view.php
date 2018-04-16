@@ -100,28 +100,28 @@ button.ui-datepicker-current { display: none; }
 								<td>
 									<select multiple="multiple" id="project" name="project[]" class="advfilter" style="width:200px;">
 										<?php foreach($projects as $pj) { ?>
-											<option value="<?php echo $pj['lead_id']; ?>"><?php echo character_limiter($pj['lead_title'], 30); ?></option>
+											<option value="<?php echo $pj['lead_id']; ?>" title="<?php echo character_limiter($pj['lead_title'], 30); ?>"><?php echo character_limiter($pj['lead_title'], 30); ?></option>
 										<?php } ?>					
 									</select> 
 								</td>
 								<td>
 									<select multiple="multiple" id="customer" name="customer[]" class="advfilter" style="width:200px;">
 										<?php foreach($customers as $customer) { ?>
-											<option value="<?php echo $customer['companyid']; ?>"><?php echo $customer['company']; ?></option>
+											<option value="<?php echo $customer['companyid']; ?>" title="<?php echo $customer['company']; ?>"><?php echo $customer['company']; ?></option>
 										<?php } ?>
 									</select> 
 								</td> 
 								<td>
 									<select multiple="multiple" id="divisions" name="divisions[]" class="advfilter" style="width: 135px;">
 										<?php foreach ($sales_divisions as $division) { ?>
-												<option value="<?php echo $division['div_id'] ?>"><?php echo $division['division_name']; ?></option>
+												<option value="<?php echo $division['div_id'] ?>" title="<?php echo $division['division_name']; ?>"><?php echo $division['division_name']; ?></option>
 										<?php } ?>
 									</select> 
 								</td>
 								<td>
 									<select multiple="multiple" id="practice" name="practice[]" class="advfilter" style="width: 99px;">
 										<?php foreach ($practices as $pr) { ?>
-												<option value="<?php echo $pr['id'] ?>"><?php echo $pr['practices']; ?></option>
+												<option value="<?php echo $pr['id'] ?>" title="<?php echo $pr['practices']; ?>"><?php echo $pr['practices']; ?></option>
 										<?php } ?>
 									</select> 
 								</td>								
@@ -142,7 +142,7 @@ button.ui-datepicker-current { display: none; }
 												foreach($all_pm as $pm) {												
 													$pm_name = $pm['first_name'].(($pm['last_name']!='') ? ' '.$pm['last_name'].' ' : ' ').(($pm['emp_id']!='') ? '- '.$pm['emp_id'].' ' : ' ');
 												?>
-												<option value="<?php echo $pm['userid']; ?>"><?php echo $pm_name; ?></option>	
+												<option value="<?php echo $pm['userid']; ?>" title="<?php echo $pm_name; ?>"><?php echo $pm_name; ?></option>	
 												<?php } ?>
 											<?php } ?>
 										</select>
