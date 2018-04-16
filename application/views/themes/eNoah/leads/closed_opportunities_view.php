@@ -92,7 +92,7 @@ button.ui-datepicker-current { display: none; }
 									<td>
 										<select style="width:180px" multiple="multiple" id="customer" name="customer[]">
 										<?php foreach($customers as $customer) { ?>
-											<option value="<?php echo $customer['companyid']; ?>"><?php echo $customer['company']; ?></option>	
+											<option value="<?php echo $customer['companyid'];?>" title="<?php echo $customer['company']; ?>"><?php echo $customer['company']; ?></option>	
 										<?php } ?>
 										</select> 
 									</td>
@@ -100,7 +100,7 @@ button.ui-datepicker-current { display: none; }
 										<select style="width:180px" multiple="multiple" id="owner" name="owner[]">
 											<?php foreach ($lead_owner as $owner) { 
 													if(!empty($owner['first_name'])) { ?>
-														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'].' '.$owner['last_name'] ?></option>
+														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' '.$owner['last_name']; ?>"><?php echo $owner['first_name'].' '.$owner['last_name'] ?></option>
 											<?php 	} 
 												} 
 											?>
@@ -110,7 +110,7 @@ button.ui-datepicker-current { display: none; }
 										<select style="width:180px" multiple="multiple" id="leadassignee" name="leadassignee[]">
 											<?php foreach ($lead_owner as $owner) {
 													if(!empty($owner['first_name'])) { ?>		
-														<option value="<?php echo $owner['userid'] ?>"><?php echo $owner['first_name'].' '.$owner['last_name']; ?></option>
+														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' '.$owner['last_name']; ?>"><?php echo $owner['first_name'].' '.$owner['last_name']; ?></option>
 											<?php 	} 
 												}
 											?>
@@ -121,7 +121,7 @@ button.ui-datepicker-current { display: none; }
 											<?php
 												if(isset($services) && count($services)>0){
 													foreach($services as $se){ ?>
-														<option value="<?php echo $se['sid'] ?>"><?php echo $se['services'] ?></option>
+														<option value="<?php echo $se['sid'] ?>" title="<?php echo $se['services']; ?>"><?php echo $se['services'] ?></option>
 													<?php }
 												}
 											?>
@@ -132,16 +132,16 @@ button.ui-datepicker-current { display: none; }
 											<?php
 												if(isset($industry) && count($industry)>0){
 													foreach($industry as $ind){ ?>
-														<option value="<?php echo $ind['id'] ?>"><?php echo $ind['industry'] ?></option>
+														<option value="<?php echo $ind['id'] ?>" title="<?php echo $ind['industry']; ?>"><?php echo $ind['industry'] ?></option>
 													<?php }
 												}
 											?>
 										</select>
 									</td>
 									<td>
-										From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:57px;" />
+										From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:67px; margin-left: 8px;" />
 										<br />
-										To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
+										To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:67px; margin-left: 22px;" />
 									</td>
 								</tr>
 								<tr>
@@ -158,7 +158,7 @@ button.ui-datepicker-current { display: none; }
 											<?php
 												if(isset($sources) && count($sources)>0){
 													foreach($sources as $srcs){ ?>
-														<option value="<?php echo $srcs['lead_source_id'] ?>"><?php echo $srcs['lead_source_name'] ?></option>
+														<option value="<?php echo $srcs['lead_source_id'] ?>" title="<?php echo $srcs['lead_source_name']; ?>"><?php echo $srcs['lead_source_name'] ?></option>
 													<?php }
 												}
 											?>
@@ -168,7 +168,7 @@ button.ui-datepicker-current { display: none; }
 										<select style="width:180px" multiple="multiple" id="regionname" name="regionname[]">
 											<?php foreach ($regions as $reg) {
 													if(!empty($reg['region_name'])) { ?>
-														<option value="<?php echo $reg['regionid'] ?>"><?php echo $reg['region_name'] ?></option>
+														<option value="<?php echo $reg['regionid'] ?>" title="<?php echo $reg['region_name']; ?>"><?php echo $reg['region_name'] ?></option>
 											<?php 	}
 												}
 											?>
