@@ -47,6 +47,7 @@ class Project_pl_report_cron extends crm_controller
 	*method : get_currency_rates
 	*/
 	public function get_currency_rates() {
+		$this->load->model('report/report_lead_region_model');
 		$currency_rates = $this->report_lead_region_model->get_currency_rate();
     	$rates 			= array();
     	if(!empty($currency_rates)) {
