@@ -61,7 +61,7 @@ class Project_pl_report extends crm_controller
 		}
 		
 		$data['start_date']  = $start_date;
-		echo $data['end_date']    = $end_date; die;
+		$data['end_date']    = $end_date;
 		
 		$this->db->select('p.practices, p.id');
 		$this->db->from($this->cfg['dbpref']. 'practices as p');
