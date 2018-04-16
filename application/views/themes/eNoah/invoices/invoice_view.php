@@ -131,7 +131,7 @@ button.ui-datepicker-current { display: none; }
 								</td>
 								<?php if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2 || $this->userdata['role_id'] == 3) { ?>
 									<td colspan="4">
-										<select style="width:210px;" multiple="multiple" id="pm" name="pm[]">
+										<select style="width:195px;" multiple="multiple" id="pm" name="pm[]">
 											<?php if(!empty($all_pm)) {
 												foreach($all_pm as $pm) {												
 													$pm_name = $pm['first_name'].(($pm['last_name']!='') ? ' '.$pm['last_name'].' ' : ' ').(($pm['emp_id']!='') ? '- '.$pm['emp_id'].' ' : ' ');
