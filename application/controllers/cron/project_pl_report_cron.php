@@ -10,7 +10,7 @@ Reviewed By     : Subbiah.S
 *********************************************************************************/
 
 /**
- * Service_dashboard_cron
+ * project_pl_report_cron
  *
  * @class 		project_pl_report_cron
  * @extends		crm_controller (application/core/CRM_Controller.php)
