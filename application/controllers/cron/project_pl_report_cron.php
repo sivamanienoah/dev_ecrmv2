@@ -397,7 +397,9 @@ class Project_pl_report_cron extends crm_controller
 		$show_arr['Total']['ytd_contribution'] 	 	= round((($tot_dc_vals-$tot_dc_tots)/$tot_dc_vals)*100);
 		
 		$data['dashboard_det'] = $show_arr;
-		echo '<pre>'; print_r($show_arr); die;
+		echo '<pre>'; print_r($data); die;
+		
+		
 	}
 	
 	/*
