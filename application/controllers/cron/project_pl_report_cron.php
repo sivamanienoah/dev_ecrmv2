@@ -86,6 +86,24 @@ class Project_pl_report_cron extends crm_controller
 		$data['start_date']  = $start_date;
 		$data['end_date']    = $end_date;
 		
+		$this->db->select('p.practices, p.id');
+		$this->db->from($this->cfg['dbpref']. 'practices as p');
+		$this->db->where('p.status', 1);
+		// BPO practice are not shown in IT Services Dashboard
+		$practice_not_in_arr = array(6);
+		$this->db->where_not_in('p.id', $practice_not_in_arr);
+		$pquery = $this->db->get();
+		$pres = $pquery->result();
+		$data['practice_data'] = $pquery->result();
+		$practice_arr 	= array();
+		$practice_array = array();
+		if(!empty($pres) && count($pres)>0){
+			foreach($pres as $prow) {
+				$practice_arr[$prow->id] = $prow->practices;
+				$practice_array[] 		 = $prow->practices;
+			}
+		}
+		
 
 		//for othercost projects
 		$this->db->select("pjt_id, lead_id, practice, lead_title");
