@@ -419,7 +419,7 @@ class Project_pl_report_cron extends crm_controller
 											'billing_month'=>'-',
 											'effort_variance'=>'-');
 				
-				if(!empty($sgdlast_data) && count($exist_data)>0){
+				if(!empty($exist_data) && count($exist_data)>0){
 					$this->db->where('practice_name', $ins_pr_key);
 					$this->db->update($this->cfg['dbpref'] . 'project_pl_report', $udpate_arr_pr);
 				} else {
