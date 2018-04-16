@@ -86,7 +86,9 @@ button.ui-datepicker-current { display: none; }
 								<td class="tblheadbg">By Practices</td>								
 								<td class="tblheadbg">By Date</td>
 								<td class="tblheadbg">Month & Year</td>
-								<td class="tblheadbg">By Project Manager</td>
+								<?php if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2|| $this->userdata['role_id'] == 3) { ?>
+									<td class="tblheadbg">By Project Manager</td>
+								<?php } ?>
 							</tr>
 							<tr>	
 								<td>
@@ -127,17 +129,19 @@ button.ui-datepicker-current { display: none; }
 									<br />
 									To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 30px;" />
 								</td>
-								<td colspan="4">
-									<select style="width:210px;" multiple="multiple" id="pm" name="pm[]">
-										<?php if(!empty($all_pm)) {
-											foreach($all_pm as $pm) {												
-												$pm_name = $pm['first_name'].(($pm['last_name']!='') ? ' '.$pm['last_name'].' ' : ' ').(($pm['emp_id']!='') ? '- '.$pm['emp_id'].' ' : ' ');
-											?>
-											<option value="<?php echo $pm['userid']; ?>"><?php echo $pm_name; ?></option>	
+								<?php if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2 || $this->userdata['role_id'] == 3) { ?>
+									<td colspan="4">
+										<select style="width:210px;" multiple="multiple" id="pm" name="pm[]">
+											<?php if(!empty($all_pm)) {
+												foreach($all_pm as $pm) {												
+													$pm_name = $pm['first_name'].(($pm['last_name']!='') ? ' '.$pm['last_name'].' ' : ' ').(($pm['emp_id']!='') ? '- '.$pm['emp_id'].' ' : ' ');
+												?>
+												<option value="<?php echo $pm['userid']; ?>"><?php echo $pm_name; ?></option>	
+												<?php } ?>
 											<?php } ?>
-										<?php } ?>
-									</select>
-								</td>
+										</select>
+									</td>
+								<?php } ?>
 							</tr>
 							<tr align="right" >
 								<td colspan="7">

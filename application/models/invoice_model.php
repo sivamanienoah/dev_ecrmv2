@@ -49,7 +49,6 @@ class Invoice_model extends crm_model {
 		//Access control RESTIRCTION
 		
 		$this->db->select('expm.received, expm.expectid, expm.invoice_status, expm.amount, expm.project_milestone_name, expm.invoice_generate_notify_date, expm.expected_date, expm.month_year, l.lead_title, l.lead_id, l.custid_fk, l.pjt_id, l.expect_worth_id, ew.expect_worth_name, c.customer_name, cc.company, sd.base_currency, sd.division_name, p.practices,l.assigned_to');
-
 		$this->db->from($this->cfg['dbpref'].'expected_payments as expm');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = expm.jobid_fk');
 		$this->db->join($this->cfg['dbpref'].'expect_worth as ew', 'ew.expect_worth_id = l.expect_worth_id');
@@ -94,11 +93,12 @@ class Invoice_model extends crm_model {
 			$this->db->where_in('l.practice', $filter['practice']);
 		}
 		
-		if (!empty($filter['pm']) && $filter['pm']!='null') {
-			$filter['pm'] = explode(',',$filter['pm']);
-			$this->db->where_in('l.assigned_to', $filter['pm']);
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2 || $this->userdata['role_id'] == 3) {
+			if (!empty($filter['pm']) && $filter['pm']!='null') {
+				$filter['pm'] = explode(',',$filter['pm']);
+				$this->db->where_in('l.assigned_to', $filter['pm']);
+			}
 		}
-		
 		if(!$invoice){
 			if(!empty($filter['from_date']) && empty($filter['to_date'])) {
 				$this->db->where('DATE(expm.invoice_generate_notify_date) >=', date('Y-m-d', strtotime($filter['from_date'])));

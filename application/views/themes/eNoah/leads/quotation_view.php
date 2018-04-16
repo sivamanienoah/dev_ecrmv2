@@ -128,7 +128,7 @@ require (theme_url().'/tpl/header.php');
 											<?php foreach ($lead_owner as $owner) { 
 													if(!empty($owner['first_name'])) { ?>
 														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' - '.$owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
-											<?php 	} 
+											<?php 	}
 												} 
 											?>
 										</select> 
@@ -138,7 +138,7 @@ require (theme_url().'/tpl/header.php');
 											<?php foreach ($lead_owner as $owner) {
 													if(!empty($owner['first_name'])) { ?>		
 														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' - '. $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
-											<?php 	} 
+											<?php 	}
 												}
 											?>
 										</select> 

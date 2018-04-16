@@ -336,36 +336,11 @@ class Invoice extends CRM_Controller {
 		} else {
 			$filter = real_escape_array($this->input->post());
 		}
-		
+	
 		$rates 	  = $this->get_currency_rates();
 		$default_currency = $this->default_cur_name;
 		
 		$bk_rates = get_book_keeping_rates();
-	
-		/* if((!empty($filter['project'])) && $filter['project']!='null')
-		$filter['project'] = explode(",",$filter['project']);
-		else 
-		$filter['project'] = '';
-		
-		if((!empty($filter['customer'])) && $filter['customer']!='null')
-		$filter['customer'] = explode(",",$filter['customer']);
-		else
-		$filter['customer'] = '';
-		
-		if((!empty($filter['divisions'])) && $filter['divisions']!='null')
-		$filter['divisions'] = explode(",",$filter['divisions']);
-		else
-		$filter['divisions'] = '';
-		
-		if((!empty($filter['practice'])) && $filter['practice']!='null')
-		$filter['practice'] = explode(",",$filter['practice']);
-		else
-		$filter['practice'] = '';
-		
-		if((!empty($filter['divisions'])) && $filter['divisions']!='null')
-		$filter['divisions'] = explode(",",$filter['divisions']);
-		else
-		$filter['divisions'] = ''; */
 		
 		if(!empty($filter['from_date']))
 		$filter['from_date'] = $filter['from_date'];
@@ -386,7 +361,6 @@ class Invoice extends CRM_Controller {
 		$filter['month_year_to_date'] = $filter['month_year_to_date'];
 		else
 		$filter['month_year_to_date'] = '';
-	
 		if(!empty($filter['pm']))
 		$filter['pm'] = $filter['pm'];
 		else
@@ -446,7 +420,7 @@ class Invoice extends CRM_Controller {
 				$i++;
 			}
 		}
-		$this->excel->getActiveSheet()->setCellValue('I'.$i, $total_amt);
+		$this->excel->getActiveSheet()->setCellValue('J'.$i, $total_amt);
 		
 		$this->excel->getActiveSheet()->getStyle('I2:I'.$i)->getNumberFormat()->setFormatCode('0.00');
 		$this->excel->getActiveSheet()->getStyle('J2:J'.$i)->getNumberFormat()->setFormatCode('0.00');
@@ -463,7 +437,7 @@ class Invoice extends CRM_Controller {
 		$this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
 		$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
 		$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
-		$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(20);			
+		$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
 		$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
 		$this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
 		$this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(20);
@@ -477,6 +451,7 @@ class Invoice extends CRM_Controller {
 		header('Content-Type: application/vnd.ms-excel'); //mime type
 		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 		header('Cache-Control: max-age=0'); //no cache
+					 
 		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
 		//if you want to save it as .XLSX Excel 2007 format
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
