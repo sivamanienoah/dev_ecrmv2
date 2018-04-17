@@ -128,12 +128,12 @@ button.ui-datepicker-current { display: none; }
 								<td>
 									From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:57px;" />
 									<br />
-									To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 14px;" />
+									To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
 								</td>
 								<td>
 									From <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" style="width:78px;" />
 									<br />
-									To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 14px;" />
+									To <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" style="width:78px; margin-left: 13px;" />
 								</td>
 								<?php if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) { ?>
 									<td colspan="4">
