@@ -1434,8 +1434,14 @@ class Dashboard extends crm_controller
 			$end_date   = date("Y-m-t",strtotime($end_date));
 			
 			// $dids = implode(',',$ids);
+			// "SELECT DISTINCT(project_code), title FROM `enoah_project` where project_code in ('$each_code')"
 			
-			$this->db->select('t.dept_id, t.dept_name, DISTINCT(t.project_code), l.lead_title');
+			// SELECT `t`.`dept_id`, `t`.`dept_name`, `t`.`project_code`, `l`.`lead_title` FROM (`crm_timesheet_month_data` as t) LEFT JOIN `crm_leads` as l ON `l`.`pjt_id` = `t`.`project_code` WHERE `t`.`resoursetype` != '' AND (t.start_time >='2018-04-01') AND (t.start_time <='2018-04-30') AND `t`.`dept_id` IN ('10')
+
+
+			
+			$this->db->distinct('t.project_code');
+			$this->db->select('t.dept_id, t.dept_name, l.lead_title');
 			// t.practice_id, t.practice_name
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
