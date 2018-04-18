@@ -1344,7 +1344,7 @@ class Dashboard extends crm_controller
 					$qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." where project_code in ('.$each_code.')");
 					$pro_title = array();
 					if($qry->num_rows()>0){
-						$res_code = $qry->result();
+						$res_code = $qry->result();echo'<pre>hello result final===>';print_r($res_code);exit;
 						$pro_title[] = $res_code['title'];
 					}
 				}echo'<pre>hello result final===>';print_r($pro_title);exit;
