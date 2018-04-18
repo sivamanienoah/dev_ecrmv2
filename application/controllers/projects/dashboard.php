@@ -1341,7 +1341,7 @@ class Dashboard extends crm_controller
 				// $dids = implode(',',$ids);
 				$timesheet_db = $this->load->database("timesheet",true);
 				foreach($each_project_codes as $key => $each_code){
-					$qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." where project_code in ($each_code)");
+					$qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." where project_code in ('.$each_code.')");
 					$res_code = array();
 					if($qry->num_rows()>0){
 						$res_code[] = $qry->result();					
