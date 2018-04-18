@@ -403,19 +403,19 @@ $(document).ready(function(){
 		var dids       = $('#department_ids').val();
 		var start_date = $('#month_year_from_date').val();
 		var end_date   = $('#month_year_to_date').val();
-		var projectids = $(this).val();
+		var resourceids = $(this).val();
 		$("#filter_area_status").val('1');
 		$('#member_ids').html('');
 		alert(dids);
 		alert(start_date);
 		alert(end_date);
-		alert(projectids);
-		var params = { 'dept_ids':dids,'skill_ids':projectids,'start_date':start_date,'end_date':end_date };
+		alert(resourceids);
+		var params = { 'dept_ids':dids,'resource_ids':resourceids,'start_date':start_date,'end_date':end_date };
 		params[csrf_token_name] = csrf_hash_token;
 		
 		$.ajax({
 			type: 'POST',
-			url: site_base_url+'projects/dashboard/get_skill_members',
+			url: site_base_url+'projects/dashboard/get_projects_by_members',
 			data: params,
 			success: function(members) {
 				if(members){

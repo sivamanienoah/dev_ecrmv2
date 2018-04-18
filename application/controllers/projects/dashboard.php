@@ -1453,6 +1453,59 @@ class Dashboard extends crm_controller
 		}
 	}
 	
+	function get_projects_by_members()
+	{
+		echo'<pre>postdata===>';print_r($this->input->post());exit;
+		if($this->input->post("resource_ids")){
+			$where = '';
+			$ids 		= $this->input->post("dept_ids");
+			$resource_ids  = $this->input->post("resource_ids");
+			$start_date = $this->input->post("start_date");
+			$end_date   = $this->input->post("end_date");
+			
+			$start_date = date("Y-m-01",strtotime($start_date));
+			$end_date   = date("Y-m-t",strtotime($end_date));
+			
+			$dids = implode(',',$ids);
+			$sids = implode(',',$resource_ids);
+			$where .= 'and status = "ACTIVE" ';
+			if(!empty($dids)) {
+				$where .= 'and v.department_id in ('.$dids.')';
+			}
+			if(!empty($sids)) {
+				$where .= 'and v.skill_id in ('.$sids.')';
+			}
+			
+			if(!empty($sids)) {
+				$this->db->select("t.empname as emp_name, t.username");
+				$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+				$this->db->where("t.practice_id !=", 0);
+				$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+				$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+				if(!empty($ids)) {
+					$this->db->where_in("t.dept_id", $ids);
+				}				
+				if(!empty($p_ids)){
+					$this->db->where_in("t.practice_id", $p_ids);
+				}
+				if(!empty($sids)) {
+					$this->db->where_in("t.skill_id", $sids);
+				}
+				$this->db->group_by('t.empname');
+				$this->db->order_by('t.empname');
+				$qry = $this->db->get();
+				if($qry->num_rows()>0){
+					$res = $qry->result();
+					echo json_encode($res); exit;
+				}else{
+					echo 0;exit;
+				}
+			} else {
+				echo 0;exit;
+			}
+		}
+	}
+	
 	/*
 	*@Get Current Financial year
 	*@Method  calculateFiscalYearForDate
@@ -3433,7 +3486,7 @@ class Dashboard extends crm_controller
 	}
 	
 	public function cost_report()
-	{
+	{	//echo'test';exit;
 		if(in_array($this->userdata['role_id'], array('8', '9', '11', '13', '14'))) {
 			redirect('project');
 		}
@@ -3544,7 +3597,8 @@ class Dashboard extends crm_controller
 			$project_master[$prec->project_code] = $prec->title;
 		}
 		$data['project_master']  = $project_master;
-		
+		$data['project_res']  = $project_res;
+		// echo'<pre>';print_r($project_res);exit;
 		/* $this->db->select('department_id, department_name');
 		$this->db->where_in('department_id', array('10','11'));
 		$dept = $this->db->get($timesheet_db->dbprefix . 'department');
@@ -3602,6 +3656,7 @@ class Dashboard extends crm_controller
 
 		//for practices		
 		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date);
+
 		$data['entitys'] 	  	  = $this->dashboard_model->get_entities();
 
 		$data['start_date'] 	  = $start_date;
