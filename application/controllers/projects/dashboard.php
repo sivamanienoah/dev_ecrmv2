@@ -1441,7 +1441,7 @@ class Dashboard extends crm_controller
 
 			
 			$this->db->distinct('t.project_code');
-			$this->db->select('t.dept_id, t.dept_name, l.lead_title');
+			$this->db->select('t.dept_id, t.project_code, t.dept_name, l.lead_title');
 			// t.practice_id, t.practice_name
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
@@ -1467,7 +1467,7 @@ class Dashboard extends crm_controller
 			
 			$query 						= $this->db->get();		
 			echo $this->db->last_query(); exit;
-			$pjctdata	   		= $query->result();//echo'<pre>';print_r($data['resdata']);exit;
+			// $pjctdata	   		= $query->result();//echo'<pre>';print_r($data['resdata']);exit;
 			
 			
 			// $timesheet_db = $this->load->database("timesheet",true);
