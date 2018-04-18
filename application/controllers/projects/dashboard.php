@@ -1455,6 +1455,23 @@ class Dashboard extends crm_controller
 	
 	function get_projects_by_members()
 	{
+		// get all projects from timesheet
+		$timesheet_db = $this->load->database("timesheet", true);
+		$proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
+		echo'<pre>query===>';print_r($proj_mas_qry);exit;
+		if($proj_mas_qry->num_rows()>0){
+			$project_res = $proj_mas_qry->result();
+		}
+		$project_master = array();
+		if(!empty($project_res)){
+			foreach($project_res as $prec)
+			$project_master[$prec->project_code] = $prec->title;
+		}
+		$data['project_master']  = $project_master;
+		$data['project_res']  = $project_res;
+		
+		echo'<pre>postdata===>';print_r($data['project_res']);exit;
+		
 		echo'<pre>postdata===>';print_r($this->input->post());exit;
 		if($this->input->post("resource_ids")){
 			$where = '';
@@ -1467,16 +1484,16 @@ class Dashboard extends crm_controller
 			$end_date   = date("Y-m-t",strtotime($end_date));
 			
 			$dids = implode(',',$ids);
-			$sids = implode(',',$resource_ids);
+			$rids = implode(',',$resource_ids);
 			$where .= 'and status = "ACTIVE" ';
 			if(!empty($dids)) {
 				$where .= 'and v.department_id in ('.$dids.')';
 			}
-			if(!empty($sids)) {
-				$where .= 'and v.skill_id in ('.$sids.')';
+			if(!empty($rids)) {
+				$where .= 'and v.skill_id in ('.$rids.')';
 			}
 			
-			if(!empty($sids)) {
+			if(!empty($rids)) {
 				$this->db->select("t.empname as emp_name, t.username");
 				$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 				$this->db->where("t.practice_id !=", 0);
@@ -1488,8 +1505,8 @@ class Dashboard extends crm_controller
 				if(!empty($p_ids)){
 					$this->db->where_in("t.practice_id", $p_ids);
 				}
-				if(!empty($sids)) {
-					$this->db->where_in("t.skill_id", $sids);
+				if(!empty($rids)) {
+					$this->db->where_in("t.skill_id", $rids);
 				}
 				$this->db->group_by('t.empname');
 				$this->db->order_by('t.empname');
