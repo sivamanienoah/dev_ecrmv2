@@ -1334,7 +1334,9 @@ class Dashboard extends crm_controller
 				foreach($res as $each_res){
 					$each_project_codes[] = $each_res->project_code;
 				}
-				echo'<pre>hello===>';print_r($each_project_codes);exit;
+				echo'<pre>hello===>';print_r($each_project_codes);
+				$dids = implode(',',$each_project_codes);
+				echo'<pre>hello===>';print_r($dids);exit;
 			}else{
 				echo 0;
 				exit;
