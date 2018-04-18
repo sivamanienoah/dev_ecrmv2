@@ -1329,7 +1329,12 @@ class Dashboard extends crm_controller
 			// echo $this->db->last_query(); exit;
 			if($query->num_rows()>0){
 				$res = $query->result();
-				echo'<pre>testing===>';print_r($res);exit;
+				echo'<pre>testing===>';print_r($res);
+				$each_project_codes = array();
+				foreach($res as $each_res){
+					$each_project_codes[] = $each_res['project_code'];
+				}
+				echo'<pre>hello===>';print_r($each_project_codes);exit;
 			}else{
 				echo 0;
 				exit;
