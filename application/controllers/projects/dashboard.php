@@ -1342,11 +1342,12 @@ class Dashboard extends crm_controller
 				$timesheet_db = $this->load->database("timesheet",true);
 				foreach($each_project_codes as $key => $each_code){
 					$qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." where project_code in ('.$each_code.')");
-					$res_code = array();
+					$pro_title = array();
 					if($qry->num_rows()>0){
-						$res_code[] = $qry->result();					
+						$res_code = $qry->result();
+						$pro_title[] = $res_code['title'];
 					}
-				}echo'<pre>hello result final===>';print_r($res_code);exit;
+				}echo'<pre>hello result final===>';print_r($pro_title);exit;
 				// $qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
 				if($qry->num_rows()>0){
 					$res = $qry->result();echo'<pre>hello result===>';print_r($res);exit;
