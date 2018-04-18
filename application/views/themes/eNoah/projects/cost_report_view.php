@@ -406,9 +406,13 @@ $(document).ready(function(){
 		var projectids = $(this).val();
 		$("#filter_area_status").val('1');
 		$('#member_ids').html('');
+		alert(dids);
+		alert(start_date);
+		alert(end_date);
+		alert(projectids);
 		var params = { 'dept_ids':dids,'skill_ids':projectids,'start_date':start_date,'end_date':end_date };
 		params[csrf_token_name] = csrf_hash_token;
-		alert(params);
+		
 		$.ajax({
 			type: 'POST',
 			url: site_base_url+'projects/dashboard/get_skill_members',
