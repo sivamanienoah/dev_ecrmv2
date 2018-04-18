@@ -1343,7 +1343,7 @@ class Dashboard extends crm_controller
 				foreach($each_project_codes as $key => $each_code){
 					// SELECT DISTINCT(project_code), title FROM `enoah_project` where project_code in ('ITS-AEC-01-0211')
 					
-					$qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM 'enoah_project' where project_code in ('.$each_code.')");
+					$qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM `enoah_project` where project_code in ($each_code)");
 					$pro_title = array();echo'<pre>hello result final===>';print_r($qry);exit;
 					if($qry->num_rows()>0){
 						$res_code = $qry->result();
