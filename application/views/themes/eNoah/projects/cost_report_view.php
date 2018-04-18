@@ -1,5 +1,4 @@
-<?php require (theme_url().'/tpl/header.php'); 
-error_reporting(E_ALL);//echo'test1223';exit;?>
+<?php require (theme_url().'/tpl/header.php');?>
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
