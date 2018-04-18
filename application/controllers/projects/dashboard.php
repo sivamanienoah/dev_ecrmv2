@@ -228,7 +228,7 @@ class Dashboard extends crm_controller
 		if($pjct->num_rows()>0){
 			$pjct_res = $pjct->result();
 		}
-		$data['all_projects'] = $pjct_res;
+		$data['all_projects'] = $pjct_res;echo "<pre>"; print_r($data['all_projects']); die;
 		$timesheet_db->close();
 
 		$data['start_date'] 	  = $start_date;
