@@ -1329,7 +1329,7 @@ class Dashboard extends crm_controller
 			// echo $this->db->last_query(); exit;
 			if($query->num_rows()>0){
 				$res = $query->result();
-				echo'<pre>testing===>';print_r($res);
+				// echo'<pre>testing===>';print_r($res);
 				$each_project_codes = array();
 				foreach($res as $each_res){
 					$each_project_codes[] = $each_res->project_code;
@@ -1337,20 +1337,16 @@ class Dashboard extends crm_controller
 				echo'<pre>hello===>';print_r($each_project_codes);
 				// $each_pjct_codes = implode(',',$each_project_codes);
 				
-				
-				// $dids = implode(',',$ids);
 				$timesheet_db = $this->load->database("timesheet",true);
 				foreach($each_project_codes as $key => $each_code){
-					// SELECT DISTINCT(project_code), title FROM `enoah_project` where project_code in ('ITS-AEC-01-0211')
-					
 					$qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM `enoah_project` where project_code in ('$each_code')");
 					$pro_title = array();
-					// if($qry->num_rows()>0){
-						$res_code = $qry->result();//echo'<pre>hello result final===>';print_r($res_code['0']->title);exit;
+					if($qry->num_rows()>0){
+						$res_code = $qry->result();echo'<pre>hello result final===>';print_r($res_code['0']->title);exit;
 						$pro_title[] = $res_code['0']->title;
-					// }
-				}echo'<pre>hello result final===>';print_r($pro_title);exit;
-				// $qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
+					}
+				}
+				echo'<pre>hello result final===>';print_r($pro_title);exit;
 				if($qry->num_rows()>0){
 					$res = $qry->result();echo'<pre>hello result===>';print_r($res);exit;
 					echo json_encode($res); exit;
