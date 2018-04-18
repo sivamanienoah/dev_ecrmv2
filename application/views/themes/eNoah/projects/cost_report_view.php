@@ -1,4 +1,5 @@
-<?php require (theme_url().'/tpl/header.php'); ?>
+<?php require (theme_url().'/tpl/header.php'); 
+error_reporting(E_ALL);//echo'test1223';exit;?>
 <style>
 .hide-calendar .ui-datepicker-calendar { display: none; }
 button.ui-datepicker-current { display: none; }
@@ -9,7 +10,7 @@ button.ui-datepicker-current { display: none; }
 table.bu-tbl th{ text-align:center; }
 table.bu-tbl{ width:70%; }
 table.bu-tbl-inr th{ text-align:center; }
-</style>
+</style> <?php //echo'<pre>';print_r($project_master);exit; ?>
 <script type="text/javascript">var this_is_home = true;</script>
 <div id="content">
     <div class="inner">
@@ -75,6 +76,7 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td class="tblheadbg">PRACTICE</td>
 									<td class="tblheadbg">SKILL</td>
 									<td class="tblheadbg">RESOURCE</td>
+									<td class="tblheadbg">PROJECTS</td>
 								</tr>
 								<tr>	
 									<td class="month-year">
@@ -132,9 +134,19 @@ table.bu-tbl-inr th{ text-align:center; }
 											<?php } }?>								
 										</select>
 									</td>
+									<td class="proj-dash-select">
+										<!--<select title="Select Skill" id="project_res" name="project_res[]"	multiple="multiple">
+											<?php //if(count($project_res)>0 && !empty($project_res)) { ?>
+											<?php //foreach($project_res as $proj_res) {
+													//$skills->name = ($skills->skill_id==0)?'N/A':$skills->name;
+													?>
+													<option <?php //echo in_array($proj_res->project_code,$project_codes)?'selected="selected"':'';?> value="<?php //echo $proj_res->project_code; ?>"><?php //echo $proj_res->title;?></option>
+											<?php //} }?>
+										</select>-->
+									</td>
 								</tr>
 								<tr align="right" >
-									<td colspan="7">
+									<td colspan="8">
 										<input type="hidden" id="start_date" name="start_date" value="" />
 										<input type="hidden" id="end_date" name="end_date" value="" />
 										<input type="hidden" id="filter_area_status" name="filter_area_status" value="" />
@@ -359,6 +371,10 @@ $(document).ready(function(){
 		var start_date = $('#month_year_from_date').val();
 		var end_date   = $('#month_year_to_date').val();
 		var sids = $(this).val();
+		alert(dids);
+		alert(start_date);
+		alert(end_date);
+		alert(sids);
 		$("#filter_area_status").val('1');
 		$('#member_ids').html('');
 		var params = { 'dept_ids':dids,'skill_ids':sids,'start_date':start_date,'end_date':end_date };
@@ -383,6 +399,36 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	/* $('body').on('change','#member_ids',function(){
+		var dids       = $('#department_ids').val();
+		var start_date = $('#month_year_from_date').val();
+		var end_date   = $('#month_year_to_date').val();
+		var sids = $(this).val();
+		$("#filter_area_status").val('1');
+		$('#member_ids').html('');
+		var params = { 'dept_ids':dids,'skill_ids':sids,'start_date':start_date,'end_date':end_date };
+		params[csrf_token_name] = csrf_hash_token;
+		
+		$.ajax({
+			type: 'POST',
+			url: site_base_url+'projects/dashboard/get_skill_members',
+			data: params,
+			success: function(members) {
+				if(members){
+					var mem_html;
+					var users = $.parseJSON(members);
+					if(users.length){
+						for(var i=0;i<users.length;i++){
+							mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
+						}	
+					}
+					$('#member_ids').html('');
+					$('#member_ids').append(mem_html);
+				}
+			}
+		});
+	}); */
 	
 	$("input[name=exclude_leave]").prop("checked",true);
 	$("input[name=exclude_holiday]").prop("checked",true);
