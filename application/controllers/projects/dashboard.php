@@ -1300,6 +1300,42 @@ class Dashboard extends crm_controller
 		}
 	}
 	
+	function get_project_by_practice()
+	{
+		// echo "<pre>"; print_R($this->input->post()); exit;
+		if($this->input->post("prac_id")){
+			$ids = '';
+			if($this->input->post("dept_ids")) {
+				$ids = $this->input->post("dept_ids");
+				$dids = implode(',',$ids);
+			}
+			$p_ids = $this->input->post("prac_id");
+			$pids = implode(',',$p_ids);
+			$start_date = $this->input->post("start_date");
+			$end_date = $this->input->post("end_date");
+
+			$this->db->select('t.skill_id, t.skill_name as name, t.project_code');
+			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+			$this->db->where("t.practice_id !=", 0);
+			// $this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
+			// $this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
+			if(!empty($ids))
+			$this->db->where_in("t.dept_id", $ids);
+			if(!empty($p_ids))
+			$this->db->where_in("t.practice_id", $p_ids);
+			$this->db->group_by('t.skill_id');
+			$this->db->order_by('t.skill_name');
+			$query = $this->db->get();
+			// echo $this->db->last_query(); exit;
+			if($query->num_rows()>0){
+				$res = $query->result();
+				echo'<pre>testing===>';print_r($res);exit;
+			}else{
+				echo 0;
+				exit;
+			}
+		}
+	}
 	
 	function get_projects_by_condition()
 	{
