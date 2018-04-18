@@ -1265,7 +1265,7 @@ class Dashboard extends crm_controller
 	
 	function get_skills_by_practice()
 	{
-		echo "<pre>"; print_R($this->input->post()); exit;
+		echo "<pre>"; print_R($this->input->post());
 		if($this->input->post("prac_id")){
 			$ids = '';
 			if($this->input->post("dept_ids")) {
@@ -1277,7 +1277,7 @@ class Dashboard extends crm_controller
 			$start_date = $this->input->post("start_date");
 			$end_date = $this->input->post("end_date");
 
-			$this->db->select('t.skill_id, t.skill_name as name');
+			$this->db->select('t.skill_id, t.skill_name as name, t.project_code');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 			$this->db->where("t.practice_id !=", 0);
 			// $this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
@@ -1289,7 +1289,7 @@ class Dashboard extends crm_controller
 			$this->db->group_by('t.skill_id');
 			$this->db->order_by('t.skill_name');
 			$query = $this->db->get();
-			// echo $this->db->last_query(); exit;
+			echo $this->db->last_query(); exit;
 			if($query->num_rows()>0){
 				$res = $query->result();
 				echo json_encode($res); exit;
