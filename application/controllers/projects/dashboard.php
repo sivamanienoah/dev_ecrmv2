@@ -1476,7 +1476,11 @@ class Dashboard extends crm_controller
 			
 			// SELECT ep.project_code, ep.title FROM `enoah_project` ep join enoah_assignments ea on ep.proj_id=ea.proj_id where ea.username in ('hema.d')
 			
-			$proj_query = "SELECT ep.project_code, ep.title FROM `enoah_project` ep join enoah_assignments ea on ep.proj_id=ea.proj_id where ea.username in ($rids)";
+			// $proj_query = "SELECT ep.project_code, ep.title FROM `enoah_project` ep join enoah_assignments ea on ep.proj_id=ea.proj_id where ea.username in ($rids)";
+			
+			$proj_query = "SELECT ep.project_code, ep.title FROM `enoah_project` ep enoah_times t on ep.proj_id=t.proj_id where t.uid in ($rids)";
+			
+			
 			$proj_mas_qry = $timesheet_db->query($proj_query);
 			
 			echo'<pre>query===>';print_r($proj_query);exit;
