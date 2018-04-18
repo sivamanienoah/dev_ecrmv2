@@ -330,7 +330,7 @@ $(document).ready(function(){
 			url: site_base_url+'projects/dashboard/get_skills_by_practice',
 			data: params,
 			success: function(pdata) {
-				if(pdata){alert(pdata);
+				if(pdata){
 					var skills = $.parseJSON(pdata);
 					if(skills.length){
 						var html='';
@@ -340,26 +340,6 @@ $(document).ready(function(){
 						}
 						$('#skill_ids').html('');
 						$('#skill_ids').append(html)
-						
-						$.ajax({
-							type: 'POST',
-							url: site_base_url+'projects/dashboard/get_projects',
-							data: params,
-							success: function(members) {
-								if(members){
-									var mem_html='';
-									var users = $.parseJSON(members);
-									if(users.length){
-										for(var i=0;i<users.length;i++){
-											mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
-										}	
-									}
-									$('#member_ids').html('');
-									$('#member_ids').append(mem_html)								
-								}
-							}
-						});
-						
 						$.ajax({
 							type: 'POST',
 							url: site_base_url+'projects/dashboard/get_practice_members',

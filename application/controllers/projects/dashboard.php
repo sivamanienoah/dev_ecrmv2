@@ -205,7 +205,7 @@ class Dashboard extends crm_controller
 		}
 		$query = $this->db->get();
 		
-		// echo "<br>****<br>" . $this->db->last_query();
+		echo "<br>****<br>" . $this->db->last_query();
 		
 		$data['resdata'] = $sql->result();
 		$arr_depts          = array();
@@ -1265,7 +1265,7 @@ class Dashboard extends crm_controller
 	
 	function get_skills_by_practice()
 	{
-		// echo "<pre>"; print_R($this->input->post());
+		// echo "<pre>"; print_R($this->input->post()); exit;
 		if($this->input->post("prac_id")){
 			$ids = '';
 			if($this->input->post("dept_ids")) {
@@ -1277,7 +1277,7 @@ class Dashboard extends crm_controller
 			$start_date = $this->input->post("start_date");
 			$end_date = $this->input->post("end_date");
 
-			$this->db->select('t.skill_id, t.skill_name as name, t.project_code');
+			$this->db->select('t.skill_id, t.skill_name as name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
 			$this->db->where("t.practice_id !=", 0);
 			// $this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
@@ -4661,61 +4661,6 @@ class Dashboard extends crm_controller
 		
 		}
 		return $results;
-	}
-	
-	function get_projects()
-	{
-		// echo "<pre>"; print_R($this->input->post());
-		if($this->input->post("prac_id")){
-			$ids = '';
-			if($this->input->post("dept_ids")) {
-				$ids = $this->input->post("dept_ids");
-				$dids = implode(',',$ids);
-			}
-			$p_ids = $this->input->post("prac_id");
-			$pids = implode(',',$p_ids);
-			$start_date = $this->input->post("start_date");
-			$end_date = $this->input->post("end_date");
-
-			$this->db->select('t.skill_id, t.skill_name as name, t.project_code');
-			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
-			$this->db->where("t.practice_id !=", 0);
-			// $this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
-			// $this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
-			if(!empty($ids))
-			$this->db->where_in("t.dept_id", $ids);
-			if(!empty($p_ids))
-			$this->db->where_in("t.practice_id", $p_ids);
-			$this->db->group_by('t.skill_id');
-			$this->db->order_by('t.skill_name');
-			$query = $this->db->get();
-			// echo $this->db->last_query(); exit;
-			if($query->num_rows()>0){
-				$res_data = $query->result();echo'<pre>';print_r($res_data);exit;
-				$timesheet_db = $this->load->database("timesheet",true);
-				
-				// get all departments from timesheet
-				$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
-				if($dept->num_rows()>0){
-					$depts_res = $dept->result();
-				}
-				$data['departments'] = $depts_res;
-				$timesheet_db->close();
-			}else{
-				$res_data = 0;
-			}
-			
-			
-			
-			
-			if($query->num_rows()>0){
-				$res = $query->result();
-				echo json_encode($res); exit;
-			}else{
-				echo 0;
-				exit;
-			}
-		}
 	}
 }
 /* End of dms resource_availability file */
