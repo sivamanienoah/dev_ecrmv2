@@ -1424,6 +1424,27 @@ class Dashboard extends crm_controller
 		}		
 	}
 	
+	function get_projects()
+	{
+		if($this->input->post("dept_ids")){
+			$ids = $this->input->post("dept_ids");
+			$start_date = $this->input->post("start_date");
+			$end_date   = $this->input->post("end_date");
+			$start_date = date("Y-m-01",strtotime($start_date));
+			$end_date   = date("Y-m-t",strtotime($end_date));
+			
+			$dids = implode(',',$ids);
+			$timesheet_db = $this->load->database("timesheet",true);
+			$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
+			if($qry->num_rows()>0){
+				$res = $qry->result();
+				echo json_encode($res); exit;
+			}else{
+				echo 0;exit;
+			}
+		}		
+	}
+	
 	function get_practice_members() 
 	{
 		if($this->input->post("dept_ids")){
@@ -3583,7 +3604,7 @@ class Dashboard extends crm_controller
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		$data['resdata'] 	   		= $query->result();//echo'<pre>';print_r($data['resdata']);exit;
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
