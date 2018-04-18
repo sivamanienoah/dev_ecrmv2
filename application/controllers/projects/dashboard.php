@@ -3525,7 +3525,7 @@ class Dashboard extends crm_controller
 		$member_ids		= $this->input->post("member_ids");
 		$entity_ids 	= $this->input->post("entity_ids");
 		
-		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, p.id as practice_id, p.practices as practice_name');
+		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, p.id as practice_id, p.practices as practice_name, l.lead_title');
 		// t.practice_id, t.practice_name
 		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
@@ -3589,6 +3589,10 @@ class Dashboard extends crm_controller
 		$data['dept_type']     		= $dept_type;
 		$data['resource_type'] 		= $resource_type;
 		$data['conversion_rates'] 	= $this->get_currency_rates();
+		
+		/* foreach($data['resdata'] as resdata){
+			
+		} */
 		
 		// get all projects from timesheet
 		$timesheet_db = $this->load->database("timesheet", true);
