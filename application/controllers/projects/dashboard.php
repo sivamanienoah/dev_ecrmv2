@@ -1265,7 +1265,7 @@ class Dashboard extends crm_controller
 	
 	function get_skills_by_practice()
 	{
-		// echo "<pre>"; print_R($this->input->post()); exit;
+		echo "<pre>"; print_R($this->input->post()); exit;
 		if($this->input->post("prac_id")){
 			$ids = '';
 			if($this->input->post("dept_ids")) {
