@@ -310,13 +310,13 @@ $(document).ready(function(){
 							type: 'POST',
 							url: site_base_url+'projects/dashboard/get_projects',
 							data: params,
-							success: function(members) {
-								if(members){
+							success: function(projects) {
+								if(projects){
 									var proj_html='';
-									var users = $.parseJSON(members);
-									if(users.length){
-										for(var i=0;i<users.length;i++){
-											proj_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
+									var pjcts = $.parseJSON(projects);
+									if(pjcts.length){
+										for(var i=0;i<pjcts.length;i++){
+											proj_html +='<option value="'+pjcts[i].project_code+'">'+pjcts[i].lead_title+'</option>';
 										}	
 									}
 									$('#project_res').html('');
