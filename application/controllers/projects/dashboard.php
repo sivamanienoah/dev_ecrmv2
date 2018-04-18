@@ -1469,12 +1469,14 @@ class Dashboard extends crm_controller
 			$dids = implode(',',$ids);
 			$rids = implode(',',$resource_ids);
 			$where .= 'and status = "ACTIVE" ';
-			
+			echo'<pre>rids===>';print_r($rids);
 			// get all projects from timesheet
 			$timesheet_db = $this->load->database("timesheet", true);
 			// $proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
 			
-			$proj_query = "SELECT ep.DISTINCT(project_code), ep.title FROM `enoah_project` ep join enoah_assignments ea on ep.proj_id=ea.proj_id where ea.username in ($resource_ids)";
+			// SELECT ep.project_code, ep.title FROM `enoah_project` ep join enoah_assignments ea on ep.proj_id=ea.proj_id where ea.username in ('hema.d')
+			
+			$proj_query = "SELECT ep.project_code, ep.title FROM `enoah_project` ep join enoah_assignments ea on ep.proj_id=ea.proj_id where ea.username in ($rids)";
 			$proj_mas_qry = $timesheet_db->query($proj_query);
 			
 			echo'<pre>query===>';print_r($proj_query);exit;
