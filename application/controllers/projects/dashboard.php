@@ -1435,7 +1435,7 @@ class Dashboard extends crm_controller
 			
 			// $dids = implode(',',$ids);
 			
-			$this->db->select('t.dept_id, t.dept_name, t.project_code, l.lead_title');
+			$this->db->select('t.dept_id, t.dept_name, DISTINCT(t.project_code), l.lead_title');
 			// t.practice_id, t.practice_name
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
