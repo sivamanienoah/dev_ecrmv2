@@ -1348,7 +1348,7 @@ class Dashboard extends crm_controller
 					$res = $qry->result();echo'<pre>hello result===>';print_r($res);exit;
 					echo json_encode($res); exit;
 				
-				
+				}
 			}else{
 				echo 0;
 				exit;
