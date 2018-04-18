@@ -74,8 +74,8 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td class="tblheadbg">DEPARTMENT</td>
 									<td class="tblheadbg">PRACTICE</td>
 									<td class="tblheadbg">SKILL</td>
-									<td class="tblheadbg">PROJECTS</td>
 									<td class="tblheadbg">RESOURCE</td>
+									<td class="tblheadbg">PROJECTS</td>
 								</tr>
 								<tr>	
 									<td class="month-year">
@@ -126,19 +126,19 @@ table.bu-tbl-inr th{ text-align:center; }
 										</select>
 									</td>
 									<td class="proj-dash-select">
-										<select title="Select Skill" id="project_res" name="project_res[]"	multiple="multiple">
-											<?php if(count($all_projects)>0 && !empty($all_projects)) { ?>
-											<?php foreach($all_projects as $project_res){?>
-													<option <?php echo in_array($project_res->project_code,$project_codes)?'selected="selected"':'';?> value="<?php echo $project_res->project_code;?>"><?php echo $project_res->title;?></option>
-											<?php } }?>
-										</select>
-									</td>
-									<td class="proj-dash-select">
 										<select title="Select Members" id="member_ids" name="member_ids[]" multiple="multiple">
 											<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
 											<?php foreach($member_ids_selected as $members){?>
 													<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?>  value="<?php echo $members->username;?>"><?php echo $members->emp_name;?></option>
 											<?php } }?>								
+										</select>
+									</td>
+									<td class="proj-dash-select">
+										<select title="Select Skill" id="project_res" name="project_res[]"	multiple="multiple">
+											<?php if(count($all_projects)>0 && !empty($all_projects)) { ?>
+											<?php foreach($all_projects as $project_res){?>
+													<option <?php echo in_array($project_res->project_code,$project_codes)?'selected="selected"':'';?> value="<?php echo $project_res->project_code;?>"><?php echo $project_res->title;?></option>
+											<?php } }?>
 										</select>
 									</td>
 								</tr>
