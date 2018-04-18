@@ -301,29 +301,29 @@ $(document).ready(function(){
 											}
 											$('#member_ids').html('');
 											$('#member_ids').append(mem_html)
-											$.ajax({
-												type: 'POST',
-												url: site_base_url+'projects/dashboard/get_projects',
-												data: params,
-												success: function(members) {
-													if(members){
-														var proj_html='';
-														var users = $.parseJSON(members);
-														if(users.length){
-															for(var i=0;i<users.length;i++){
-																proj_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
-															}	
-														}
-														$('#project_res').html('');
-														$('#project_res').append(proj_html)								
-													}
-												}
-											});
 										}
 									}
 								});
 							}
 						}
+						$.ajax({
+							type: 'POST',
+							url: site_base_url+'projects/dashboard/get_projects',
+							data: params,
+							success: function(members) {
+								if(members){
+									var proj_html='';
+									var users = $.parseJSON(members);
+									if(users.length){
+										for(var i=0;i<users.length;i++){
+											proj_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
+										}	
+									}
+									$('#project_res').html('');
+									$('#project_res').append(proj_html)								
+								}
+							}
+						});
 					}
 				});
 			}
