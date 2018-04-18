@@ -1461,13 +1461,13 @@ class Dashboard extends crm_controller
 			
 			$query 						= $this->db->get();		
 			echo $this->db->last_query(); exit;
-			$data['pjctdata'] 	   		= $query->result();//echo'<pre>';print_r($data['resdata']);exit;
+			$pjctdata	   		= $query->result();//echo'<pre>';print_r($data['resdata']);exit;
 			
 			
-			$timesheet_db = $this->load->database("timesheet",true);
-			$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
-			if($qry->num_rows()>0){
-				$res = $qry->result();
+			// $timesheet_db = $this->load->database("timesheet",true);
+			// $qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
+			if($query->num_rows()>0){
+				$res = $query->result();
 				echo json_encode($res); exit;
 			}else{
 				echo 0;exit;
