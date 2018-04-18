@@ -1433,7 +1433,37 @@ class Dashboard extends crm_controller
 			$start_date = date("Y-m-01",strtotime($start_date));
 			$end_date   = date("Y-m-t",strtotime($end_date));
 			
-			$dids = implode(',',$ids);
+			// $dids = implode(',',$ids);
+			
+			$this->db->select('t.dept_id, t.dept_name, t.project_code, l.lead_title');
+			// t.practice_id, t.practice_name
+			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+			$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
+			// $this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice', 'LEFT');
+			$this->db->where("t.resoursetype !=", '');
+			if(!empty($start_date) && !empty($end_date)) {
+				$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."')", NULL, FALSE);
+				$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
+			}
+			
+			
+			if(count($ids)>0 && !empty($ids)) {
+				// $data['department_ids'] = $ids;
+				$data['filter_area_status'] = 1;
+				$dids = implode(",",$ids);
+				if(!empty($dids)) {
+					$this->db->where_in("t.dept_id", $ids);
+				}
+			} else {
+				$deptwhere = "t.dept_id IN ('10','11')";
+				$this->db->where($deptwhere);
+			}
+			
+			$query 						= $this->db->get();		
+			echo $this->db->last_query(); exit;
+			$data['pjctdata'] 	   		= $query->result();//echo'<pre>';print_r($data['resdata']);exit;
+			
+			
 			$timesheet_db = $this->load->database("timesheet",true);
 			$qry = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where v.department_id in ($dids) and t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc");
 			if($qry->num_rows()>0){
@@ -3604,7 +3634,7 @@ class Dashboard extends crm_controller
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$data['resdata'] 	   		= $query->result();//echo'<pre>';print_r($data['resdata']);exit;
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
