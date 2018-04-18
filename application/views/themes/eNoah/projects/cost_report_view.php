@@ -9,7 +9,7 @@ button.ui-datepicker-current { display: none; }
 table.bu-tbl th{ text-align:center; }
 table.bu-tbl{ width:70%; }
 table.bu-tbl-inr th{ text-align:center; }
-</style> <?php echo'<pre>';print_r($all_projects);exit; ?>
+</style> <?php //echo'<pre>';print_r($all_projects);exit; ?>
 <script type="text/javascript">var this_is_home = true;</script>
 <div id="content">
     <div class="inner">
@@ -136,8 +136,8 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td class="proj-dash-select">
 										<select title="Select Skill" id="project_res" name="project_res[]"	multiple="multiple">
 											<?php if(count($all_projects)>0 && !empty($all_projects)) { ?>
-											<?php foreach($all_projects as $project_res){?>
-													<option <?php echo in_array($project_res->project_code,$project_codes)?'selected="selected"':'';?> value="<?php echo $project_res->project_code;?>"><?php echo $project_res->title;?></option>
+											<?php foreach($all_projects as $key=>$val){?>
+													<option <?php echo in_array($key,$project_codes)?'selected="selected"':'';?> value="<?php echo $key;?>"><?php echo $val;?></option>
 											<?php } }?>
 										</select>
 									</td>
