@@ -4691,11 +4691,7 @@ class Dashboard extends crm_controller
 			$query = $this->db->get();
 			// echo $this->db->last_query(); exit;
 			if($query->num_rows()>0){
-				$res_data = $query->result();
-			}else{
-				$res_data = 0;
-			}
-			if($res_data>0){echo'<pre>';print_r($res_data);exit;
+				$res_data = $query->result();echo'<pre>';print_r($res_data);exit;
 				$timesheet_db = $this->load->database("timesheet",true);
 				
 				// get all departments from timesheet
@@ -4705,7 +4701,10 @@ class Dashboard extends crm_controller
 				}
 				$data['departments'] = $depts_res;
 				$timesheet_db->close();
+			}else{
+				$res_data = 0;
 			}
+			
 			
 			
 			
