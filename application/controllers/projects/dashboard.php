@@ -1332,7 +1332,7 @@ class Dashboard extends crm_controller
 				echo'<pre>testing===>';print_r($res);
 				$each_project_codes = array();
 				foreach($res as $each_res){
-					$each_project_codes[] = $each_res['project_code'];
+					$each_project_codes[] = $each_res->project_code;
 				}
 				echo'<pre>hello===>';print_r($each_project_codes);exit;
 			}else{
