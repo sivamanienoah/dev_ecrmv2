@@ -1454,25 +1454,8 @@ class Dashboard extends crm_controller
 	}
 	
 	function get_projects_by_members()
-	{
-		// get all projects from timesheet
-		$timesheet_db = $this->load->database("timesheet", true);
-		$proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
-		echo'<pre>query===>';print_r($proj_mas_qry);exit;
-		if($proj_mas_qry->num_rows()>0){
-			$project_res = $proj_mas_qry->result();
-		}
-		$project_master = array();
-		if(!empty($project_res)){
-			foreach($project_res as $prec)
-			$project_master[$prec->project_code] = $prec->title;
-		}
-		$data['project_master']  = $project_master;
-		$data['project_res']  = $project_res;
-		
-		echo'<pre>postdata===>';print_r($data['project_res']);exit;
-		
-		echo'<pre>postdata===>';print_r($this->input->post());exit;
+	{	
+		echo'<pre>postdata===>';print_r($this->input->post());
 		if($this->input->post("resource_ids")){
 			$where = '';
 			$ids 		= $this->input->post("dept_ids");
@@ -1486,6 +1469,28 @@ class Dashboard extends crm_controller
 			$dids = implode(',',$ids);
 			$rids = implode(',',$resource_ids);
 			$where .= 'and status = "ACTIVE" ';
+			
+			// get all projects from timesheet
+			$timesheet_db = $this->load->database("timesheet", true);
+			// $proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
+			
+			$proj_query = "SELECT ep.DISTINCT(project_code), ep.title FROM `enoah_project` ep join enoah_assignments ea on ep.proj_id=ea.proj_id where ea.username in ($resource_ids)";
+			$proj_mas_qry = $timesheet_db->query($proj_query);
+			
+			echo'<pre>query===>';print_r($proj_query);exit;
+			if($proj_mas_qry->num_rows()>0){
+				$project_res = $proj_mas_qry->result();
+			}
+			$project_master = array();
+			if(!empty($project_res)){
+				foreach($project_res as $prec)
+				$project_master[$prec->project_code] = $prec->title;
+			}
+			$data['project_master']  = $project_master;
+			$data['project_res']  = $project_res;
+			
+			echo'<pre>postdata===>';print_r($data['project_res']);exit;
+			
 			if(!empty($dids)) {
 				$where .= 'and v.department_id in ('.$dids.')';
 			}
