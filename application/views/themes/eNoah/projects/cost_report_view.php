@@ -399,16 +399,16 @@ $(document).ready(function(){
 		});
 	});
 	
-	/* $('body').on('change','#member_ids',function(){
+	$('body').on('change','#member_ids',function(){
 		var dids       = $('#department_ids').val();
 		var start_date = $('#month_year_from_date').val();
 		var end_date   = $('#month_year_to_date').val();
-		var sids = $(this).val();
+		var projectids = $(this).val();
 		$("#filter_area_status").val('1');
 		$('#member_ids').html('');
-		var params = { 'dept_ids':dids,'skill_ids':sids,'start_date':start_date,'end_date':end_date };
+		var params = { 'dept_ids':dids,'skill_ids':projectids,'start_date':start_date,'end_date':end_date };
 		params[csrf_token_name] = csrf_hash_token;
-		
+		alert(params);
 		$.ajax({
 			type: 'POST',
 			url: site_base_url+'projects/dashboard/get_skill_members',
@@ -427,7 +427,7 @@ $(document).ready(function(){
 				}
 			}
 		});
-	}); */
+	});
 	
 	$("input[name=exclude_leave]").prop("checked",true);
 	$("input[name=exclude_holiday]").prop("checked",true);
