@@ -331,7 +331,7 @@ $(document).ready(function(){
 			data: params,
 			success: function(pdata) {
 				if(pdata){
-					var skills = $.parseJSON(pdata);
+					var skills = $.parseJSON(pdata);alert(skills);
 					if(skills.length){
 						var html='';
 						for(var i=0;i<skills.length;i++){
