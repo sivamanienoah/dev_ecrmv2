@@ -221,14 +221,6 @@ class Dashboard extends crm_controller
 			$depts_res = $dept->result();
 		}
 		$data['departments'] = $depts_res;
-		
-		// get all projects from timesheet
-		// $pjct = $timesheet_db->query("SELECT title, project_code FROM ".$timesheet_db->dbprefix('project')." where department_id IN ('10','11') ");
-		$pjct = $timesheet_db->query("SELECT title, project_code FROM ".$timesheet_db->dbprefix('project')." where department_id IN ('10','11') ");
-		if($pjct->num_rows()>0){
-			$pjct_res = $pjct->result();
-		}
-		$data['all_projects'] = $pjct_res;echo "<pre>"; print_r($data['all_projects']); die;
 		$timesheet_db->close();
 
 		$data['start_date'] 	  = $start_date;
@@ -3552,8 +3544,8 @@ class Dashboard extends crm_controller
 			$project_master[$prec->project_code] = $prec->title;
 		}
 		$data['project_master']  = $project_master;
-		$data['project_res']  = $project_res;
-		// echo'<pre>';print_r($project_res);exit;
+		$data['all_projects']  = $project_res;
+		echo'<pre>';print_r($data['all_projects']);exit;
 		/* $this->db->select('department_id, department_name');
 		$this->db->where_in('department_id', array('10','11'));
 		$dept = $this->db->get($timesheet_db->dbprefix . 'department');
