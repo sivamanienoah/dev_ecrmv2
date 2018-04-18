@@ -126,14 +126,12 @@ table.bu-tbl-inr th{ text-align:center; }
 										</select>
 									</td>
 									<td class="proj-dash-select">
-										<!--<select title="Select Skill" id="project_res" name="project_res[]"	multiple="multiple">
-											<?php //if(count($project_res)>0 && !empty($project_res)) { ?>
-											<?php //foreach($project_res as $proj_res) {
-													//$skills->name = ($skills->skill_id==0)?'N/A':$skills->name;
-													?>
-													<option <?php //echo in_array($proj_res->project_code,$project_codes)?'selected="selected"':'';?> value="<?php //echo $proj_res->project_code; ?>"><?php //echo $proj_res->title;?></option>
-											<?php //} }?>
-										</select>-->
+										<select title="Select Skill" id="project_res" name="project_res[]"	multiple="multiple">
+											<?php if(count($all_projects)>0 && !empty($all_projects)) { ?>
+											<?php foreach($all_projects as $project_res){?>
+													<option <?php echo in_array($project_res->project_code,$project_codes)?'selected="selected"':'';?> value="<?php echo $project_res->project_code;?>"><?php echo $project_res->title;?></option>
+											<?php } }?>
+										</select>
 									</td>
 									<td class="proj-dash-select">
 										<select title="Select Members" id="member_ids" name="member_ids[]" multiple="multiple">
