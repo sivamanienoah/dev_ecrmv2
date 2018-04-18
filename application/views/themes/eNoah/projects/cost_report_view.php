@@ -330,7 +330,7 @@ $(document).ready(function(){
 			url: site_base_url+'projects/dashboard/get_skills_by_practice',
 			data: params,
 			success: function(pdata) {
-				if(pdata){
+				if(pdata){alert(pdata);
 					var skills = $.parseJSON(pdata);alert(skills);
 					if(skills.length){
 						var html='';
