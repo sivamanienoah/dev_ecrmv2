@@ -1302,7 +1302,7 @@ class Dashboard extends crm_controller
 	
 	function get_project_by_practice()
 	{
-		echo "<pre>"; print_R($this->input->post()); 
+		// echo "<pre>"; print_R($this->input->post()); 
 		if($this->input->post("prac_id")){
 			$ids = '';
 			if($this->input->post("dept_ids")) {
@@ -1375,7 +1375,7 @@ class Dashboard extends crm_controller
 			
 			// echo "<pre>"; print_R($pids);
 			
-			echo $this->db->last_query(); exit;
+			// echo $this->db->last_query(); exit;
 			
 			
 			
