@@ -3933,7 +3933,7 @@ class Dashboard extends crm_controller
 				$this->db->where_in('l.practice', $practice_ids);
 			}
 		}
-		// echo'<pre>';print_r($project_reslt);
+		echo'<pre>';print_r($project_reslt); echo '</pre>';
 		/* if(!empty($project_reslt) && count($project_reslt)>0) {
 			$this->db->where_in('t.project_code', $project_reslt);
 		} */
@@ -3941,6 +3941,7 @@ class Dashboard extends crm_controller
 		if(!empty($project_reslt) && count($project_reslt)>0) {
 			$project_result_arr = array();
 			$project_result_arr = @implode(",", $project_reslt);
+			echo'<pre>';print_r($project_result_arr); echo '</pre>'; 
 			if(!empty($project_result_arr) && count($project_result_arr)>0) {
 				$this->db->where_in('t.project_code', $project_result_arr);
 			}
