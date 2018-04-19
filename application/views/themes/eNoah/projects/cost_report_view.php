@@ -53,6 +53,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					<input type="hidden" name="entity_ids" value="" id="henty_ids" />
 					<input type="hidden" name="skill_ids" value="" id="hskill_ids" />
 					<input type="hidden" name="member_ids" value="" id="hmember_ids" />
+					<input type="hidden" name="project_res" value="" id="hproject_res" />
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					</form>
 				</div>
@@ -227,16 +228,16 @@ $(function() {
 		
 		var form = $('<form action="' + url + '" method="post">' +
 		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-		'<input type="hidden" name="month_year_from_date" id="hidden_month_year_from_date" value="'+$('#month_year_from_date').val()+ '" />' +
+		'<input type="hidden" name="month_year_from_date" id="hidden_month_year_fdate" value="'+$('#month_year_from_date').val()+ '" />' +
 		'<input type="hidden" name="month_year_to_date" id="hidden_month_year_to_date" value="'+$('#month_year_to_date').val()+ '" />' +
 		'<input type="hidden" name="exclude_leave" id="hidden_exclude_leave" value="'+$('#exclude_leave').val()+'" />' +
 		'<input type="hidden" name="exclude_holiday" id="hidden_exclude_holiday" value="' +$('#exclude_holiday').val()+ '" />' +
 		'<input type="hidden" name="entity_ids" id="hidden_entity_ids" value="' +$('#entity_ids').val()+ '" />' +
 		'<input type="hidden" name="department_ids" id="hidden_department_ids" value="' +$('#department_ids').val()+ '" />' +
-		'<input type="hidden" name="practice_ids" id="hidden_practice_ids" value="' +$('#practice_ids').val()+ '" />' +
+		'<input type="hidden" name="practice_ids" id="hidden_practice_ids" value="' +$('rom_#practice_ids').val()+ '" />' +
 		'<input type="hidden" name="skill_ids" id="hidden_skill_ids" value="' +$('#skill_ids').val()+ '" />' +
 		'<input type="hidden" name="member_ids" id="hidden_member_ids" value="' +$('#member_ids').val()+ '" />' +
-		'<input type="hidden" name="project_res" id="hidden_project_res" value="' +$('#project_res').val()+ '" />' +
+		'<input type="hidden" name="project_res" id="hidden_project_names" value="' +$('#hproject_res').val()+ '" />' +
 		'</form>');
 		$('body').append(form);
 		$(form).submit();
