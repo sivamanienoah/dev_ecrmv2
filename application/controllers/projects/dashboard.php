@@ -3935,9 +3935,9 @@ class Dashboard extends crm_controller
 		}
 		
 		if(!empty($project_reslt) && count($project_reslt)>0) {
-			if($project_reslt != 'null') {
-				$this->db->where_in('l.pjt_id', $project_reslt);
-			}
+			$data['sel_project_reslt'] = $project_reslt;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('t.project_code', $project_reslt);
 		}
 		
 		if(count($department_ids)>0 && !empty($department_ids) && ($department_ids != 'null')) {
