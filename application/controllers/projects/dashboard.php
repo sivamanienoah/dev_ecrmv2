@@ -3841,7 +3841,7 @@ class Dashboard extends crm_controller
 		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
 
 		//for practices		
-		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date);
+		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date,$department_ids);
 		
 		$data['proj_data'] 	  = $this->get_default_projects($start_date, $end_date, $department_ids, $practice_ids);
 		
@@ -4576,16 +4576,26 @@ class Dashboard extends crm_controller
 		$this->load->view("projects/cost_report_view_new", $data);
 	}
 	
-	private function get_default_practices($start_date, $end_date)
+	private function get_default_practices($start_date, $end_date, $department_ids)
 	{
 		$practice_not_in_array = array('6','7','8');
+		$eads_arr = array(1,3,10,12,13,14,15);
+		$eqad_arr = array(3,5);
 		$this->db->select('id, practices');
 		$this->db->from($this->cfg['dbpref']. 'practices');
 		$this->db->where("status !=", 0);
 		$this->db->where_not_in("id", $practice_not_in_array);
+		if(!empty($department_ids) && count($department_ids)!=2) {
+			if(in_array(10, $department_ids)) {
+				$this->db->where_in("id", $eads_arr);
+			}
+			if(in_array(11, $department_ids)) {
+				$this->db->where_in("id", $eqad_arr);
+			}
+		}
 		$query = $this->db->get();
 		// echo $this->db->last_query(); die;
-		return $query->result();
+		return $query->result();		
 	}
 	
 	private function get_default_projects($start_date, $end_date, $department_ids, $practice_ids)
