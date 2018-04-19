@@ -1332,10 +1332,12 @@ class Dashboard extends crm_controller
 			}
 			
 			$this->db->distinct('t.project_code');
-			$this->db->select('t.dept_id, t.project_code, t.dept_name, l.lead_title, t.practice_id, t.practice_name');
+			$this->db->select('l.department_id_fk, t.project_code, dep.department_name, l.lead_title, l.practice, pract.practices');
 			// t.practice_id, t.practice_name
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
 			$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
+			$this->db->join($this->cfg['dbpref']. 'department as dep', 'dep.department_id = l.department_id_fk', 'LEFT');
+			$this->db->join($this->cfg['dbpref']. 'practices as pract', 'pract.id = l.practice', 'LEFT');
 			// $this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice', 'LEFT');
 			$this->db->where("t.resoursetype !=", '');
 			$this->db->where("l.lead_title !=", '');
@@ -1350,10 +1352,10 @@ class Dashboard extends crm_controller
 				// $data['filter_area_status'] = 1;
 				// $dids = implode(",",$ids);
 				if(!empty($dids)) {
-					$this->db->where_in("t.dept_id", $ids);
+					$this->db->where_in("l.department_id_fk", $ids);
 				}
 			} else {
-				$deptwhere = "t.dept_id IN ('10','11')";
+				$deptwhere = "l.department_id_fk IN ('10','11')";
 				$this->db->where($deptwhere);
 			}
 			
@@ -1362,7 +1364,7 @@ class Dashboard extends crm_controller
 				// $data['filter_area_status'] = 1;
 				// $proids = implode(",",$p_ids);
 				if(!empty($pids)) {
-					$this->db->where_in("t.practice_id", $p_ids);
+					$this->db->where_in("l.practice", $p_ids);
 				}
 			}/*  else {
 				$depatwhere = "t.dept_id IN ('10','11')";
@@ -1375,7 +1377,7 @@ class Dashboard extends crm_controller
 			
 			// echo "<pre>"; print_R($pids);
 			
-			echo $this->db->last_query(); exit;
+			// echo $this->db->last_query(); exit;
 			
 			
 			
