@@ -9,7 +9,7 @@ button.ui-datepicker-current { display: none; }
 table.bu-tbl th{ text-align:center; }
 table.bu-tbl{ width:70%; }
 table.bu-tbl-inr th{ text-align:center; }
-</style> <?php echo'<pre>';print_r($all_projects);exit; ?>
+</style> <?php //echo'<pre>';print_r($all_projects);exit; ?>
 <script type="text/javascript">var this_is_home = true;</script>
 <div id="content">
     <div class="inner">
