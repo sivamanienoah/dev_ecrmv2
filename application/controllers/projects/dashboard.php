@@ -3829,9 +3829,9 @@ class Dashboard extends crm_controller
 			if(!empty($project_reslt) && count($project_reslt)>0) {
 				$this->db->where_in('t.project_code', $project_reslt);
 			}
-			if(!empty($skill_ids)) {
-				$this->db->where_in("t.skill_id", $skill_ids);
-			}
+			/* if(!empty($data['member_ids'])) {
+				$this->db->where_in("t.skill_id", $data['member_ids']);
+			} */
 			$this->db->group_by('t.empname');
 			$mem_qry = $this->db->get();
 			$data['member_ids_selected'] = $mem_qry->result();
