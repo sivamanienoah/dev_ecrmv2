@@ -3796,7 +3796,7 @@ class Dashboard extends crm_controller
 		$data['departments'] = $depts_res;
 		
 		$timesheet_db->close();
-		
+		echo'<pre>';print_r($project_reslt);exit;
 		if(!empty($data['departments']) && count($data['departments'])>0) {
 			$this->db->select('t.skill_id, t.skill_name as name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
@@ -3808,6 +3808,9 @@ class Dashboard extends crm_controller
 			}
 			if(!empty($practice_ids) && count($practice_ids)>0) {
 				$this->db->where_in('t.practice_id', $practice_ids);
+			}
+			if(!empty($project_reslt) && count($project_reslt)>0) {
+				$this->db->where_in('t.project_code', $project_reslt);
 			}
 			$this->db->group_by('t.skill_id');
 			$this->db->order_by('t.skill_name');
