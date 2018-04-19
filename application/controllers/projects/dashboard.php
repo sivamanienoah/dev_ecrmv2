@@ -3941,12 +3941,11 @@ class Dashboard extends crm_controller
 		}
 		
 		if(count($department_ids)>0 && !empty($department_ids) && ($department_ids != 'null')) {
-			echo'<pre>';print_r($department_ids);exit;
+			// echo'<pre>';print_r($department_ids);exit;
 			$data['department_ids'] = $department_ids;
 			$data['filter_area_status'] = 1;
-			$dids = implode(",",$department_ids);
-			if(!empty($dids)) {
-				foreach($dids as $depid){
+			if(!empty($department_ids)) {
+				foreach($department_ids as $depid){
 					$this->db->where("t.dept_id", $depid);
 				}
 			}
