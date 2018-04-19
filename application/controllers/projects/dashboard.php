@@ -3782,7 +3782,7 @@ class Dashboard extends crm_controller
 		}
 		$data['project_master']  = $project_master;
 		$data['all_projects']  = $project_list;
-		// echo'<pre>';print_r($data['all_projects']);exit;
+		echo'<pre>';print_r($data['all_projects']);exit;
 		/* $this->db->select('department_id, department_name');
 		$this->db->where_in('department_id', array('10','11'));
 		$dept = $this->db->get($timesheet_db->dbprefix . 'department');
