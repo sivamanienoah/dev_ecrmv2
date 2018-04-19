@@ -3940,19 +3940,14 @@ class Dashboard extends crm_controller
 			}
 		}
 		
-		if(count($department_ids)>0 && !empty($department_ids)) {
-			if($department_ids != 'null') {//echo'<pre>test==>';print_r($department_ids);exit;
-				$data['department_ids'] = $department_ids;
-				$data['filter_area_status'] = 1;
-				$dids = implode(",",$department_ids);//echo'<pre>';print_r($dids);exit;
-				if(!empty($dids)) {
-					foreach($dids as $depid){
-						$this->db->where("t.dept_id", $depid);
-					}
+		if(count($department_ids)>0 && !empty($department_ids) && ($department_ids != 'null')) {
+			$data['department_ids'] = $department_ids;
+			$data['filter_area_status'] = 1;
+			$dids = implode(",",$department_ids);//echo'<pre>';print_r($dids);exit;
+			if(!empty($dids)) {
+				foreach($dids as $depid){
+					$this->db->where("t.dept_id", $depid);
 				}
-			} else {
-				$deptwhere = "t.dept_id IN ('10','11')";
-				$this->db->where($deptwhere);
 			}
 		} else {
 			$deptwhere = "t.dept_id IN ('10','11')";
