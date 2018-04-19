@@ -3939,8 +3939,8 @@ class Dashboard extends crm_controller
 				$this->db->where_in('l.pjt_id', $project_reslt);
 			}
 		}
-		// echo'<pre>';print_r($department_ids);
-		if(count($department_ids)>0 && !empty($department_ids)) {
+		
+		if(count($department_ids)>0 && !empty($department_ids)) {echo'<pre>test==>';print_r($department_ids);exit;
 			if($department_ids != 'null') {
 				$data['department_ids'] = $department_ids;
 				$data['filter_area_status'] = 1;
