@@ -236,6 +236,7 @@ $(function() {
 		'<input type="hidden" name="practice_ids" id="hidden_practice_ids" value="' +$('#practice_ids').val()+ '" />' +
 		'<input type="hidden" name="skill_ids" id="hidden_skill_ids" value="' +$('#skill_ids').val()+ '" />' +
 		'<input type="hidden" name="member_ids" id="hidden_member_ids" value="' +$('#member_ids').val()+ '" />' +
+		'<input type="hidden" name="project_res" id="hidden_project_res" value="' +$('#project_res').val()+ '" />' +
 		'</form>');
 		$('body').append(form);
 		$(form).submit();
@@ -372,7 +373,7 @@ $(document).ready(function(){
 									$('#member_ids').html('');
 									$('#member_ids').append(mem_html)
 									
-									$('#project_res').html('');
+									/* $('#project_res').html('');
 									$.ajax({
 										type: 'POST',
 										url: site_base_url+'projects/dashboard/get_project_by_practice',
@@ -390,11 +391,29 @@ $(document).ready(function(){
 												$('#member_ids').append(mem_html)								
 											}
 										}
-									});
+									}); */
 								}
 							}
 						});
 					}
+					$.ajax({
+						type: 'POST',
+						url: site_base_url+'projects/dashboard/get_project_by_practice',
+						data: params,
+						success: function(project) {
+							if(project){
+								var proj_html='';
+								var pjct = $.parseJSON(project);
+								if(pjct.length){
+									for(var i=0;i<pjct.length;i++){
+										proj_html +='<option value="'+pjct[i].project_code+'">'+pjct[i].lead_title+'</option>';
+									}	
+								}
+								$('#project_res').html('');
+								$('#project_res').append(proj_html)								
+							}
+						}
+					});
 				}
 			}
 		});
@@ -406,10 +425,6 @@ $(document).ready(function(){
 		var start_date = $('#month_year_from_date').val();
 		var end_date   = $('#month_year_to_date').val();
 		var sids = $(this).val();
-		alert(dids);
-		alert(start_date);
-		alert(end_date);
-		alert(sids);
 		$("#filter_area_status").val('1');
 		$('#member_ids').html('');
 		var params = { 'dept_ids':dids,'skill_ids':sids,'start_date':start_date,'end_date':end_date };
