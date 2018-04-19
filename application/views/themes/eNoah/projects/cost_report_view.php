@@ -78,7 +78,7 @@ table.bu-tbl-inr th{ text-align:center; }
 									<td class="tblheadbg">PROJECTS</td>
 								</tr>
 								<tr>	
-									<td class="month-year">
+									<td class="month-year" style="width: 150px;">
 										<span>From</span> <input type="text" data-calendar="false" name="month_year_from_date" id="month_year_from_date" class="textfield" value="<?php echo date('F Y',strtotime($start_date)); ?>" />
 										<br />
 										<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date)); ?>" />
