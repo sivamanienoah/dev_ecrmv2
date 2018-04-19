@@ -3967,14 +3967,14 @@ class Dashboard extends crm_controller
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
-		// echo $this->db->last_query();
+		echo $this->db->last_query();
 		$resdata  = $query->result();
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
 		$data['resource_type'] 		= $resource_type;
 		$conversion_rates 	= $this->get_currency_rates();
 		
-		// echo '<pre>'; print_r($resdata); die;
+		echo '<pre>'; print_r($resdata); die;
 		
 		// get all projects from timesheet
 		$timesheet_db = $this->load->database("timesheet", true);
