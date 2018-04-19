@@ -3935,9 +3935,9 @@ class Dashboard extends crm_controller
 		}
 		
 		if(!empty($project_reslt) && count($project_reslt)>0) {
-			$data['project_results'] = $project_reslt;
-			$data['filter_area_status'] = 1;
-			$this->db->where_in('t.project_code', $project_reslt);
+			if($project_reslt != 'null') {
+				$this->db->where_in('l.pjt_id', $project_reslt);
+			}
 		}
 		
 		if(count($department_ids)>0 && !empty($department_ids)) {
@@ -4013,6 +4013,9 @@ class Dashboard extends crm_controller
 			}
 			if(!empty($practice_ids) && count($practice_ids)>0) {
 				$this->db->where_in('t.practice_id', $practice_ids);
+			}
+			if(!empty($project_reslt) && count($project_reslt)>0) {
+				$this->db->where_in('t.project_code', $project_reslt);
 			}
 			$this->db->group_by('t.skill_id');
 			$this->db->order_by('t.skill_name');
