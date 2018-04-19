@@ -3935,11 +3935,7 @@ class Dashboard extends crm_controller
 		}
 		// echo'<pre>';print_r($project_reslt);
 		if(!empty($project_reslt) && count($project_reslt)>0) {
-			// $project_result_arr = array();
-			// $project_result_arr = @implode(",", $project_reslt);
-			// if(!empty($project_result_arr) && count($project_result_arr)>0) {
-				$this->db->where_in('t.project_code', $project_reslt);
-			// }
+			$this->db->where_in('t.project_code', $project_reslt);
 		}
 		
 		if(count($department_ids)>0 && !empty($department_ids) && ($department_ids != 'null')) {
