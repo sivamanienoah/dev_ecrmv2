@@ -3844,7 +3844,6 @@ class Dashboard extends crm_controller
 		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date);
 		
 		$data['proj_data'] 	  = $this->get_default_projects($start_date, $end_date, $department_ids, $practice_ids);
-		$practice_ids);
 		
 		foreach($data['proj_data'] as $resdata){
 			$project_list[$resdata->project_code] = $resdata->lead_title;
