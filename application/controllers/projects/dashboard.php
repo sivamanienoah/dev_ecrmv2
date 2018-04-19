@@ -3836,7 +3836,7 @@ class Dashboard extends crm_controller
 			$mem_qry = $this->db->get();
 			$data['member_ids_selected'] = $mem_qry->result();
 		}
-
+		echo "<pre>"; print_r($data['member_ids_selected']); die;
 		//get other costs
 		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
 
