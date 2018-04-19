@@ -213,13 +213,8 @@ class Dashboard extends crm_controller
 		$check_user_array   = array();
 		$arr_depts1		    = array();
 		$arr_user_avail_set = array();
-		echo "<pre>"; print_r($data['resdata']); echo "</pre>";
+		/* echo "<pre>"; print_r($data['resdata']); echo "</pre>"; */
 		
-		
-		foreach($data['resdata'] as $resdata){
-			$project_list[$resdata->project_code] = $resdata->lead_title;
-		}
-		$data['all_projects']  = $project_list;
 		// get all departments from timesheet
 		$dept = $timesheet_db->query("SELECT department_id, department_name FROM ".$timesheet_db->dbprefix('department')." where department_id IN ('10','11') ");
 		if($dept->num_rows()>0){
