@@ -3933,7 +3933,7 @@ class Dashboard extends crm_controller
 				$this->db->where_in('l.practice', $practice_ids);
 			}
 		}
-		
+		echo'<pre>';print_r($project_reslt);
 		if(!empty($project_reslt) && count($project_reslt)>0) {
 			$data['sel_project_reslt'] = $project_reslt;
 			$data['filter_area_status'] = 1;
