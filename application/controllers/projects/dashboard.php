@@ -3843,7 +3843,8 @@ class Dashboard extends crm_controller
 		//for practices		
 		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date);
 		
-		$data['proj_data'] 	  = $this->get_default_projects($start_date, $end_date);
+		$data['proj_data'] 	  = $this->get_default_projects($start_date, $end_date, $department_ids, $practice_ids);
+		$practice_ids);
 		
 		foreach($data['proj_data'] as $resdata){
 			$project_list[$resdata->project_code] = $resdata->lead_title;
@@ -4588,7 +4589,7 @@ class Dashboard extends crm_controller
 		return $query->result();
 	}
 	
-	private function get_default_projects($start_date, $end_date)
+	private function get_default_projects($start_date, $end_date, $department_ids, $practice_ids)
 	{
 		$this->db->distinct('l.lead_title');
 		$this->db->select('t.dept_id, t.dept_name, t.project_code, l.lead_title');
@@ -4602,8 +4603,19 @@ class Dashboard extends crm_controller
 			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
 		}
 		
-		$deptwhere = "t.dept_id IN ('10','11')";
-		$this->db->where($deptwhere);
+		if(!empty($practice_ids) && count($practice_ids)>0) {
+			$this->db->where_in('l.practice', $practice_ids);
+		}
+		
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			$dids = implode(",",$department_ids);
+			if(!empty($dids)) {
+				$this->db->where_in("t.dept_id", $department_ids);
+			}
+		} else {
+			$deptwhere = "t.dept_id IN ('10','11')";
+			$this->db->where($deptwhere);
+		}
 		
 		$this->db->where('l.practice is not null');
 		$this->db->where('l.lead_title is not null');
