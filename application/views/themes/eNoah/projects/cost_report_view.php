@@ -133,7 +133,7 @@ table.bu-tbl-inr th{ text-align:center; }
 											<?php } }?>								
 										</select>
 									</td>
-									<td class="proj-dash-select" style="width: 80px;">
+									<td class="proj-dash-select" style="width: 250px;">
 										<select title="Select Project" id="project_res" name="project_res[]" multiple="multiple">
 											<?php if(count($all_projects)>0 && !empty($all_projects)) { ?>
 											<?php foreach($all_projects as $key=>$val){?>
