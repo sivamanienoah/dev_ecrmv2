@@ -4605,7 +4605,7 @@ class Dashboard extends crm_controller
 		$this->db->where('l.practice is not null');
 		$this->db->where('l.lead_title is not null');
 		$query 	= $this->db->get();	
-		echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
 		return $query->result();
 	}
 	
