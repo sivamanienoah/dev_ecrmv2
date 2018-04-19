@@ -3814,7 +3814,7 @@ class Dashboard extends crm_controller
 			}
 			$this->db->group_by('t.skill_id');
 			$this->db->order_by('t.skill_name');
-			$skquery = $this->db->get();
+			$skquery = $this->db->get();echo $this->db->last_query(); exit;
 			$data['skill_ids_selected'] = $skquery->result();
 		}
 		
