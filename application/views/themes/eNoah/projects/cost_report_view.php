@@ -541,7 +541,8 @@ $('#filter_reset').click(function() {
 	 $("#member_ids").html('');
 	 $('select#entity_ids option').removeAttr("selected");
 	 $('select#department_ids option').removeAttr("selected");
-	 $("#project_res").html('');
+	 $('#project_res').html('');
+	 $('#project_res').append(proj_html)
 });
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
