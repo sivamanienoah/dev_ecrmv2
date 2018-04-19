@@ -53,7 +53,7 @@ table.bu-tbl-inr th{ text-align:center; }
 					<input type="hidden" name="entity_ids" value="" id="henty_ids" />
 					<input type="hidden" name="skill_ids" value="" id="hskill_ids" />
 					<input type="hidden" name="member_ids" value="" id="hmember_ids" />
-					<input type="hidden" name="project_name" value="" id="hproject_name" />
+					<input type="hidden" name="project_res" value="" id="hproject_res" />
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 					</form>
 				</div>
@@ -135,10 +135,10 @@ table.bu-tbl-inr th{ text-align:center; }
 										</select>
 									</td>
 									<td class="proj-dash-select" style="width: 250px;">
-										<select title="Select Project" id="project_name" name="project_name[]" multiple="multiple">
+										<select title="Select Project" id="project_res" name="project_res[]" multiple="multiple">
 											<?php if(count($all_projects)>0 && !empty($all_projects)) { ?>
 											<?php foreach($all_projects as $key=>$val){?>
-													<option <?php echo in_array($key,$sel_project_namelt)?'selected="selected"':'';?> value="<?php echo $key;?>"><?php echo $val;?></option>
+													<option <?php echo in_array($key,$sel_project_reslt)?'selected="selected"':'';?> value="<?php echo $key;?>"><?php echo $val;?></option>
 											<?php } }?>
 										</select>
 									</td>
@@ -237,7 +237,7 @@ $(function() {
 		'<input type="hidden" name="practice_ids" id="hidden_practice_ids" value="' +$('#practice_ids').val()+ '" />' +
 		'<input type="hidden" name="skill_ids" id="hidden_skill_ids" value="' +$('#skill_ids').val()+ '" />' +
 		'<input type="hidden" name="member_ids" id="hidden_member_ids" value="' +$('#member_ids').val()+ '" />' +
-		'<input type="hidden" name="project_name" id="hidden_project_name" value="' +$('#project_name').val()+ '" />' +
+		'<input type="hidden" name="project_res" id="hidden_project_res" value="' +$('#project_res').val()+ '" />' +
 		'</form>');
 		$('body').append(form);
 		$(form).submit();
@@ -321,8 +321,8 @@ $(document).ready(function(){
 											proj_html +='<option value="'+pjcts[i].project_code+'">'+pjcts[i].lead_title+'</option>';
 										}	
 									}
-									$('#project_name').html('');
-									$('#project_name').append(proj_html)								
+									$('#project_res').html('');
+									$('#project_res').append(proj_html)								
 								}
 							}
 						});
@@ -390,8 +390,8 @@ $(document).ready(function(){
 										proj_html +='<option value="'+pjct[i].project_code+'">'+pjct[i].lead_title+'</option>';
 									}	
 								}
-								$('#project_name').html('');
-								$('#project_name').append(proj_html)								
+								$('#project_res').html('');
+								$('#project_res').append(proj_html)								
 							}
 						}
 					});
@@ -522,8 +522,8 @@ $('#filter_reset').click(function() {
 	 $("#member_ids").html('');
 	 $('select#entity_ids option').removeAttr("selected");
 	 $('select#department_ids option').removeAttr("selected");
-	 // $('#project_name').html('');
-	 $('select#project_name option').removeAttr("selected");
+	 // $('#project_res').html('');
+	 $('select#project_res option').removeAttr("selected");
 });
 </script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
