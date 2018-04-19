@@ -3826,9 +3826,6 @@ class Dashboard extends crm_controller
 			if(!empty($practice_ids) && count($practice_ids)>0) {
 				$this->db->where_in('t.practice_id', $practice_ids);
 			}
-			if(!empty($project_reslt) && count($project_reslt)>0) {
-				$this->db->where_in('t.project_code', $project_reslt);
-			}
 			/* if(!empty($data['member_ids'])) {
 				$this->db->where_in("t.skill_id", $data['member_ids']);
 			} */
@@ -3836,7 +3833,7 @@ class Dashboard extends crm_controller
 			$mem_qry = $this->db->get();
 			$data['member_ids_selected'] = $mem_qry->result();
 		}
-		// echo "<pre>"; print_r($data['member_ids_selected']); die;
+		echo "<pre>"; print_r($data['member_ids_selected']); die;
 		//get other costs
 		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
 
