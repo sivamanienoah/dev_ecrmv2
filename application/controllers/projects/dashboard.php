@@ -3796,7 +3796,7 @@ class Dashboard extends crm_controller
 		$data['departments'] = $depts_res;
 		
 		$timesheet_db->close();
-		echo'<pre>';print_r($project_reslt);exit;
+		// echo'<pre>';print_r($project_reslt);exit;
 		if(!empty($data['departments']) && count($data['departments'])>0) {
 			$this->db->select('t.skill_id, t.skill_name as name');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
