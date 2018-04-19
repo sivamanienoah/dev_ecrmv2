@@ -137,7 +137,7 @@ table.bu-tbl-inr th{ text-align:center; }
 										<select title="Select Project" id="project_res" name="project_res[]" multiple="multiple">
 											<?php if(count($all_projects)>0 && !empty($all_projects)) { ?>
 											<?php foreach($all_projects as $key=>$val){?>
-													<option <?php echo in_array($key,$project_results)?'selected="selected"':'';?> value="<?php echo $key;?>"><?php echo $val;?></option>
+													<option <?php echo in_array($key,$sel_project_reslt)?'selected="selected"':'';?> value="<?php echo $key;?>"><?php echo $val;?></option>
 											<?php } }?>
 										</select>
 									</td>
