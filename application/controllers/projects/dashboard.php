@@ -3946,7 +3946,7 @@ class Dashboard extends crm_controller
 				$data['filter_area_status'] = 1;
 				$dids = implode(",",$department_ids);
 				if(!empty($dids)) {
-					$this->db->where_in("t.dept_id", $department_ids);
+					$this->db->where_in("t.dept_id", $dids);
 				}
 			} else {
 				$deptwhere = "t.dept_id IN ('10','11')";
