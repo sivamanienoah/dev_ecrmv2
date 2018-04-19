@@ -3934,7 +3934,7 @@ class Dashboard extends crm_controller
 			}
 		}
 		echo'<pre>';print_r($project_reslt);
-		$exploded_project_reslt = explode(" ",$project_reslt);echo'<pre>';print_r($exploded_project_reslt);
+		$exploded_project_reslt = implode(",",$project_reslt);echo'<pre>';print_r($exploded_project_reslt);
 		if(!empty($project_reslt) && count($project_reslt)>0) {
 			$this->db->where_in('t.project_code', $exploded_project_reslt);
 		}
