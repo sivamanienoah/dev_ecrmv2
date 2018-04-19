@@ -3712,7 +3712,7 @@ class Dashboard extends crm_controller
 		}
 		
 		if(!empty($project_reslt) && count($project_reslt)>0) {
-			$data['project_codes'] = $project_reslt;
+			$data['project_results'] = $project_reslt;
 			$data['filter_area_status'] = 1;
 			$this->db->where_in('t.project_code', $project_reslt);
 		}
@@ -3908,7 +3908,7 @@ class Dashboard extends crm_controller
 		}
 		
 		if(!empty($project_reslt) && count($project_reslt)>0) {
-			$data['project_codes'] = $project_reslt;
+			$data['project_results'] = $project_reslt;
 			$data['filter_area_status'] = 1;
 			$this->db->where_in('t.project_code', $project_reslt);
 		}
