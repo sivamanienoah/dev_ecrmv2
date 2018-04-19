@@ -1311,9 +1311,25 @@ class Dashboard extends crm_controller
 			}
 			$p_ids = $this->input->post("prac_id");
 			$pids = implode(',',$p_ids);
-			$start_date = $this->input->post("start_date");
-			$end_date = $this->input->post("end_date");//dids,pids,start_date,end_date
+			// $start_date = $this->input->post("start_date");
+			// $end_date = $this->input->post("end_date");//dids,pids,start_date,end_date
 
+			$start_date = date("Y-m-1");
+			$end_date   = date("Y-m-d");
+			// $start_date = date("Y-m-d", strtotime('01-04-2017'));
+			// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
+			
+			if($this->input->post("start_date")) {
+				$start_date = $this->input->post("start_date");
+				$start_date = date("Y-m-01",strtotime($start_date));
+				if($this->input->post("start_date")== "") {
+					$end_date   = date("Y-m-t",strtotime($start_date));
+				}
+			}
+			if($this->input->post("end_date")) {
+				$end_date = $this->input->post("end_date");
+				$end_date = date("Y-m-t",strtotime($end_date));	
+			}
 			
 			$this->db->distinct('t.project_code');
 			$this->db->select('t.dept_id, t.project_code, t.dept_name, l.lead_title, t.practice_id, t.practice_name');
@@ -1325,7 +1341,7 @@ class Dashboard extends crm_controller
 			$this->db->where("l.lead_title !=", '');
 			if(!empty($start_date) && !empty($end_date)) {
 				$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."')", NULL, FALSE);
-				$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
+				$this->db->where("(t.end_time <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
 			}
 			
 			
@@ -1359,7 +1375,7 @@ class Dashboard extends crm_controller
 			
 			// echo "<pre>"; print_R($pids);
 			
-			// echo $this->db->last_query(); exit;
+			echo $this->db->last_query(); exit;
 			
 			
 			
