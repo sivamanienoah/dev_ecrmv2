@@ -3875,8 +3875,6 @@ class Dashboard extends crm_controller
 		// $start_date = date("Y-m-d", strtotime('01-04-2017'));
 		// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
 		
-		// echo '<pre>'; print_r($this->input->post()); die;
-		
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
 			$start_date = date("Y-m-01",strtotime($start_date));
@@ -3924,50 +3922,45 @@ class Dashboard extends crm_controller
 			$data['exclude_holiday'] = 1;
 		}
 		if(!empty($entity_ids) && count($entity_ids)>0) {
-			if($entity_ids != 'null') {
-				$this->db->where_in('t.entity_id', $entity_ids);
-			}
+			$data['entity_ids'] = $entity_ids;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('t.entity_id', $entity_ids);
 		}
 		if(!empty($practice_ids) && count($practice_ids)>0) {
-			if($practice_ids != 'null') {
-				$this->db->where_in('l.practice', $practice_ids);
-			}
+			$data['sel_practice_ids'] = $practice_ids;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('l.practice', $practice_ids);
 		}
 		
 		if(!empty($project_reslt) && count($project_reslt)>0) {
-			if($project_reslt != 'null') {
-				$this->db->where_in('l.pjt_id', $project_reslt);
-			}
+			$data['sel_project_reslt'] = $project_reslt;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('t.project_code', $project_reslt);
 		}
 		
 		if(count($department_ids)>0 && !empty($department_ids) && ($department_ids != 'null')) {
-			// echo'<pre>';print_r($department_ids);exit;
 			$data['department_ids'] = $department_ids;
 			$data['filter_area_status'] = 1;
-			if(!empty($department_ids)) {
-				$this->db->where_in('t.dept_id', $department_ids);
+			$dids = implode(",",$department_ids);
+			if(!empty($dids)) {
+				$this->db->where_in("t.dept_id", $department_ids);
 			}
 		} else {
 			$deptwhere = "t.dept_id IN ('10','11')";
 			$this->db->where($deptwhere);
 		}
 		if(count($skill_ids)>0 && !empty($skill_ids)) {
-			if($skill_ids != 'null') {
-				$data['skill_ids'] = $skill_ids;
-				$data['filter_area_status'] = 1;
-				$this->db->where_in('t.skill_id', $skill_ids);
-			}
+			$data['skill_ids'] = $skill_ids;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('t.skill_id', $skill_ids);
 		}
 		if(count($member_ids)>0 && !empty($member_ids)) {
-			if($member_ids != 'null') {
-				$data['member_ids'] = $member_ids;
-				$data['filter_area_status'] = 1;
-				$this->db->where_in('t.username', $member_ids);
-			}
+			$data['member_ids'] = $member_ids;
+			$data['filter_area_status'] = 1;
+			$this->db->where_in('t.username', $member_ids);
 		}
 		$this->db->where('l.practice is not null');
-		$query 						= $this->db->get();		
-		echo $this->db->last_query();
+		$query 						= $this->db->get();
 		$resdata  = $query->result();
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
