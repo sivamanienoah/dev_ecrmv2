@@ -372,26 +372,6 @@ $(document).ready(function(){
 									}
 									$('#member_ids').html('');
 									$('#member_ids').append(mem_html)
-									
-									/* $('#project_res').html('');
-									$.ajax({
-										type: 'POST',
-										url: site_base_url+'projects/dashboard/get_project_by_practice',
-										data: params,
-										success: function(members) {
-											if(members){
-												var mem_html='';
-												var users = $.parseJSON(members);
-												if(users.length){
-													for(var i=0;i<users.length;i++){
-														mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
-													}	
-												}
-												$('#member_ids').html('');
-												$('#member_ids').append(mem_html)								
-											}
-										}
-									}); */
 								}
 							}
 						});
