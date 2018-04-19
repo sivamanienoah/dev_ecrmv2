@@ -83,7 +83,7 @@ table.bu-tbl-inr th{ text-align:center; }
 										<br />
 										<span>To</span> <input type="text" data-calendar="false" name="month_year_to_date" id="month_year_to_date" class="textfield" value="<?php echo date('F Y',strtotime($end_date)); ?>" />
 									</td>
-									<td class="by-exclusion">
+									<td class="by-exclusion" style="width: 60px;">
 										<?php $leaveChecked=''; if($exclude_leave==1) { $leaveChecked ='checked="checked"'; } ?>
 										<label><input type="checkbox" id="exclude_leave" name="exclude_leave" <?php echo $leaveChecked; ?> value="1" /><span>Leave</span></label>
 										<br />
@@ -133,7 +133,7 @@ table.bu-tbl-inr th{ text-align:center; }
 											<?php } }?>								
 										</select>
 									</td>
-									<td class="proj-dash-select">
+									<td class="proj-dash-select" style="width: 80px;">
 										<select title="Select Project" id="project_res" name="project_res[]" multiple="multiple">
 											<?php if(count($all_projects)>0 && !empty($all_projects)) { ?>
 											<?php foreach($all_projects as $key=>$val){?>
