@@ -1375,7 +1375,7 @@ class Dashboard extends crm_controller
 			
 			// echo "<pre>"; print_R($pids);
 			
-			// echo $this->db->last_query(); exit;
+			echo $this->db->last_query(); exit;
 			
 			
 			
