@@ -3933,9 +3933,10 @@ class Dashboard extends crm_controller
 				$this->db->where_in('l.practice', $practice_ids);
 			}
 		}
-		// echo'<pre>';print_r($project_reslt);
+		echo'<pre>';print_r($project_reslt);
+		$exploded_project_reslt = explode(" ",$project_reslt);echo'<pre>';print_r($exploded_project_reslt);
 		if(!empty($project_reslt) && count($project_reslt)>0) {
-			$this->db->where_in('t.project_code', $project_reslt);
+			$this->db->where_in('t.project_code', $exploded_project_reslt);
 		}
 		
 		if(count($department_ids)>0 && !empty($department_ids) && ($department_ids != 'null')) {
