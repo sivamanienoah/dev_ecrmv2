@@ -234,7 +234,7 @@ $(function() {
 		'<input type="hidden" name="exclude_holiday" id="hidden_exclude_holiday" value="' +$('#exclude_holiday').val()+ '" />' +
 		'<input type="hidden" name="entity_ids" id="hidden_entity_ids" value="' +$('#entity_ids').val()+ '" />' +
 		'<input type="hidden" name="department_ids" id="hidden_department_ids" value="' +$('#department_ids').val()+ '" />' +
-		'<input type="hidden" name="practice_ids" id="hidden_practice_ids" value="' +$('rom_#practice_ids').val()+ '" />' +
+		'<input type="hidden" name="practice_ids" id="hidden_practice_ids" value="' +$('#practice_ids').val()+ '" />' +
 		'<input type="hidden" name="skill_ids" id="hidden_skill_ids" value="' +$('#skill_ids').val()+ '" />' +
 		'<input type="hidden" name="member_ids" id="hidden_member_ids" value="' +$('#member_ids').val()+ '" />' +
 		'<input type="hidden" name="project_res" id="hidden_project_res" value="' +$('#project_res').val()+ '" />' +
