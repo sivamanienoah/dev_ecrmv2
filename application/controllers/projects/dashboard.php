@@ -3765,10 +3765,6 @@ class Dashboard extends crm_controller
 		$data['resource_type'] 		= $resource_type;
 		$data['conversion_rates'] 	= $this->get_currency_rates();
 		
-		foreach($data['resdata'] as $resdata){
-			$project_list[$resdata->project_code] = $resdata->lead_title;
-		}
-		
 		// get all projects from timesheet
 		$timesheet_db = $this->load->database("timesheet", true);
 		$proj_mas_qry = $timesheet_db->query("SELECT DISTINCT(project_code), title FROM ".$timesheet_db->dbprefix('project')." ");
@@ -3781,7 +3777,7 @@ class Dashboard extends crm_controller
 			$project_master[$prec->project_code] = $prec->title;
 		}
 		$data['project_master']  = $project_master;
-		$data['all_projects']  = $project_list;
+		
 		// echo'<pre>';print_r($data['all_projects']);exit;
 		/* $this->db->select('department_id, department_name');
 		$this->db->where_in('department_id', array('10','11'));
@@ -3846,7 +3842,14 @@ class Dashboard extends crm_controller
 
 		//for practices		
 		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date);
-
+		
+		$data['proj_data'] 	  = $this->get_default_projects($start_date, $end_date);
+		
+		foreach($data['proj_data'] as $resdata){
+			$project_list[$resdata->project_code] = $resdata->lead_title;
+		}
+		$data['all_projects']  = $project_list;
+		
 		$data['entitys'] 	  	  = $this->dashboard_model->get_entities();
 
 		$data['start_date'] 	  = $start_date;
@@ -4579,6 +4582,29 @@ class Dashboard extends crm_controller
 		$this->db->where_not_in("id", $practice_not_in_array);
 		$query = $this->db->get();
 		// echo $this->db->last_query(); die;
+		return $query->result();
+	}
+	
+	private function get_default_projects($start_date, $end_date)
+	{
+		$this->db->select('t.dept_id, t.dept_name, t.skill_id, t.skill_name, t.resoursetype, t.username, t.duration_hours, t.resource_duration_cost, t.cost_per_hour, t.project_code, t.empname, t.direct_cost_per_hour, t.resource_duration_direct_cost,t.entry_month as month_name, t.entry_year as yr, t.entity_id, t.entity_name, p.id as practice_id, p.practices as practice_name, l.lead_title');
+		// t.practice_id, t.practice_name
+		$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+		$this->db->join($this->cfg['dbpref']. 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
+		$this->db->join($this->cfg['dbpref']. 'practices as p', 'p.id = l.practice', 'LEFT');
+		$this->db->where("t.resoursetype !=", '');
+		if(!empty($start_date) && !empty($end_date)) {
+			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."')", NULL, FALSE);
+			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."')", NULL, FALSE);
+		}
+		
+		$deptwhere = "t.dept_id IN ('10','11')";
+		$this->db->where($deptwhere);
+		
+		$this->db->where('l.practice is not null');
+		$this->db->where('l.lead_title is not null');
+		$query 	= $this->db->get();	
+		echo $this->db->last_query(); die;
 		return $query->result();
 	}
 	
