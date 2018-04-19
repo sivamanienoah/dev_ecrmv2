@@ -3875,7 +3875,7 @@ class Dashboard extends crm_controller
 		// $start_date = date("Y-m-d", strtotime('01-04-2017'));
 		// $end_date   = date("Y-m-d", strtotime('30-04-2017'));
 		
-		echo '<pre>'; print_r($this->input->post()); die;
+		// echo '<pre>'; print_r($this->input->post()); die;
 		
 		if($this->input->post("month_year_from_date")) {
 			$start_date = $this->input->post("month_year_from_date");
@@ -3967,14 +3967,14 @@ class Dashboard extends crm_controller
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query();
 		$resdata  = $query->result();
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
 		$data['resource_type'] 		= $resource_type;
 		$conversion_rates 	= $this->get_currency_rates();
 		
-		// echo '<pre>'; print_r($resdata); die;
+		echo '<pre>'; print_r($resdata); die;
 		
 		// get all projects from timesheet
 		$timesheet_db = $this->load->database("timesheet", true);
