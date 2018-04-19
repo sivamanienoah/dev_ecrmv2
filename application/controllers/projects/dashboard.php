@@ -3940,8 +3940,8 @@ class Dashboard extends crm_controller
 			}
 		}
 		
-		if(count($department_ids)>0 && !empty($department_ids)) {//echo'<pre>test==>';print_r($department_ids);exit;
-			if($department_ids != 'null') {
+		if(count($department_ids)>0 && !empty($department_ids)) {
+			if($department_ids != 'null') {echo'<pre>test==>';print_r($department_ids);exit;
 				$data['department_ids'] = $department_ids;
 				$data['filter_area_status'] = 1;
 				$dids = implode(",",$department_ids);//echo'<pre>';print_r($dids);exit;
