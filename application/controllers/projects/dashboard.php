@@ -3940,7 +3940,7 @@ class Dashboard extends crm_controller
 			}
 		}
 		
-		if(count($department_ids)>0 && !empty($department_ids)) {echo'<pre>test==>';print_r($department_ids);exit;
+		if(count($department_ids)>0 && !empty($department_ids)) {//echo'<pre>test==>';print_r($department_ids);exit;
 			if($department_ids != 'null') {
 				$data['department_ids'] = $department_ids;
 				$data['filter_area_status'] = 1;
@@ -3974,7 +3974,7 @@ class Dashboard extends crm_controller
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
-		// echo $this->db->last_query(); exit;
+		echo $this->db->last_query(); exit;
 		$resdata  = $query->result();
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
