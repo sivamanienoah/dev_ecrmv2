@@ -3756,8 +3756,11 @@ class Dashboard extends crm_controller
 			
 			$depatids = implode(",",$department_ids);
 			$pracids = implode(",",$practice_ids);
-			$sklids = implode(",",$skill_ids);
+			// $sklids = implode(",",$skill_ids);
 			
+			
+			
+			$sklids = "'".implode("','", $skill_ids)."'";
 			ECHO'<PRE>';PRINT_R($skill_ids);
 			ECHO'<PRE>';PRINT_R($sklids);
 			
