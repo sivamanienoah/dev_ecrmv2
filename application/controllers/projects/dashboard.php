@@ -3946,17 +3946,15 @@ class Dashboard extends crm_controller
 			$this->db->where_in('t.project_code', $project_reslt);
 		} */
 		
-		if(!empty($project_reslt) && count($project_reslt)>0) {
+		if(!empty($project_reslt) && count($project_reslt)>0 && ($project_reslt != 'null')) {
 			$project_result_arr = array();
 			$project_result_arr = @explode(",", $project_reslt);
-			// echo'<pre>';print_r($project_result_arr); echo '</pre>'; 
 			if(!empty($project_result_arr) && count($project_result_arr)>0) {
 				$this->db->where_in('t.project_code', $project_result_arr);
 			}
 		}
 		
 		if(count($department_ids)>0 && !empty($department_ids) && ($department_ids != 'null')) {
-			// echo'<pre>';print_r($department_ids);exit;
 			$data['department_ids'] = $department_ids;
 			$data['filter_area_status'] = 1;
 			if(!empty($department_ids)) {
@@ -3966,27 +3964,19 @@ class Dashboard extends crm_controller
 			$deptwhere = "t.dept_id IN ('10','11')";
 			$this->db->where($deptwhere);
 		}
-		if(count($skill_ids)>0 && !empty($skill_ids)) {
-			if($skill_ids != 'null') {
-				$data['skill_ids'] = $skill_ids;
-				$data['filter_area_status'] = 1;
-				$this->db->where_in('t.skill_id', $skill_ids);
+		if(count($skill_ids)>0 && !empty($skill_ids) && ($skill_ids != 'null')) {
+			$skill_ids_arr = array();
+			$skill_ids_arr = @explode(",", $skill_ids);
+			if(!empty($skill_ids_arr) && count($skill_ids_arr)>0) {
+				$this->db->where_in('t.skill_id', $skill_ids_arr);
 			}
 		}
 		if(count($member_ids)>0 && !empty($member_ids) && ($member_ids != 'null')) {
 			$member_ids_arr = array();
 			$member_ids_arr = @explode(",", $member_ids);
-			// echo'<pre>';print_r($project_result_arr); echo '</pre>'; 
 			if(!empty($member_ids_arr) && count($member_ids_arr)>0) {
 				$this->db->where_in('t.username', $member_ids_arr);
 			}
-			
-			
-			/* if($member_ids != 'null') {
-				$data['member_ids'] = $member_ids;
-				$data['filter_area_status'] = 1;
-				$this->db->where_in('t.username', $member_ids);
-			} */
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
