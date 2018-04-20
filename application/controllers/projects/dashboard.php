@@ -3753,6 +3753,14 @@ class Dashboard extends crm_controller
 			$data['skill_ids'] = $skill_ids;
 			$data['filter_area_status'] = 1;
 			$this->db->where_in('t.skill_id', $skill_ids);
+			
+			$depatids = implode(",",$department_ids);
+			$pracids = implode(",",$practice_ids);
+			$sklids = implode(",",$skill_ids);
+			$members_by_skills_query = "SELECT empname as emp_name, username FROM crm_timesheet_data  WHERE practice_id != 0 AND (start_time >='".date('Y-m-d', strtotime($start_date))."' ) AND (start_time <='".date('Y-m-t', strtotime($end_date))."' ) AND dept_id IN ('".$depatids."') AND practice_id IN ('".$pracids."') AND skill_id IN ('".$sklids."') GROUP BY empname ";
+			
+			$mem_sql = $this->db->query($members_by_skills_query);
+			$data['member_ids_selected'] = $mem_sql->result();
 		}
 		if(count($member_ids)>0 && !empty($member_ids)) {
 			$data['member_ids'] = $member_ids;
@@ -3808,9 +3816,9 @@ class Dashboard extends crm_controller
 			if(!empty($practice_ids) && count($practice_ids)>0) {
 				$this->db->where_in('t.practice_id', $practice_ids);
 			}
-			if(!empty($project_reslt) && count($project_reslt)>0) {
+			/* if(!empty($project_reslt) && count($project_reslt)>0) {
 				$this->db->where_in('t.project_code', $project_reslt);
-			}
+			} */
 			$this->db->group_by('t.skill_id');
 			$this->db->order_by('t.skill_name');
 			$skquery = $this->db->get();
