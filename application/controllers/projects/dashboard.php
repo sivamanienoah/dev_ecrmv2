@@ -3758,7 +3758,7 @@ class Dashboard extends crm_controller
 		}
 		$this->db->where('l.practice is not null');
 		$query 						= $this->db->get();		
-		echo $this->db->last_query(); exit;
+		// echo $this->db->last_query(); exit;
 		$data['resdata'] 	   		= $query->result();//echo'<pre>';print_r($data['resdata']);exit;
 		$data['heading'] 	   		= $heading;
 		$data['dept_type']     		= $dept_type;
@@ -3926,9 +3926,17 @@ class Dashboard extends crm_controller
 			}
 		}
 		if(!empty($practice_ids) && count($practice_ids)>0) {
-			if($practice_ids != 'null') {
-				$this->db->where_in('l.practice', $practice_ids);
+			$practice_result_arr = array();
+			$practice_result_arr = @explode(",", $practice_ids);
+			// echo'<pre>';print_r($practice_result_arr); echo '</pre>'; 
+			if(!empty($practice_result_arr) && count($practice_result_arr)>0) {
+				$this->db->where_in('l.practice', $practice_result_arr);
 			}
+			
+			
+			/* if($practice_ids != 'null') {
+				$this->db->where_in('l.practice', $practice_ids);
+			} */
 		}
 		// echo'<pre>';print_r($project_reslt); echo '</pre>';
 		/* if(!empty($project_reslt) && count($project_reslt)>0) {
