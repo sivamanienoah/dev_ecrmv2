@@ -3925,7 +3925,7 @@ class Dashboard extends crm_controller
 				$this->db->where_in('t.entity_id', $entity_ids);
 			}
 		}
-		if(!empty($practice_ids) && count($practice_ids)>0) {
+		if(!empty($practice_ids) && count($practice_ids)>0 && $practice_ids != 'null') {
 			$practice_result_arr = array();
 			$practice_result_arr = @explode(",", $practice_ids);
 			// echo'<pre>';print_r($practice_result_arr); echo '</pre>'; 
