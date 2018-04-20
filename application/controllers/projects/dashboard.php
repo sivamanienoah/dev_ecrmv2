@@ -3970,7 +3970,7 @@ class Dashboard extends crm_controller
 				$this->db->where_in('t.skill_id', $skill_ids);
 			}
 		}
-		if(count($member_ids)>0 && !empty($member_ids)) {
+		if(count($member_ids)>0 && !empty($member_ids) && ($member_ids != 'null')) {
 			$member_ids_arr = array();
 			$member_ids_arr = @explode(",", $member_ids);
 			// echo'<pre>';print_r($project_result_arr); echo '</pre>'; 
