@@ -1646,7 +1646,6 @@ class Dashboard extends crm_controller
 			if(!empty($sids)) {
 				$where .= 'and v.skill_id in ('.$sids.')';
 			}
-			
 			if(!empty($sids)) {
 				$this->db->select("t.empname as emp_name, t.username");
 				$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
@@ -1659,8 +1658,12 @@ class Dashboard extends crm_controller
 				if(!empty($p_ids)){
 					$this->db->where_in("t.practice_id", $p_ids);
 				}
-				if(!empty($sids)) {
-					$this->db->where_in("t.skill_id", $sids);
+				if(!empty($sids) && count($sids)>0) {
+					$sid_arr = array();
+					$sid_arr = @explode(",", $sids);
+					if(!empty($sid_arr) && count($sid_arr)>0) {
+						$this->db->where_in('t.skill_id', $sid_arr);
+					}
 				}
 				$this->db->group_by('t.empname');
 				$this->db->order_by('t.empname');
@@ -3826,9 +3829,9 @@ class Dashboard extends crm_controller
 			if(!empty($practice_ids) && count($practice_ids)>0) {
 				$this->db->where_in('t.practice_id', $practice_ids);
 			}
-			/* if(!empty($data['member_ids'])) {
-				$this->db->where_in("t.skill_id", $data['member_ids']);
-			} */
+			if(!empty($data['skill_ids'])) {
+				$this->db->where_in("t.skill_id", $data['skill_ids']);
+			}
 			$this->db->group_by('t.empname');
 			$mem_qry = $this->db->get();
 			$data['member_ids_selected'] = $mem_qry->result();
