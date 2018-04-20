@@ -3760,7 +3760,7 @@ class Dashboard extends crm_controller
 			$members_by_skills_query = "SELECT empname as emp_name, username FROM crm_timesheet_data  WHERE practice_id != 0 AND (start_time >='".date('Y-m-d', strtotime($start_date))."' ) AND (start_time <='".date('Y-m-t', strtotime($end_date))."' ) AND dept_id IN ('".$depatids."') AND practice_id IN ('".$pracids."') AND skill_id IN ('".$sklids."') GROUP BY empname ";
 			
 			$mem_sql = $this->db->query($members_by_skills_query);
-			$data['member_ids_selected'] = $mem_sql->result();
+			$data['member_ids_selected'] = $mem_sql->result();ECHO'<PRE>';PRINT_R($data['member_ids_selected']);EXIT;
 		}
 		if(count($member_ids)>0 && !empty($member_ids)) {
 			$data['member_ids'] = $member_ids;
