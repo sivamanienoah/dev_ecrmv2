@@ -3758,12 +3758,9 @@ class Dashboard extends crm_controller
 			$pracids = implode(",",$practice_ids);
 			$sklids = implode(",",$skill_ids);
 			
-			if(count($sklids)>0 && !empty($sklids) && ($sklids != 'null')) {
-				$sklids_arr = array();
-				$sklids_arr = @explode(",", $sklids);
-			}
+			ECHO'<PRE>';PRINT_R($sklids);
 			
-			$members_by_skills_query = "SELECT empname as emp_name, username FROM crm_timesheet_data  WHERE practice_id != 0 AND (start_time >='".date('Y-m-d', strtotime($start_date))."' ) AND (start_time <='".date('Y-m-t', strtotime($end_date))."' ) AND dept_id IN ('".$depatids."') AND practice_id IN ('".$pracids."') AND skill_id IN ('".$sklids_arr."') GROUP BY empname ";
+			$members_by_skills_query = "SELECT empname as emp_name, username FROM crm_timesheet_data  WHERE practice_id != 0 AND (start_time >='".date('Y-m-d', strtotime($start_date))."' ) AND (start_time <='".date('Y-m-t', strtotime($end_date))."' ) AND dept_id IN ('".$depatids."') AND practice_id IN ('".$pracids."') AND skill_id IN ('".$sklids."') GROUP BY empname ";
 			
 			$mem_sql = $this->db->query($members_by_skills_query);
 			$data['member_ids_selected'] = $mem_sql->result();ECHO $this->db->last_query(); exit;
