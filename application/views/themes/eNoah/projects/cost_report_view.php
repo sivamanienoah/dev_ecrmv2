@@ -127,10 +127,10 @@ table.bu-tbl-inr th{ text-align:center; }
 										</select>
 									</td>
 									<td class="proj-dash-select">
-										<select title="Select Members" id="member_ids" name="member_ids[]" multiple="multiple">
+										<select id="member_ids" name="member_ids[]" multiple="multiple">
 											<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
 											<?php foreach($member_ids_selected as $members){?>
-													<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?>  value="<?php echo $members->username;?>"><?php echo $members->emp_name;?></option>
+													<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?> value="<?php echo $members->username;?>" title="<?php echo $members->emp_name;?>"><?php echo $members->emp_name;?></option>
 											<?php } }?>								
 										</select>
 									</td>
