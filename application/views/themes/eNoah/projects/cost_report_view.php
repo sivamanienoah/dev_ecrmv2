@@ -126,7 +126,14 @@ table.bu-tbl-inr th{ text-align:center; }
 											<?php } }?>
 										</select>
 									</td>
-									
+									<td>
+										<select id="member_ids" name="member_ids[]" multiple="multiple">
+											<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
+											<?php foreach($member_ids_selected as $members){?>
+													<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?> value="<?php echo $members->username;?>" title="<?php echo "hello";?>"><?php echo $members->emp_name;?></option>
+											<?php } }?>								
+										</select>
+									</td>
 									<td class="proj-dash-select" style="width: 250px;">
 										<select title="Select Project" id="project_res" name="project_res[]" multiple="multiple">
 											<?php if(count($all_projects)>0 && !empty($all_projects)) { ?>
