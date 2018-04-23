@@ -421,7 +421,7 @@ $(document).ready(function(){
 					var users = $.parseJSON(members);
 					if(users.length){
 						for(var i=0;i<users.length;i++){
-							mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
+							mem_html +='<option value="'+users[i].username+'" title="'+users[i].emp_name+'">'+users[i].emp_name+'</option>';
 						}	
 					}
 					$('#member_ids').html('');
