@@ -9,7 +9,7 @@ button.ui-datepicker-current { display: none; }
 table.bu-tbl th{ text-align:center; }
 table.bu-tbl{ width:70%; }
 table.bu-tbl-inr th{ text-align:center; }
-</style> <?php //echo'<pre>';print_r($all_projects);exit; ?>
+</style>
 <script type="text/javascript">var this_is_home = true;</script>
 <div id="content">
     <div class="inner">
@@ -228,7 +228,7 @@ $(function() {
 		
 		var form = $('<form action="' + url + '" method="post">' +
 		'<input id="token" type="hidden" name="'+csrf_token_name+'" value="'+csrf_hash_token+'" />'+
-		'<input type="hidden" name="month_year_from_date" id="hidden_month_year_fdate" value="'+$('#month_year_from_date').val()+ '" />' +
+		'<input type="hidden" name="month_year_from_date" id="hidden_month_year_from_date" value="'+$('#month_year_from_date').val()+ '" />' +
 		'<input type="hidden" name="month_year_to_date" id="hidden_month_year_to_date" value="'+$('#month_year_to_date').val()+ '" />' +
 		'<input type="hidden" name="exclude_leave" id="hidden_exclude_leave" value="'+$('#exclude_leave').val()+'" />' +
 		'<input type="hidden" name="exclude_holiday" id="hidden_exclude_holiday" value="' +$('#exclude_holiday').val()+ '" />' +
@@ -431,36 +431,6 @@ $(document).ready(function(){
 		});
 	});
 	
-	/* $('body').on('change','#member_ids',function(){
-		var dids       = $('#department_ids').val();
-		var start_date = $('#month_year_from_date').val();
-		var end_date   = $('#month_year_to_date').val();
-		var sids = $(this).val();
-		$("#filter_area_status").val('1');
-		$('#member_ids').html('');
-		var params = { 'dept_ids':dids,'skill_ids':sids,'start_date':start_date,'end_date':end_date };
-		params[csrf_token_name] = csrf_hash_token;
-		
-		$.ajax({
-			type: 'POST',
-			url: site_base_url+'projects/dashboard/get_skill_members',
-			data: params,
-			success: function(members) {
-				if(members){
-					var mem_html;
-					var users = $.parseJSON(members);
-					if(users.length){
-						for(var i=0;i<users.length;i++){
-							mem_html +='<option value="'+users[i].username+'">'+users[i].emp_name+'</option>';
-						}	
-					}
-					$('#member_ids').html('');
-					$('#member_ids').append(mem_html);
-				}
-			}
-		});
-	}); */
-	
 	$("input[name=exclude_leave]").prop("checked",true);
 	$("input[name=exclude_holiday]").prop("checked",true);
 });
@@ -522,7 +492,6 @@ $('#filter_reset').click(function() {
 	 $("#member_ids").html('');
 	 $('select#entity_ids option').removeAttr("selected");
 	 $('select#department_ids option').removeAttr("selected");
-	 // $('#project_res').html('');
 	 $('select#project_res option').removeAttr("selected");
 });
 </script>
