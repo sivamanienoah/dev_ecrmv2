@@ -98,7 +98,7 @@ table.bu-tbl-inr th{ text-align:center; }
 									</select>
 								</td>
 								<td class="proj-dash-select">
-									<select title="Select Skill" id="skill_ids" name="skill_ids[]"	multiple="multiple">
+									<select id="skill_ids" name="skill_ids[]"	multiple="multiple">
 										<?php if(count($skill_ids_selected)>0 && !empty($skill_ids_selected)) { ?>
 										<?php foreach($skill_ids_selected as $skills) {
 												$skills->name = ($skills->skill_id==0)?'N/A':$skills->name;
