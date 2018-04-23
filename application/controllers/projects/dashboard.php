@@ -3849,8 +3849,7 @@ class Dashboard extends crm_controller
 		}
 		// echo "<pre>"; print_r($data['member_ids_selected']); die;
 		//get other costs
-		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
-
+		$data['other_cost_arr']   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids, $project_reslt);
 		//for practices		
 		$data['practice_ids'] 	  = $this->get_default_practices($start_date, $end_date,$department_ids);
 		
@@ -4069,7 +4068,10 @@ class Dashboard extends crm_controller
 		if($practice_ids == 'null') {
 			$practice_ids = array();
 		}
-		$other_cost_arr   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids);
+		if($project_reslt == 'null') {
+			$project_reslt = array();
+		}
+		$other_cost_arr   = $this->dashboard_model->getOtherCosts($start_date, $end_date, $entity_ids, $practice_ids, $project_reslt);
 		// echo '<pre>123'.$this->db->last_query();; print_r($other_cost_arr); die;
 
 		//for practices		

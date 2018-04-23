@@ -74,11 +74,12 @@ class Dashboard_model extends crm_model
 	}
 	
 	//for IT cost report
-	public function getOtherCosts($start_date, $end_date, $entity_ids=array(), $practice_ids=array())
+	public function getOtherCosts($start_date, $end_date, $entity_ids=array(), $practice_ids=array(), $project_reslt)
 	{
+		// echo'<pre>';print_r($project_reslt);exit;
 		$us_currenty_type = 1;
 		$bk_rates = get_book_keeping_rates();
-		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, oc.description, l.pjt_id, l.department_id_fk, l.division, l.practice");
+		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, oc.description, l.pjt_id, l.department_id_fk, l.division, l.practice, l.lead_title");
 		$this->db->from($this->cfg['dbpref'].'project_other_cost as oc');
 		$this->db->join($this->cfg['dbpref'].'leads as l', 'l.lead_id = oc.project_id');
 		if(!empty($start_date) && !empty($end_date)) {
@@ -91,10 +92,13 @@ class Dashboard_model extends crm_model
 		if(!empty($practice_ids) && count($practice_ids)>0) {
 			$this->db->where_in('l.practice', $practice_ids);
 		}
+		if(!empty($project_reslt) && count($project_reslt)>0) {
+			$this->db->where_in('l.pjt_id', $project_reslt);
+		}
 		$query 	= $this->db->get();
 		// echo $this->db->last_query(); die;
 		$data	= $query->result_array();
-		
+		// echo "<pre>"; print_r($data); die;
 		$departments 	= $this->get_departments();
 		$deptArr		= array();
 		if(!empty($departments) && count($departments)>0) {
@@ -118,6 +122,7 @@ class Dashboard_model extends crm_model
 				$practArr[$pract_row->id] = $pract_row->practices;
 			}
 		}
+		
 		if(!empty($data)) {
 			$other_cost_array = array();
 			$i = 0;
