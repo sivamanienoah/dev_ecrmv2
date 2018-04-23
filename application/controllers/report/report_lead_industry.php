@@ -33,7 +33,7 @@ public $userdata;
     	$data['lead_stage'] = $this->welcome_model->get_lead_stage();
     	$data['customers'] 	= $this->welcome_model->get_customers();	
 		$data['regions'] 	= $this->regionsettings_model->region_list();
-    	$data['user'] 		= $this->report_active_lead_model->get_users_list('users', 'userid, first_name', 'first_name');
+    	$data['user'] 		= $this->report_active_lead_model->get_users_list('users', 'userid, first_name, emp_id', 'first_name');
     	$data['industry'] 	= $this->report_lead_industry_model->get_industry();
 		$data['report'] 	= $this->get_lead_report();
 
