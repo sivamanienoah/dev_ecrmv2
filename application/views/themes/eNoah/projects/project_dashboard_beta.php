@@ -110,7 +110,7 @@ table.bu-tbl-inr th{ text-align:center; }
 									<select title="Select Members" id="member_ids" name="member_ids[]" multiple="multiple">
 										<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
 										<?php foreach($member_ids_selected as $members){?>
-												<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?> value="<?php echo $members->username;?>" title="<?php echo $members->emp_name; ?>"><?php echo $members->emp_name;?></option>
+												<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?> value="<?php echo $members->username;?>" title="<?php echo $members->emp_name.' - '.$members->emp_id; ?>"><?php echo $members->emp_name;?></option>
 										<?php } }?>								
 									</select>
 								</td>
@@ -608,7 +608,7 @@ $(document).ready(function(){
 					var users = $.parseJSON(members);
 					if(users.length){
 						for(var i=0;i<users.length;i++){
-							mem_html +='<option value="'+users[i].username+'" title="'+users[i].emp_name+'">'+users[i].emp_name+'</option>';
+							mem_html +='<option value="'+users[i].username+'" title="'+users[i].emp_name+' - '+users[i].emp_id+'">'+users[i].emp_name+'</option>';
 						}	
 					}
 					$('#member_ids').html('');
