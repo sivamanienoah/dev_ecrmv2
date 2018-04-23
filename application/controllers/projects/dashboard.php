@@ -620,8 +620,9 @@ class Dashboard extends crm_controller
 			
 			/* $qry1 = $timesheet_db->query("SELECT v.username,concat(v.first_name,' ',v.last_name) as emp_name FROM `v_emp_details` v join enoah_times t on v.username=t.uid where t.start_time between '$start_date' and '$end_date' group by v.username order by v.username asc"); */
 			
-			$this->db->select('t.username, t.empname as emp_name');
+			$this->db->select('t.username, t.empname as emp_name, users.emp_id');
 			$this->db->from($this->cfg['dbpref']. 'timesheet_data as t');
+			$this->db->join($this->cfg['dbpref'].'users as users', 'users.username = t.username');
 			$this->db->where("t.practice_id !=", 0);
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
@@ -1647,8 +1648,9 @@ class Dashboard extends crm_controller
 				$where .= 'and v.skill_id in ('.$sids.')';
 			}
 			if(!empty($sids)) {
-				$this->db->select("t.empname as emp_name, t.username");
+				$this->db->select("t.empname as emp_name, t.username, users.emp_id");
 				$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+				$this->db->join($this->cfg['dbpref'].'users as users', 'users.username = t.username');
 				$this->db->where("t.practice_id !=", 0);
 				$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 				$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);
@@ -3829,8 +3831,9 @@ class Dashboard extends crm_controller
 		}
 		
 		if(!empty($data['member_ids']) && count($data['member_ids'])>0) {
-			$this->db->select("t.empname as emp_name, t.username");
+			$this->db->select("t.empname as emp_name, t.username, users.emp_id");
 			$this->db->from($this->cfg['dbpref']. 'timesheet_month_data as t');
+			$this->db->join($this->cfg['dbpref'].'users as users', 'users.username = t.username');
 			$this->db->where("t.practice_id !=", 0);
 			$this->db->where("(t.start_time >='".date('Y-m-d', strtotime($start_date))."' )", NULL, FALSE);
 			$this->db->where("(t.start_time <='".date('Y-m-d', strtotime($end_date))."' )", NULL, FALSE);

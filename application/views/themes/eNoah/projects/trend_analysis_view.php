@@ -11,7 +11,7 @@ button.ui-datepicker-current { display: none; }
 table.bu-tbl th{ text-align:center; }
 table.bu-tbl{ width:70%; }
 table.bu-tbl-inr th{ text-align:center; }
-</style>
+</style><?php //echo'<pre>';print_r($member_ids_selected);?>
 <script type="text/javascript">var this_is_home = true;</script>
 <div id="content">
     <div class="inner">
@@ -148,7 +148,7 @@ table.bu-tbl-inr th{ text-align:center; }
 									<select id="member_ids" name="member_ids[]" multiple="multiple">
 										<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
 										<?php foreach($member_ids_selected as $members){?>
-												<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?> value="<?php echo $members->username;?>" title="<?php echo $members->emp_name; ?>"><?php echo $members->emp_name;?></option>
+												<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?> value="<?php echo $members->username;?>" title="<?php echo $members->emp_name." - ".$members->emp_id; ?>"><?php echo $members->emp_name;?></option>
 										<?php } }?>								
 									</select>
 								</td>
@@ -516,7 +516,7 @@ $(document).ready(function(){
 					var users = $.parseJSON(members);
 					if(users.length){
 						for(var i=0;i<users.length;i++){
-							mem_html +='<option value="'+users[i].username+'" title="'+users[i].emp_name+'">'+users[i].emp_name+'</option>';
+							mem_html +='<option value="'+users[i].username+'" title="'+users[i].emp_name+' - '+users[i].emp_id+'">'+users[i].emp_name+'</option>';
 						}	
 					}
 					$('#member_ids').html('');

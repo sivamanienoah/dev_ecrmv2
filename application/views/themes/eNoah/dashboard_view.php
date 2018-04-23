@@ -164,7 +164,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 									<select style="width:110px;" multiple="multiple" id="owner" name="owner[]" class="advfilter">
 										<?php foreach ($lead_owner as $owner) { 
 												if(!empty($owner['first_name'])) { ?>
-													<option value="<?php echo $owner['userid'] ?>"<?php if (!empty($filter['owner'])) { echo in_array($owner['userid'], $filter['owner']) ? 'selected="selected"' : ''; } ?> title="<?php echo $owner['first_name']; ?>"><?php echo $owner['first_name']; ?></option>
+													<option value="<?php echo $owner['userid'] ?>"<?php if (!empty($filter['owner'])) { echo in_array($owner['userid'], $filter['owner']) ? 'selected="selected"' : ''; } ?> title="<?php echo $owner['first_name'].' - '.$owner['emp_id']; ?>"><?php echo $owner['first_name']; ?></option>
 										<?php	} 
 											} 
 										?>
@@ -174,7 +174,7 @@ if(($this->session->userdata('viewtask')==1) && ($this->session->userdata('viewl
 									<select style="width:110px;" multiple="multiple" id="leadassignee" name="leadassignee[]" class="advfilter">
 										<?php foreach ($lead_owner as $ownr) {
 												if(!empty($ownr['first_name'])) { ?>
-													<option value="<?php echo $ownr['userid'] ?>"<?php if (!empty($filter['leadassignee'])) { echo in_array($ownr['userid'], $filter['leadassignee']) ? 'selected="selected"' : ''; } ?> title="<?php echo $ownr['first_name']; ?>"><?php echo $ownr['first_name']; ?></option>
+													<option value="<?php echo $ownr['userid'] ?>"<?php if (!empty($filter['leadassignee'])) { echo in_array($ownr['userid'], $filter['leadassignee']) ? 'selected="selected"' : ''; } ?> title="<?php echo $ownr['first_name'].' - '.$ownr['emp_id']; ?>"><?php echo $ownr['first_name']; ?></option>
 										<?php 	}
 											} 
 										?>

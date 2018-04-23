@@ -76,7 +76,6 @@ class Dashboard_model extends crm_model
 	//for IT cost report
 	public function getOtherCosts($start_date, $end_date, $entity_ids=array(), $practice_ids=array(), $project_reslt)
 	{
-		// echo'<pre>';print_r($project_reslt);exit;
 		$us_currenty_type = 1;
 		$bk_rates = get_book_keeping_rates();
 		$this->db->select("oc.id, oc.cost_incurred_date, oc.currency_type, oc.value, oc.description, l.pjt_id, l.department_id_fk, l.division, l.practice, l.lead_title");
@@ -98,7 +97,6 @@ class Dashboard_model extends crm_model
 		$query 	= $this->db->get();
 		// echo $this->db->last_query(); die;
 		$data	= $query->result_array();
-		// echo "<pre>"; print_r($data); die;
 		$departments 	= $this->get_departments();
 		$deptArr		= array();
 		if(!empty($departments) && count($departments)>0) {

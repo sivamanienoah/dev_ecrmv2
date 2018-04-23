@@ -85,14 +85,14 @@
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="owner" name="owner[]">
 							<?php foreach ($user as $owner){ ?>
-							<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name']; ?>"><?php echo $owner['first_name'] ?></option>
+							<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' - '.$owner['emp_id']; ?>"><?php echo $owner['first_name'] ?></option>
 							<?php } ?>
 							</select> 
 						</td>
 						<td>
 							<select  style="width:120px;" multiple="multiple" id="leadassignee" name="leadassignee[]">
 								<?php foreach ($user as $owner) { ?>
-									<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name']; ?>"><?php echo $owner['first_name'] ?></option>
+									<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' - '.$owner['emp_id']; ?>"><?php echo $owner['first_name'] ?></option>
 								<?php } ?>
 							</select> 
 						</td>

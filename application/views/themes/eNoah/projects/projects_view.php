@@ -167,7 +167,7 @@ if (get_default_currency()) {
 											foreach($all_pm as $pm) {												
 												$pm_name = $pm['first_name'].(($pm['last_name']!='') ? ' '.$pm['last_name'].' ' : ' ').(($pm['emp_id']!='') ? '- '.$pm['emp_id'].' ' : ' ');
 										?>
-													<option value="<?php echo $pm['userid']; ?>" title="<?php echo $pm_name; ?>"><?php echo $pm_name; ?></option>	
+											<option value="<?php echo $pm['userid']; ?>" title="<?php echo $pm_name; ?>"><?php echo $pm_name; ?></option>	
 										<?php 
 										} 
 									}

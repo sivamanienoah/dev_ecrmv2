@@ -100,7 +100,7 @@ button.ui-datepicker-current { display: none; }
 										<select style="width:180px" multiple="multiple" id="owner" name="owner[]">
 											<?php foreach ($lead_owner as $owner) { 
 													if(!empty($owner['first_name'])) { ?>
-														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' '.$owner['last_name']; ?>"><?php echo $owner['first_name'].' '.$owner['last_name'] ?></option>
+														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' '.$owner['last_name'].' - '.$owner['emp_id']; ?>"><?php echo $owner['first_name'].' '.$owner['last_name'] ?></option>
 											<?php 	} 
 												} 
 											?>
@@ -110,7 +110,7 @@ button.ui-datepicker-current { display: none; }
 										<select style="width:180px" multiple="multiple" id="leadassignee" name="leadassignee[]">
 											<?php foreach ($lead_owner as $owner) {
 													if(!empty($owner['first_name'])) { ?>		
-														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' '.$owner['last_name']; ?>"><?php echo $owner['first_name'].' '.$owner['last_name']; ?></option>
+														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' '.$owner['last_name'].' - '.$owner['emp_id']; ?>"><?php echo $owner['first_name'].' '.$owner['last_name']; ?></option>
 											<?php 	} 
 												}
 											?>

@@ -424,7 +424,7 @@ class Dashboard extends crm_controller {
 		//For Tasks & Projects access - Start here (for filter also)
 		$data['lead_stage']  = $this->welcome_model->get_lead_stage();
 		$data['customers']   = $this->welcome_model->get_customers();
-		$leadowner 			 = $this->db->query("SELECT userid, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
+		$leadowner 			 = $this->db->query("SELECT userid, emp_id, first_name FROM ".$this->cfg['dbpref']."users order by first_name");
 		$data['lead_owner']  = $leadowner->result_array(); 
 		$data['regions'] 	 = $this->regionsettings_model->region_list();
 		$data['serv_requ'] 	 = $this->dashboard_model->get_serv_req();
