@@ -31,7 +31,7 @@ public $userdata;
     	$data['customers'] 	= $this->welcome_model->get_customers();	
 		$data['regions'] 	= $this->regionsettings_model->region_list('','');		
     	$data['report'] 	= $this->get_lead_report();
-    	$data['user'] 		= $this->report_least_active_lead_model->get_users_list('users', 'userid, first_name', 'first_name');
+    	$data['user'] 		= $this->report_least_active_lead_model->get_users_list('users', 'userid, first_name, emp_id', 'first_name');
 		$this->load->vars($data);
     	$this->load->view('report/report_least_active_lead');		   	    	   	
     }
