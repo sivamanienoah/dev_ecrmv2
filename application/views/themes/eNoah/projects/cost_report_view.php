@@ -130,7 +130,7 @@ table.bu-tbl-inr th{ text-align:center; }
 										<select id="member_ids" name="member_ids[]" multiple="multiple">
 											<?php if(count($member_ids_selected)>0 && !empty($member_ids_selected)){?>
 											<?php foreach($member_ids_selected as $members){?>
-													<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?> title="<?php echo $members->emp_name;?>" value="<?php echo $members->username;?>" > <?php echo $members->emp_name;?></option>
+													<option <?php echo in_array($members->username, $member_ids)?'selected="selected"':'';?> value="<?php echo $members->username;?>" title="<?php echo "hello";?>"><?php echo $members->emp_name;?></option>
 											<?php } }?>								
 										</select>
 									</td>
