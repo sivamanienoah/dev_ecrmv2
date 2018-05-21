@@ -2406,7 +2406,7 @@ class Project extends crm_controller {
 	{
             //print_r($eid);exit;
 		$exp = array();
-		$payment_details = $this->project_model->get_pr_payment_term_det($eid, $jid);
+		$payment_details = $this->project_model->get_payment_term_det($eid, $jid);
 		$attached_files  = $this->project_model->get_attached_files($eid);
 		
 		$exp['payment_remark']		   = $payment_details['payment_remark'];
@@ -2420,7 +2420,7 @@ class Project extends crm_controller {
 		if(!empty($attached_files)) {
 			$exp['attached_file']      = $attached_files;
 		}
-                //print_r($exp);exit;
+//                print_r($exp);exit;
 		$get_parent_folder_id = $this->request_model->getParentFfolderId($jid,$parent=0);
 		$exp['ff_id'] = $get_parent_folder_id['folder_id'];
 		$this->load->view("projects/update_payment_term", $exp);
