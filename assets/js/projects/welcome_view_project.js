@@ -11,7 +11,25 @@
 		$("#previous-project-manager").val(lead_assign); 
 		$('#project_lead').change( function() {
 		});
-
+                
+                $('.pr-payment-profile-button').click(function() {
+			$('#pr_rec_paymentfadeout').hide();
+			$('.pr_payment-profile-view').slideToggle(); 
+			$('.pr_payment-recieved-view').hide(); 
+			$('.pr_payment-terms-mini-view1').show(); 
+			$('.pr_payment-received-mini-view1').hide(); 
+			loadPayment();	
+			return false;
+		});
+                $('.pr-payment-received-button').click(function() {
+			$('#rec_paymentfadeout').hide();
+			$('.pr_payment-recieved-view').slideToggle();
+			$('.pr_payment-profile-view').hide(); 
+			$('.pr_payment-received-mini-view1').show(); 
+			$('.pr_payment-terms-mini-view1').hide(); 
+			loadPaymentTerms(); 
+			return false;
+		});
 		$('.payment-profile-button').click(function() {
 			$('#rec_paymentfadeout').hide();
 			$('.payment-profile-view').slideToggle(); 
@@ -403,6 +421,22 @@
 			}
 		);
 	}
+        
+        function loadPrPaymentTerms() 
+	{	
+		var params = {};
+		params[csrf_token_name] = csrf_hash_token;
+		$.post( 
+			site_base_url+'project/retrieve_pr_record/'+curr_job_id,params,
+			function(data) {
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$('.pr_deposit_map_field').html(data);	
+				}
+			}
+		);
+	}
 
 	//function for load the payment terms every time click the 'Add Payment Terms' button
 	function loadPayment() 
@@ -417,6 +451,25 @@
 					alert(data.errormsg);
 				} else {
 					$('.payment-terms-mini-view1').html(data);
+				}
+			}
+		);
+	}
+        
+        function loadPrPayment() 
+	{
+           // alert('hi');return false;
+		$("#uploadFile").empty();
+		var params = {};
+		params[csrf_token_name] = csrf_hash_token;
+		$.post( 
+			site_base_url+'project/retrieve_pr_payment_terms/'+curr_job_id,params,
+			function(data) {
+                          console.log(data)
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$('.pr_payment-terms-mini-view1').html(data);
 				}
 			}
 		);
@@ -1591,7 +1644,7 @@ function addURLtoJob()
 			}
 		});
 		$('.milestone_date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
-		$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date, #sp_date_2').datepicker({
+		$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date, #sp_date_2, #pr_sp_date_2').datepicker({
 			dateFormat: 'dd-mm-yy', 
 			//minDate: '0',
 			beforeShow : function(input, inst) {
@@ -1599,6 +1652,27 @@ function addURLtoJob()
 			}
 		});
 		$('#month_year').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'MM yy',
+			showButtonPanel: true,
+			onClose: function(input, inst) {
+				var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+				var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			},
+			beforeShow: function(input, inst) {
+				if ((selDate = $(this).val()).length > 0) 
+				{
+					iYear = selDate.substring(selDate.length - 4, selDate.length);
+					iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+					$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+					$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+				}
+				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+			}
+		});
+                	$('#pr_month_year').datepicker({
 			changeMonth: true,
 			changeYear: true,
 			dateFormat: 'MM yy',
@@ -1665,6 +1739,274 @@ function addURLtoJob()
 						$('.payment-terms-mini-view1').html('');
 						loadPayment();
 					break;
+                                        case 'jv-tab-12':
+                                            $('.pr_payment-terms-mini-view1').html('');
+						loadPrPayment();
+                                            
+					case 'jv-tab-3':
+						loadExistingFiles($('#filefolder_id').val());
+						showBreadCrumbs($('#filefolder_id').val());
+					break;
+					case 'jv-tab-4':
+						loadExistingTasks();
+					break;
+					case 'jv-tab-4-5':
+						$('.payment-received-mini-view1').hide();
+					break;
+					case 'jv-tab-5':
+						loadCustomer(quote_id);
+					break;
+					case 'jv-tab-9':
+						loadLogs(project_jobid);
+					break;
+				}
+			}
+		});
+		
+		$( "#map_add_file" ).tabs();
+		$( "#oc_map_add_file" ).tabs();
+
+		$('#job-url-list li a:not(.file-delete)').livequery(function(){
+			$(this).click(function(){
+				window.open(this.href);
+				return false;
+			});
+		});
+	
+
+		/* try {
+			var sb_ol = $('.status-bar').offset().left;
+			$('.status-bar').mousemove(function(e){
+				var wd = e.clientX - sb_ol;
+				$('.over', $(this)).css({width: wd + 'px', opacity:0.5});
+			});
+			
+			$('.status-bar').bind('mouseleave', function(e){
+				$('.over', $(this)).stop().animate({opacity:0}, 600);
+			});
+			
+			$('.status-bar a').click(function(){
+				var pos = $(this).attr('rel');
+			
+				if (window.confirm('Are you sure that you want to change\nthe status to ' + pos * 10 +'% completion?'))
+				{
+					updateJobStatus(pos);
+				}
+				$('.status-bar span.over').fadeOut();
+				return false;
+			});
+		} catch (e) { if (window.console) console.log(e); } */
+
+
+		if (project_complete_status!='') {
+			updateVisualStatus(project_complete_status);
+		}
+
+		
+		$('.jump-to-job select').change(function(){
+			var _new_location = proj_location;
+			document.location = _new_location.replace('{{lead_id}}', $(this).val());
+		});
+
+
+		/* $('#job_log').siblings().hide();
+
+		$('#job_log').focus(function(){
+			$(this).siblings(':hidden').not('#multiple-client-emails').slideDown('fast');
+			if ($(this).val() == 'Click to view options') {
+				$(this).val('');
+				$(this).removeClass('gray-text');
+			}
+		}); */
+
+
+		/* job tasks character limit */
+		$('#job-task-desc').keyup(function(){
+			var desc_len = $(this).val();
+			
+			if (desc_len.length > 240) {
+				$(this).focus().val(desc_len.substring(0, 240));
+			}
+			
+			var remain_len = 240 - desc_len.length;
+			if (remain_len < 0) remain_len = 0;
+			
+			$('#task-desc-countdown').text(remain_len);
+		});
+
+		$('#edit-job-task-desc').keyup(function(){
+			var desc_len = $(this).val();
+			
+			if (desc_len.length > 240) {
+				$(this).focus().val(desc_len.substring(0, 240));
+			}
+			
+			var remain_len = 240 - desc_len.length;
+			if (remain_len < 0) remain_len = 0;
+			
+			$('#edit-task-desc-countdown').text(remain_len);
+		});
+
+		// Sasha's quick keys
+		$('#job_log').keydown(function (e) {
+
+			if (e.ctrlKey && e.keyCode == 13) {
+
+				// Entered values:
+				var minutesInput = $('#log_minutes');
+				var minutes = minutesInput.val();
+
+				// Check the values that are required (time and recipients)
+				//
+				// if either are empty, use prompt() dialog boxes to use them.
+				// EDIT: In fact, a prompt will use enter, so we can jam it down if needed.
+
+				var newMinutes = prompt('Time in minutes', minutes);
+				if(minutes != newMinutes) {
+					minutesInput.val(newMinutes);
+				}
+
+				var contactsText = prompt('Select contacts (min 3 letters). Seperate with a space.');
+				var contacts = contactsText.split(' ');
+				for(i in contacts) {
+					// Check the ones that match.
+					//
+					// Modifications needed: this needs to be case insensitive.
+					if(contacts[i].length >= 3) {
+						contacts[i].replace(/\w+/g, function(a){
+							contacts[i]  = a.charAt(0).toUpperCase() + a.substr(1).toLowerCase();
+						});
+						
+						var scope = $('.user label:contains("' + contacts[i] + '")').parent();
+						$('input[type=checkbox]', scope).attr('checked', true);
+					}
+				}
+				var recipients = 'Send to the following recipients:\n';
+				$('.user input[type=checkbox]:checked').each(
+					function () {
+						recipients += $('label', $(this).parent()).text() + '\n';
+					}
+				);
+				
+				if(confirm(recipients)) {
+					addLog();
+				}
+				return false;
+			}
+		});
+		
+		
+	});
+        
+        $(function() {
+		$('#set-pr-payment-terms .pick-date').datepicker({dateFormat: 'dd-mm-yy'});
+		$('#pr_payment-recieved-terms .pick-date, #pr_date_3').datepicker({
+			dateFormat: 'dd-mm-yy', 
+			maxDate: '0',
+			beforeShow : function(input, inst) {
+				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+			}
+		});
+		$('.milestone_date .pick-date').datepicker({dateFormat: 'dd-mm-yy', minDate: -30, maxDate: '+1M' });
+		$('#project-date-assign .pick-date, #set-job-task .pick-date, #edit-job-task .pick-date, #sp_date_2, #pr_sp_date_2').datepicker({
+			dateFormat: 'dd-mm-yy', 
+			//minDate: '0',
+			beforeShow : function(input, inst) {
+				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+			}
+		});
+		$('#month_year').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'MM yy',
+			showButtonPanel: true,
+			onClose: function(input, inst) {
+				var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+				var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			},
+			beforeShow: function(input, inst) {
+				if ((selDate = $(this).val()).length > 0) 
+				{
+					iYear = selDate.substring(selDate.length - 4, selDate.length);
+					iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+					$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+					$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+				}
+				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+			}
+		});
+                $('#pr_month_year').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'MM yy',
+			showButtonPanel: true,
+			onClose: function(input, inst) {
+				var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+				var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			},
+			beforeShow: function(input, inst) {
+				if ((selDate = $(this).val()).length > 0) 
+				{
+					iYear = selDate.substring(selDate.length - 4, selDate.length);
+					iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+					$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+					$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+				}
+				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+			}
+		});
+		$('.task-list-item').livequery(function(){
+			$(this).hover(
+				function() { $('.delete-task', $(this)).css('display', 'block'); },
+				function() { $('.delete-task', $(this)).css('display', 'none'); }
+			);
+		});
+
+		$('#email_to_customer').change(function(){
+			if ($(this).is(':checked'))	{
+				$('#multiple-client-emails').slideDown(400)
+					.children('input[type=checkbox]:first').attr('checked', true);
+			} else {
+				$('#additional_client_emails').val('');
+				$('#multiple-client-emails').children('input[type=checkbox]').attr('checked', false).end()
+					.slideUp(400);
+			}
+		});
+
+		$.fn.__tabs = $.fn.tabs;
+		$.fn.tabs = function (a, b, c, d, e, f) {
+			var base = location.href.replace(/#.*$/, '');
+			$('ul>li>a[href^="#"]', this).each(function () {
+				var href = $(this).attr('href');
+				$(this).attr('href', base + href);
+			});
+			$(this).__tabs(a, b, c, d, e, f);
+		};
+
+		$( "#project-tabs" ).tabs({
+			beforeActivate: function( event, ui ) {
+				
+				var evnt_id = ui.newPanel[0].id;
+				
+				switch(evnt_id){
+					case 'jv-tab-0':
+						if(metrics_reload == true) {
+							updtActualProjectValue(project_jobid);
+						}
+					break;
+					case 'jv-tab-0-a':
+						viewOtherCost(project_jobid);
+					break;
+					case 'jv-tab-1':
+						$('.payment-terms-mini-view1').html('');
+						loadPayment();
+					break;
+                                        case 'jv-tab-12':
+                                            $('.pr_payment-terms-mini-view1').html('');
+						loadPrPayment();
+                                            
 					case 'jv-tab-3':
 						loadExistingFiles($('#filefolder_id').val());
 						showBreadCrumbs($('#filefolder_id').val());
@@ -2104,9 +2446,54 @@ function addURLtoJob()
 				return false;
 			}
 		}
+                
+                function proformaPaymentProfileEdit(eid) 
+		{
+            //  alert('hi');return false;
+			$(".pr_payment-profile-view").show();
+			var jid = project_jobid;
+			setTimeout('timerfadeout()', 2000);
+			var url = site_base_url+"project/proforma_payment_term_edit/"+eid+"/"+jid;
+			$('#pr_payment-profile-view').load(url);
+		}
+                
+                function proformaPaymentProfileDelete(eid) 
+		{//alert(eid);return false;
+			var agree=confirm("Are you sure you want to delete this file?");
+			if (agree) 
+			{
+				var jid = project_jobid;
+				setTimeout('timerfadeout()', 2000);
+				var url = site_base_url+"project/agreedProformaPaymentDelete/"+eid+"/"+jid;
+				$('.pr_payment-terms-mini-view1').load(url);
+			}
+			else 
+			{
+				return false;
+			}
+		}
+                
+//                function proformaPaymentProfileDelete(eid) 
+//		{
+//                // alert(eid); return false;
+//			var agree=confirm("Are you sure you want to delete this file?");
+//			if (agree) 
+//			{
+//				var jid = project_jobid;
+//				setTimeout('timerfadeout()', 2000);
+//				var url = site_base_url+"project/agreedProformaPaymentDelete/"+eid+"/"+jid;
+//                             //  alert(url);return false;
+//                              // console.log(data);return false;
+//				$('.pr_payment-terms-mini-view1').load(url);
+//			}
+//			else 
+//			{
+//				return false;
+//			}
+//		}
 
 		function timerfadeout()
-		{
+		{alert(123)
 			$('#paymentfadeout').fadeOut();
 			$('#rec_paymentfadeout').fadeOut();
 			$('#pjt_lead_errormsg').fadeOut();
@@ -2776,6 +3163,7 @@ $(function(){
 
 /*Project module Invoice genration*/
 function generate_inv(eid) {
+   // alert('hi');return false;
 	// window.location.href = site_base_url+'project/generateInvoice/'+eid+"/"+pjtid;
 	$('#rec_paymentfadeout').empty();
 	var agree = confirm("Are you sure you want to generate invoice?\nIt will send an email to accounts department.");
@@ -2789,6 +3177,44 @@ function generate_inv(eid) {
 		var form_data = csrf_token_name+'='+csrf_hash_token;
 		$.post( 
 			site_base_url+"project/generateInvoice/"+eid+"/"+pjtid,
+			form_data,
+			function(data) {
+				if (data.error) {
+					// alert(data.errormsg);
+					$('#rec_paymentfadeout').html(data.errormsg);
+				} else {
+					$('#rec_paymentfadeout').html('<span class=ajx_success_msg>Status Updated</span>');
+					loadPayment();
+					reset_paymentdata();
+				}
+				$.unblockUI();
+			}
+			,'json'
+		);
+		setTimeout('timerfadeout()', 4000);
+	} else {
+		return false;
+	}
+	
+}
+
+function generate_proforma_inv(eid) {
+    
+ //alert('hi');return false;
+ // alert(eid);return false;
+	// window.location.href = site_base_url+'project/generateInvoice/'+eid+"/"+pjtid;
+	$('#pr_rec_paymentfadeout').empty();
+	var agree = confirm("Are you sure you want to generate invoice?\nIt will send an email to accounts department.");
+	var pjtid = project_jobid;
+	if (agree) {
+		$.blockUI({
+			message:'<h4>Processing</h4><img src="assets/img/ajax-loader.gif" />',
+			css: {background:'#666', border: '2px solid #999', padding:'4px', height:'35px', color:'#333'}
+		});
+		
+		var form_data = csrf_token_name+'='+csrf_hash_token;
+		$.post( 
+			site_base_url+"project/generateProformaInvoice/"+eid+"/"+pjtid,
 			form_data,
 			function(data) {
 				if (data.error) {
@@ -2941,6 +3367,10 @@ function showRequest()
 	if ( ($.trim($('#sp_date_1').val()) == '') && ($.trim($('#sp_date_2').val()) == '') && ($.trim($('#sp_date_3').val()) == '') ) {
 		date_entered = false;
 	}
+        
+        if ( ($.trim($('#sp_date_1').val()) == '') && ($.trim($('#pr_sp_date_2').val()) == '') && ($.trim($('#sp_date_3').val()) == '') ) {
+		date_entered = false;
+	}
 	/* if ($('#sp_form_jobid').val() == 0) { 
 		errors.push('Project Id missing!');
 	} */
@@ -2950,10 +3380,16 @@ function showRequest()
 	if(($.trim($('#sp_date_2').val()) == ''))  { //|| valid_date == false) {
 		errors.push('<p>Enter valid Date.</p>');
 	}
+        if(($.trim($('#pr_sp_date_2').val()) == ''))  { //|| valid_date == false) {
+		errors.push('<p>Enter valid Date.</p>');
+	}
 	if(($.trim($('#sp_date_3').val()) == '')) {
 		errors.push('<p>Enter Milestone Value.</p>');
 	}
 	if(($.trim($('#month_year').val()) == '')) {
+		errors.push('<p>Enter Month & Year Value.</p>');
+	}
+        if(($.trim($('#pr_month_year').val()) == '')) {
 		errors.push('<p>Enter Month & Year Value.</p>');
 	}
 	if (errors.length > 0) {
@@ -3238,24 +3674,25 @@ function getTemplate(temp_id)
 /* To get email signature by id */
 function getSignature(sign_id)
 {
-	params ={'sign_id':sign_id};
-	params[csrf_token_name] = csrf_hash_token;
-	$.ajax({
-		async: false,
-		type: "POST",
-		url : site_base_url + 'project/get_signature_content/',
-		cache : false,
-		data :params,
-		success : function(response){
-			response = JSON.parse(response);
-			
-			if(response != null && response.sign_content !=null) {
+	       params ={'sign_id':sign_id};
+		   params[csrf_token_name] = csrf_hash_token;
+			$.ajax({
+			async: false,
+			type: "POST",
+			url : site_base_url + 'project/get_signature_content/',
+			cache : false,
+			data :params,
+			success : function(response){
+				response = JSON.parse(response);
 				
-				tinymce.get('signature').setContent(response.sign_content);
-				//tinymce.triggerSave();
-			} else {
-				tinymce.get('signature').setContent('');
+				if(response != null && response.sign_content !=null) {
+					
+					tinymce.get('signature').setContent(response.sign_content);
+					//tinymce.triggerSave();
+                } else {
+					tinymce.get('signature').setContent('');
+				}
 			}
-		}
-	});
+		});
 }
+
