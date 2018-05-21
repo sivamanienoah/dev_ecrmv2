@@ -2317,13 +2317,13 @@ class Project extends crm_controller {
 					<div class="pull-left"><img src=assets/img/payment-received.jpg><span>Payment Received</span></div>
 					<div class="pull-left"><img src=assets/img/payment-pending.jpg><span>Partial Payment</span></div>
 					<div class="pull-left"><img src=assets/img/payment-due.jpg ><span>Payment Due</span></div>
-					<div class="pull-left"><img src=assets/img/generate_invoice.png><span>Generate Invoice</span></div>
-					<div class="pull-left"><img src=assets/img/invoice_raised.png><span>Invoice Raised</span></div>
+					<div class="pull-left"><img src=assets/img/generate_invoice.png><span>Generate Proforma Invoice</span></div>
+					<div class="pull-left"><img src=assets/img/invoice_raised.png><span>Proforma Invoice Raised</span></div>
 					</div></div>';
 		$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
 		$output .= "<thead>";
 		$output .= "<tr align='left'>";
-		$output .= "<th class='header'>Payment Milestone</th>";
+		$output .= "<th class='header'>Proforma Milestone</th>";
 		$output .= "<th class='header'>Milestone Date</th>";
 		$output .= "<th class='header'>For the Month & Year</th>";
 		$output .= "<th class='header'>Amount</th>";
@@ -2345,7 +2345,7 @@ class Project extends crm_controller {
 				$invoice_stat = '';
 				$raised_invoice_stat = '';
 				if ($exp['invoice_status'] == 1) {
-					$raised_invoice_stat = "<img src='assets/img/invoice_raised.png' alt='Invoice-raised'>";
+					$raised_invoice_stat = "<img src='assets/img/invoice_raised.png' alt='Proforma-Invoice-raised'>";
 				}
 				if ($exp['received'] == 0) {
 					$payment_received = $raised_invoice_stat.'&nbsp;<img src="assets/img/payment-due.jpg" alt="Due" />';
@@ -2358,16 +2358,16 @@ class Project extends crm_controller {
 					if ($exp['invoice_status'] == 0) {
 						$invoice_stat = "<a title='Edit' onclick='proformaPaymentProfileEdit(".$exp['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'> </a>
 						<a title='Delete' onclick='proformaPaymentProfileDelete(".$exp['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
-						<a title='Generate Invoice' href='javascript:void(0)' onclick='generate_proforma_inv(".$exp['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>";
+						<a title='Generate Proforma Invoice' href='javascript:void(0)' onclick='generate_proforma_inv(".$exp['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Proforma Invoice' ></a>";
 					} else if ($exp['invoice_status'] == 1) {
 						$invoice_stat = "<a title='Edit' onclick='proformaPaymentProfileEdit(".$exp['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'> </a>
 						<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
-						<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
+						<a title='Generate Proforma Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Proforma Invoice'></a>";
 					}
 				} else {
 					$invoice_stat = "<a title='Edit' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/edit.png' alt='edit'></a>
 					<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
-					<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
+					<a title='Generate Proforma Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Proforma Invoice'></a>";
 				}
 				$att = "";
 				if($attachments>0) {
@@ -5363,19 +5363,19 @@ HDOC;
 			// $param['bcc_mail'] 	  = $bcc_email;
 			$param['from_email']	  = 'webmaster@enoahprojects.com';
 			$param['from_email_name'] = 'Webmaster';
-			$param['template_name']	  = "Generate Invoice Notification";
+			$param['template_name']	  = "Generate Proforma Invoice Notification";
 			$param['subject'] 		  = $subject;
 			$param['attach'] 		  = $attached_files;
 			$param['job_id'] 		  = $pjtid;
 			
 			//insert log
 			$ins_log = array();
-			$ins_log['log_content'] 	= 'Invoice has been raised for the milestone "'.$payment_details['project_milestone_name'].'" & for the Month & Year "'.$month_year.'".<br /> Invoice Amount - '.trim($milestone_value).'.';
+			$ins_log['log_content'] 	= 'Proforma Invoice has been raised for the milestone "'.$payment_details['project_milestone_name'].'" & for the Month & Year "'.$month_year.'".<br /> Invoice Amount - '.trim($milestone_value).'.';
 			$ins_log['jobid_fk']    	= $pjtid;
 			$ins_log['date_created'] 	= $inv_gen_time;
 			$ins_log['userid_fk']   	= $this->userdata['userid'];
 			$insert_log = $this->welcome_model->insert_row('logs', $ins_log);
-
+                      //  print_r($param);exit;
 			$this->email_template_model->sent_email($param);
 		} else {
 			$output['error'] = true;
