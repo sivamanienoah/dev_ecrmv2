@@ -58,9 +58,8 @@ class Project extends crm_controller {
 		$data['services']    = $this->project_model->get_services();
 		$data['practices']   = $this->project_model->get_practices();
 		$data['sales_divisions'] = $this->welcome_model->get_sales_divisions();
-		$data['all_pm'] 		 = $this->project_model->get_all_pm();
-		$data['saved_search'] 	 = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=2);
-		$db_fields 			  	 = $this->project_model->get_dashboard_field($this->userdata['userid']);
+		$data['saved_search'] = $this->welcome_model->get_saved_search($this->userdata['userid'], $search_for=2);
+		$db_fields 			  = $this->project_model->get_dashboard_field($this->userdata['userid']);
 		if(!empty($db_fields) && count($db_fields)>0) {
 			foreach($db_fields as $record) {
 				$data['db_fields'][] = $record['column_name'];
@@ -85,7 +84,6 @@ class Project extends crm_controller {
 		$from_date			= '';
 		$to_date  			= '';
 		$divisions  		= '';
-		$pm			  		= '';
 		$customer_type  	= '';
 		$data['val_export'] = 'no_search';
 
@@ -101,7 +99,6 @@ class Project extends crm_controller {
 			$from_date		= $inputData['from_date'];
 			$to_date  		= $inputData['to_date'];
 			$divisions  	= $inputData['divisions'];
-			$pm  			= $inputData['pm'];
 			$customer_type  = $inputData['customer_type'];
 			
 			$data['val_export']  = 'search';
@@ -141,7 +138,6 @@ class Project extends crm_controller {
 				$from_date		= $inputData['from_date'];
 				$to_date  		= $inputData['to_date'];
 				$divisions  	= $inputData['divisions'];
-				$pm  			= $inputData['pm'];
 				$customer_type  = $inputData['customer_type'];
 				
 				if(!empty($pjtstage) && $pjtstage!='null') {
@@ -168,11 +164,6 @@ class Project extends crm_controller {
 					$divisions = @explode(",",$divisions);
 				} else {
 					$divisions = '';
-				}
-				if(!empty($pm) && $pm!='null') {
-					$pm = @explode(",",$pm);
-				} else {
-					$pm = '';
 				}
 				if(!empty($customer_type) && $customer_type!='null') {
 					$customer_type = @explode(",",$customer_type);
@@ -213,7 +204,6 @@ class Project extends crm_controller {
 				$from_date		= $inputData['from_date'];
 				$to_date  		= $inputData['to_date'];
 				$divisions  	= $inputData['divisions'];
-				$pm  			= $inputData['pm'];
 				$customer_type  = $inputData['customer_type'];
 				
 				if(!empty($pjtstage) && $pjtstage!='null') {
@@ -241,11 +231,6 @@ class Project extends crm_controller {
 				} else {
 					$divisions = '';
 				}
-				if(!empty($pm) && $pm!='null') {
-					$pm = @explode(",",$pm);
-				} else {
-					$pm = '';
-				}
 				if(!empty($customer_type) && $customer_type!='null') {
 					$customer_type = @explode(",",$customer_type);
 				} else {
@@ -260,7 +245,7 @@ class Project extends crm_controller {
 		if ($keyword == 'false' || $keyword == 'undefined') {
 			$keyword = 'null';
 		}
-		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions,$customer_type,$pm);
+		$getProjects	   = $this->project_model->get_projects_results($pjtstage,$cust,$service,$practice,$keyword,$datefilter,$from_date,$to_date,false,$divisions,$customer_type);
 		
 		// echo $this->db->last_query(); die;
 
@@ -385,9 +370,10 @@ class Project extends crm_controller {
 	 */
 	public function view_project($id = 0)
 	{
+            //echo 'hi';exit;
 		// ini_set("display_errors",1);
 		// error_reporting(1);
-        $this->load->helper('text');
+                $this->load->helper('text');
 		$this->load->helper('fix_text');
 		$usernme = $this->session->userdata('logged_in_user');
 		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2) {
@@ -435,6 +421,7 @@ class Project extends crm_controller {
 			if ($data['quote_data']['payment_terms'] == 1)
 			{
 				$data['payment_data'] = $this->project_model->get_expect_payment_terms($data['quote_data']['lead_id']);
+                                $data['proforma_payment_data'] = $this->project_model->get_proforma_payment_terms($data['quote_data']['lead_id']);
 			}
 			
 			$deposits = $this->project_model->get_deposits_data($data['quote_data']['lead_id']);
@@ -2182,6 +2169,9 @@ class Project extends crm_controller {
 	 */
 	function retrieve_payment_terms($jid)
 	{
+         //   print_r($jid);exit;
+         //   return $jid;
+          //  echo $jid;exit;
 		$expect_payment_terms = $this->project_model->get_expect_payment_terms($jid);
 		
 		$usernme = $this->session->userdata('logged_in_user');
@@ -2292,15 +2282,157 @@ class Project extends crm_controller {
 		$output .= '</div>';
 		echo $output;
 	}
+        
+        function retrieve_pr_payment_terms($jid)
+	{
+       //   print_r($jid);exit;
+         //   return $jid;
+//          echo $jid;exit;
+		$expect_payment_terms = $this->project_model->get_proforma_payment_terms($jid);
+		
+		$usernme = $this->session->userdata('logged_in_user');
+		if ($usernme['role_id'] == 1 || $usernme['role_id'] == 2|| $usernme['role_id'] == 4) {
+			$chge_access = 1;
+		} else {
+			$chge_access = $this->project_model->get_access($jid, $usernme['userid']);
+		}
+		
+		$get_pjt_status = $this->project_model->get_lead_det($jid);
+		//print_r($get_pjt_status);exit;
+		$readonly_status = false;
+		if($chge_access != 1)
+		$readonly_status = true;
+		if($get_pjt_status['pjt_status'] == 2)
+		$readonly_status = true;
+		
+		$output = '';
+		$total_amount_recieved = '';
+		$output .= '<div class="payment-terms-mini-view2" style="float:left; margin-top: 5px;">';
+		$expi = 1;
+		$pt_select_box = '';
+		$pt_select_box .= '<option value="0"> &nbsp; </option>';
+		$output .= '<div align="left" style="background: none repeat scroll 0 0;">
+					<h6>Agreed Payment Terms</h6>
+					<div class=payment_legend>
+					<div class="pull-left"><img src=assets/img/payment-received.jpg><span>Payment Received</span></div>
+					<div class="pull-left"><img src=assets/img/payment-pending.jpg><span>Partial Payment</span></div>
+					<div class="pull-left"><img src=assets/img/payment-due.jpg ><span>Payment Due</span></div>
+					<div class="pull-left"><img src=assets/img/generate_invoice.png><span>Generate Invoice</span></div>
+					<div class="pull-left"><img src=assets/img/invoice_raised.png><span>Invoice Raised</span></div>
+					</div></div>';
+		$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+		$output .= "<thead>";
+		$output .= "<tr align='left'>";
+		$output .= "<th class='header'>Payment Milestone</th>";
+		$output .= "<th class='header'>Milestone Date</th>";
+		$output .= "<th class='header'>For the Month & Year</th>";
+		$output .= "<th class='header'>Amount</th>";
+		$output .= "<th class='header'>Attachments</th>";
+		$output .= "<th class='header'>Status</th>";
+		$output .= "<th class='header'>Action</th>";
+		$output .= "</tr>";
+		$output .= "</thead>";
+		if (count($expect_payment_terms>0))
+		{                           
+			foreach ($expect_payment_terms as $exp)
+			{
+				$att_condn   = array("expectid"=>$exp['expectid']);
+				$attachments = $this->customer_model->get_records_by_num("expected_payments_attach_file",$att_condn);
+				$month_year     = ($exp['month_year']!='0000-00-00 00:00:00') ? date('F Y', strtotime($exp['month_year'])) :'';
+				$payment_amount = number_format($exp['amount'], 2, '.', ',');
+				$total_amount_recieved += $exp['amount'];
+				$payment_received = '';
+				$invoice_stat = '';
+				$raised_invoice_stat = '';
+				if ($exp['invoice_status'] == 1) {
+					$raised_invoice_stat = "<img src='assets/img/invoice_raised.png' alt='Invoice-raised'>";
+				}
+				if ($exp['received'] == 0) {
+					$payment_received = $raised_invoice_stat.'&nbsp;<img src="assets/img/payment-due.jpg" alt="Due" />';
+				} else if ($exp['received'] == 1) {
+					$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" />';
+				} else {
+					$payment_received = $raised_invoice_stat.'&nbsp;<img src="assets/img/payment-pending.jpg" alt="pending" />';
+				}
+				if ($readonly_status == false) {
+					if ($exp['invoice_status'] == 0) {
+						$invoice_stat = "<a title='Edit' onclick='proformaPaymentProfileEdit(".$exp['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'> </a>
+						<a title='Delete' onclick='proformaPaymentProfileDelete(".$exp['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
+						<a title='Generate Invoice' href='javascript:void(0)' onclick='generate_proforma_inv(".$exp['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoice' ></a>";
+					} else if ($exp['invoice_status'] == 1) {
+						$invoice_stat = "<a title='Edit' onclick='proformaPaymentProfileEdit(".$exp['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'> </a>
+						<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
+						<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
+					}
+				} else {
+					$invoice_stat = "<a title='Edit' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/edit.png' alt='edit'></a>
+					<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
+					<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
+				}
+				$att = "";
+				if($attachments>0) {
+					$att = "<img src='assets/img/attachment_icon.png' alt='Attachments' >";
+				}
+				$output .= "<tr>";
+				$output .= "<td align='left'>".$exp['project_milestone_name']."</td>";
+				$output .= "<td align='left'>".date('d-m-Y', strtotime($exp['expected_date']))."</td>";
+				$output .= "<td align='left'>".$month_year."</td>";
+				$output .= "<td align='left'> ".$exp['expect_worth_name'].' '.number_format($exp['amount'], 2, '.', ',')."</td>";
+				$output .= "<td align='center'>".$att."</td>";
+				$output .= "<td align='center'>".$payment_received."</td>";
+				if ($readonly_status == false) {
+					$output .= "<td align='left'>".$invoice_stat."</td>";
+				} else {
+					$output .= "<td align='left'>".$invoice_stat."</td>";
+				}
+				$output .= "</tr>";
+				$pt_select_box .= '<option value="'. $exp['expectid'] .'">' . $exp['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
+				$expi ++;
+			}
+		}
+		$output .= "<tr>";
+		$output .= "<td></td><td></td>";
+		$output .= "<td><b>Total Milestone Payment : </b></td><td><b>".$exp['expect_worth_name'].' '.number_format($total_amount_recieved, 2, '.', ',') ."</b></td>";
+		$output .= "</tr>";
+		$output .= "</table>";
+		$output .= '</div>';
+		echo $output;
+	}
 	
 	/*
 	 *edit the payment term
 	 */
 	function payment_term_edit($eid, $jid)
 	{
+            //print_r($eid);exit;
 		$exp = array();
-		$payment_details = $this->project_model->get_payment_term_det($eid, $jid);
+		$payment_details = $this->project_model->get_pr_payment_term_det($eid, $jid);
 		$attached_files  = $this->project_model->get_attached_files($eid);
+		
+		$exp['payment_remark']		   = $payment_details['payment_remark'];
+		$exp['expect_id']			   = $eid;
+		$exp['job_id']			   	   = $jid;
+		$exp['expected_date']          = date('d-m-Y', strtotime($payment_details['expected_date']));
+		$exp['month_year']             = ($payment_details['month_year']!='0000-00-00 00:00:00') ? date('F Y', strtotime($payment_details['month_year'])) : '';
+		$exp['project_milestone_name'] = $payment_details['project_milestone_name'];
+		$exp['project_milestone_amt']  = $payment_details['amount'];
+		$exp['invoice_status']  	   = $payment_details['invoice_status'];
+		if(!empty($attached_files)) {
+			$exp['attached_file']      = $attached_files;
+		}
+                //print_r($exp);exit;
+		$get_parent_folder_id = $this->request_model->getParentFfolderId($jid,$parent=0);
+		$exp['ff_id'] = $get_parent_folder_id['folder_id'];
+		$this->load->view("projects/update_payment_term", $exp);
+	}
+        
+        function proforma_payment_term_edit($eid, $jid)
+	{
+           // print_r($eid);exit;
+		$exp = array();
+		$payment_details = $this->project_model->get_pr_payment_term_det($eid,$jid);
+            //    echo '<pre>';  print_r($payment_details);exit;
+		$attached_files  = $this->project_model->get_pr_attached_files($eid);
 		
 		$exp['payment_remark']		   = $payment_details['payment_remark'];
 		$exp['expect_id']			   = $eid;
@@ -2315,7 +2447,8 @@ class Project extends crm_controller {
 		}
 		$get_parent_folder_id = $this->request_model->getParentFfolderId($jid,$parent=0);
 		$exp['ff_id'] = $get_parent_folder_id['folder_id'];
-		$this->load->view("projects/update_payment_term", $exp);
+                //print_r($exp);exit;
+		$this->load->view("projects/update_proforma_payment_term", $exp);
 	}
 	
 	/**
@@ -2329,7 +2462,7 @@ class Project extends crm_controller {
 		$today = time();
 		
 		$data = real_escape_array($this->input->post());
-		
+		//print_r($data);exit;
 		$fname = $_FILES['newfile_upload'];
 	
 		if($fname!="") {
@@ -2496,6 +2629,187 @@ class Project extends crm_controller {
 			}
 		}
 	}
+        
+        function set_pr_payment_terms($update = false)
+	{
+           //echo 'hi';exit;
+		$errors = array();
+		$res_file = array();
+		$today = time();
+		
+		$data = real_escape_array($this->input->post());
+		//print_r($data);exit;
+		$fname = $_FILES['newfile_upload'];
+	
+		if($fname!="") {
+			$f_dir = UPLOAD_PATH.'files/';
+			if (!is_dir($f_dir)) {
+				mkdir($f_dir);
+				chmod($f_dir, 0777);
+			}
+			
+			//creating lead_id folder name
+			$f_dir = $f_dir.$data['sp_form_jobid'];
+			if (!is_dir($f_dir)) {
+				mkdir($f_dir);
+				chmod($f_dir, 0777);
+			}
+			
+			$this->upload->initialize(array(
+			   "upload_path" => $f_dir,
+			   "overwrite" => FALSE,
+			   "remove_spaces" => TRUE,
+			   "max_size" => 51000000,
+			   "allowed_types" => "*"
+			)); 
+			$returnUpload = array();
+			if(!empty($_FILES['newfile_upload']['name'][0])) {
+				if ($this->upload->do_multi_upload("newfile_upload")) {
+					$returnUpload  = $this->upload->get_multi_upload_data();
+					$i = 1;
+					if(!empty($returnUpload)) {
+						foreach($returnUpload as $file_up) {
+							$lead_files['lead_files_name']		 = $file_up['file_name'];
+							$lead_files['lead_files_created_by'] = $this->userdata['userid'];
+							$lead_files['lead_files_created_on'] = date('Y-m-d H:i:s');
+							$lead_files['lead_id'] 				 = $data['sp_form_jobid'];
+							$lead_files['folder_id'] 			 = $data['filefolder_id']; //get here folder id from file_management table.
+							$insert_file						 = $this->request_model->return_insert_id('lead_files', $lead_files);
+							$res_file[] = $insert_file;
+							
+							$logs['jobid_fk']	   = $data['sp_form_jobid'];
+							$logs['userid_fk']	   = $this->userdata['userid'];
+							$logs['date_created']  = date('Y-m-d H:i:s');
+							$logs['log_content']   = $file_up['file_name'].' is added.';
+							$logs['attached_docs'] = $file_up['file_name'];
+							$insert_logs 		   = $this->request_model->insert_row('logs', $logs);
+							
+							$i++;
+						}
+					}
+				}
+			}
+		}
+		
+		
+		
+		$pdate1 = $data['sp_date_1'];
+		$pdate2 = strtotime($data['pr_sp_date_2']);
+		$pdate3 = $data['sp_date_3']; 
+		$payment_remark = $data['payment_remark'];
+		//echo "<pre>"; print_r($payment_remark); exit;
+		
+		// $new_file_res = $this->payment_file_upload($data['sp_form_jobid'], $data['filefolder_id'])
+		
+		if (count($errors))
+		{
+			echo "<p style='color:#FF4400;'>" . join('\n', $errors) . "</p>";
+		}
+		else
+		{
+			$job_updated   = FALSE;
+			$expected_date = date('Y-m-d', $pdate2);
+			$month_year    = date('Y-m-d', strtotime($data['pr_month_year']));
+			$data3         = array('jobid_fk' => $data['sp_form_jobid'], 'percentage' => '0', 'amount' => $pdate3, 'expected_date' => $expected_date, 'month_year' => $month_year,'project_milestone_name' => $pdate1, 'payment_remark' => $payment_remark);
+			//print_r($data['sp_form_jobid']);exit;
+			$payment_details = $this->project_model->get_proforma_payment_terms($data['sp_form_jobid']);
+                        
+			if ($update == "") 
+			{                        // echo 'if';exit;
+				$ins_exp_pay = $this->project_model->return_insert_id('proforma_payments', $data3);
+				//print_r($ins_exp_pay);exit;
+				$attach		= array();
+				$new_attach = array();
+				if($ins_exp_pay) {
+					$attach['expectid'] = $ins_exp_pay;
+					if(!empty($data['file_id'])) {
+						foreach($data['file_id'] as $files) {
+							$attach['file_id'] = $files;
+							$this->project_model->insert_row('expected_payments_attach_file', $attach);
+						}
+					}
+					$new_attach['expectid'] = $ins_exp_pay;
+					if(!empty($res_file)) {
+						foreach($res_file as $files) {
+							$new_attach['file_id'] = $files;
+							$this->project_model->insert_row('expected_payments_attach_file', $new_attach);
+						}
+					}
+				}
+
+				$pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$expected_date;
+				
+				$ins['jobid_fk']      = $data['sp_form_jobid'];
+				$ins['userid_fk']     = $this->userdata['userid'];
+				$ins['date_created']  = date('Y-m-d H:i:s');
+				$ins['log_content']   = $pay_det;
+                            // print_r($ins);exit;
+				$insert_logs = $this->project_model->insert_row('logs', $ins);
+                                redirect('project');
+                                
+			}
+			else 
+			{		
+                             //echo 'else';exit;
+				$pay_status = $this->project_model->get_pr_payment_term_det($update, $data['sp_form_jobid']);
+				
+				if ($pay_status['received'] != 1) 
+				{
+					$pay_det = 'Project Milestone Name: '.$data3['project_milestone_name'].'  Amount: '.$payment_details[0]['expect_worth_name'].' '.$data3['amount'].'  Expected Date: '.$data3['expected_date'];
+					
+					$ins['jobid_fk']      = $data['sp_form_jobid'];
+					$ins['userid_fk']     = $this->userdata['userid'];
+					$ins['date_created']  = date('Y-m-d H:i:s');
+					$ins['log_content']   = $pay_det;
+					$insert_logs = $this->project_model->insert_row('logs', $ins);
+					
+					$this->project_model->delete_row('expected_payments_attach_file', array("expectid"=>$update));
+					
+					if(!empty($data['file_id'])){
+						$attach_updt['expectid'] = $update;
+						foreach($data['file_id'] as $files) {
+							$attach_updt['file_id'] = $files;
+							$this->project_model->insert_row('expected_payments_attach_file', $attach_updt);
+						}
+					}
+					if(!empty($res_file)) {
+						$attach_new_updt['expectid'] = $update;
+						foreach($res_file as $files) {
+							$attach_new_updt['file_id'] = $files;
+							$this->project_model->insert_row('expected_payments_attach_file', $attach_new_updt);
+						}
+					}
+					
+					$updatepayment = array('amount' => $pdate3, 'expected_date' => $expected_date, 'month_year' => $month_year, 'project_milestone_name' => $pdate1, 'payment_remark' => $payment_remark );
+					$wh_condn = array('expectid' => $update, 'jobid_fk' => $data['sp_form_jobid']);
+					$updt_pay = $this->project_model->update_row('proforma_payments', $updatepayment, $wh_condn);
+					
+				}
+				else
+				{
+					echo "<span id=paymentfadeout><h6>Received Payment cannot be Edited!</h6></span>";
+				}	
+			}	
+			$job_updated = TRUE;
+
+			if ($job_updated)
+			{
+				$up = array('payment_terms'=>1);
+				$wh_condn = array('lead_id' => $data['sp_form_jobid']);
+				$this->project_model->update_row('leads', $up, $wh_condn);
+				
+				$output = '';
+				// $payment_det = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']); //after update
+				$output .= $this->retrieve_pr_payment_terms($data['sp_form_jobid']);
+				echo $output;
+			}
+			else
+			{
+				echo "{error:true, errormsg:'Payment update failed'}";
+			}
+		}
+	}
+       
 	
 	/**
 	 * Uploads a file by payment milestone posted to a specified job
@@ -2506,8 +2820,11 @@ class Project extends crm_controller {
 	 *Delete the expected payment
 	 *@params expect_id, lead_id
 	 */
+        
 	function agreedPaymentDelete($eid, $jid)
 	{
+             // echo "<script>alert();</script>";
+            
 		$stat = $this->project_model->get_payment_term_det($eid, $jid);
 		
 		if ($stat['received'] == 0)
@@ -2540,8 +2857,78 @@ class Project extends crm_controller {
 		}
 		$this->retrieve_payment_terms($jid);
 	}
-	
-	//list the expected payments
+        
+        function agreedPaymentDelete2($eid, $jid)
+	{
+              echo "<script>alert();</script>";exit;
+            
+		$stat = $this->project_model->get_payment_term_det($eid, $jid);
+		
+		if ($stat['received'] == 0)
+		{
+			//log details
+			$ins['jobid_fk'] = $jid;
+			$ins['userid_fk'] = $this->userdata['userid'];
+			$ins['date_created'] = date('Y-m-d H:i:s');
+			$ins['log_content'] = 'Project Milestone Name: '.$stat['project_milestone_name'].'  Amount: '.$stat['expect_worth_name'].' '.$stat['amount'].'  is deleted on '.date('Y-m-d');
+			
+			//delete the record
+			$wh_condn = array('expectid' => $eid, 'jobid_fk' => $jid, 'received' => 0);
+			$del      = $this->project_model->delete_row('expected_payments', $wh_condn);
+			if ($del)
+			{
+				//insert the log
+				$wh_condn = array('expectid' => $eid);
+				$this->project_model->delete_row('expected_payments_attach_file', $wh_condn);
+				$insert_logs = $this->project_model->insert_row('logs', $ins);
+				echo "<span id=paymentfadeout><h6>Payment Deleted!</h6></span>";
+			}
+			else
+			{
+				echo "<span id=paymentfadeout><h6>Error In Deletion!</h6></span>";
+			}
+		}
+		else
+		{
+			echo "<span id=paymentfadeout><h6>Received Payments cannot be Deleted!</h6></span>";
+		}
+		$this->retrieve_payment_terms($jid);
+	}
+        
+        function agreedProformaPaymentDelete($eid, $jid) {
+        //pr - proforma 
+
+     //   echo "<script>alert($jid);</script>";
+
+        $stat = $this->project_model->get_pr_payment_term_det($eid, $jid);
+ 
+        if ($stat['received'] == 0) {
+            //log details
+            $ins['jobid_fk'] = $jid;
+            $ins['userid_fk'] = $this->userdata['userid'];
+            $ins['date_created'] = date('Y-m-d H:i:s');
+            $ins['log_content'] = 'Project Milestone Name: ' . $stat['project_milestone_name'] . '  Amount: ' . $stat['expect_worth_name'] . ' ' . $stat['amount'] . '  is deleted on ' . date('Y-m-d');
+
+            //delete the record
+            $wh_condn = array('expectid' => $eid, 'jobid_fk' => $jid, 'received' => 0);
+            $del = $this->project_model->delete_row('proforma_payments', $wh_condn);
+           
+            if ($del) {
+                //insert the log
+                $wh_condn = array('expectid' => $eid);
+                $this->project_model->delete_row('proforma_payments_attach_file', $wh_condn);
+                $insert_logs = $this->project_model->insert_row('logs', $ins);
+                echo "<span id=paymentfadeout><h6>Payment Deleted!</h6></span>";
+            } else {
+                echo "<span id=paymentfadeout><h6>Error In Deletion!</h6></span>";
+            }
+        } else {
+            echo "<span id=paymentfadeout><h6>Received Payments cannot be Deleted!</h6></span>";
+        }
+        $this->retrieve_pr_payment_terms($jid);
+    }
+
+    //list the expected payments
 	function agreedPaymentView($jobId)
 	{
 		$get_parent_folder_id = $this->request_model->getParentFfolderId($jobId,$parent=0);
@@ -2557,6 +2944,24 @@ class Project extends crm_controller {
 	function retrieve_record($lead_id)
 	{
 		$retrieve_rec = $this->project_model->get_expect_payment_terms($lead_id);
+		$pt_select_box = '';
+		$pt_select_box .= '<option value="0"> &nbsp; </option>';
+		echo sizeof($retrieve_rec); 
+		if(count($retrieve_rec)>0)
+		{
+			foreach ($retrieve_rec as $rec)
+			{
+				if($rec['invoice_status'] == 1) {
+					$pt_select_box .= '<option value="'.$rec['expectid'].'">' . $rec['project_milestone_name']. ' - '.$rec['expect_worth_name']." ".number_format($rec['amount'], 2, '.', ',')." by ".date('d-m-Y', strtotime($rec['expected_date']))." " . '</option>';
+				}
+			}
+		}
+		echo $pt_select_box;
+	}
+        
+        function retrieve_pr_record($lead_id)
+	{
+		$retrieve_rec = $this->project_model->get_proforma_payment_terms($lead_id);
 		$pt_select_box = '';
 		$pt_select_box .= '<option value="0"> &nbsp; </option>';
 		echo sizeof($retrieve_rec); 
@@ -4844,6 +5249,140 @@ HDOC;
 		}
 		echo json_encode($output);
 	}
+        
+        public function generateProformaInvoice($eid, $pjtid) 
+	{
+		$inv_gen_time	 = date('Y-m-d H:i:s');
+		$wh_condn		 = array('expectid' => $eid,'jobid_fk'=>$pjtid);
+		$updt			 = array('invoice_status'=>1, 'invoice_generate_notify_date'=>$inv_gen_time);
+		
+		$output['error'] = FALSE;
+		
+		$updt_payment_ms = $this->project_model->update_row('proforma_payments', $updt, $wh_condn);
+		// $updt_payment_ms = 1;
+                //print_r($updt_payment_ms);exit;
+		
+		if($updt_payment_ms) {
+			$project_details = $this->project_model->get_quote_data($pjtid);
+                       // print_r($project_details);exit;
+			$pm_inv_cc_mail  = '';
+			if( $this->userdata['userid'] != $project_details[0]['assigned_to'] ) {
+				//get user details
+				$cc_wh_condn 	= array('userid'=>$project_details[0]['assigned_to']);
+				$cc_user_data 	= $this->project_model->get_user_data_by_id('users', $cc_wh_condn);
+				$pm_inv_cc_mail = isset($cc_user_data[0]['email']) ? $cc_user_data[0]['email'] : '';
+			}
+			
+			$payment_details 	 = $this->project_model->get_pr_payment_term_det($eid, $pjtid);
+			$attached_files  	 = $this->project_model->get_pr_attached_files($eid);
+//                      /  print_r($attached_files);exit;
+			
+			$user_name 			 = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
+			$dis['date_created'] = date('Y-m-d H:i:s');
+			$print_fancydate 	 = date('l, jS F y h:iA', strtotime($dis['date_created']));
+
+			$from		  	 = $this->userdata['email'];
+			$arrayEmails   	 = $this->config->item('crm');
+			$to				 = implode(',',$arrayEmails['account_emails']);
+			
+			//checking attaching attachment not exceed to 5 mb - (5mb == 5242880)
+			$file_size = 0;
+			$attachment_exists = false;
+			$attachment_array = array();
+			if(is_array($attached_files) && !empty($attached_files) && count($attached_files)>0){
+				$attach_file_path = UPLOAD_PATH.'files/'.$pjtid.'/';
+				foreach($attached_files as $att_file) {
+					$file_size += filesize($attach_file_path.$att_file['lead_files_name']);
+					$attachment_array[] = $attach_file_path.$att_file['lead_files_name'];
+				}
+			}
+			//1-BPO 2-ITS 
+			switch($project_details[0]['project_center']) {
+				case 1:
+					$cc_email = implode(',', $arrayEmails['bpo_invoice_emails_cc']);
+				break;
+				case 2:
+					$cc_email = implode(',', $arrayEmails['its_invoice_emails_cc']);
+				break;
+				default:
+					$cc_email = implode(',', $arrayEmails['bpo_invoice_emails_cc']);   
+			}
+
+			/* switch($project_details[0]['practice']) {
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+				case 10:
+				case 12:
+				case 13:
+					$cc_email = implode(',', $arrayEmails['eads_account_emails_cc']);
+				break;
+				case 6:
+					$cc_email = implode(',', $arrayEmails['bpo_account_emails_cc']);
+				break;
+				default:
+					$cc_email = implode(',', $arrayEmails['account_emails_cc']);
+				break;
+			} */
+			
+			$subject		 = 'Generate Proforma Invoice Notification';
+			$customer_name   = $project_details[0]['company'].' - '.$project_details[0]['customer_name'];
+			$project_name	 = word_limiter($project_details[0]['lead_title'], 4);
+			$project_id	 	 = $project_details[0]['invoice_no'];
+			$project_code	 = $project_details[0]['pjt_id'];
+			$milestone_name  = $payment_details['project_milestone_name'];
+			$month_year  	 = date('F Y', strtotime($payment_details['month_year']));
+			$payment_type	 = '';
+			$inv_amt['sign'] = '';
+			$inv_amt 	  	 = array('value' => abs($payment_details['amount']));
+			if ($payment_details['amount'] < 0)
+			{
+				$inv_amt['sign'] = '-';
+				$payment_type = ' (Negative Invoice)';
+			}			
+			$milestone_value = $inv_amt['sign'].' '.$payment_details['expect_worth_name'] . ' ' . $inv_amt['value'] . $payment_type;
+			$payment_remark  = isset($payment_details['payment_remark']) ? $payment_details['payment_remark'] : '-';
+			if(is_array($attachment_array) && !empty($attachment_array) && count($attachment_array)>0) {
+				$attachment_exists = true;
+				if($file_size != 0 && $attachment_exists == true) {
+					if(5242880 < $file_size) {
+						$payment_remark .= "<br /><br /> <span style='color:red';>Attachments Size exceeds to 5 Mb. So attachments are not included in this mail.</span>";
+						$attached_files = array();
+					}
+				}
+			}
+
+			//email sent by email template
+			$param = array();
+			
+			$param['email_data'] = array('print_fancydate'=>$print_fancydate,'user_name'=>$user_name,'month_year'=>$month_year,'signature'=>$this->userdata['signature'],'customer_name'=>$customer_name,'project_name'=>$project_name,'project_id'=>$project_id,'project_code'=>$project_code,'milestone_name'=>$milestone_name,'milestone_value'=>$milestone_value,'payment_remark'=>$payment_remark);
+
+			$param['to_mail'] 		  = $to;
+			$param['cc_mail'] 		  = $this->userdata['email'].','.$cc_email.','.$pm_inv_cc_mail;
+			// $param['bcc_mail'] 	  = $bcc_email;
+			$param['from_email']	  = 'webmaster@enoahprojects.com';
+			$param['from_email_name'] = 'Webmaster';
+			$param['template_name']	  = "Generate Invoice Notification";
+			$param['subject'] 		  = $subject;
+			$param['attach'] 		  = $attached_files;
+			$param['job_id'] 		  = $pjtid;
+			
+			//insert log
+			$ins_log = array();
+			$ins_log['log_content'] 	= 'Invoice has been raised for the milestone "'.$payment_details['project_milestone_name'].'" & for the Month & Year "'.$month_year.'".<br /> Invoice Amount - '.trim($milestone_value).'.';
+			$ins_log['jobid_fk']    	= $pjtid;
+			$ins_log['date_created'] 	= $inv_gen_time;
+			$ins_log['userid_fk']   	= $this->userdata['userid'];
+			$insert_log = $this->welcome_model->insert_row('logs', $ins_log);
+
+			$this->email_template_model->sent_email($param);
+		} else {
+			$output['error'] = true;
+			$output['errormsg'] = 'An error occured. Milestone cannot be updated.';
+		}
+		echo json_encode($output);
+	}
 	
 	/**
 	 * Uploads a file posted to a specified job
@@ -5385,7 +5924,6 @@ HDOC;
 		$ins['customer']	 = $post_data['customer'];
 		$ins['service']		 = $post_data['service'];
 		$ins['divisions']	 = $post_data['divisions'];
-		$ins['pm']	 		 = $post_data['pm'];
 		$ins['customer_type']= $post_data['customer_type'];
 		$ins['practice']     = $post_data['practice'];
 		$ins['datefilter']   = $post_data['datefilter'];
