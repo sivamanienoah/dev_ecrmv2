@@ -3204,7 +3204,7 @@ function generate_proforma_inv(eid) {
  // alert(eid);return false;
 	// window.location.href = site_base_url+'project/generateInvoice/'+eid+"/"+pjtid;
 	$('#pr_rec_paymentfadeout').empty();
-	var agree = confirm("Are you sure you want to generate invoice?\nIt will send an email to accounts department.");
+	var agree = confirm("Are you sure you want to generate proforma invoice?\nIt will send an email to accounts department.");
 	var pjtid = project_jobid;
 	if (agree) {
 		$.blockUI({
@@ -3336,6 +3336,7 @@ $(function() {
 		$.unblockUI();
 		return false;
 	});
+       
 });
 
 /*
