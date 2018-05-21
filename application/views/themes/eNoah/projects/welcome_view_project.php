@@ -811,9 +811,9 @@
 						<div class="buttons">
 							<a class="pr-payment-profile-button positive" href="#" onclick="">Payment Terms</a>
 						</div>
-						<div class="buttons">
+<!--						<div class="buttons">
 						<a class="pr-payment-received-button positive" href="#" onclick="">Payment Received</a>
-						</div>
+						</div>-->
 					</div>
 				<div style="color:red; margin:7px 0 0;" id="pr_rec_paymentfadeout"></div>
 				<?php
@@ -828,7 +828,7 @@
 							<input type="hidden" id="filefolder_id" name="filefolder_id" value="<?php echo $ff_id; ?>">
 							<table class="payment-table">
 								<tr>
-									<td>Payment Milestone *</td><td><input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </td>
+									<td>Proforma Milestone *</td><td><input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </td>
 								</tr>
 								<tr>
 									<td>Milestone date *</td><td><input type="text" data-calendar="true" name="pr_sp_date_2" id="pr_sp_date_2" class="textfield width200px" readonly /> </td>
