@@ -83,7 +83,7 @@
 				<?php if($invoice_status != 1) { ?>
 					<button type="submit" class="positive">Update Payment Terms</button>
 				<?php  } ?>
-					<button onclick="reset_paymentdata(); return false;" class="negative">Cancel</button>
+					<button onclick="location.href='<?php echo base_url();?>project/view_project/<?php echo $job_id; ?>'; return false;" class="negative">Cancel</button>
 				</div>
 
 				<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="<?php echo $job_id; ?>" />
