@@ -585,7 +585,9 @@
 			<?php if($this->userdata['role_id'] != 8):?>
 				<li><a href="<?php echo current_url() ?>#jv-tab-0">Metrics</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-0-a">Other Cost</a></li>
+                                <li><a href="<?php echo current_url() ?>#jv-tab-12">Proforma Invoice</a></li>
 				<li><a href="<?php echo current_url() ?>#jv-tab-1">Payment Milestones</a></li>
+				
 				<li><a href="<?php echo current_url() ?>#jv-tab-2">Document</a></li>
 			<?php endif; ?>
 				<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
@@ -801,6 +803,279 @@
 		</div>
 		<!--File Upload--END-->
 	</div><!--end of jv-tab-0-a-->
+        
+        <div id="jv-tab-12"><!--start of jv-tab-1-->
+				<div class="q-view-main-top">
+					
+					<div class="payment-buttons clearfix">
+						<div class="buttons">
+							<a class="pr-payment-profile-button positive" href="#" onclick="">Payment Terms</a>
+						</div>
+						<div class="buttons">
+						<a class="pr-payment-received-button positive" href="#" onclick="">Payment Received</a>
+						</div>
+					</div>
+				<div style="color:red; margin:7px 0 0;" id="pr_rec_paymentfadeout"></div>
+				<?php
+				if ($quote_data['payment_terms'] == 0 || $quote_data['payment_terms'] == 1)
+				{
+                                  //  echo'hi';exit;
+				?>
+					<div class="pr_payment-profile-view" id="pr_payment-profile-view" style="float:left;"><br/>
+						<?php $attributes = array('id' => 'set-pr-payment-terms','name' => 'set-pr-payment-terms'); ?>
+						<?php echo form_open_multipart("project/set_pr_payment_terms", $attributes); ?>
+						<!--form id="set-pr-payment-terms" -->
+							<input type="hidden" id="filefolder_id" name="filefolder_id" value="<?php echo $ff_id; ?>">
+							<table class="payment-table">
+								<tr>
+									<td>Payment Milestone *</td><td><input type="text" name="sp_date_1" id="sp_date_1" class="textfield width200px" /> </td>
+								</tr>
+								<tr>
+									<td>Milestone date *</td><td><input type="text" data-calendar="true" name="pr_sp_date_2" id="pr_sp_date_2" class="textfield width200px" readonly /> </td>
+								</tr>
+								<tr>
+									<td>For the Month & Year *</td>
+									<td><input type="text" data-calendar="false" class="textfield width200px" name="pr_month_year" id="pr_month_year" readonly /></td>
+								</tr>
+								<tr>
+									<td>Value *</td><td><input onkeypress="return isPaymentVal(event)" type="text" name="sp_date_3" id="sp_date_3" class="textfield width200px" /> <span style="color:red;">(Numbers only)</span></td>
+								</tr>
+								<tr>
+									<td>Remarks </td><td><textarea name="payment_remark" id="payment_remark" class="textfield width200px" ></textarea> </td>
+								</tr>
+								<tr>
+									<td>Attachment File </td>
+									<td>
+										<a title="Add Folder" href='javascript:void(0)' onclick="open_files(<?php echo $quote_data['lead_id']; ?>,'set'); return false;"><img src="assets/img/select_file.jpg" alt="Select Files" ></a>
+										<div id="show_files"></div>
+										<div id="add_newfile"></div>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><div id="uploadFile"></div></td>
+								</tr>
+								<tr>
+									<td colspan='2'>
+										<?php if ($readonly_status == false) { ?>
+										<div class="buttons">
+											<button type="submit" class="positive">Add Payment Terms</button>
+										</div>
+										<?php } ?>
+										<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="<?php echo $quote_data['lead_id']; ?>" />
+										<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
+									</td>
+								</tr>
+							</table>
+						<?php echo form_close(); ?>
+					</div>
+					<div id="map_add_file" >
+						<div class="file-tabs-close-project" id="file-tabs-close"></div>
+						<div>
+							<ul id="map_add_file-tabs">
+								<li><a href="<?php echo current_url() ?>#map-tab-2">Select File</a></li>
+								<li><a href="<?php echo current_url() ?>#map-tab-4">Add New File</a></li>
+							</ul>
+						</div>
+						<div id="map-tab-2" style="height:260px; overflow:scroll;">
+							<div name='all_file_list' id="all_file_list" style="text-align: left;"></div>
+							<div style="padding: 10px 0px 0px;">
+								<button type="submit" class="positive" onclick="select_files()">Submit</button>
+							</div>
+						</div>
+						<div id="map-tab-4" style="height:260px; overflow:scroll;">
+							<form name="payment_ajax_file_upload" style="height: 35px;">
+								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+								<div id="upload-container">
+									<?php if (($file_upload_access == 1 && $quote_data['pjt_status'] != 2) || ($chge_access == 1 && $quote_data['pjt_status'] != 2)) { ?>
+										<label>Browse file</label>
+										<input type="file" title='upload' class="textfield" multiple id="payment_ajax_file_uploader" name="payment_ajax_file_uploader[]" onchange="return runPaymentAjaxFileUpload();"/>
+										<input type="hidden" id="exp_type" value="">
+									<?php } ?> 
+								</div>
+							</form>
+						</div>
+					</div>
+					<?php
+						$output = '';
+						$total_amount_recieved = '';
+						$pt_select_box = '';
+						
+						$output .= '<div class="pr_payment-terms-mini-view1" style="display:block; float:left; margin-top:5px;">';
+					    if(!empty($proforma_payment_data))
+						{//print_r($proforma_payment_data);exit;
+							$pdi = 1;
+							$pt_select_box .= '<option value="0"> &nbsp; </option>';
+							
+							$output .= '<div align="left" style="background: none repeat scroll 0 0;">
+							<h6>Agreed Payment Terms</h6>
+							<div class=payment_legend>
+							<div class="pull-left"><img src=assets/img/payment-received.jpg><span>Payment Received</span></div>
+							<div class="pull-left"><img src=assets/img/payment-pending.jpg><span>Partial Payment</span></div>
+							<div class="pull-left"><img src=assets/img/payment-due.jpg ><span>Payment Due</span></div>
+							<div class="pull-left"><img src=assets/img/generate_invoice.png><span>Generate Invoice</span></div>
+							<div class="pull-left"><img src=assets/img/invoice_raised.png><span>Invoice Raised</span></div>
+							</div></div>';
+							$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+							$output .= "<thead>";
+							$output .= "<tr align='left' >";
+							$output .= "<th class='header'>Payment Milestone</th>";
+							$output .= "<th class='header'>Milestone Date</th>";
+							$output .= "<th class='header'>For the Month & Year</th>";
+							$output .= "<th class='header'>Amount</th>";
+							$output .= "<th class='header'>Attachments</th>";
+							$output .= "<th class='header'>Status</th>";
+							$output .= "<th class='header'>Action</th>";
+							$output .= "</tr>";
+							$output .= "</thead>";
+							foreach ($proforma_payment_data as $ppd)
+							{
+                                             // print_r($ppd);exit;
+								$att_condn   = array("expectid"=>$ppd['expectid']);
+								$attachments = $this->customer_model->get_records_by_num("proforma_payments_attach_file",$att_condn);
+
+								$month_year     = ($ppd['month_year']!='0000-00-00 00:00:00') ? date('F Y', strtotime($ppd['month_year'])) :'';
+								$payment_amount = number_format($ppd['amount'], 2, '.', ',');
+								$total_amount_recieved += $ppd['amount'];
+								$payment_received = '';
+								$invoice_stat = '';
+								$raised_invoice_stat = '';
+								if ($ppd['invoice_status'] == 1) {
+									$raised_invoice_stat = "<img src='assets/img/invoice_raised.png' alt='Invoice-raised'>";
+								}
+								if ($ppd['received'] == 0) {
+									$payment_received = $raised_invoice_stat.'&nbsp;<img src="assets/img/payment-due.jpg" alt="Due" />';
+								} else if ($ppd['received'] == 1) {
+									$payment_received = '<img src="assets/img/payment-received.jpg" alt="received" />';
+								} else {
+									$payment_received = $raised_invoice_stat.'&nbsp;<img src="assets/img/payment-pending.jpg" alt="pending" />';
+								}
+								if ($readonly_status == false) {
+									if ($ppd['invoice_status'] == 0) {
+                                                                         // echo 'if';exit;
+										$invoice_stat = "<a title='Edit' onclick='proformaPaymentProfileEdit(".$ppd['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a><a title='Delete' href='javascript:void(0)' onclick='proformaPaymentProfileDelete(".$ppd['expectid']."); return false;'><img src='assets/img/trash.png' alt='delete' ></a>
+										<a title='Generate Invoice' href='javascript:void(0)' onclick='generate_inv(".$ppd['expectid']."); return false;'><img src='assets/img/generate_invoice.png' alt='Generate Invoiceeeee' ></a>";
+									} else if ($ppd['invoice_status'] == 1) {
+                                                                           // echo 'elseif';exit;
+										$invoice_stat = "<a title='Edit' onclick='proformaPaymentProfileEdit(".$ppd['expectid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a>
+										<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a>
+										<a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
+									}
+								} else {
+                                                                  //  echo 'else';exit;
+									$invoice_stat = "<a title='Edit' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/edit.png' alt='edit'></a>
+										<a title='Delete' class='readonly-status img-opacity' href='javascript:void(0)'><img src='assets/img/trash.png' alt='delete'></a><a title='Generate Invoice' href='javascript:void(0)' class='readonly-status img-opacity'><img src='assets/img/generate_invoice.png' alt='Generate Invoice'></a>";
+								}
+								$att = "";
+								if($attachments!=0){
+									$att = "<img src='assets/img/attachment_icon.png' alt='Attachments' >";
+								}
+								$output .= "<tr>";
+								$output .= "<td align='left'>".$ppd['project_milestone_name']."</td>";
+								$output .= "<td align='left'>".date('d-m-Y', strtotime($ppd['expected_date']))."</td>";
+								$output .= "<td align='left'>".$month_year."</td>";
+								$output .= "<td align='left'> ".$ppd['expect_worth_name'].' '.number_format($ppd['amount'], 2, '.', ',')."</td>";
+								$output .= "<td align='center'>".$att."</td>";
+								$output .= "<td align='center'>".$payment_received."</td>";
+								if ($readonly_status == false || $this->session->userdata['logged_in_user']['role_id']==4) {
+									$output .= "<td align='left'>".$invoice_stat."</td>";
+								} else {
+									$output .= "<td align='left'>".$invoice_stat."</td>";
+								}
+
+								$output .= "</tr>";
+								$pt_select_box .= '<option value="'. $ppd['expectid'] .'">' . $ppd['project_milestone_name'] ." \${$payment_amount} by {$expected_date}" . '</option>';
+								$pdi ++;
+							}
+							$output .= "<tr>";
+							$output .= "<td></td><td></td>";
+							$output .= "<td colspan='0'><b>Total Milestone Payment :</b></td><td><b>".$ppd['expect_worth_name'].' '.number_format($total_amount_recieved, 2, '.', ',') ."</b></td>";
+							$output .= "</tr>";
+							$output .= "</table>";
+						}
+						$output .= '</div>';
+					    echo $output;
+						?>
+						<!--payment received starts here -->
+
+						<div class="pr_payment-recieved-view" id="pr_payment-recieved-view" style="display:none;float:left;"><br/>
+						<form id="pr_payment-recieved-terms">
+							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						
+							<p>Invoice No *<input type="text" name="pr_date_1" id="pr_date_1" class="textfield width200px" /> </p>
+							<p>Amount Received *<input type="text" name="pr_date_2" onkeypress="return isNumberKey(event)" id="pr_date_2" class="textfield width200px" /><span style="color:red;">(Numbers only)</span></p>
+							<p>Date Received *<input type="text" data-calendar="true" name="pr_date_3" id="pr_date_3" class="textfield width200px" readonly /> </p>
+							
+							<?php if (isset($pt_select_box)) { ?>
+								<p>Map to a payment term *<select name="pr_deposit_map_field" class="pr_deposit_map_field" style="width:210px;"><?php echo $pt_select_box; ?></select></p>
+							<?php } else { ?>
+								<p>Map to a payment term *<select name="pr_deposit_map_field" class="pr_deposit_map_field" style="width:210px;"><?php echo $pt_select_box; ?></select></p>
+							<?php } ?>
+							
+							<p>Comments <textarea name="pr_date_4" id="pr_date_4" class="textfield width200px" ></textarea> </p>
+							<?php if ($readonly_status == false){ ?>
+							<div class="buttons">
+								<button type="submit" class="positive" onclick="setPaymentRecievedTerms(); return false;">Add Payment</button>
+							</div>
+							<?php } ?>
+							<input type="hidden" name="pr_form_jobid" id="pr_form_jobid" value="0" />
+							<input type="hidden" name="pr_form_invoice_total" id="pr_form_invoice_total" value="0" />
+						</form>
+					    </div>
+						<?php 
+		
+						$output = '';
+						$amount_recieved = '';
+						$output .= '<div class="pr_payment-received-mini-view1" style="float:left; display:none; margin-top:5px;">';
+						if(!empty($deposits_data))
+						{
+							$pdi = 1;
+							$output .= '<option value="0"> &nbsp; </option>';
+							$output .= "<p><h6>Payment History</h6></p>";
+							$output .= "<table class='data-table' cellspacing = '0' cellpadding = '0' border = '0'>";
+							$output .= "<thead>";
+							$output .= "<tr align='left'>";
+							$output .= "<th class='header'>Invoice No</th>";
+							$output .= "<th class='header'>Date Received</th>";
+							$output .= "<th class='header'>Amt Received</th>";
+							$output .= "<th class='header'>Payment Term</th>";
+							$output .= "<th class='header'>Action</th>";
+							$output .= "</tr>";
+							$output .= "</thead>";
+							foreach ($deposits_data as $dd)
+							{
+								$expected_date = date('d-m-Y', strtotime($dd['deposit_date']));
+								$payment_amount = number_format($dd['amount'], 2, '.', ',');
+								$amount_recieved += $dd['amount'];								
+								$output .= "<tr align='left'>";
+								$output .= "<td>".$dd['invoice_no']."</td>";
+								$output .= "<td>".date('d-m-Y', strtotime($dd['deposit_date']))."</td>";
+								$output .= "<td> ".$dd['expect_worth_name'].' '.number_format($dd['amount'], 2, '.', ',')."</td>";
+								$output .= "<td>".$dd['payment_term']."</td>";
+								if ($readonly_status == false) {
+								$output .= "<td align='left'><a class='edit' title='edit' onclick='paymentReceivedEdit(".$dd['depositid']."); return false;' ><img src='assets/img/edit.png' alt='edit'></a>";
+								$output .= "<a class='edit' title='Delete' onclick='paymentReceivedDelete(".$dd['depositid'].",".$dd['map_term'].");' ><img src='assets/img/trash.png' alt='delete'></a></td>";
+								} else {
+								$output .= "<td align='left'> - </td>";
+								}
+								$output .= "</tr>";
+							}
+							$output .= "<tr>";
+							$output .= "<td></td>";
+							$output .= "<td><b>Total Payment: </b></td><td colspan='2'><b>".$dd['expect_worth_name'].' '.number_format($amount_recieved, 2, '.', ',')."</b></td>";
+							$output .= "</tr>";
+							$output .= "</table>";
+						}
+						$output .= "</div>";
+						echo $output;
+						?>
+					<!--payment received ends here -->
+				<?php
+				}
+				?>
+	
+		</div><!-- class:q-view-main-top end -->
+	</div><!-- id: jv-tab-1 end -->
 	
 	<div id="jv-tab-1"><!--start of jv-tab-1-->
 				<div class="q-view-main-top">
@@ -901,6 +1176,7 @@
 						$output .= '<div class="payment-terms-mini-view1" style="display:block; float:left; margin-top:5px;">';
 					    if(!empty($payment_data))
 						{
+                                            //    echo 'if';exit;
 							$pdi = 1;
 							$pt_select_box .= '<option value="0"> &nbsp; </option>';
 							
@@ -2470,6 +2746,8 @@ $(document).ready(function(){
   $(".gantt_task").css("height",gantHiet+20);
   $(".gantt_grid").css("height",gantHiet+20);
 });
+
+
 </script>
 
 <?php // loaded files/folders manually when logged in user is developer
