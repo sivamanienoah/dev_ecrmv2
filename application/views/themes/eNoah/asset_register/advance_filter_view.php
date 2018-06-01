@@ -86,8 +86,11 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                 <td><?php echo  $filter_result['storage_mode']; ?></td>
                                                 <td><?php echo  $filter_result['location']; ?></td>
                                                 <td><?php 
-                                                $get_user_details = $this->asset_model->get_user_data_by_id($filter_result['asset_owner']);
-                                                //echo($get_user_details);exit;
+                                                $get_user_details = $this->asset_model->get_user_name_by_id($filter_result['asset_owner']);
+                                                foreach ($get_user_details as $user_details){
+                                                    echo $user_details['first_name'];exit;
+                                                }
+                                        
                                                 echo implode(" ",$get_user_details['first_name']);
                                                // print_r($get_user_details['first_name'].$get_user_details['last_name']); ?></td>
                                                 <td><?php echo  $filter_result['labelling']; ?></td>
