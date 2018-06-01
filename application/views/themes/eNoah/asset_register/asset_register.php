@@ -870,7 +870,7 @@ if (!isset($view_quotation)) {
                         <p><label>Asset Name</label></p>
                         <p><input type="text" name="asset_name" id="asset_name" class="textfield width300px" /></p>
                         <p><label>Location</label></p>
-                        <p><textarea name="location" id="location" class="textfield width565px"></textarea></p>
+                        <p><textarea name="location" id="location" class="textfield width300px"></textarea></p>
                         <p><label>Labelling</label></p>
                         <p><input type="text" name="labelling" id="labelling" class="textfield width300px" /></p>
                         <p><label>Select Location</label></p>
