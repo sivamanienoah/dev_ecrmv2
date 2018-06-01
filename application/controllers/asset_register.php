@@ -209,7 +209,7 @@ class Asset_register extends crm_controller {
 
         $getAssetDet = $this->asset_model->get_asset_detail($id);
          $data['quote_data'] = $getAssetDet;
- print_r($data['quote_data']);exit;
+ //print_r($data['quote_data']);exit;
        // $arrLeadInfo = $this->request_model->get_lead_info($id);
 
         if (!empty($getAssetDet)) {
