@@ -126,25 +126,7 @@ class Asset_register extends crm_controller {
             $this->session->set_userdata("load_proposal_expect_end", 1);
             $proposal_expect_end = 'load_proposal_expect_end';
         } else {
-        // echo 'else';exit;
-            //print_r($this->userdata['userid']);exit;
-          //  $wh_condn = array('search_for' => 1, 'user_id' => $this->userdata['userid'], 'is_default' => 1);
-          //  $get_rec = $this->asset_model->get_data_by_id('saved_search_critriea', $wh_condn);
-          //  unset($get_rec['search_id']);
-          //  unset($get_rec['search_for']);
-          //  unset($get_rec['search_name']);
-          //  unset($get_rec['user_id']);
-          //  unset($get_rec['is_default']);
-         //   if (!empty($get_rec)) {
-         //       $filt = real_escape_array($get_rec);
-        //  //      $this->session->set_userdata("lead_search_by_default", 1);
-        //        $this->session->set_userdata("lead_search_only", 0);
-        //        $this->session->set_userdata("lead_search_by_id", 0);
-        //    } else {
-      //          $this->session->set_userdata("lead_search_by_default", 0);
-       //         $this->session->set_userdata("lead_search_only", 1);
-      //          $this->session->set_userdata("lead_search_by_id", 0);
-      //      }
+       
         }
         // echo'<pre>filt2=>';print_r($filt);
         // echo'<pre>';print_r(count($filt));exit;
@@ -157,6 +139,7 @@ class Asset_register extends crm_controller {
             $storage_mode = $filt['storage_mode'];
             $location = $filt['location'];
             $asset_owner = $filt['asset_owner'];
+            echo $asset_owner;exit;
             $labelling = $filt['labelling'];
             $confidentiality = $filt['confidentiality'];
             $integrity = $filt['integrity'];
