@@ -44,7 +44,7 @@
                             </button>
                         </div>
                         <div class="buttons">
-                            <button type="button" class="negative" onclick="location.href = '<?php echo base_url(); ?>asset_register/quotation'">Cancel</button>
+                            <button type="button" class="negative" onclick="location.href = '<?php echo base_url(); ?>manage_service/manage_sales'">Cancel</button>
                         </div>
                     </td>
                 </tr>
