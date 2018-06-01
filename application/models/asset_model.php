@@ -1855,7 +1855,7 @@ class Asset_model extends crm_model {
 		
 		$sql = $this->db->get();
 		// echo $this->db->last_query(); exit;
-	    $res =  $sql->result_array();
+	    $res =  $sql->row();
 	    return $res;
     }
      public function get_locations(){
