@@ -2992,7 +2992,7 @@ HDOC;
 
         $chk_data = real_escape_array($this->input->post());
         $name = $chk_data['name'];
-//       / print_r($name);exit;
+     print_r($chk_data);exit;
         $tbl_name = 'asset_location';
         $tbl_cont['name'] = 'asset_location';
       //  $tbl_cont['id'] = 'lead_source_id';
