@@ -213,7 +213,7 @@ class Asset_register extends crm_controller {
 
         if (!empty($getAssetDet)) {
            
-            $this->load->view('asset_register/asset_view', $data);
+            $this->load->view('asset_register/asset_view', $getAssetDet);
         } else {
             // echo "Lead does not exist or you may not be authorised to view this";
             $this->session->set_flashdata('login_errors', array("Lead does not exist or you may not be authorised to view this."));
