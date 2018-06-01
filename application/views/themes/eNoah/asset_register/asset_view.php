@@ -788,10 +788,10 @@ $(function(){
 			<div class="action-buttons" style="overflow:hidden;">
 				
 				<?php if (isset($quote_data)) { 
-                                    print_r($quote_data);exit;
+                                  //  print_r($quote_data);exit;
                                     ?>
                             
-					<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
+<!--					<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />	
 						<table>
 							<tr>
@@ -800,7 +800,7 @@ $(function(){
 								</td>
 							</tr>
 						</table>
-					</form>
+					</form>-->
 					<?php //} ?>	
 					
 					<div class="q-init-details">
