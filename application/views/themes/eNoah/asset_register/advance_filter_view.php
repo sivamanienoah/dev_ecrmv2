@@ -88,7 +88,7 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                 <td><?php 
                                                 $get_user_details = $this->asset_model->get_user_name_by_id($filter_result['asset_owner']);
                                                 foreach ($get_user_details as $user_details){
-                                                    echo $user_details['first_name'].$user_details['last_name'];
+                                                    echo $user_details['first_name']. ' ' .$user_details['last_name'];
                                                 }
                                                  // print_r($get_user_details['first_name'].$get_user_details['last_name']); ?></td>
                                                 <td><?php echo  $filter_result['labelling']; ?></td>
