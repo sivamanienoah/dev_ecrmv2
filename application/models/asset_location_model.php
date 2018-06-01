@@ -227,7 +227,7 @@ class asset_location_model extends crm_model {
 	*Checking duplicates
 	*/
 	function check_duplicate($tbl_cont, $condn, $tbl_name) {
-         //  echo '<pre>';            print_r($tbl_name);exit;
+           echo '<pre>';            print_r($tbl_name);exit;
 		$this->db->select($tbl_cont['name']);
 		$this->db->where($tbl_cont['name'], $condn);
 		if(!empty($condn['id'])) {
