@@ -817,41 +817,20 @@ if (isset($quote_data)) {
 
                         <div class="q-init-details">
                             <p class="clearfix"><label>Asset No</label>  <span><?php echo $asset['asset_id'] ?></span></p>
-                            <p class="clearfix"><label>Lead Title</label>  <span><?php echo htmlentities($quote_data['lead_title'], ENT_QUOTES) ?></span></p>
-                            <p class="clearfix"><label>Lead Source </label>  <span><?php echo $quote_data['lead_source_name'] ?></span></p>
-                            <p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['lead_service'] ?></span></p>
-                            <p class="clearfix"><label>Industry </label><span><?php echo $quote_data['industry'] ?></span></p>
-                            <p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount']; ?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
+                            <p class="clearfix"><label>Department Name</label>  <span><?php echo htmlentities($quote_data['department_id'], ENT_QUOTES) ?></span></p>
+                            <p class="clearfix"><label>Project Name</label>  <span><?php echo $quote_data['project_id'] ?></span></p>
+                            <p class="clearfix"><label>Asset Name</label>  <span><?php echo $quote_data['asset_name'] ?></span></p>
+                            <p class="clearfix"><label>Asset Type</label><span><?php echo $quote_data['asset_type'] ?></span></p>
+                            <p class="clearfix"><label>Storage Mode</label>  <span><?php echo $quote_data['storage_mode'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount']; ?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
 
-                            <p class="clearfix"><label>Entity </label><span><?php echo $quote_data['division_name'] ?></span></p>
-                            <p class="clearfix"><label>Lead Owner </label> <span><?php echo $quote_data['ownfname'] . ' ' . $quote_data['ownlname']; ?></span></p>
-                            <p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname']; ?></span></p>
-                            <p class="clearfix"><label>Lead Indicator </label><span><?php echo $quote_data['lead_indicator'] ?></span></p>
-                            <p class="clearfix"><label>Lead Status </label>
-                                <span> 
-                                    <?php
-                                    switch ($quote_data['lead_status']) {
-                                        case 1:
-                                            echo $status = 'Active';
-                                            break;
-                                        case 2:
-                                            echo $status = 'On Hold';
-                                            break;
-                                        case 3:
-                                            echo $status = 'Dropped';
-                                            break;
-                                        case 4:
-                                            echo $status = 'Closed';
-                                            break;
-                                    }
-                                    ?>
-                                </span>
-                            </p>
-                            <p class="clearfix"><label>Lead Stage </label><span><?php echo $quote_data['lead_stage_name'] ?></span></p>
-        <?php if ($quote_data['lead_status'] == 2) { ?>
-                                <p class="clearfix"><label>Reason for OnHold </label><span><?php echo $quote_data['lead_hold_reason'] ?></span></p>
-                            <?php } ?>
-                            <input type="hidden" name="jobid_edit" id="jobid_edit" value="<?php echo $quote_data['lead_id'] ?>" />
+                            <p class="clearfix"><label>Location</label><span><?php echo $quote_data['location'] ?></span></p>
+                            <p class="clearfix"><label>Asset Owner</label> <span><?php echo $quote_data['asset_owner']; ?></span></p>
+                            <p class="clearfix"><label>Labelling</label><span><?php echo $quote_data['labelling']; ?></span></p>
+                            <p class="clearfix"><label>Confidentiality</label><span><?php echo $quote_data['confidentiality'] ?></span></p>
+                            <p class="clearfix"><label>Integrity</label><span><?php echo $quote_data['integrity'] ?></span></p>
+                            <p class="clearfix"><label>Availability</label><span><?php echo $quote_data['availability'] ?></span></p>
+                           
+                           
                         </div>
     <?php }
 }
