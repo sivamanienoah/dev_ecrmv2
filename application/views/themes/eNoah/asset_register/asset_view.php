@@ -788,7 +788,7 @@ $(function(){
 			<div class="action-buttons" style="overflow:hidden;">
 				
 				<?php if (isset($quote_data)) { 
-                                        print_r($quote_data);exit;
+//                                      /  print_r($quote_data);exit;
                                     ?>
                             
 <!--					<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
@@ -801,7 +801,7 @@ $(function(){
 							</tr>
 						</table>
 					</form>-->
-					<?php //} ?>	
+						
 					
 					<div class="q-init-details">
 						<p class="clearfix"><label>Asset No</label>  <span><?php echo $quote_data['asset_name'] ?></span></p>
@@ -810,16 +810,7 @@ $(function(){
 						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['lead_service'] ?></span></p>
 						<p class="clearfix"><label>Industry </label><span><?php echo $quote_data['industry'] ?></span></p>
 						<p class="clearfix"><label>Expected worth of Deal </label>  <span><?php echo $quote_data['expect_worth_name'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount'];?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
-						<p class="clearfix"><label>Actual worth of Deal </label>  <span>
-								<?php
-									if($quote_data['actual_worth_amount'] == '0.00')
-									$amount = '0.00';
-									else 
-									$amount = $quote_data['actual_worth_amount'];
-									echo $quote_data['expect_worth_name'] . ' ' .$amount;
-								?>
-						</span>
-						</p>
+						
 						<p class="clearfix"><label>Entity </label><span><?php echo $quote_data['division_name'] ?></span></p>
 						<p class="clearfix"><label>Lead Owner </label> <span><?php echo $quote_data['ownfname'] .' '. $quote_data['ownlname']; ?></span></p>
 						<p class="clearfix"><label>Lead Assigned To </label><span><?php echo $quote_data['assfname']; ?></span></p>
@@ -859,9 +850,7 @@ $(function(){
 					if ($quote_data['belong_to'] == $userdata['userid'] || (in_array($userdata['userid'], $lead_assign_arr) ) || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 ) 
 					{
 				?>
-					<div class="buttons" style="overflow:hidden; padding-bottom:10px; margin:10px 0 0;">
-						<button type="submit" class="positive" onclick="document.location.href = '<?php echo $this->config->item('base_url') ?>welcome/edit_quote/<?php echo $quote_data['lead_id'] ?>'">Edit this Lead</button>
-					</div>
+					
 				<?php
 					}
 				?>
