@@ -817,18 +817,18 @@ if (isset($quote_data)) {
 
                         <div class="q-init-details">
                             <p class="clearfix"><label>Asset No</label>  <span><?php echo $asset['asset_id'] ?></span></p>
-                            <p class="clearfix"><label>Department Name</label>  <span><?php echo htmlentities($quote_data['department_id'], ENT_QUOTES) ?></span></p>
-                            <p class="clearfix"><label>Project Name</label>  <span><?php echo $quote_data['project_id'] ?></span></p>
-                            <p class="clearfix"><label>Asset Name</label>  <span><?php echo $quote_data['asset_name'] ?></span></p>
-                            <p class="clearfix"><label>Asset Type</label><span><?php echo $quote_data['asset_type'] ?></span></p>
-                            <p class="clearfix"><label>Storage Mode</label>  <span><?php echo $quote_data['storage_mode'] ?><?php echo '&nbsp;' ?><?php echo $quote_data['expect_worth_amount']; ?><?php if (is_int($quote_data['expect_worth_amount'])) echo '.00' ?></span></p>
+                            <p class="clearfix"><label>Department Name</label>  <span><?php echo $asset['department_id'] ?></span></p>
+                            <p class="clearfix"><label>Project Name</label>  <span><?php echo $asset['project_id'] ?></span></p>
+                            <p class="clearfix"><label>Asset Name</label>  <span><?php echo $asset['asset_name'] ?></span></p>
+                            <p class="clearfix"><label>Asset Type</label><span><?php echo $asset['asset_type'] ?></span></p>
+                            <p class="clearfix"><label>Storage Mode</label>  <span><?php echo $asset['storage_mode'] ?></span></p>
 
-                            <p class="clearfix"><label>Location</label><span><?php echo $quote_data['location'] ?></span></p>
-                            <p class="clearfix"><label>Asset Owner</label> <span><?php echo $quote_data['asset_owner']; ?></span></p>
-                            <p class="clearfix"><label>Labelling</label><span><?php echo $quote_data['labelling']; ?></span></p>
-                            <p class="clearfix"><label>Confidentiality</label><span><?php echo $quote_data['confidentiality'] ?></span></p>
-                            <p class="clearfix"><label>Integrity</label><span><?php echo $quote_data['integrity'] ?></span></p>
-                            <p class="clearfix"><label>Availability</label><span><?php echo $quote_data['availability'] ?></span></p>
+                            <p class="clearfix"><label>Location</label><span><?php echo $asset['location'] ?></span></p>
+                            <p class="clearfix"><label>Asset Owner</label> <span><?php echo $asset['asset_owner']; ?></span></p>
+                            <p class="clearfix"><label>Labelling</label><span><?php echo $asset['labelling']; ?></span></p>
+                            <p class="clearfix"><label>Confidentiality</label><span><?php echo $asset['confidentiality'] ?></span></p>
+                            <p class="clearfix"><label>Integrity</label><span><?php echo $asset['integrity'] ?></span></p>
+                            <p class="clearfix"><label>Availability</label><span><?php echo $asset['availability'] ?></span></p>
                            
                            
                         </div>
