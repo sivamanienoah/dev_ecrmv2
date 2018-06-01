@@ -190,7 +190,9 @@ class Asset_register extends crm_controller {
         $data['asset_type'] = $asset_type;
         $data['storage_mode'] = $storage_mode;
         $data['location'] = $location;
-        $data['asset_owner'] = $asset_owner;
+        $data['asset_owner_id'] = $asset_owner;
+        $data['asset_owner'] = $this->asset_model->get_user_data_by_id($asset_owner);
+        
         $data['labelling'] = $labelling;
         $data['confidentiality'] = $confidentiality;
         $data['integrity'] = $integrity;
