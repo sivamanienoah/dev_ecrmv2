@@ -320,7 +320,7 @@ if (!isset($view_quotation)) {
         if ($('#asset_name').val() == '') {
             err.push('asset_name is required');
         }
-//          if ($('#Integrity').val() == 'not_select') {
+//         if ($('#Integrity').val() == 'not_select') {
 //            err.push('Integrity must be selected');
 //        }
 //        if ($.trim($('#location').val()) == '') {
