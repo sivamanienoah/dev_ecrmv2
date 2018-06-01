@@ -227,7 +227,7 @@ function save_search() {
 
 //for lead search functionality.
 $(function () {
-    $("#lead_search_form").submit(function () {
+    $("#asset_search_form").submit(function () {
         var keyword = $("#keyword").val();
         if (keyword == "Lead No, Job Title, Name or Company")
             keyword = 'null';
