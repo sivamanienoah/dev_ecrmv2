@@ -705,63 +705,13 @@ if ($userdata['level'] > 1)
                                 }
                             </script>
 
-                            <input type="checkbox" name="email_to_customer" id="email_to_customer" /> <label for="email_to_customer" class="normal">Email Client</label>
-                            <input type="hidden" name="client_email_address" id="client_email_address" value="<?php echo (isset($quote_data)) ? $quote_data['email_1'] : '' ?>" />
-                            <input type="hidden" name="client_full_name" id="client_full_name" value="<?php echo (isset($quote_data)) ? $quote_data['customer_name'] : '' ?>" />
-                            <input type="hidden" name="requesting_client_approval" id="requesting_client_approval" value="0" />
-
-                            <p id="multiple-client-emails">
-                                <input type="checkbox" name="client_emails_1" id="client_emails_1" value="<?php echo $quote_data['email_1'] ?>" /> <?php echo $quote_data['email_1'] ?>
-                                <?php
-                                if ($quote_data['email_2'] != '') {
-                                    ?>
-                                    <br /><input type="checkbox" name="client_emails_2" id="client_emails_2" value="<?php echo $quote_data['email_2'] ?>" /> <?php echo $quote_data['email_2'] ?>
-                                    <?php
-                                }
-                                if ($quote_data['email_3'] != '') {
-                                    ?>
-                                    <br /><input type="checkbox" name="client_emails_3" id="client_emails_3" value="<?php echo $quote_data['email_3'] ?>" /> <?php echo $quote_data['email_3'] ?>
-                                    <?php
-                                }
-                                if ($quote_data['email_4'] != '') {
-                                    ?>
-                                    <br /><input type="checkbox" name="client_emails_4" id="client_emails_4" value="<?php echo $quote_data['email_4'] ?>" /> <?php echo $quote_data['email_4'] ?>
-                                    <?php
-                                }
-                                ?>
-                                <br />
-                                Additional Emails (separate addresses with a comma)<br />
-                                <input type="text" name="additional_client_emails" id="additional_client_emails" class="textfield width99pct" />
-                            </p>
 
                         </div>
         <?php
     }
     ?>
 
-                    <div class="user-addresses">
-                    <?php
-                    /* check the condition if role_id = 1 (admin) and role_id = 2 (management)  and leadowner and lead assigned to  */
-                    ?>
-                        <?php if (count($user_accounts) > 0) { ?>
-                            <label>Email To:</label>
-                            <br/>
-                            <select data-placeholder="Choose Users..." name="email_users" multiple id="email_users" class="chzn-select" style="width:400px;">
-        <?php
-        foreach ($user_accounts as $ua) {
-            // if ((($ua['role_id'] == 1) && ($ua['inactive'] == 0)) || (($ua['role_id'] == 2) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['belong_to']) && ($ua['inactive'] == 0)) || (($ua['userid'] == $quote_data['lead_assign']) && ($ua['inactive'] == 0)) ) {
-            ?>
-                                    <option value="<?php echo 'email-log-' . $ua['userid']; ?>"><?php echo $ua['first_name'] . ' ' . $ua['last_name']; ?></option>
-                                    <?php
-                                    // }
-                                }
-                                ?>
-                            </select>
-                                <?php
-                            }
-                            ?>
-                    </div>
-                </form>
+                    
 <?php } ?>
         </div>
 
