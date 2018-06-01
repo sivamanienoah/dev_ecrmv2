@@ -366,6 +366,7 @@ class Asset_register extends crm_controller {
         $data['project_listing_ls'] = $this->asset_model->ListActiveprojects();
         $data['sales_divisions'] = $this->asset_model->get_sales_divisions();
         $data['industry'] = $this->asset_model->get_industry();
+        $data['location'] = $this->asset_model->get_locations();
 
         $this->load->view('asset_register/asset_register', $data);
     }
