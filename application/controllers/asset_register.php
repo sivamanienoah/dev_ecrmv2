@@ -131,7 +131,7 @@ class Asset_register extends crm_controller {
         // echo'<pre>filt2=>';print_r($filt);
         // echo'<pre>';print_r(count($filt));exit;
         if (count($filt) > 0) {
-// echo 'yes';exit;
+echo 'yes';exit;
             $department_id = $filt['department_id'];
             $project_id = $filt['project_id'];
             $asset_name = $filt['asset_name'];
@@ -139,7 +139,6 @@ class Asset_register extends crm_controller {
             $storage_mode = $filt['storage_mode'];
             $location = $filt['location'];
             $asset_owner = $filt['asset_owner'];
-            echo $asset_owner;exit;
             $labelling = $filt['labelling'];
             $confidentiality = $filt['confidentiality'];
             $integrity = $filt['integrity'];
