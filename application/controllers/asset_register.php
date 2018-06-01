@@ -2997,7 +2997,7 @@ HDOC;
         $tbl_cont['name'] = 'asset_location';
       //  $tbl_cont['id'] = 'lead_source_id';
         if (empty($id)) {
-        echo 'hi';exit;
+       // echo 'hi';exit;
          //   $condn = array('asset_location' => $name);
             $res = $this->asset_location_model->check_duplicate($tbl_cont, $name, $tbl_name);
         } else {
