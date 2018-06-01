@@ -234,7 +234,7 @@ class asset_location_model extends crm_model {
 			$this->db->where($tbl_cont['id'].' !=', $condn['id']);
 		}
 		
-              echo $this->db->last_query();exit;
+             // echo $this->db->last_query();exit;
         return $res->num_rows();
 	}
 	
