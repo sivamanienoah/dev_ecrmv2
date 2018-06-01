@@ -208,7 +208,7 @@ class Asset_register extends crm_controller {
         $usid = $this->session->userdata('logged_in_user');
 
         $getAssetDet = $this->asset_model->get_asset_detail($id);
-     //   print_r($getLeadDet);exit;
+      print_r($getAssetDet);exit;
        // $arrLeadInfo = $this->request_model->get_lead_info($id);
 
         if (!empty($getAssetDet)) {
@@ -216,8 +216,8 @@ class Asset_register extends crm_controller {
             $this->load->view('asset_register/asset_view', $data);
         } else {
             // echo "Lead does not exist or you may not be authorised to view this";
-            $this->session->set_flashdata('login_errors', array("Asset does not exist or you may not be authorised to view this."));
-            redirect('asset_register/quotation');
+            $this->session->set_flashdata('login_errors', array("Lead does not exist or you may not be authorised to view this."));
+            redirect('welcome/quotation');
         }
     }
 
