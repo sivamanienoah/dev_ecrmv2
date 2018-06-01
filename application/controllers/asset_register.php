@@ -182,7 +182,7 @@ class Asset_register extends crm_controller {
         $filter_results = $this->asset_model->get_filter_results($department_id, $project_id, $asset_name, $asset_type, $storage_mode, $location, $asset_owner, $labelling, $confidentiality, $integrity, $availability);
         // echo $this->db->last_query(); die;
         $data['filter_results'] = $filter_results;
-         echo '<pre>';print_r($data['filter_results']);exit;
+        // echo '<pre>';print_r($data['filter_results']);exit;
         $data['department_id'] = $department_id;
        //  echo '<pre>';print_r($data['department_id']);exit;
         $data['project_id'] = $project_id;
@@ -190,8 +190,8 @@ class Asset_register extends crm_controller {
         $data['asset_type'] = $asset_type;
         $data['storage_mode'] = $storage_mode;
         $data['location'] = $location;
-        $data['asset_owner_id'] = $asset_owner;
-        $data['asset_owner'] = $this->asset_model->get_user_data_by_id($asset_owner);
+        $data['asset_owner'] = $asset_owner;
+     //   $data['asset_owner'] = $this->asset_model->get_user_data_by_id($asset_owner);
         
         $data['labelling'] = $labelling;
         $data['confidentiality'] = $confidentiality;
