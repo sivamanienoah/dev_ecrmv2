@@ -804,7 +804,7 @@ $(function(){
 					<?php //} ?>	
 					
 					<div class="q-init-details">
-						<p class="clearfix"><label>Asset No</label>  <span><?php echo $quote_data['asset_id'] ?></span></p>
+						<p class="clearfix"><label>Asset No</label>  <span><?php echo $quote_data['asset_name'] ?></span></p>
 						<p class="clearfix"><label>Lead Title</label>  <span><?php echo htmlentities($quote_data['lead_title'], ENT_QUOTES) ?></span></p>
 						<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
 						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['lead_service'] ?></span></p>
