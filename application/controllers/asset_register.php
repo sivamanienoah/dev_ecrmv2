@@ -200,24 +200,24 @@ class Asset_register extends crm_controller {
      * @param int $id - Job Id
      */
 
-    public function view_quote($id = 0, $quote_section = '') {
+    public function view_asset($id = 0, $quote_section = '') {
        // print_r($id);exit;
         $this->load->helper('text');
         $this->load->helper('fix_text');
 
         $usid = $this->session->userdata('logged_in_user');
 
-        $getLeadDet = $this->asset_model->get_asset_detail($id);
+        $getAssetDet = $this->asset_model->get_asset_detail($id);
      //   print_r($getLeadDet);exit;
        // $arrLeadInfo = $this->request_model->get_lead_info($id);
 
-        if (!empty($getLeadDet)) {
+        if (!empty($getAssetDet)) {
            
-            $this->load->view('leads/welcome_view_quote', $data);
+            $this->load->view('asset_register/asset_view', $data);
         } else {
             // echo "Lead does not exist or you may not be authorised to view this";
-            $this->session->set_flashdata('login_errors', array("Lead does not exist or you may not be authorised to view this."));
-            redirect('welcome/quotation');
+            $this->session->set_flashdata('login_errors', array("Asset does not exist or you may not be authorised to view this."));
+            redirect('asset_register/quotation');
         }
     }
 
