@@ -165,6 +165,14 @@ class Asset_model extends crm_model {
                //   echo $this->db->last_query(); exit;
 		return $user->result_array();
 	}
+        
+        function get_user_name_by_id($ld) {
+             //echo $id;
+		$this->db->where('userid', $ld);
+		$user = $this->db->get($this->cfg['dbpref'] . 'users');
+               //   echo $this->db->last_query(); exit;
+		return $user->result_array();
+	}
 	
 	function get_data_by_id($table, $wh_condn) {
 		$this->db->where($wh_condn);
