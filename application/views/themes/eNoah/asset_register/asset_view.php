@@ -788,6 +788,7 @@ $(function(){
 			<div class="action-buttons" style="overflow:hidden;">
 				
 				<?php if (isset($quote_data)) { ?>
+                            print_r($quote_data);exit;
 					<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />	
 						<table>
@@ -801,7 +802,7 @@ $(function(){
 					<?php //} ?>	
 					
 					<div class="q-init-details">
-						<p class="clearfix"><label>Lead No</label>  <span><?php echo $quote_data['invoice_no'] ?></span></p>
+						<p class="clearfix"><label>Lead No</label>  <span><?php echo $quote_data['asset_id'] ?></span></p>
 						<p class="clearfix"><label>Lead Title</label>  <span><?php echo htmlentities($quote_data['lead_title'], ENT_QUOTES) ?></span></p>
 						<p class="clearfix"><label>Lead Source </label>  <span><?php echo  $quote_data['lead_source_name'] ?></span></p>
 						<p class="clearfix"><label>Service Requirement </label>  <span><?php echo $quote_data['lead_service'] ?></span></p>
