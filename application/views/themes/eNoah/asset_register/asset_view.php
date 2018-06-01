@@ -788,7 +788,7 @@ $(function(){
 			<div class="action-buttons" style="overflow:hidden;">
 				
 				<?php if (isset($quote_data)) { 
-                                      //  print_r($quote_data);exit;
+                                        print_r($quote_data);exit;
                                     ?>
                             
 <!--					<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
