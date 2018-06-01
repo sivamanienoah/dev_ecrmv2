@@ -799,7 +799,7 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
 if (isset($quote_data)) {
     foreach ($quote_data as $asset) {
 
-//                                      /  print_r($quote_data);exit;
+ print_r($asset);exit;
         ?>
 
                         <!--					<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
