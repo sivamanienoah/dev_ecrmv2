@@ -52,14 +52,12 @@ if(!empty($db_fields) && count($db_fields)>0){
 			{
 				foreach($filter_results as $filter_result) 
 				{
-					if($filter_result['pjt_status']!=0) {
-						$view_url		= base_url().'project/view_project/'.$filter_result['lead_id'];
-					} else {
-						$view_url		= base_url().'welcome/view_quote/'.$filter_result['lead_id'];
-					}
+					
+						$view_url = base_url().'asset_register/view_asset/'.$filter_result['asset_id'];
+					
 					
 					//get the lead assign names - changes based on multiple lead assign
-					$assign_names = get_lead_assigne_names($filter_result['lead_assign']);
+				//$assign_names = get_lead_assigne_names($filter_result['lead_assign']);
 		?>
 					<tr id='<?php echo $filter_result['asset_id'] ?>'>
 						<td class="actions" align="center">

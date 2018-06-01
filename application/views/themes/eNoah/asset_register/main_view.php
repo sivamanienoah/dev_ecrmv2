@@ -45,7 +45,7 @@ require (theme_url().'/tpl/header.php');
 			<div class="section-right">
 				<!--search-->
 				<div class="form-cont search-table">
-					<form id="lead_search_form" name="lead_search_form" method="post">
+					<form id="asset_search_form" name="asset_search_form" method="post">
 						<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo '' ?>" class="textfield width200px g-search" />
 						<button type="submit" class="positive">Asset Search</button>			
 					</form>
