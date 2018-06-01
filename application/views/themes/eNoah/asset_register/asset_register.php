@@ -870,10 +870,21 @@ if (!isset($view_quotation)) {
                         <p><label>Asset Name</label></p>
                         <p><input type="text" name="asset_name" id="asset_name" class="textfield width300px" /></p>
                         <p><label>Location</label></p>
-                        <p><input type="text" name="location" id="location" class="textfield width300px" /></p>
+                        <p><textarea name="location" id="location" class="textfield width300px"></textarea></p>
                         <p><label>Labelling</label></p>
                         <p><input type="text" name="labelling" id="labelling" class="textfield width300px" /></p>
-                        <p><label>Backup Location</label></p>
+                        <p><label>Select Location</label></p>
+                        <p><select name="location" id="location" class="textfield width300px";">
+                                <option value="not_select">Please Select</option>
+                                <?php
+                                foreach ($location as $loc) {
+                                    ?>
+                                    <option value="<?php echo $loc['loc_id'] ?>"><?php echo $loc['asset_location'] ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </p>
                         <p><input type="text" name="backupLocation" id="backupLocation" class="textfield width300px" /></p>
                         <p><label>Archival Location</label></p>
                         <p><input type="text" name="archivalLocation" id="archivalLocation" class="textfield width300px" /></p>
