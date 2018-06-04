@@ -44,12 +44,12 @@ $userdata = $this->session->userdata('logged_in_user');
 					</td>
 					<td class="actions">
 						<?php if($this->session->userdata('edit')==1) { ?>
-							<a href="manage_practice/practice_add/update/<?php echo $practice_name['id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
+							<a href="manage_practice/practice_add/update/<?php echo $location_name['id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
 						<?php } ?> 
 						<?php if($this->session->userdata('delete')==1) { ?>
-							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $practice_name['id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
+							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $location_name['loc_id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
 						<?php } ?>
-						<div class="dialog-err pull-right" id="dialog-message-<?php echo $practice_name['id']; ?>" style="display:none"></div>
+						<div class="dialog-err pull-right" id="dialog-message-<?php echo $location_name['loc_id']; ?>" style="display:none"></div>
 					</td>
 				</tr>
 			<?php } ?>
@@ -65,7 +65,7 @@ $userdata = $this->session->userdata('logged_in_user');
 </div><!--Content div-close here -->
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="assets/js/manage_practice/manage_practice_view.js"></script>
+<script type="text/javascript" src="assets/js/add_location/manage_location_view.js"></script>
 <?php
 require (theme_url(). '/tpl/footer.php');
 ob_end_flush();
