@@ -287,6 +287,18 @@ class asset_location_model extends crm_model {
 		return $query->result_array();
     }
     
+   public function get_locations(){
+        $this->db->select('*');
+		$this->db->from($this->cfg['dbpref'] . 'asset_location as a');
+		//$this->db->where('j.asset_id = "'.$id.'" ');
+		// $this->db->where('j.pjt_status', 0);
+		
+		$sql = $this->db->get();
+		// echo $this->db->last_query(); exit;
+	    $res =  $sql->result_array();
+	    return $res;
+    }
+    
 }
 
 ?>
