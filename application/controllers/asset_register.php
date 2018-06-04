@@ -212,9 +212,10 @@ class Asset_register extends crm_controller {
         $usid = $this->session->userdata('logged_in_user');
 
         $getAssetDet = $this->asset_model->get_asset_detail($id); 
-       // print_t($getAssetDet);exit;
+        
         $data['quote_data'] = $getAssetDet;
-        print_r($data['quote_data']);exit;
+        $get_user_details = $this->asset_model->get_user_name_by_id($data['quote_data']['asset_owner']);                                         
+        print_r($get_user_details);exit;
         // $arrLeadInfo = $this->request_model->get_lead_info($id);
 
         if (!empty($getAssetDet)) {
