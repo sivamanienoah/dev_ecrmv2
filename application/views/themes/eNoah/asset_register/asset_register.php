@@ -887,8 +887,8 @@ if (!isset($view_quotation)) {
                         </p>
                         
                         <div id="saveLocation" style="display: none">
-                           <p><label>Location:</label></p>
-                           <p><input type="text" id="saveLocationText" /></p>
+                           <p><label>Save Location:</label></p>
+                           <p><textarea name="saveLocationText" id="saveLocationText"  class="textfield width300px"></textarea></p>
                         </div>
                        
                         
