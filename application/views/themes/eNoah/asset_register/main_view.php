@@ -8,39 +8,6 @@ require (theme_url().'/tpl/header.php');
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Asset Dashboard</h2>
 			
-<!--			<a class="choice-box" onclick="advanced_filter();" >
-				<span>Advanced Filters</span>
-				<img src="assets/img/advanced_filter.png" class="icon leads" />
-			</a>-->
-
-<!--			<div class="search-dropdown">
-				<a class="saved-search-head">
-					<p>Saved Search</p>
-				</a>
-				<div class="saved-search-criteria" style="display: none; ">
-					<img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
-					<ul class="search-root">
-					<li class="save-search-heading"><span>Search Name</span><span>Set Default</span><span>Action</span></li>
-					<?php 
-//					if(sizeof($saved_search)>0) {
-//						foreach($saved_search as $searc) { 
-//					?>
-							<li class="saved-search-res" id="item_//<?php echo $searc['search_id']; ?>">
-								<span><a href="javascript:void(0)" onclick="show_search_results('//<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a></span>
-								<span class='rd-set-default'><input type="radio" value="//<?php echo $searc['search_id'] ?>" <?php if ($searc['is_default']==1) { echo "checked"; } ?> name="set_default_search" class="set_default_search" /></span>
-								<span><a title="Delete" href="javascript:void(0)" onclick="delete_save_search('//<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></span>
-							</li>
-					//<?php 
-//						}
-//					} else {
-//					?>
-						<li id="no_record" style="text-align: center; margin: 5px;">No Save & search found</li>
-					//<?php
-//					}
-//					?>
-					</ul>
-				</div>
-			</div>-->
 
 			<div class="section-right">
 				<!--search-->
@@ -59,16 +26,7 @@ require (theme_url().'/tpl/header.php');
 					</button>
 				</div>
 				<?php } ?>
-				<!--add-->
-				<!--export-->
-<!--				<div class="buttons export-to-excel">
-					a class="export-btn">Export to Excel</a
-					<button id="excel_lead" class="positive" type="button" >
-						Export to Excel
-					</button>
-					<input type="hidden" name="search_type" value="" id="search_type" />
-				</div>-->
-				<!--export-->
+		
 			</div>
 		</div>
 	
