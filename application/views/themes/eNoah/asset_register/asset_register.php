@@ -885,6 +885,10 @@ if (!isset($view_quotation)) {
                                 ?>
                             </select>
                         </p>
+                        <div id="saveLocation" style="display: none">
+                            Location :
+                            <input type="text" id="saveLocationText" />
+                        </div>
                        
                         
                         <div class="buttons clearfix">
@@ -1721,5 +1725,14 @@ echo $menu, $data;
             }
         });
     }
+     $(function () {
+        $("#location").change(function () {
+            if ($(this).val() != "") {
+                $("#saveLocation").show();
+            } else {
+                $("#saveLocation").hide();
+            }
+        });
+    });
 </script>
 <?php require (theme_url() . '/tpl/footer.php'); ?>
