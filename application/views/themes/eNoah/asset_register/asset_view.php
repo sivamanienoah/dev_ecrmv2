@@ -756,7 +756,11 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
                             <p class="clearfix"><label>Storage Mode</label>  <span><?php echo $asset['storage_mode'] ?></span></p>
 
                             <p class="clearfix"><label>Location</label><span><?php echo $asset['location'] ?></span></p>
-                            <p class="clearfix"><label>Asset Owner</label> <span><?php echo $asset['asset_owner']; ?></span></p>
+                            
+                            <p class="clearfix"><label>Asset Owner</label> <span><?php     
+                            foreach ($asset_owner as $owner_name){
+                                                    echo $owner_name['first_name']. ' ' .$owner_name['last_name'];
+                                                } ?></span></p>
                             <p class="clearfix"><label>Labelling</label><span><?php echo $asset['labelling']; ?></span></p>
                             <p class="clearfix"><label>Confidentiality</label><span><?php echo $asset['confidentiality'] ?></span></p>
                             <p class="clearfix"><label>Integrity</label><span><?php echo $asset['integrity'] ?></span></p>
