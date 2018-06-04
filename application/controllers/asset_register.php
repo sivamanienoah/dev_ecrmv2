@@ -3155,6 +3155,7 @@ HDOC;
     $this->load->library('validation');
     $data              = array();
     $post_data         = real_escape_array($this->input->post());
+    print_r($post_data);exit;
             $rules['practices'] = "trim|required";
             $rules['max_hours'] = "required";
 
