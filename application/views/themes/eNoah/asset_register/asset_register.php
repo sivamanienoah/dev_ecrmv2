@@ -874,7 +874,7 @@ if (!isset($view_quotation)) {
                         <p><label>Labelling</label></p>
                         <p><input type="text" name="labelling" id="labelling" class="textfield width300px" /></p>
                         <p><label>Select Location</label></p>
-                        <p><select name="location" id="location" class="textfield width300px"; onchange="getLocationDetails(this.value)"">
+                        <p><select name="location" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)"">
                                 <option value="not_select">Please Select</option>
                                 <?php
                                 foreach ($location as $loc) {
@@ -1735,14 +1735,9 @@ echo $menu, $data;
             }
         });
     });
-     function getLocationDetails(cont_id)
-    {    alert(con_id);return false;
-         if ($(this).val() != "") {
-             
-                $("#saveLocation").show();
-            } else {
-                $("#saveLocation").hide();
-            }
+     function getContractsDetails(cont_id)
+    {    alert(cont_id);return false;
+        $("#saveLocation").show();
 
 
     }
