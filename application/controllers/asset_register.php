@@ -3028,6 +3028,25 @@ HDOC;
             echo json_encode('fail');
         exit;
     }
+    
+    public function delete_practice($update, $id) 
+	{	
+		if ($this->session->userdata('delete')==1)
+		{
+			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
+			{
+				$this->db->delete($this->cfg['dbpref']."asset_location", array('id' => $id));
+				$this->session->set_flashdata('confirm', array('Practice Deleted!'));
+				redirect('manage_practice/');
+			} else {
+				$this->session->set_flashdata('login_errors', array("Error Occured!"));
+				redirect('manage_practice/');
+			}
+		} else {
+			$this->session->set_flashdata('login_errors', array("You have no rights to access this page!"));
+			redirect('manage_practice/');
+		}
+	}
 
 }
 
