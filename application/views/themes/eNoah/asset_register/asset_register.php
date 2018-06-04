@@ -1736,8 +1736,13 @@ echo $menu, $data;
         });
     });
      function getContractsDetails(cont_id)
-    {    alert(cont_id);return false;
-        $("#saveLocation").show();
+    {    
+         if ($(this).val() != "") {
+             alert(cont_id);
+                $("#saveLocation").show();
+            } else {
+                $("#saveLocation").hide();
+            }
 
 
     }
