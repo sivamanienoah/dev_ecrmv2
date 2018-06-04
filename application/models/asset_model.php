@@ -672,7 +672,7 @@ class Asset_model extends crm_model {
 		//echo $this->db->last_query(); exit;
 		
 		$res =  $query->result_array();
-                print_r($res);exit;
+               // print_r($res);exit;
 		return $res;
 	}
 	
