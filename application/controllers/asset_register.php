@@ -2924,6 +2924,23 @@ HDOC;
         $this->load->view('location/manage_location_view', $data);
     }
     
+    public function ajax_check_status() 
+	{
+		$post_data  = real_escape_array($this->input->post());
+                print_r($post_data);exit;
+		$leadId     = $post_data['data'];
+		$this->db->where('practice', $leadId);
+		$query = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
+		$res = array();
+		if($query == 0) {
+			$res['html'] .= "YES";
+		} else {
+			$res['html'] .= "NO";
+		}
+		echo json_encode($res);
+		exit;
+	}
+    
     public function add_location(){
       // echo 'hi';exit;
         $this->load->library('validation');
