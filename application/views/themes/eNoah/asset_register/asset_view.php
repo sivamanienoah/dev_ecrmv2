@@ -749,8 +749,14 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
 
                         <div class="q-init-details">
                             <p class="clearfix"><label>Asset No</label>  <span><?php echo $asset['asset_id'] ?></span></p>
-                            <p class="clearfix"><label>Department Name</label>  <span><?php echo $asset['department_id'] ?></span></p>
-                            <p class="clearfix"><label>Project Name</label>  <span><?php echo $asset['project_id'] ?></span></p>
+                            <p class="clearfix"><label>Department Name</label>  <span><?php     
+                            foreach ($departments as $department){
+                                                    echo $department['department_name'];
+                                                } ?></span></p>
+                            <p class="clearfix"><label>Project Name</label>  <span><?php     
+                            foreach ($projects as $project){
+                                                    echo $project['lead_title'];
+                                                } ?></span></p>
                             <p class="clearfix"><label>Asset Name</label>  <span><?php echo $asset['asset_name'] ?></span></p>
                             <p class="clearfix"><label>Asset Type</label><span><?php echo $asset['asset_type'] ?></span></p>
                             <p class="clearfix"><label>Storage Mode</label>  <span><?php echo $asset['storage_mode'] ?></span></p>
