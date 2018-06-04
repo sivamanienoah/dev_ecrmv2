@@ -1499,7 +1499,7 @@ class Asset_model extends crm_model {
 		// $this->db->where('j.pjt_status', 0);
 		
 		$sql = $this->db->get();
-		echo $this->db->last_query(); exit;
+//		/echo $this->db->last_query(); exit;
 	    $res =  $sql->result_array();
 	    return $res;
     }
