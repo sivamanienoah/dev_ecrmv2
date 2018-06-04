@@ -513,7 +513,7 @@ class Asset_model extends crm_model {
 	
 	function delete_asset($tbl, $lead_id) 
 	{
-		$this->db->where('lead_id', $lead_id);
+		$this->db->where('asset_id', $lead_id);
 		$this->db->delete($this->cfg['dbpref'] . $tbl);
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
 	}
