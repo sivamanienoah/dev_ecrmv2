@@ -2957,7 +2957,7 @@ HDOC;
         $this->db->where('loc_id', $id);
         $data['cb_status'] = $this->db->get($this->cfg['dbpref'] . 'asset_location')->num_rows();
         // $data['currencies'] = $this->manage_service_model->get_records('expect_worth', $wh_condn = array('status' => 1), $order = array('expect_worth_id' => 'asc'));
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_dvsn'])) {
+        if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
             $item_data = $this->db->get_where($this->cfg['dbpref'] . "asset_location", array('loc_id' => $id));
             if ($item_data->num_rows() > 0)
                 $src = $item_data->result_array();
@@ -2982,10 +2982,10 @@ HDOC;
             }
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
                 //update
-                $this->db->where('div_id', $id);
+                $this->db->where('loc_id', $id);
 
-                if ($this->db->update($this->cfg['dbpref'] . "sales_divisions", $update_data)) {
-                    $this->session->set_flashdata('confirm', array('Entity Details Updated!'));
+                if ($this->db->update($this->cfg['dbpref'] . "asset_location", $update_data)) {
+                    $this->session->set_flashdata('confirm', array('Location Details Updated!'));
                 }
             } else {
                 //insert
@@ -3024,98 +3024,7 @@ HDOC;
         exit;
     }
 
-    public function location_add($update = false, $id = false) {
-
-        $this->load->library('validation');
-        $data = array();
-        $post_data = real_escape_array($this->input->post());
-        $rules['practices'] = "trim|required";
-        $rules['max_hours'] = "required";
-
-        $this->validation->set_rules($rules);
-        $fields['practices'] = 'Practices';
-        $fields['status'] = 'Status';
-        $fields['max_hours'] = 'Maximum Hours';
-
-        $this->validation->set_fields($fields);
-        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-
-        //for status
-        $data['cb_status'] = '';
-        $data['practice_max_hours_history'] = '';
-        if (!empty($id)) {
-            $this->db->where('practice', $id);
-            $data['cb_status'] = $this->db->get($this->cfg['dbpref'] . 'leads')->num_rows();
-            $data['practice_max_hours_history'] = get_practice_max_hours($id);
-        }
-
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt'])) {
-            $item_data = $this->db->get_where($this->cfg['dbpref'] . "practices", array('id' => $id));
-            if ($item_data->num_rows() > 0)
-                $src = $item_data->result_array();
-            if (isset($src) && is_array($src) && count($src) > 0)
-                foreach ($src[0] as $k => $v) {
-                    if (isset($this->validation->$k))
-                        $this->validation->$k = $v;
-                }
-        }
-
-        if ($this->validation->run() != false) {
-            // all good
-            foreach ($fields as $key => $val) {
-                $update_data[$key] = $this->input->post($key);
-            }
-            if ($update_data['status'] == "") {
-                if ($data['cb_status'] == 0) {
-                    $update_data['status'] = 0;
-                } else {
-                    $update_data['status'] = 1;
-                }
-            }
-            if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
-                //update
-                $this->db->where('id', $id);
-
-                if ($this->db->update($this->cfg['dbpref'] . "practices", $update_data)) {
-                    //Update history table
-                    $financial_year = get_current_financial_year();
-                    $practice_hours_history_data = $this->db->get_where($this->cfg['dbpref'] . "practice_max_hours_history", array('financial_year' => $financial_year, 'practice_id' => $id))->row();
-
-                    $update_practice_hours_history = array();
-                    $update_practice_hours_history['practice_id'] = $id;
-                    $update_practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
-                    $update_practice_hours_history['financial_year'] = $financial_year;
-
-                    if (count($practice_hours_history_data) > 0 && !empty($practice_hours_history_data)) {
-                        $this->db->where('id', $practice_hours_history_data->id);
-                        $this->db->update($this->cfg['dbpref'] . "practice_max_hours_history", $update_practice_hours_history);
-                    } else {
-                        $this->db->insert($this->cfg['dbpref'] . "practice_max_hours_history", $update_practice_hours_history);
-                    }
-
-                    $this->session->set_flashdata('confirm', array('Practice Details Updated!'));
-                }
-            } else {
-                //insert
-                $this->db->insert($this->cfg['dbpref'] . "practices", $update_data);
-
-                if ($this->db->affected_rows() > 0) {
-                    $practice_id = $this->db->insert_id();
-
-                    if ($practice_id > 0) {
-                        $practice_hours_history['practice_id'] = $practice_id;
-                        $practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
-                        $practice_hours_history['financial_year'] = get_current_financial_year();
-                        $this->db->insert($this->cfg['dbpref'] . "practice_max_hours_history", $practice_hours_history);
-                    }
-                }
-                $this->session->set_flashdata('confirm', array('New Practice Added!'));
-            }
-
-            redirect('manage_practice/');
-        }
-        $this->load->view('manage_practice/manage_practice_add_view', $data);
-    }
+    
 
     public function delete_location($update, $id) {
         if ($this->session->userdata('delete') == 1) {
@@ -3133,7 +3042,7 @@ HDOC;
         }
     }
 
-    public function practice_add($update = false, $id = false) {
+    public function location_add($update = false, $id = false) {
 
         $this->load->library('validation');
         $data = array();
@@ -3225,7 +3134,7 @@ HDOC;
 
             redirect('manage_practice/');
         }
-        $this->load->view('manage_practice/manage_practice_add_view', $data);
+        $this->load->view('location/manage_location_add_view', $data);
     }
 
 }
