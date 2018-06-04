@@ -156,13 +156,12 @@ class Asset_register extends crm_controller {
         if ($this->input->post("keyword")) {
             $filt['keyword'] = $this->input->post("keyword");
             $keyword = $this->input->post("keyword");
-           // print_r($keyword);exit;
             $this->session->set_userdata("search_keyword", $keyword);
         } else {
             $this->session->set_userdata("search_keyword", '');
         }
 
-        $filter_results = $this->asset_model->get_filter_results($department_id, $project_id, $asset_name, $asset_type, $storage_mode, $location, $asset_owner, $labelling, $confidentiality, $integrity, $availability,$keyword);
+        $filter_results = $this->asset_model->get_filter_results($department_id, $project_id, $asset_name, $asset_type, $storage_mode, $location, $asset_owner, $labelling, $confidentiality, $integrity, $availability);
         // echo $this->db->last_query(); die;
         $data['filter_results'] = $filter_results;
         // echo '<pre>';print_r($data['filter_results']);exit;
