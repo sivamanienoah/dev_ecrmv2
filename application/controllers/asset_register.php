@@ -127,7 +127,7 @@ class Asset_register extends crm_controller {
         } else {
             
         }
-        // echo'<pre>filt2=>';print_r($filt);
+        echo'<pre>filt2=>';print_r($filt);
         // echo'<pre>';print_r(count($filt));exit;
         if (count($filt) > 0) {
 //echo 'yes';exit;
