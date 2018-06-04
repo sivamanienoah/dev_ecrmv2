@@ -3155,7 +3155,7 @@ HDOC;
     $this->load->library('validation');
     $data              = array();
     $post_data         = real_escape_array($this->input->post());
-    print_r($post_data);exit;
+    //print_r($post_data);exit;
             $rules['practices'] = "trim|required";
             $rules['max_hours'] = "required";
 
@@ -3171,6 +3171,7 @@ HDOC;
             $data['cb_status'] = '';
             $data['practice_max_hours_history']='';
             if(!empty($id)) {
+                echo $id;exit;
                     $this->db->where('practice', $id);
                     $data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
                     $data['practice_max_hours_history']=get_practice_max_hours($id);
