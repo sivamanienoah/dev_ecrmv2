@@ -214,8 +214,8 @@ class Asset_register extends crm_controller {
         $getAssetDet = $this->asset_model->get_asset_detail($id); 
       //  print_r($getAssetDet);exit;
         $data['quote_data'] = $getAssetDet;
-        $get_user_details = $this->asset_model->get_user_name_by_id($getAssetDet[0]['asset_owner']);                                         
-        
+        $data['asset_owner'] = $this->asset_model->get_user_name_by_id($getAssetDet[0]['asset_owner']);                                         
+        print_r($data['asset_owner']);exit;
         // $arrLeadInfo = $this->request_model->get_lead_info($id);
 
         if (!empty($getAssetDet)) {
