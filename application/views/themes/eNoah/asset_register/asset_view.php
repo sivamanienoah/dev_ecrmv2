@@ -774,6 +774,10 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
 
 
                         </div>
+                <div class="buttons">
+                            <button type="button" class="negative" onclick="location.href = '<?php echo base_url(); ?>asset_register/quotation'">Cancel</button>
+                        </div>
+
                     <?php
                     }
                 }
