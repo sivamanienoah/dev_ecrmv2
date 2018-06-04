@@ -635,7 +635,7 @@ class Asset_model extends crm_model {
 					$this->db->where($invwhere);
 				}
 			} 
-			echo $this->db->last_query();exit;
+//			/echo $this->db->last_query();exit;
 		} else {
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			
