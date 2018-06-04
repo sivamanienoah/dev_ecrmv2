@@ -44,7 +44,7 @@ $userdata = $this->session->userdata('logged_in_user');
 					</td>
 					<td class="actions">
 						<?php if($this->session->userdata('edit')==1) { ?>
-							<a href="manage_practice/practice_add/update/<?php echo $location_name['id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
+							<a href="asset_register/practice_add/update/<?php echo $location_name['id']; ?>" title='Edit' ><img src="assets/img/edit.png" alt='edit'> </a>
 						<?php } ?> 
 						<?php if($this->session->userdata('delete')==1) { ?>
 							<a class="delete" href="javascript:void(0)" onclick="return checkStatus(<?php echo $location_name['loc_id']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'> </a>
