@@ -25,20 +25,20 @@ $userdata = $this->session->userdata('logged_in_user');
 	<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
 		<thead>
 			<tr>
-				<th width="20%">Practice</th>
-				<th width="8%">Max Hours</th>
+				<th width="20%">Location</th>
+				
 				<th width="12%">Status</th>
 				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
-		<?php if (is_array($practices) && count($practices) > 0) { ?>
-			<?php foreach($practices as $practice_name) { ?>
+		<?php if (is_array(locations) && count(locations) > 0) { ?>
+			<?php foreach(locations as $location_name) { ?>
 				<tr>
-					<td><?php echo $practice_name['practices']; ?></td>
-					<td><?php echo $practice_name['max_hours']; ?></td>
+					<td><?php echo $location_name['asset_location']; ?></td>
+					
 					<td>
-						<?php if ($practice_name['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
+						<?php if ($location_name['status'] == 1) echo "<span class=label-success>Active</span>"; else echo "<span class=label-warning>Inactive</span>"; ?>
 					</td>
 					<td class="actions">
 						<?php if($this->session->userdata('edit')==1) { ?>
