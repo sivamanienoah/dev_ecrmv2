@@ -1124,56 +1124,21 @@ class Asset_register extends crm_controller {
     /**
      * Deletes lead from the list
      */
-    function delete_quote() {
+    function delete_asset() {
 
         $id = isset($_POST['id']) ? $this->input->post('id') : 0;
 
         if ($this->session->userdata('delete') == 1) {
             if ($id > 0) {
 
-                $lead_det = $this->asset_model->get_lead_det($id);
-                $lead_assign_mail = $this->asset_model->get_user_data_by_id($lead_det['lead_assign']);
-                $lead_owner = $this->asset_model->get_user_data_by_id($lead_det['belong_to']);
-
-                $delete_job = $this->asset_model->delete_lead('leads', $id);
-                if ($delete_job) {
-                    $delete_item = $this->asset_model->delete_row('items', 'jobid_fk', $id);
+                $asset_det = $this->asset_model->get_asset_det($id);
+                $delete_asset = $this->asset_model->delete_asset('asset_register', $id);
+                if ($delete_asset) {
+                 //   $delete_item = $this->asset_model->delete_row('items', 'jobid_fk', $id);
                     $delete_log = $this->asset_model->delete_row('logs', 'jobid_fk', $id);
-                    $delete_task = $this->asset_model->delete_row('tasks', 'jobid_fk', $id);
-                    $delete_file = $this->asset_model->delete_row('lead_files', 'lead_id', $id);
-                    $delete_query = $this->asset_model->delete_row('lead_query', 'lead_id', $id);
-
-                    # Lead Delete Mail Notification
-                    $ins['log_content'] = 'Lead Deleted Sucessfully - Lead ' . word_limiter($lead_det['lead_title'], 4) . ' ';
-
-                    $user_name = $this->userdata['first_name'] . ' ' . $this->userdata['last_name'];
-                    $dis['date_created'] = date('Y-m-d H:i:s');
-                    $print_fancydate = date('l, jS F y h:iA', strtotime($dis['date_created']));
-
-                    $from = $this->userdata['email'];
-                    $arrEmails = $this->config->item('crm');
-                    $arrSetEmails = $arrEmails['director_emails'];
-                    $mangement_email = $arrEmails['management_emails'];
-                    $mgmt_mail = implode(',', $mangement_email);
-                    $admin_mail = implode(',', $arrSetEmails);
-
-                    //email sent by email template
-                    $param = array();
-
-                    $param['email_data'] = array('user_name' => $user_name, 'print_fancydate' => $print_fancydate, 'log_content' => $ins['log_content'], 'signature' => $this->userdata['signature']);
-
-                    $param['to_mail'] = $mgmt_mail . ',' . $lead_assign_mail[0]['email'] . ',' . $lead_owner[0]['email'];
-                    $param['bcc_mail'] = $admin_mail;
-                    $param['from_email'] = $this->userdata['email'];
-                    $param['from_email_name'] = $user_name;
-                    $param['template_name'] = "Lead - Delete Notification Message";
-                    $param['subject'] = "Lead Delete Notification";
-
-                    $this->email_template_model->sent_email($param);
-
-                    // $this->session->set_flashdata('confirm', array("Lead deleted from the system"));
+                    
                     $res['error'] = false;
-                    $res['msg'] = 'Lead deleted from the system';
+                    $res['msg'] = 'Asset deleted from the system';
 
                     //redirect('welcome/quotation');
                 } else {
@@ -1186,13 +1151,13 @@ class Asset_register extends crm_controller {
                 // $this->session->set_flashdata('login_errors', array("Quote does not exist or you may not be authorised to delete quotes."));
                 // redirect('welcome/quotation');
                 $res['error'] = true;
-                $res['msg'] = 'Lead does not exist or you may not be authorised to delete the leads.';
+                $res['msg'] = 'Asset does not exist or you may not be authorised to delete the assets.';
             }
         } else {
             // $this->session->set_flashdata('login_errors', array("You have no rights to access this page"));
             // redirect('welcome/quotation');
             $res['error'] = true;
-            $res['msg'] = 'You have no rights to delete this lead.';
+            $res['msg'] = 'You have no rights to delete this asset.';
         }
 
         echo json_encode($res);
