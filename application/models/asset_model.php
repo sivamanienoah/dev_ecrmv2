@@ -173,6 +173,22 @@ class Asset_model extends crm_model {
              //     echo $this->db->last_query(); exit;
 		return $user->result_array();
 	}
+        
+         function get_department_by_id($id) {
+            // echo $id;
+		$this->db->where('department_id', $id);
+		$user = $this->db->get($this->cfg['dbpref'] . 'department');
+             //     echo $this->db->last_query(); exit;
+		return $user->result_array();
+	}
+        
+         function get_project_by_id($id) {
+            // echo $id;
+		$this->db->where('lead_id', $id);
+		$user = $this->db->get($this->cfg['dbpref'] . 'leads');
+             //     echo $this->db->last_query(); exit;
+		return $user->result_array();
+	}
 	
 	function get_data_by_id($table, $wh_condn) {
 		$this->db->where($wh_condn);
