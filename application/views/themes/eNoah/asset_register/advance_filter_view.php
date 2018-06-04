@@ -79,7 +79,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 							<?php } ?> 
 							<?php
 							if (( $userdata['role_id'] == 1|| $userdata['role_id'] == 2) ) { ?>
-								<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['asset_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
+								<a href="javascript:void(0)" onclick="return deleteAsset(<?php echo $filter_result['asset_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
 							<?php } ?>
 						</td>
 						<td><a target="_blank" href="<?php echo $view_url;?>"><?php echo $filter_result['asset_name']; ?></a> </td>
