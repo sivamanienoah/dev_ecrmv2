@@ -421,6 +421,15 @@ class Asset_model extends crm_model {
 	    $lead_history = $this->db->get();
 	    return $leads =  $lead_history->row_array();
 	}
+        
+        public function get_asset_det($jid) 
+	{
+	    $this->db->select('*');
+	    $this->db->from($this->cfg['dbpref'] . 'asset_register');
+	    $this->db->where('asset_id', $jid);
+	    $asset_history = $this->db->get();
+	    return $assets =  $asset_history->row_array();
+	}
 	
 	function updt_lead_stg_status($id, $updt) 
 	{
@@ -502,7 +511,7 @@ class Asset_model extends crm_model {
 		return $query->result_array();
 	}
 	
-	function delete_lead($tbl, $lead_id) 
+	function delete_asset($tbl, $lead_id) 
 	{
 		$this->db->where('lead_id', $lead_id);
 		$this->db->delete($this->cfg['dbpref'] . $tbl);
