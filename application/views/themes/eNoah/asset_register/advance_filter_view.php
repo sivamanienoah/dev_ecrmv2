@@ -25,9 +25,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 }
 ?>
 <div id="ad_filter" class="custom_dashboardfilter customize-sec" style="overflow-x:scroll; width:100%;" >
-	<div class="tbl-field-customize">
+<!--	<div class="tbl-field-customize">
 		<a href="#" class="modal-custom-fields"><span>Customize Table Fields</span></a>
-	</div>
+	</div>-->
 	<table border="0" cellpadding="0" cellspacing="0" style="<?php echo $custom_width; ?>" class="data-tbl dashboard-heads dataTable">
 		<thead>
 		<tr>
