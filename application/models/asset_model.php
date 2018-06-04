@@ -548,7 +548,7 @@ class Asset_model extends crm_model {
 	
 	public function get_filter_results($department_id, $project_id, $asset_name, $asset_type, $storage_mode, $location, $asset_owner, $labelling, $confidentiality, $integrity, $availability,$keyword)
 	{
-            print_r($keyword);exit;
+         //   print_r($keyword);exit;
         $userdata = $this->session->userdata('logged_in_user');
 
         $department_id = (count($department_id) > 0) ? explode(',', $department_id) : '';
