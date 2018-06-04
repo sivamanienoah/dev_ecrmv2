@@ -13,8 +13,8 @@ $userdata = $this->session->userdata('logged_in_user');
 			<?php if($this->session->userdata('add')==1) { ?>
 				<div class="section-right">
 					<div class="buttons add-new-button">
-						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>manage_practice/practice_add'">
-							Add New Practice
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>asset_register/add_location'">
+							Add New Location
 						</button>
 					</div>
 				</div>
