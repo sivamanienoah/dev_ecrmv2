@@ -459,6 +459,7 @@ class Asset_register extends crm_controller {
         $data = real_escape_array($this->input->post());
 //   /print_r($data);exit;
         $ins['asset_name'] = $data['asset_name'];
+       
         $chkAssetName = $this->asset_model->checkAssetName($ins['asset_name']);
         if (is_array($chkAssetName) && count($chkAssetName) > 0) {
             $json['error'] = false;
