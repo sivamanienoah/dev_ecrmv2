@@ -3138,7 +3138,7 @@ HDOC;
         $this->load->library('validation');
         $data = array();
         $post_data = real_escape_array($this->input->post());
-        print_r($post_data);exit;
+//        /print_r($post_data);exit;
         $rules['practices'] = "trim|required";
         $rules['max_hours'] = "required";
 
@@ -3185,30 +3185,30 @@ HDOC;
             }
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
                 //update
-                $this->db->where('id', $id);
+                $this->db->where('loc_id', $id);
 
-                if ($this->db->update($this->cfg['dbpref'] . "practices", $update_data)) {
+                if ($this->db->update($this->cfg['dbpref'] . "asset_location", $update_data)) {
                     //Update history table
-                    $financial_year = get_current_financial_year();
-                    $practice_hours_history_data = $this->db->get_where($this->cfg['dbpref'] . "practice_max_hours_history", array('financial_year' => $financial_year, 'practice_id' => $id))->row();
+                  //  $financial_year = get_current_financial_year();
+                 //   $practice_hours_history_data = $this->db->get_where($this->cfg['dbpref'] . "practice_max_hours_history", array('financial_year' => $financial_year, 'practice_id' => $id))->row();
 
-                    $update_practice_hours_history = array();
-                    $update_practice_hours_history['practice_id'] = $id;
-                    $update_practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
-                    $update_practice_hours_history['financial_year'] = $financial_year;
+                //    $update_practice_hours_history = array();
+                //    $update_practice_hours_history['practice_id'] = $id;
+                 //   $update_practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
+                 //   $update_practice_hours_history['financial_year'] = $financial_year;
 
                     if (count($practice_hours_history_data) > 0 && !empty($practice_hours_history_data)) {
-                        $this->db->where('id', $practice_hours_history_data->id);
-                        $this->db->update($this->cfg['dbpref'] . "practice_max_hours_history", $update_practice_hours_history);
+                        $this->db->where('loc_id', $id);
+                        $this->db->update($this->cfg['dbpref'] . "asset_location", $update_practice_hours_history);
                     } else {
-                        $this->db->insert($this->cfg['dbpref'] . "practice_max_hours_history", $update_practice_hours_history);
+                        $this->db->insert($this->cfg['dbpref'] . "asset_location", $update_practice_hours_history);
                     }
 
-                    $this->session->set_flashdata('confirm', array('Practice Details Updated!'));
+                    $this->session->set_flashdata('confirm', array('Location Details Updated!'));
                 }
             } else {
                 //insert
-                $this->db->insert($this->cfg['dbpref'] . "practices", $update_data);
+                $this->db->insert($this->cfg['dbpref'] . "asset_location", $update_data);
 
                 if ($this->db->affected_rows() > 0) {
                     $practice_id = $this->db->insert_id();
