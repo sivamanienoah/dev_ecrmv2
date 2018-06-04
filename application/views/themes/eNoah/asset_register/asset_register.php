@@ -874,7 +874,7 @@ if (!isset($view_quotation)) {
                         <p><label>Labelling</label></p>
                         <p><input type="text" name="labelling" id="labelling" class="textfield width300px" /></p>
                         <p><label>Select Location</label></p>
-                        <p><select name="location" id="location" class="textfield width300px";">
+                        <p><select name="location" id="location" class="textfield width300px"; onchange="getLocationDetails(this.value)"">
                                 <option value="not_select">Please Select</option>
                                 <?php
                                 foreach ($location as $loc) {
@@ -885,10 +885,11 @@ if (!isset($view_quotation)) {
                                 ?>
                             </select>
                         </p>
-                        <div id="saveLocation" style="display: none">
+                        <p id="saveLocation" style="display: none"><label>Labelling</label></p>
+                        <p id="saveLocation" style="display: none">
                             Location :
                             <input type="text" id="saveLocationText" />
-                        </div>
+                        </p>
                        
                         
                         <div class="buttons clearfix">
@@ -1734,5 +1735,16 @@ echo $menu, $data;
             }
         });
     });
+     function getLocationDetails(cont_id)
+    {    
+         if ($(this).val() != "") {
+             alert(con_id);return false;
+                $("#saveLocation").show();
+            } else {
+                $("#saveLocation").hide();
+            }
+
+
+    }
 </script>
 <?php require (theme_url() . '/tpl/footer.php'); ?>
