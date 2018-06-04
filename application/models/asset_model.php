@@ -646,7 +646,7 @@ class Asset_model extends crm_model {
 			/* Expected Worth amount filter search ends */
 			
 			if(!empty($keyword) && count($keyword)>0){
-                         //  echo 'hi';exit;
+                         echo 'hi';exit;
 				if( $keyword != 'null'){		
 					$invwhere = "( (j.department_id LIKE '%$keyword%' OR j.project_id LIKE '%$keyword%' OR j.asset_name LIKE '%$keyword%' OR j.asset_type LIKE '%$keyword%'"
                                                 . "OR j.storage_mode LIKE '%$keyword%' OR j.location LIKE '%$keyword%' OR j.asset_owner LIKE '%$keyword%' OR j.labelling LIKE '%$keyword%'"
