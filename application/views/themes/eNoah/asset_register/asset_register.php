@@ -885,11 +885,13 @@ if (!isset($view_quotation)) {
                                 ?>
                             </select>
                         </p>
+                        
+                        <div id="saveLocation" style="display: none">
+                           <p><label>Location:</label></p>
+                           <p><input type="text" id="saveLocationText" /></p>
+                        </div>
                        
-                        <p id="saveLocation" style="display: none">
-                            Location :
-                            <input type="text" id="saveLocationText" />
-                        </p>
+                        
                        
                         
                         <div class="buttons clearfix">
@@ -1730,7 +1732,7 @@ echo $menu, $data;
      function getContractsDetails(cont_id)
     {    
          if ($(this).val() != "") {
-           //  alert(cont_id);
+            alert(cont_id);
                 $("#saveLocation").show();
             } else {
                 $("#saveLocation").hide();
