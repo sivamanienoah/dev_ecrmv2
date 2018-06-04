@@ -1132,6 +1132,7 @@ class Asset_register extends crm_controller {
             if ($id > 0) {
 
                 $asset_det = $this->asset_model->get_asset_det($id);
+                print_r($asset_det);exit;
                 $delete_asset = $this->asset_model->delete_asset('asset_register', $id);
                 if ($delete_asset) {
                  //   $delete_item = $this->asset_model->delete_row('items', 'jobid_fk', $id);
