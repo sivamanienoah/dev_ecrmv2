@@ -3035,7 +3035,7 @@ HDOC;
 		{
 			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
 			{
-				$this->db->delete($this->cfg['dbpref']."asset_location", array('id' => $id));
+				$this->db->delete($this->cfg['dbpref']."asset_location", array('loc_id' => $id));
 				$this->session->set_flashdata('confirm', array('Practice Deleted!'));
 				redirect('manage_practice/');
 			} else {
