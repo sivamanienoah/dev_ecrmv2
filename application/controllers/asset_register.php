@@ -141,6 +141,9 @@ class Asset_register extends crm_controller {
             $labelling = $filt['labelling'];
             $confidentiality = $filt['confidentiality'];
             $integrity = $filt['integrity'];
+            $asset_location = $filt['asset_location'];
+            $saveLocationText = $filt['saveLocationText'];
+            $created_by = $filt['created_by'];
             $availability = $filt['availability'];
            
             //$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : '';
@@ -178,7 +181,9 @@ class Asset_register extends crm_controller {
         $data['confidentiality'] = $confidentiality;
         $data['integrity'] = $integrity;
         $data['availability'] = $availability;
-//        $data['locname'] = $locname;
+        $data['asset_location'] = $asset_location;
+        $data['saveLocationText'] = $saveLocationText;
+        $data['created_by'] = $data['username'];
 //        $data['lead_status'] = $lead_status;
 //        $data['lead_indi'] = $lead_indi;
 //        $data['keyword'] = $keyword;
@@ -2910,6 +2915,12 @@ HDOC;
         }
         echo json_encode($res);
         exit;
+    }
+    
+    public function manage_location(){
+        $data['page_heading'] = 'Manage Location';
+        $data['locations'] = $this->asset_location_model->get_locations($search);
+        $this->load->view('location/manage_location_view', $data);
     }
     
     public function add_location(){
