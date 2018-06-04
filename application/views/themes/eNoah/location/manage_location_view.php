@@ -34,7 +34,7 @@ $userdata = $this->session->userdata('logged_in_user');
 		<tbody>
 		<?php if (is_array($locations) && count($locations) > 0) { ?>
 			<?php foreach($locations as $location_name) { 
-     print_r($location_name);exit;
+  
                            ?>
 				<tr>
 					<td><?php echo $location_name['asset_location']; ?></td>
