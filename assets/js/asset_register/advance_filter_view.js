@@ -36,9 +36,9 @@ $(function() {
 });	
 
 function deleteAsset(id) {
-    alert(id);return false;
+//    alert(id);return false;
 	$.blockUI({
-		message:'<br /><h5>Are You Sure Want to Delete <br />this project?<br /><br />This will delete all the items<br />and logs attached to this Lead.</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
+		message:'<br /><h5>Are You Sure Want to Delete <br />this Asset?<br /><br />This will delete all the assets<br />and logs attached to this Asset.</h5><div class="modal-confirmation overflow-hidden"><div class="buttons"><button type="submit" class="positive" onclick="processDelete('+id+'); return false;">Yes</button></div><div class="buttons"><button type="submit" class="negative" onclick="cancelDel(); return false;">No</button></div></div>',
 		css:{width:'440px'}
 	});
 }
@@ -49,7 +49,7 @@ function processDelete(id) {
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
-			url : site_base_url + 'welcome/delete_quote/',
+			url : site_base_url + 'asset_register/delete_asset/',
 			data: formdata,
 			beforeSend:function(){
 				$.blockUI();
