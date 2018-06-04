@@ -2946,7 +2946,7 @@ HDOC;
         $rules['status'] = "trim|required";
 
         $this->validation->set_rules($rules);
-        $fields['asset_location'] = 'Location Name';
+        $fields['asset_location'] = 'asset_location';
         //  $fields['base_currency'] = 'Base Currency';
         $fields['status'] = 'Status';
 
@@ -2961,6 +2961,7 @@ HDOC;
             $item_data = $this->db->get_where($this->cfg['dbpref'] . "asset_location", array('loc_id' => $id));
             if ($item_data->num_rows() > 0)
                 $src = $item_data->result_array();
+            print_r($src);exit;
             if (isset($src) && is_array($src) && count($src) > 0)
                 foreach ($src[0] as $k => $v) {
                     if (isset($this->validation->$k))
@@ -2994,7 +2995,7 @@ HDOC;
             }
             redirect('asset_register/manage_location');
         }
-        print_r($data);exit;
+      //  print_r($data);exit;
         $this->load->view('location/add_location', $data);
     }
 
