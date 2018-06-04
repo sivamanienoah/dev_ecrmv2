@@ -1731,12 +1731,7 @@ echo $menu, $data;
     
      function getContractsDetails(cont_id)
     {    
-         if ($(this).val() != "") {
-            alert(cont_id);
-                $("#saveLocation").show();
-            } else {
-                $("#saveLocation").hide();
-            }
+         $("#saveLocation").show();
 
 
     }
