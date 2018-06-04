@@ -548,7 +548,7 @@ class Asset_model extends crm_model {
 	
 	public function get_filter_results($department_id, $project_id, $asset_name, $asset_type, $storage_mode, $location, $asset_owner, $labelling, $confidentiality, $integrity, $availability,$keyword)
 	{
-        
+            print_r($keyword);exit;
         $userdata = $this->session->userdata('logged_in_user');
 
         $department_id = (count($department_id) > 0) ? explode(',', $department_id) : '';
@@ -629,7 +629,7 @@ class Asset_model extends crm_model {
 			}
 			if(!empty($keyword) && count($keyword)>0){
 				if(!empty($keyword) && $keyword != 'null'){	
-                                      echo 'hi';exit;
+                                     // echo 'hi';exit;
 					$invwhere = "( (j.department_id LIKE '%$keyword%' OR j.project_id LIKE '%$keyword%' OR j.asset_name LIKE '%$keyword%' OR j.asset_type LIKE '%$keyword%'"
                                                 . "OR j.storage_mode LIKE '%$keyword%' OR j.location LIKE '%$keyword%' OR j.asset_owner LIKE '%$keyword%' OR j.labelling LIKE '%$keyword%'"
                                                 . "OR j.confidentiality LIKE '%$keyword%' OR j.integrity LIKE '%$keyword%' OR j.availability LIKE '%$keyword%'))";
