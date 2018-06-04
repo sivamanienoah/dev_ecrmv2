@@ -668,16 +668,12 @@ class Asset_model extends crm_model {
 			
 			
 		}
-		
-		
-		
 		$query = $this->db->get();
 		// echo $this->db->last_query(); exit;
 		
 		$res =  $query->result_array();
 		return $res;
 	}
-	
 	
 	//project
 	public function assign_lists($stage, $customer, $worth, $owner, $keyword)
