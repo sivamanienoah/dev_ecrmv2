@@ -1736,9 +1736,9 @@ echo $menu, $data;
         });
     });
      function getLocationDetails(cont_id)
-    {    
+    {    alert(con_id);return false;
          if ($(this).val() != "") {
-             alert(con_id);return false;
+             
                 $("#saveLocation").show();
             } else {
                 $("#saveLocation").hide();
