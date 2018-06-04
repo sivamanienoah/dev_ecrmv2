@@ -477,6 +477,8 @@ class Asset_register extends crm_controller {
             $ins['confidentiality'] = $data['confidentiality'];
             $ins['integrity'] = $data['integrity'];
             $ins['availability'] = $data['availability'];
+            $ins['asset_location'] = $data['asset_location'];
+            $ins['saveLocationText'] = $data['saveLocationText'];
             $ins['created_by'] = $data['username'];
             //print_r($ins);exit;
             $insert_asset = $this->asset_model->insert_row_return_id('asset_register', $ins);
