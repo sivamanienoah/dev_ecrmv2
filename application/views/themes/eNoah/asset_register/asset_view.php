@@ -761,7 +761,7 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
                             <p class="clearfix"><label>Asset Type</label><span><?php echo $asset['asset_type'] ?></span></p>
                             <p class="clearfix"><label>Storage Mode</label>  <span><?php echo $asset['storage_mode'] ?></span></p>
 
-                            <p class="clearfix"><label>Location</label><span><?php echo $asset['location'] ?></span></p>
+                            <p class="clearfix"><label>Location</label><span><?php echo $asset['saveLocationText'] ?></span></p>
                             
                             <p class="clearfix"><label>Asset Owner</label> <span><?php     
                             foreach ($asset_owner as $owner_name){
