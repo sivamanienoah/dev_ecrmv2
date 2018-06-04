@@ -33,7 +33,7 @@ return false;
 }
 
 function processDelete(id) {
-	window.location.href = site_base_url+'asset_register/delete_practice/update/'+id;
+	window.location.href = site_base_url+'asset_register/delete_location/update/'+id;
 }
 
 function cancelDel() {
