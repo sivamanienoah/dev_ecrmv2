@@ -76,7 +76,7 @@ class Asset_register extends crm_controller {
 
     // public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $lead_indi='null', $keyword='null') 
     public function advance_filter_search($search_type = false, $search_id = false) {// echo"here";exit;
-   //echo'<pre>search_type=>';print_r($search_type);exit;
+        //echo'<pre>search_type=>';print_r($search_type);exit;
         // echo'<pre>search_id=>';print_r($search_id);
         $filt = array();
         $stage = null;
@@ -101,13 +101,13 @@ class Asset_register extends crm_controller {
         $this->session->unset_userdata('load_proposal_expect_end');
 
         if ($search_type == 'search' && $search_id == false) {
-           // echo 'if';exit;
+            // echo 'if';exit;
             $filt = real_escape_array($this->input->post()); //echo'<pre>filt1=>';print_r($filt);
             $this->session->set_userdata("lead_search_by_default", 0);
             $this->session->set_userdata("lead_search_by_id", 0);
             $this->session->set_userdata("lead_search_only", 1);
         } else if ($search_type == 'search' && is_numeric($search_id)) {
-         //   echo 'elsif';exit;
+            //   echo 'elsif';exit;
             $wh_condn = array('search_id' => $search_id, 'search_for' => 1, 'user_id' => $this->userdata['userid']);
             $get_rec = $this->asset_model->get_data_by_id('saved_search_critriea', $wh_condn);
             unset($get_rec['search_id']);
@@ -121,11 +121,11 @@ class Asset_register extends crm_controller {
             $this->session->set_userdata("lead_search_by_id", $search_id);
             $this->session->set_userdata("lead_search_only", 0);
         } else if ($search_type == 'load_proposal_expect_end' && $search_id == false) {
-         //   echo 'elsif2';exit;
+            //   echo 'elsif2';exit;
             $this->session->set_userdata("load_proposal_expect_end", 1);
             $proposal_expect_end = 'load_proposal_expect_end';
         } else {
-       
+            
         }
         // echo'<pre>filt2=>';print_r($filt);
         // echo'<pre>';print_r(count($filt));exit;
@@ -145,7 +145,7 @@ class Asset_register extends crm_controller {
             $saveLocationText = $filt['saveLocationText'];
             $created_by = $filt['created_by'];
             $availability = $filt['availability'];
-           
+
             //$keyword 	  = !empty($filt['keyword']) ? $filt['keyword'] : '';
             /* $excel_arr 	  = array();
               foreach ($filt as $key => $val) {
@@ -168,15 +168,15 @@ class Asset_register extends crm_controller {
         $data['filter_results'] = $filter_results;
         // echo '<pre>';print_r($data['filter_results']);exit;
         $data['department_id'] = $department_id;
-       //  echo '<pre>';print_r($data['department_id']);exit;
+        //  echo '<pre>';print_r($data['department_id']);exit;
         $data['project_id'] = $project_id;
         $data['asset_name'] = $asset_name;
         $data['asset_type'] = $asset_type;
         $data['storage_mode'] = $storage_mode;
         $data['location'] = $location;
         $data['asset_owner'] = $asset_owner;
-     //   $data['asset_owner'] = $this->asset_model->get_user_data_by_id($asset_owner);
-        
+        //   $data['asset_owner'] = $this->asset_model->get_user_data_by_id($asset_owner);
+
         $data['labelling'] = $labelling;
         $data['confidentiality'] = $confidentiality;
         $data['integrity'] = $integrity;
@@ -187,14 +187,13 @@ class Asset_register extends crm_controller {
 //        $data['lead_status'] = $lead_status;
 //        $data['lead_indi'] = $lead_indi;
 //        $data['keyword'] = $keyword;
-
-       // $db_fields = $this->asset_model->get_lead_dashboard_field($this->userdata['userid']);
-      //  if (!empty($db_fields) && count($db_fields) > 0) {
-      //      foreach ($db_fields as $record) {
-       //         $data['db_fields'][] = $record['column_name'];
-     //       }
-      //  }
-    //  echo '<pre>';      print_r($data);exit;
+        // $db_fields = $this->asset_model->get_lead_dashboard_field($this->userdata['userid']);
+        //  if (!empty($db_fields) && count($db_fields) > 0) {
+        //      foreach ($db_fields as $record) {
+        //         $data['db_fields'][] = $record['column_name'];
+        //       }
+        //  }
+        //  echo '<pre>';      print_r($data);exit;
         $this->load->view('asset_register/advance_filter_view', $data);
     }
 
@@ -205,19 +204,19 @@ class Asset_register extends crm_controller {
      */
 
     public function view_asset($id = 0, $quote_section = '') {
-       // print_r($id);exit;
+        // print_r($id);exit;
         $this->load->helper('text');
         $this->load->helper('fix_text');
 
         $usid = $this->session->userdata('logged_in_user');
 
         $getAssetDet = $this->asset_model->get_asset_detail($id);
-         $data['quote_data'] = $getAssetDet;
- //print_r($data['quote_data']);exit;
-       // $arrLeadInfo = $this->request_model->get_lead_info($id);
+        $data['quote_data'] = $getAssetDet;
+        //print_r($data['quote_data']);exit;
+        // $arrLeadInfo = $this->request_model->get_lead_info($id);
 
         if (!empty($getAssetDet)) {
-           
+
             $this->load->view('asset_register/asset_view', $data);
         } else {
             // echo "Lead does not exist or you may not be authorised to view this";
@@ -457,21 +456,19 @@ class Asset_register extends crm_controller {
     /**
      * Initiates and create the quote based on an ajax request
      */
-    function ajax_create_quote() 
-    {
-       // echo 'hi';exit;
+    function ajax_create_quote() {
+        // echo 'hi';exit;
         $data = real_escape_array($this->input->post());
 //   /print_r($data);exit;
         $ins['asset_name'] = $data['asset_name'];
-       
+
         $chkAssetName = $this->asset_model->checkAssetName($ins['asset_name']);
         if (is_array($chkAssetName) && count($chkAssetName) > 0) {
             $json['error'] = false;
             $json['errormsg'] = 'Asset already registered';
             echo json_encode($json);
-       
         } else {
-         //   echo 'else';exit;
+            //   echo 'else';exit;
             $ins['department_id'] = $data['department'];
             $ins['project_id'] = $data['Project'];
             $ins['asset_type'] = $data['asset_type'];
@@ -487,12 +484,12 @@ class Asset_register extends crm_controller {
             $ins['created_by'] = $data['username'];
             //print_r($ins);exit;
             $insert_asset = $this->asset_model->insert_row_return_id('asset_register', $ins);
-           // print_r($insert_asset);exit;
-           // $insert_asset = $this->db->insert_id();
-                $json['error'] = true;
-                $json['insert_id'] = $insert_asset;
-                echo json_encode($json);
-             //  print_r($insert_asset);
+            // print_r($insert_asset);exit;
+            // $insert_asset = $this->db->insert_id();
+            $json['error'] = true;
+            $json['insert_id'] = $insert_asset;
+            echo json_encode($json);
+            //  print_r($insert_asset);
             //insert logs
             $ins_log = array();
             $ins_log['log_content'] = "Asset Created For the " . $customer['company'] . " - " . $customer['customer_name'] . " On :" . " " . date('M j, Y g:i A');
@@ -502,8 +499,7 @@ class Asset_register extends crm_controller {
             $ins_log['userid_fk'] = $this->userdata['userid'];
             $insert_log = $this->asset_model->insert_row_return_id('logs', $ins_log);
 //        /  print_r($insert_log);
-          //  redirect('asset_register/quotation');
-            
+            //  redirect('asset_register/quotation');
         }
     }
 
@@ -2916,33 +2912,32 @@ HDOC;
         echo json_encode($res);
         exit;
     }
-    
-    public function manage_location(){
+
+    public function manage_location() {
         $data['page_heading'] = 'Manage Location';
         $data['locations'] = $this->asset_location_model->get_locations();
-     //   print_r($data['locations']);exit;
+        //   print_r($data['locations']);exit;
         $this->load->view('location/manage_location_view', $data);
     }
-    
-    public function ajax_check_status() 
-	{
-		$post_data  = real_escape_array($this->input->post());
-               // print_r($post_data);exit;
-		$locId     = $post_data['data'];
-		$this->db->where('asset_location', $locId);
-		$query = $this->db->get($this->cfg['dbpref'].'asset_location')->num_rows();
-		$res = array();
-		if($query == 0) {
-			$res['html'] .= "YES";
-		} else {
-			$res['html'] .= "NO";
-		}
-		echo json_encode($res);
-		exit;
-	}
-    
-    public function add_location(){
-      // echo 'hi';exit;
+
+    public function ajax_check_status() {
+        $post_data = real_escape_array($this->input->post());
+        // print_r($post_data);exit;
+        $locId = $post_data['data'];
+        $this->db->where('asset_location', $locId);
+        $query = $this->db->get($this->cfg['dbpref'] . 'asset_location')->num_rows();
+        $res = array();
+        if ($query == 0) {
+            $res['html'] .= "YES";
+        } else {
+            $res['html'] .= "NO";
+        }
+        echo json_encode($res);
+        exit;
+    }
+
+    public function add_location() {
+        // echo 'hi';exit;
         $this->load->library('validation');
         $data = array();
         $post_data = real_escape_array($this->input->post());
@@ -2952,7 +2947,7 @@ HDOC;
 
         $this->validation->set_rules($rules);
         $fields['asset_location'] = 'Location Name';
-      //  $fields['base_currency'] = 'Base Currency';
+        //  $fields['base_currency'] = 'Base Currency';
         $fields['status'] = 'Status';
 
         $this->validation->set_fields($fields);
@@ -2961,7 +2956,7 @@ HDOC;
         //for status
         $this->db->where('loc_id', $id);
         $data['cb_status'] = $this->db->get($this->cfg['dbpref'] . 'asset_location')->num_rows();
-       // $data['currencies'] = $this->manage_service_model->get_records('expect_worth', $wh_condn = array('status' => 1), $order = array('expect_worth_id' => 'asc'));
+        // $data['currencies'] = $this->manage_service_model->get_records('expect_worth', $wh_condn = array('status' => 1), $order = array('expect_worth_id' => 'asc'));
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_dvsn'])) {
             $item_data = $this->db->get_where($this->cfg['dbpref'] . "asset_location", array('loc_id' => $id));
             if ($item_data->num_rows() > 0)
@@ -3001,257 +2996,236 @@ HDOC;
         }
         $this->load->view('location/add_location', $data);
     }
-    
-     /**
+
+    /**
      * Check Duplicates for Lead source is already exits or not.
      */
     function chk_duplicate() {
 
         $chk_data = real_escape_array($this->input->post());
         $name = $chk_data['name'];
-    // print_r($chk_data);exit;
+        // print_r($chk_data);exit;
         $tbl_name = 'asset_location';
         $tbl_cont['name'] = 'asset_location';
-      //  $tbl_cont['id'] = 'lead_source_id';
+        //  $tbl_cont['id'] = 'lead_source_id';
         if (empty($id)) {
-       // echo 'hi';exit;
-         //   $condn = array('asset_location' => $name);
+            // echo 'hi';exit;
+            //   $condn = array('asset_location' => $name);
             $res = $this->asset_location_model->check_duplicate($tbl_cont, $name, $tbl_name);
         } else {
             $condn = array('asset_location' => $name, 'id' => $id);
             $res = $this->asset_location_model->check_duplicate($tbl_cont, $name, $tbl_name);
         }
-        
+
         if ($res == 0)
             echo json_encode('success');
         else
             echo json_encode('fail');
         exit;
     }
-    
-    	public function location_add($update = false, $id = false) {
-	
-		$this->load->library('validation');
-        $data              = array();
-        $post_data         = real_escape_array($this->input->post());
-		$rules['practices'] = "trim|required";
-		$rules['max_hours'] = "required";
-		
-		$this->validation->set_rules($rules);
-		$fields['practices'] = 'Practices';
-		$fields['status']   = 'Status';
-		$fields['max_hours']   = 'Maximum Hours';
-		
-		$this->validation->set_fields($fields);
+
+    public function location_add($update = false, $id = false) {
+
+        $this->load->library('validation');
+        $data = array();
+        $post_data = real_escape_array($this->input->post());
+        $rules['practices'] = "trim|required";
+        $rules['max_hours'] = "required";
+
+        $this->validation->set_rules($rules);
+        $fields['practices'] = 'Practices';
+        $fields['status'] = 'Status';
+        $fields['max_hours'] = 'Maximum Hours';
+
+        $this->validation->set_fields($fields);
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-		
-		//for status
-		$data['cb_status'] = '';
-		$data['practice_max_hours_history']='';
-		if(!empty($id)) {
-			$this->db->where('practice', $id);
-			$data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
-			$data['practice_max_hours_history']=get_practice_max_hours($id);
-		}
-		
-		if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt']))
-        {
-            $item_data = $this->db->get_where($this->cfg['dbpref']."practices", array('id' => $id));
-            if ($item_data->num_rows() > 0) $src = $item_data->result_array();
-            if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v)
-            {
-                if (isset($this->validation->$k)) $this->validation->$k = $v;
-            }
+
+        //for status
+        $data['cb_status'] = '';
+        $data['practice_max_hours_history'] = '';
+        if (!empty($id)) {
+            $this->db->where('practice', $id);
+            $data['cb_status'] = $this->db->get($this->cfg['dbpref'] . 'leads')->num_rows();
+            $data['practice_max_hours_history'] = get_practice_max_hours($id);
         }
-		
-		if ($this->validation->run() != false)
-        {
-			// all good
-            foreach($fields as $key => $val)
-            {
+
+        if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt'])) {
+            $item_data = $this->db->get_where($this->cfg['dbpref'] . "practices", array('id' => $id));
+            if ($item_data->num_rows() > 0)
+                $src = $item_data->result_array();
+            if (isset($src) && is_array($src) && count($src) > 0)
+                foreach ($src[0] as $k => $v) {
+                    if (isset($this->validation->$k))
+                        $this->validation->$k = $v;
+                }
+        }
+
+        if ($this->validation->run() != false) {
+            // all good
+            foreach ($fields as $key => $val) {
                 $update_data[$key] = $this->input->post($key);
             }
-			if ($update_data['status'] == "") {
-				if ($data['cb_status']==0) {
-					$update_data['status'] = 0;
-				} else {
-					$update_data['status'] = 1;
-				}
-			}
-            if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
-            {
-                //update
-                $this->db->where('id', $id);
-                
-                if ($this->db->update($this->cfg['dbpref']."practices", $update_data))
-                {	
-					//Update history table
-					$financial_year=get_current_financial_year();
-					$practice_hours_history_data = $this->db->get_where($this->cfg['dbpref']."practice_max_hours_history", array('financial_year' => $financial_year,'practice_id'=>$id))->row();
-					
-					$update_practice_hours_history = array();
-					$update_practice_hours_history['practice_id'] = $id;
-					$update_practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
-					$update_practice_hours_history['financial_year']   = $financial_year;
-						
-					if (count($practice_hours_history_data) > 0 && !empty($practice_hours_history_data)) 
-					{	
-						$this->db->where('id',$practice_hours_history_data->id);
-						$this->db->update($this->cfg['dbpref']."practice_max_hours_history", $update_practice_hours_history);
-					
-					}else{
-						$this->db->insert($this->cfg['dbpref']."practice_max_hours_history", $update_practice_hours_history);
-					}
-					
-                    $this->session->set_flashdata('confirm', array('Practice Details Updated!'));
+            if ($update_data['status'] == "") {
+                if ($data['cb_status'] == 0) {
+                    $update_data['status'] = 0;
+                } else {
+                    $update_data['status'] = 1;
                 }
             }
-            else
-            {
+            if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+                //update
+                $this->db->where('id', $id);
+
+                if ($this->db->update($this->cfg['dbpref'] . "practices", $update_data)) {
+                    //Update history table
+                    $financial_year = get_current_financial_year();
+                    $practice_hours_history_data = $this->db->get_where($this->cfg['dbpref'] . "practice_max_hours_history", array('financial_year' => $financial_year, 'practice_id' => $id))->row();
+
+                    $update_practice_hours_history = array();
+                    $update_practice_hours_history['practice_id'] = $id;
+                    $update_practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
+                    $update_practice_hours_history['financial_year'] = $financial_year;
+
+                    if (count($practice_hours_history_data) > 0 && !empty($practice_hours_history_data)) {
+                        $this->db->where('id', $practice_hours_history_data->id);
+                        $this->db->update($this->cfg['dbpref'] . "practice_max_hours_history", $update_practice_hours_history);
+                    } else {
+                        $this->db->insert($this->cfg['dbpref'] . "practice_max_hours_history", $update_practice_hours_history);
+                    }
+
+                    $this->session->set_flashdata('confirm', array('Practice Details Updated!'));
+                }
+            } else {
                 //insert
-                $this->db->insert($this->cfg['dbpref']."practices", $update_data);
-				
-				if($this->db->affected_rows() > 0)
-				{
-					$practice_id = $this->db->insert_id();
-					
-					if($practice_id>0){
-						$practice_hours_history['practice_id'] = $practice_id;
-						$practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
-						$practice_hours_history['financial_year']   = get_current_financial_year();
-						$this->db->insert($this->cfg['dbpref']."practice_max_hours_history", $practice_hours_history);
-					}
-				}
+                $this->db->insert($this->cfg['dbpref'] . "practices", $update_data);
+
+                if ($this->db->affected_rows() > 0) {
+                    $practice_id = $this->db->insert_id();
+
+                    if ($practice_id > 0) {
+                        $practice_hours_history['practice_id'] = $practice_id;
+                        $practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
+                        $practice_hours_history['financial_year'] = get_current_financial_year();
+                        $this->db->insert($this->cfg['dbpref'] . "practice_max_hours_history", $practice_hours_history);
+                    }
+                }
                 $this->session->set_flashdata('confirm', array('New Practice Added!'));
-                
             }
 
-			redirect('manage_practice/');
-		}
-		$this->load->view('manage_practice/manage_practice_add_view', $data);
-	}
-    
-    public function delete_location($update, $id) 
-	{	
-		if ($this->session->userdata('delete')==1)
-		{
-			if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
-			{
-				$this->db->delete($this->cfg['dbpref']."asset_location", array('loc_id' => $id));
-				$this->session->set_flashdata('confirm', array('Practice Deleted!'));
-				redirect('asset_register/quotation');
-			} else {
-				$this->session->set_flashdata('login_errors', array("Error Occured!"));
-				redirect('asset_register/quotation');
-			}
-		} else {
-			$this->session->set_flashdata('login_errors', array("You have no rights to access this page!"));
-			redirect('asset_register/quotation');
-		}
-	}
-        
-    public function practice_add($update = false, $id = false) {
+            redirect('manage_practice/');
+        }
+        $this->load->view('manage_practice/manage_practice_add_view', $data);
+    }
 
-    $this->load->library('validation');
-    $data              = array();
-    $post_data         = real_escape_array($this->input->post());
-    //print_r($post_data);exit;
-            $rules['practices'] = "trim|required";
-            $rules['max_hours'] = "required";
-
-            $this->validation->set_rules($rules);
-            $fields['practices'] = 'Practices';
-            $fields['status']   = 'Status';
-            $fields['max_hours']   = 'Maximum Hours';
-
-            $this->validation->set_fields($fields);
-    $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
-
-            //for status
-            $data['cb_status'] = '';
-            $data['practice_max_hours_history']='';
-            if(!empty($id)) {
-                echo $id;exit;
-                    $this->db->where('practice', $id);
-                    $data['cb_status'] = $this->db->get($this->cfg['dbpref'].'leads')->num_rows();
-                    $data['practice_max_hours_history']=get_practice_max_hours($id);
+    public function delete_location($update, $id) {
+        if ($this->session->userdata('delete') == 1) {
+            if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+                $this->db->delete($this->cfg['dbpref'] . "asset_location", array('loc_id' => $id));
+                $this->session->set_flashdata('confirm', array('Practice Deleted!'));
+                redirect('asset_register/quotation');
+            } else {
+                $this->session->set_flashdata('login_errors', array("Error Occured!"));
+                redirect('asset_register/quotation');
             }
-
-            if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($post_data['update_pdt']))
-    {
-        $item_data = $this->db->get_where($this->cfg['dbpref']."practices", array('id' => $id));
-        if ($item_data->num_rows() > 0) $src = $item_data->result_array();
-        if (isset($src) && is_array($src) && count($src) > 0) foreach ($src[0] as $k => $v)
-        {
-            if (isset($this->validation->$k)) $this->validation->$k = $v;
+        } else {
+            $this->session->set_flashdata('login_errors', array("You have no rights to access this page!"));
+            redirect('asset_register/quotation');
         }
     }
 
-            if ($this->validation->run() != false)
-    {
-                    // all good
-        foreach($fields as $key => $val)
-        {
-            $update_data[$key] = $this->input->post($key);
+    public function practice_add($update = false, $id = false) {
+
+        $this->load->library('validation');
+        $data = array();
+        $post_data = real_escape_array($this->input->post());
+        print_r($post_data);exit;
+        $rules['practices'] = "trim|required";
+        $rules['max_hours'] = "required";
+
+        $this->validation->set_rules($rules);
+        $fields['practices'] = 'Practices';
+        $fields['status'] = 'Status';
+        $fields['max_hours'] = 'Maximum Hours';
+
+        $this->validation->set_fields($fields);
+        $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
+
+        //for status
+        $data['cb_status'] = '';
+        $data['practice_max_hours_history'] = '';
+        if (!empty($id)) {
+            //  echo $id;exit;
+            $this->db->where('asset_location', $id);
+            $data['cb_status'] = $this->db->get($this->cfg['dbpref'] . 'asset_location')->num_rows();
+//                    /$data['practice_max_hours_history']=get_practice_max_hours($id);
         }
-                    if ($update_data['status'] == "") {
-                            if ($data['cb_status']==0) {
-                                    $update_data['status'] = 0;
-                            } else {
-                                    $update_data['status'] = 1;
-                            }
+
+        if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+            $item_data = $this->db->get_where($this->cfg['dbpref'] . "asset_location", array('loc_id' => $id));
+            if ($item_data->num_rows() > 0)
+                $src = $item_data->result_array();
+            if (isset($src) && is_array($src) && count($src) > 0)
+                foreach ($src[0] as $k => $v) {
+                    if (isset($this->validation->$k))
+                        $this->validation->$k = $v;
+                }
+        }
+
+        if ($this->validation->run() != false) {
+            // all good
+            foreach ($fields as $key => $val) {
+                $update_data[$key] = $this->input->post($key);
+            }
+            if ($update_data['status'] == "") {
+                if ($data['cb_status'] == 0) {
+                    $update_data['status'] = 0;
+                } else {
+                    $update_data['status'] = 1;
+                }
+            }
+            if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+                //update
+                $this->db->where('id', $id);
+
+                if ($this->db->update($this->cfg['dbpref'] . "practices", $update_data)) {
+                    //Update history table
+                    $financial_year = get_current_financial_year();
+                    $practice_hours_history_data = $this->db->get_where($this->cfg['dbpref'] . "practice_max_hours_history", array('financial_year' => $financial_year, 'practice_id' => $id))->row();
+
+                    $update_practice_hours_history = array();
+                    $update_practice_hours_history['practice_id'] = $id;
+                    $update_practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
+                    $update_practice_hours_history['financial_year'] = $financial_year;
+
+                    if (count($practice_hours_history_data) > 0 && !empty($practice_hours_history_data)) {
+                        $this->db->where('id', $practice_hours_history_data->id);
+                        $this->db->update($this->cfg['dbpref'] . "practice_max_hours_history", $update_practice_hours_history);
+                    } else {
+                        $this->db->insert($this->cfg['dbpref'] . "practice_max_hours_history", $update_practice_hours_history);
                     }
-        if ($update == 'update' && preg_match('/^[0-9]+$/', $id))
-        {
-            //update
-            $this->db->where('id', $id);
 
-            if ($this->db->update($this->cfg['dbpref']."practices", $update_data))
-            {	
-                                    //Update history table
-                                    $financial_year=get_current_financial_year();
-                                    $practice_hours_history_data = $this->db->get_where($this->cfg['dbpref']."practice_max_hours_history", array('financial_year' => $financial_year,'practice_id'=>$id))->row();
+                    $this->session->set_flashdata('confirm', array('Practice Details Updated!'));
+                }
+            } else {
+                //insert
+                $this->db->insert($this->cfg['dbpref'] . "practices", $update_data);
 
-                                    $update_practice_hours_history = array();
-                                    $update_practice_hours_history['practice_id'] = $id;
-                                    $update_practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
-                                    $update_practice_hours_history['financial_year']   = $financial_year;
+                if ($this->db->affected_rows() > 0) {
+                    $practice_id = $this->db->insert_id();
 
-                                    if (count($practice_hours_history_data) > 0 && !empty($practice_hours_history_data)) 
-                                    {	
-                                            $this->db->where('id',$practice_hours_history_data->id);
-                                            $this->db->update($this->cfg['dbpref']."practice_max_hours_history", $update_practice_hours_history);
-
-                                    }else{
-                                            $this->db->insert($this->cfg['dbpref']."practice_max_hours_history", $update_practice_hours_history);
-                                    }
-
-                $this->session->set_flashdata('confirm', array('Practice Details Updated!'));
+                    if ($practice_id > 0) {
+                        $practice_hours_history['practice_id'] = $practice_id;
+                        $practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
+                        $practice_hours_history['financial_year'] = get_current_financial_year();
+                        $this->db->insert($this->cfg['dbpref'] . "practice_max_hours_history", $practice_hours_history);
+                    }
+                }
+                $this->session->set_flashdata('confirm', array('New Practice Added!'));
             }
+
+            redirect('manage_practice/');
         }
-        else
-        {
-            //insert
-            $this->db->insert($this->cfg['dbpref']."practices", $update_data);
-
-                            if($this->db->affected_rows() > 0)
-                            {
-                                    $practice_id = $this->db->insert_id();
-
-                                    if($practice_id>0){
-                                            $practice_hours_history['practice_id'] = $practice_id;
-                                            $practice_hours_history['practice_max_hours'] = $update_data['max_hours'];
-                                            $practice_hours_history['financial_year']   = get_current_financial_year();
-                                            $this->db->insert($this->cfg['dbpref']."practice_max_hours_history", $practice_hours_history);
-                                    }
-                            }
-            $this->session->set_flashdata('confirm', array('New Practice Added!'));
-
-        }
-
-                    redirect('manage_practice/');
-            }
-            $this->load->view('manage_practice/manage_practice_add_view', $data);
+        $this->load->view('manage_practice/manage_practice_add_view', $data);
     }
 
 }
