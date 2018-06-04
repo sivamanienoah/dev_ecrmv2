@@ -2920,7 +2920,7 @@ HDOC;
     public function manage_location(){
         $data['page_heading'] = 'Manage Location';
         $data['locations'] = $this->asset_location_model->get_locations();
-        print_r($data['locations']);exit;
+     //   print_r($data['locations']);exit;
         $this->load->view('location/manage_location_view', $data);
     }
     
