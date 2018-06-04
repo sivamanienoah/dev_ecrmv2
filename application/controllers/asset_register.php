@@ -75,8 +75,7 @@ class Asset_register extends crm_controller {
      */
 
     // public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $lead_indi='null', $keyword='null') 
-    public function advance_filter_search($search_type = false, $search_id = false) {
-    // echo"here";exit;
+    public function advance_filter_search($search_type = false, $search_id = false) {// echo"here";exit;
    //echo'<pre>search_type=>';print_r($search_type);exit;
         // echo'<pre>search_id=>';print_r($search_id);
         $filt = array();
