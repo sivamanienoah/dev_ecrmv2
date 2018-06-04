@@ -2958,10 +2958,11 @@ HDOC;
         $data['cb_status'] = $this->db->get($this->cfg['dbpref'] . 'asset_location')->num_rows();
         // $data['currencies'] = $this->manage_service_model->get_records('expect_worth', $wh_condn = array('status' => 1), $order = array('expect_worth_id' => 'asc'));
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+            echo 'if';exit;
             $item_data = $this->db->get_where($this->cfg['dbpref'] . "asset_location", array('loc_id' => $id));
             if ($item_data->num_rows() > 0)
                 $src = $item_data->result_array();
-            print_r($src);exit;
+           // print_r($src);exit;
             if (isset($src) && is_array($src) && count($src) > 0)
                 foreach ($src[0] as $k => $v) {
                     if (isset($this->validation->$k))
@@ -2981,6 +2982,7 @@ HDOC;
                     $update_data['status'] = 1;
                 }
             }
+            print_r($update_data);exit;
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
                 //update
                 $this->db->where('loc_id', $id);
