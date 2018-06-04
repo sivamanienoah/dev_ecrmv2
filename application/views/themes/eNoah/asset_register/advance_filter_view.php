@@ -78,8 +78,8 @@ if(!empty($db_fields) && count($db_fields)>0){
 								</a>
 							<?php } ?> 
 							<?php
-							if (($this->session->userdata('deletelead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1|| $userdata['role_id'] == 2) && $filter_result['pjt_status']==0) { ?>
-								<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['lead_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
+							if (( $userdata['role_id'] == 1|| $userdata['role_id'] == 2) ) { ?>
+								<a href="javascript:void(0)" onclick="return deleteLeads(<?php echo $filter_result['asset_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
 							<?php } ?>
 						</td>
 						<td><a target="_blank" href="<?php echo $view_url;?>"><?php echo $filter_result['asset_name']; ?></a> </td>
@@ -109,4 +109,4 @@ if(!empty($db_fields) && count($db_fields)>0){
 	</table>
 </div>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
-<script type="text/javascript" src="assets/js/leads/advance_filter_view.js"></script>
+<script type="text/javascript" src="assets/js/asset_register/advance_filter_view.js"></script>
