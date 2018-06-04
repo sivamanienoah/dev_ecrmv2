@@ -2936,7 +2936,7 @@ HDOC;
         exit;
     }
 
-    public function add_location() {
+    public function add_location($update = false, $id = false) {
         // echo 'hi';exit;
         $this->load->library('validation');
         $data = array();
