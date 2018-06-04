@@ -156,7 +156,7 @@ class Asset_register extends crm_controller {
         if ($this->input->post("keyword")) {
             $filt['keyword'] = $this->input->post("keyword");
             $keyword = $this->input->post("keyword");
-            print_r($keyword);exit;
+          //  print_r($keyword);exit;
             $this->session->set_userdata("search_keyword", $keyword);
         } else {
             $this->session->set_userdata("search_keyword", '');
