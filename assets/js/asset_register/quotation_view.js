@@ -229,6 +229,7 @@ function save_search() {
 $(function () {
     $("#asset_search_form").submit(function () {
         var keyword = $("#keyword").val();
+        alert(keyword);return false;
         if (keyword == "Asset No, Asset Name")
             keyword = 'null';
         var stage = $("#stage").val();
