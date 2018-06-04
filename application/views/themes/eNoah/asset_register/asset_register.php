@@ -885,7 +885,7 @@ if (!isset($view_quotation)) {
                                 ?>
                             </select>
                         </p>
-                        <p id="saveLocation" style="display: none"><label>Labelling</label></p>
+                       
                         <p id="saveLocation" style="display: none">
                             Location :
                             <input type="text" id="saveLocationText" />
@@ -1726,19 +1726,11 @@ echo $menu, $data;
             }
         });
     }
-     $(function () {
-        $("#location").change(function () {
-            if ($(this).val() != "") {
-                $("#saveLocation").show();
-            } else {
-                $("#saveLocation").hide();
-            }
-        });
-    });
+    
      function getContractsDetails(cont_id)
     {    
          if ($(this).val() != "") {
-             alert(cont_id);
+           //  alert(cont_id);
                 $("#saveLocation").show();
             } else {
                 $("#saveLocation").hide();
