@@ -2992,8 +2992,9 @@ HDOC;
                 $this->db->insert($this->cfg['dbpref'] . "asset_location", $update_data);
                 $this->session->set_flashdata('confirm', array('New Location Added!'));
             }
-            redirect('asset_register/quotation');
+            redirect('asset_register/manage_location');
         }
+        print_r($data);exit;
         $this->load->view('location/add_location', $data);
     }
 
