@@ -43,6 +43,9 @@ if(!empty($db_fields) && count($db_fields)>0){
                         <th>Confidentiality</th>
                         <th>Integrity</th>
                         <th>Availability</th>
+                        <th>Asset Created Date</th>
+                        <th>Asset Modified Date</th>
+                        <th>Asset Location</th>
                 </tr>
 		</tr>
 		</thead>
@@ -93,6 +96,9 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                 <td><?php echo  $filter_result['confidentiality']; ?></td>
                                                 <td><?php echo  $filter_result['integrity']; ?></td>
                                                 <td><?php echo  $filter_result['availability']; ?></td>
+                                                <td><?php echo  $filter_result['labelling']; ?></td>
+                                                <td><?php echo  $filter_result['labelling']; ?></td>
+                                                <td><?php echo  $filter_result['labelling']; ?></td>
 						
 					</tr> 
 		<?php 
