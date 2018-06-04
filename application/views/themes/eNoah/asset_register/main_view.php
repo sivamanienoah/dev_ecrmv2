@@ -8,12 +8,12 @@ require (theme_url().'/tpl/header.php');
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Asset Dashboard</h2>
 			
-			<a class="choice-box" onclick="advanced_filter();" >
+<!--			<a class="choice-box" onclick="advanced_filter();" >
 				<span>Advanced Filters</span>
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
-			</a>
+			</a>-->
 
-			<div class="search-dropdown">
+<!--			<div class="search-dropdown">
 				<a class="saved-search-head">
 					<p>Saved Search</p>
 				</a>
@@ -22,25 +22,25 @@ require (theme_url().'/tpl/header.php');
 					<ul class="search-root">
 					<li class="save-search-heading"><span>Search Name</span><span>Set Default</span><span>Action</span></li>
 					<?php 
-					if(sizeof($saved_search)>0) {
-						foreach($saved_search as $searc) { 
-					?>
-							<li class="saved-search-res" id="item_<?php echo $searc['search_id']; ?>">
-								<span><a href="javascript:void(0)" onclick="show_search_results('<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a></span>
-								<span class='rd-set-default'><input type="radio" value="<?php echo $searc['search_id'] ?>" <?php if ($searc['is_default']==1) { echo "checked"; } ?> name="set_default_search" class="set_default_search" /></span>
-								<span><a title="Delete" href="javascript:void(0)" onclick="delete_save_search('<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></span>
+//					if(sizeof($saved_search)>0) {
+//						foreach($saved_search as $searc) { 
+//					?>
+							<li class="saved-search-res" id="item_//<?php echo $searc['search_id']; ?>">
+								<span><a href="javascript:void(0)" onclick="show_search_results('//<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a></span>
+								<span class='rd-set-default'><input type="radio" value="//<?php echo $searc['search_id'] ?>" <?php if ($searc['is_default']==1) { echo "checked"; } ?> name="set_default_search" class="set_default_search" /></span>
+								<span><a title="Delete" href="javascript:void(0)" onclick="delete_save_search('//<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></span>
 							</li>
-					<?php 
-						}
-					} else {
-					?>
+					//<?php 
+//						}
+//					} else {
+//					?>
 						<li id="no_record" style="text-align: center; margin: 5px;">No Save & search found</li>
-					<?php
-					}
-					?>
+					//<?php
+//					}
+//					?>
 					</ul>
 				</div>
-			</div>
+			</div>-->
 
 			<div class="section-right">
 				<!--search-->
