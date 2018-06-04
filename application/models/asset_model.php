@@ -636,7 +636,8 @@ class Asset_model extends crm_model {
 				}
 			} 
 			//echo $this->db->last_query();exit;
-		} else if($this->userdata['role_id'] == 14) { //for reseller role
+		} else if($this->userdata['role_id'] == 14) 
+                    { //for reseller role
 			$curusid = $this->session->userdata['logged_in_user']['userid'];
 			$this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
 			c.customer_name, cc.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, u.first_name as ufname, u.last_name as ulname,us.first_name as usfname,
@@ -955,8 +956,10 @@ class Asset_model extends crm_model {
 				}
 			}
 			if(!empty($keyword) && count($keyword)>0){
-				if($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null'){		
-					$invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.customer_name LIKE '%$keyword%' ))";
+				if( $keyword != 'null'){		
+					$invwhere = "( (j.department_id LIKE '%$keyword%' OR j.project_id LIKE '%$keyword%' OR j.asset_name LIKE '%$keyword%' OR j.asset_type LIKE '%$keyword%'"
+                                                . "OR j.storage_mode LIKE '%$keyword%' OR j.location LIKE '%$keyword%' OR j.asset_owner LIKE '%$keyword%' OR j.labelling LIKE '%$keyword%'"
+                                                . "OR j.confidentiality LIKE '%$keyword%' OR j.integrity LIKE '%$keyword%' OR j.availability LIKE '%$keyword%'))";
 					$this->db->where($invwhere);
 				}
 			}
@@ -1025,7 +1028,7 @@ class Asset_model extends crm_model {
 		
 		
 		$query = $this->db->get();
-		 //echo $this->db->last_query(); exit;
+		 echo $this->db->last_query(); exit;
 		
 		$res =  $query->result_array();
 		return $res;
