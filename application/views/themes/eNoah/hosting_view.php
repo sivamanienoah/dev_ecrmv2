@@ -90,7 +90,7 @@
 		
 			<div>			
 				<div id="advance_search" style="float:left;width:100%;">
-					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:314px; width:100%;">
+					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:157px; width:100%;">
 						
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						
@@ -102,8 +102,7 @@
 									<td class="tblheadbg">By Subscription Type</td>
 									<td class="tblheadbg">By Customer Worth</td>
 									<td class="tblheadbg">By Subscription Status</td>
-									<td class="tblheadbg">By Lead Assignee</td>
-									<td class="tblheadbg" colspan="2">By Service</td>
+									
 									
 								</tr>
 								<tr>	
@@ -145,7 +144,7 @@
 											?>
 										</select> 
 									</td>
-									<td>
+<!--									<td>
 										<select style="width:110px" multiple="multiple" id="leadassignee" name="leadassignee[]">
 											<?php foreach ($lead_owner as $owner) {
 													if(!empty($owner['first_name'])) { ?>		
@@ -154,8 +153,8 @@
 												}
 											?>
 										</select> 
-									</td>
-									<td colspan="2">
+									</td>-->
+<!--									<td colspan="2">
 										<select multiple="multiple" id="service" name="service[]" >
 											<?php
 												if(isset($services) && count($services)>0){
@@ -165,7 +164,7 @@
 												}
 											?>
 										</select>
-									</td>
+									</td>-->
 									
 								</tr>
                                                                 <tr align="right" >
