@@ -129,7 +129,7 @@
 									<td>
 										<select style="width:110px" multiple="multiple" id="customer" name="customer[]">
 											<?php foreach($accounts as $cus) { ?>
-											<option value="<?php echo $sub_type['customer']; ?>" title="<?php echo $sub_type['customer']; ?>"><?php echo $sub_type['customer']; ?></option>	
+											<option value="<?php echo $cus['customer']; ?>" title="<?php echo $cus['customer']; ?>"><?php echo $cus['customer']; ?></option>	
 										<?php } ?>
 										</select> 
 									</td>
