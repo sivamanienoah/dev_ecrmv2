@@ -46,7 +46,7 @@ if(!empty($db_fields) && count($db_fields)>0){
                         <?php
                         if (is_array($filter_results) && count($filter_results) > 0) {
                             foreach ($filter_results as $account) {
-                                print_r($account);exit;
+                              //  print_r($account);exit;
                                 $rem = strtotime($account['go_live_date']) - time();
                                 if ($account['login_url'] != '' && $account['login'] != '' && $account['registrar_password'] != '' && $account['email'] != '' && $account['cur_smtp_setting'] != '' && $account['cur_pop_setting'] != '' && $account['cur_dns_primary_url'] != '' && $account['cur_dns_primary_ip'] != '' && $account['cur_dns_secondary_url'] != '' && $account['cur_dns_secondary_ip'] != '')
                                     $dns = 'green';
