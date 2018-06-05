@@ -92,7 +92,7 @@ class Hosting_model extends crm_model {
         $dom = $this->db->select('domain_name');
         $dom = $this->db->distinct();
         $dom = $this->db->get_where($this->cfg['dbpref'] . 'hosting', array('domain_name' => $domain));
-        echo $this->db->last_query();exit;
+        //echo $this->db->last_query();exit;
         return $dom->result_array();
     }
     
