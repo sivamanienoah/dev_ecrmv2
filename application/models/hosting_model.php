@@ -170,7 +170,7 @@ class Hosting_model extends crm_model {
         $this->db->group_by("h.domain_name");
         $this->db->order_by("h.domain_name", "asc");
         $query = $this->db->get();
-        $res = $qry->num_rows();
+        $res = $query->num_rows();
 		if($res){
 			return $qry->result_array();
 		}
