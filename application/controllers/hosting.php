@@ -315,6 +315,7 @@ class Hosting extends crm_controller {
         $lead_indi = null;
         $keyword = null;
         $proposal_expect_end = null;
+        $search = null;
 
         $this->session->unset_userdata('load_proposal_expect_end');
 
@@ -418,6 +419,7 @@ class Hosting extends crm_controller {
         $data['lead_status'] = $lead_status;
         $data['lead_indi'] = $lead_indi;
         $data['keyword'] = $keyword;
+        $data['search'] == $search;;
        // print_r($this->userdata['userid']);exit;
         $db_fields = $this->hosting_model->get_subscription_dashboard_field($this->userdata['userid']);
         if (!empty($db_fields) && count($db_fields) > 0) {
@@ -425,7 +427,7 @@ class Hosting extends crm_controller {
                 $data['db_fields'][] = $record['column_name'];
             }
         }
-        $data['search'] == TRUE;
+        
         $this->load->view('hosting_view', $data);
     }
 
