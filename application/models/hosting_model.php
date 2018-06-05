@@ -151,11 +151,12 @@ class Hosting_model extends crm_model {
     }
 
     function get_subscription_name() {
-        $this->db->select('*');
-        $this->db->from('hosting');
-        $this->db->distinct('domain_name');
-        $query = $this->db->get();  
-        return $query->result();
+        $qry = $this->db->query("SELECT DISTINCT domain_name  FROM `crm_hosting` order by domain_name asc");
+		$res = $qry->num_rows();
+		if($res){
+			return $qry->result_array();
+		}
+		return false;
     }
 
     /*
