@@ -73,7 +73,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 								$lead_assign_arr = array(0);
 								$lead_assign_arr = @explode(',',$filter_result['lead_assign']);
 							if (( $userdata['role_id'] == 1 || $userdata['role_id'] == 2)) { ?>				
-								<a target="_blank" href="<?php echo base_url(); ?>welcome/edit_quote/<?php echo $filter_result['lead_id'] ?>" title='Edit'>
+								<a target="_blank" href="<?php echo base_url(); ?>asset_register/edit_asset/<?php echo $filter_result['asset_id'] ?>" title='Edit'>
 									<img src="assets/img/edit.png" alt='edit' >
 								</a>
 							<?php } ?> 
