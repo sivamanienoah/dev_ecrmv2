@@ -115,7 +115,7 @@
 									<td>
 										<select style="width:148px" multiple="multiple" id="subscriptions_type_name" name="stage[]">
 											<?php foreach($accounts as $name) { ?>
-													<option value="<?php echo $name['subscriptions_type_id']; ?>" title="<?php echo $name['subscriptions_type_name']; ?>"><?php echo $name['subscriptions_type_name']; ?></option>
+													<option value="<?php echo $name['hostingid']; ?>" title="<?php echo $name['domain_name']; ?>"><?php echo $name['domain_name']; ?></option>
 											<?php } ?>
                                                                                                        
 										</select> 
