@@ -100,7 +100,7 @@
 									<td class="tblheadbg">By Created / Modified Date</td>
 									<td class="tblheadbg">By Subscription Name</td>
 									<td class="tblheadbg">By Subscription Type</td>
-									<td class="tblheadbg">By Customer Worth</td>
+									<td class="tblheadbg">By Customer</td>
 									<td class="tblheadbg">By Subscription Status</td>
 									
 									
@@ -112,7 +112,7 @@
 										To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
 									</td>
 									<td>
-										<select style="width:148px" multiple="multiple" id="sub_name" name="stage[]">
+										<select style="width:148px" multiple="multiple" id="sub_name" name="sub_name[]">
 											<?php foreach($accounts as $name) { ?>
 													<option value="<?php echo $name['hostingid']; ?>" title="<?php echo $name['domain_name']; ?>"><?php echo $name['domain_name']; ?></option>
 											<?php } ?>
@@ -120,18 +120,17 @@
 										</select> 
 									</td>
 									<td>
-										<select style="width:180px" multiple="multiple" id="customer" name="customer[]">
-										<?php foreach($customers as $customer) { ?>
-											<option value="<?php echo $customer['companyid']; ?>" title="<?php echo $customer['company']; ?>"><?php echo $customer['company']; ?></option>	
+										<select style="width:180px" multiple="multiple" id="sub_type_name" name="sub_type_name[]">
+										<?php foreach($accounts as $sub_type) { ?>
+											<option value="<?php echo $sub_type['subscriptions_type_name']; ?>" title="<?php echo $sub_type['subscriptions_type_name']; ?>"><?php echo $sub_type['subscriptions_type_name']; ?></option>	
 										<?php } ?>
 										</select> 
 									</td>  
 									<td>
-										<select style="width:110px" multiple="multiple" id="worth" name="worth[]">
-											<option value="0-10000" title="< 10000"> < 10000 </option>
-											<option value="10000-20000" title="> 10000 < 20000"> > 10000 < 20000 </option>
-											<option value="20000-50000" title="> 20000 < 50000"> > 20000 < 50000 </option>
-											<option value="50000-above" title="> 50000"> > 50000 </option>
+										<select style="width:110px" multiple="multiple" id="customer" name="customer[]">
+											<?php foreach($accounts as $cus) { ?>
+											<option value="<?php echo $sub_type['customer']; ?>" title="<?php echo $sub_type['customer']; ?>"><?php echo $sub_type['customer']; ?></option>	
+										<?php } ?>
 										</select> 
 									</td>
 									<td>
