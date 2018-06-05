@@ -100,3 +100,4 @@ if(!empty($db_fields) && count($db_fields)>0){
 </div>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/leads/advance_filter_view.js"></script>
+<script type="text/javascript" src="assets/js/hosting/subscription_view.js"></script>
