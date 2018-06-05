@@ -3,11 +3,6 @@
     <div class="inner hosting-section">
         
         <?php
-        if($search){
-            echo 'hi';exit;
-        }else{
-            
-      
         if ($this->session->userdata('accesspage') == 1) {
             if (!empty($hosts)) {
                 if ($hosts == 'HOSTS') {
@@ -284,7 +279,6 @@
 } else {
     echo "You have no rights to access this page";
 }
-  }
 ?>
 </div>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
