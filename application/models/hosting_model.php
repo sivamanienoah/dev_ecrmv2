@@ -88,7 +88,7 @@ class Hosting_model extends crm_model {
     }
     
     function get_customers(){
-        $qry = $this->db->query("SELECT * from crm_hosting a,crm_customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
+        $qry = $this->db->query("SELECT * from hosting a,customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
 		$res = $qry->num_rows();
 		if($res){
 			return $qry->result_array();
