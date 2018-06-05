@@ -98,7 +98,7 @@
 							<table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
 								<tr>
 									<td class="tblheadbg">By Created / Modified Date</td>
-									<td class="tblheadbg">By Lead Stage</td>
+									<td class="tblheadbg">By Subscription Name</td>
 									<td class="tblheadbg">By Customer</td>
 									<td class="tblheadbg">Expected Worth</td>
 									<td class="tblheadbg">By lead Owner</td>
@@ -113,10 +113,11 @@
 										To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
 									</td>
 									<td>
-										<select style="width:148px" multiple="multiple" id="stage" name="stage[]">
-											<?php foreach($lead_stage as $ls) { ?>
-													<option value="<?php echo $ls['lead_stage_id']; ?>" title="<?php echo $ls['lead_stage_name']; ?>"><?php echo $ls['lead_stage_name']; ?></option>
-											<?php } ?>					
+										<select style="width:148px" multiple="multiple" id="subscriptions_type_name" name="stage[]">
+											<?php foreach($accounts as $name) { ?>
+													<option value="<?php echo $name['subscriptions_type_id']; ?>" title="<?php echo $name['subscriptions_type_name']; ?>"><?php echo $name['subscriptions_type_name']; ?></option>
+											<?php } ?>
+                                                                                                       
 										</select> 
 									</td>
 									<td>
