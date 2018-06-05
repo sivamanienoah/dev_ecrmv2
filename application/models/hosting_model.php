@@ -86,7 +86,16 @@ class Hosting_model extends crm_model {
             return FALSE;
         }
     }
-
+    
+    function get_customers(){
+        $qry = $this->db->query("SELECT * from crm_hosting a,crm_customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
+		$res = $qry->num_rows();
+		if($res){
+			return $qry->result_array();
+		}
+		return false;
+    }
+    
     function check_unique($domain) {
 
         $dom = $this->db->get_where($this->cfg['dbpref'] . 'hosting', array('domain_name' => $domain));
@@ -151,7 +160,7 @@ class Hosting_model extends crm_model {
     }
 
     function get_subscription_names() {
-        $qry = $this->db->query("SELECT DISTINCT domain_name  FROM `crm_hosting` order by domain_name asc");
+        $qry = $this->db->query("SELECT *  FROM `crm_hosting` group by domain_name order by domain_name asc");
 		$res = $qry->num_rows();
 		if($res){
 			return $qry->result_array();
