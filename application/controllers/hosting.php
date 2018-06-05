@@ -401,7 +401,7 @@ class Hosting extends crm_controller {
         $filter_results = $this->hosting_model->get_filter_results($from_date, $to_date, $sub_name, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
         // echo $this->db->last_query(); die;
         $data['filter_results'] = $filter_results;
-        echo '<pre>';print_r($data['filter_results']);exit;
+       // echo '<pre>';print_r($data['filter_results']);exit;
         $data['sub_name'] = $sub_name;
         $data['customer'] = $customer;
         $data['service'] = $service;
@@ -417,7 +417,7 @@ class Hosting extends crm_controller {
         $data['lead_status'] = $lead_status;
         $data['lead_indi'] = $lead_indi;
         $data['keyword'] = $keyword;
-
+        print_r($this->userdata['userid']);exit;
         $db_fields = $this->hosting_model->get_subscription_dashboard_field($this->userdata['userid']);
         if (!empty($db_fields) && count($db_fields) > 0) {
             foreach ($db_fields as $record) {
