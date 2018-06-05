@@ -154,9 +154,7 @@ class Hosting_model extends crm_model {
         $this->db->select('*');
         $this->db->from('hosting');
         $this->db->distinct('domain_name');
-        $query = $this->db->get();
-        echo $this->db->last_query();
-        exit;
+        $query = $this->db->get();  
         return $query->result();
     }
 
