@@ -94,7 +94,6 @@ class Hosting_model extends crm_model {
         $this->db->join($this->cfg['dbpref'] . 'customers as b', 'a.custid_fk = b.custid');
         $this->db->group_by("a.custid_fk");
         $this->db->order_by("a.custid_fk", "asc");
-        
         $res = $qry->num_rows();
 		if($res){
 			return $qry->result_array();
