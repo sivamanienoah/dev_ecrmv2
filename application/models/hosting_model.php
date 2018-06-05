@@ -88,8 +88,14 @@ class Hosting_model extends crm_model {
     }
     
     function get_customers(){
-        $qry = $this->db->query("SELECT * from hosting a,customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
-		$res = $qry->num_rows();
+       // $qry = $this->db->query("SELECT * from hosting a,customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
+        $this->db->select('a.*,b.*');
+        $this->db->from($this->cfg['dbpref'] . 'hosting as a');
+        $this->db->join($this->cfg['dbpref'] . 'customers as b', 'a.custid_fk = b.custid');
+        $this->db->group_by("a.custid_fk");
+        $this->db->order_by("a.custid_fk", "asc");
+        
+        $res = $qry->num_rows();
 		if($res){
 			return $qry->result_array();
 		}
@@ -160,8 +166,12 @@ class Hosting_model extends crm_model {
     }
 
     function get_subscription_names() {
-        $qry = $this->db->query("SELECT *  FROM `crm_hosting` group by domain_name order by domain_name asc");
-		$res = $qry->num_rows();
+        $this->db->select('*');
+        $this->db->from($this->cfg['dbpref'] . 'hosting as h');
+        $this->db->group_by("h.domain_name");
+        $this->db->order_by("h.domain_name", "asc");
+        $query = $this->db->get();
+        $res = $qry->num_rows();
 		if($res){
 			return $qry->result_array();
 		}
