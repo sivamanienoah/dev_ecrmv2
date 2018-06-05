@@ -8,9 +8,7 @@ class Hosting_model extends crm_model {
     function Hosting_model() {
 
         parent::__construct();
-        $this->load->helper('lead_stage_helper');
-		$this->stg = getLeadStage();
-		$this->stages = @implode('","', $this->stg);
+        $this->userdata = $this->session->userdata('logged_in_user');
     }
 
     function account_list($offset, $search) {
