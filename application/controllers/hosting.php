@@ -289,10 +289,10 @@ class Hosting extends crm_controller {
 
     public function advance_filter_search($search_type = false, $search_id = false) {
         // echo"here";exit;
-        // echo'<pre>search_type=>';print_r($search_type);
+         echo'<pre>search_type=>';print_r($search_type);
         // echo'<pre>search_id=>';print_r($search_id);
         $filt = array();
-        $stage = null;
+        $sub_name = null;
         $from_date = null;
         $to_date = null;
         $customer = null;
@@ -359,7 +359,7 @@ class Hosting extends crm_controller {
             //echo 'yes';
             $from_date = $filt['from_date'];
             $to_date = $filt['to_date'];
-            $stage = $filt['stage'];
+            $sub_name = $filt['sub_name'];
             $customer = $filt['customer'];
             $service = $filt['service'];
             $lead_src = $filt['lead_src'];
@@ -394,7 +394,7 @@ class Hosting extends crm_controller {
         // echo $this->db->last_query(); die;
         $data['filter_results'] = $filter_results;
 
-        $data['stage'] = $stage;
+        $data['sub_name'] = $sub_name;
         $data['customer'] = $customer;
         $data['service'] = $service;
         $data['lead_src'] = $lead_src;
