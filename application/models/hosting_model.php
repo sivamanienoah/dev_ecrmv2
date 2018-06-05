@@ -450,7 +450,7 @@ class Hosting_model extends crm_model {
      //   $this->db->group_by("j.lead_id");
         $this->db->order_by("j.hostingid", "desc");
         $query = $this->db->get();
-        echo $this->db->last_query(); exit;
+      //  echo $this->db->last_query(); exit;
 
         $res = $query->result_array();
         return $res;
