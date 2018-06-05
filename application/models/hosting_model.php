@@ -87,14 +87,6 @@ class Hosting_model extends crm_model {
         }
     }
 
-    function get_unique_domain($domain) {
-//     /   print_r($domain);exit;
-        $dom = $this->db->select('domain_name');
-        $dom = $this->db->distinct();
-        $dom = $this->db->get_where($this->cfg['dbpref'] . 'hosting', array('domain_name' => $domain));
-        //echo $this->db->last_query();exit;
-        return $dom->result_array();
-    }
     
     function check_unique($domain) {
                
@@ -157,6 +149,14 @@ class Hosting_model extends crm_model {
         $cond = array('HP.hostingid_fk' => $hostingid, 'H.hostingid' => $hostingid);
         $this->db->where('jb.lead_id', $cond);
         return $this->db->get()->result_array();
+    }
+    
+    function get_subscription_name() {
+       $this->db->select('*');
+        $this->db->from('hosting');
+         $this->db->distinct('domain_name');
+        $query = $this->db->get();
+        return $query->result();
     }
 
     /*
