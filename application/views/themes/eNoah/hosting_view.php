@@ -1,6 +1,9 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
-  
+  <?php foreach($sub_names as $sub_name) { 
+     print_r($sub_name);exit;
+  }
+?>
 	<div class="inner hosting-section">
 	<?php 
 	if($this->session->userdata('accesspage')==1) {
@@ -113,8 +116,8 @@
 									</td>
 									<td>
 										<select style="width:148px" multiple="multiple" id="sub_name" name="sub_name[]">
-											<?php foreach($accounts as $name) { ?>
-													<option value="<?php echo $name['hostingid']; ?>" title="<?php echo $name['domain_name']; ?>"><?php echo $name['domain_name']; ?></option>
+											<?php foreach($sub_names as $sub_name) { ?>
+													<option value="<?php echo $sub_name['hostingid']; ?>" title="<?php echo $sub_name['domain_name']; ?>"><?php echo $sub_name['domain_name']; ?></option>
 											<?php } ?>
                                                                                                        
 										</select> 
