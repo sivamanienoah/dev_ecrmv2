@@ -42,7 +42,7 @@
 				<!--search-->
 				<div class="form-cont search-table">
 					<form id="lead_search_form" name="lead_search_form" method="post">
-						<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Subscription Name, Subscription Type, Customer' ?>" class="textfield width200px g-search" />
+						<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Subscription Name, Subscription Type' ?>" class="textfield width200px g-search" />
 						<button type="submit" class="positive">Subscription Search</button>			
 					</form>
 				</div>
