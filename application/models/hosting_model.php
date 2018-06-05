@@ -88,7 +88,7 @@ class Hosting_model extends crm_model {
     }
 
     function get_unique_domain($domain) {
-        print_r($domain);exit;
+//     /   print_r($domain);exit;
         $dom = $this->db->get_where($this->cfg['dbpref'] . 'hosting', array('domain_name' => $domain));
         return $dom->result_array();
     }
