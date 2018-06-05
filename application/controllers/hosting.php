@@ -7,6 +7,7 @@ class Hosting extends crm_controller {
 
     function Hosting() {
         parent::__construct();
+         $this->userdata = $this->session->userdata('logged_in_user');
         $this->login_model->check_login();
         $this->load->model('hosting_model');
         $this->load->model('customer_model');
