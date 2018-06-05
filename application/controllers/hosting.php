@@ -21,7 +21,7 @@ class Hosting extends crm_controller {
         $data['sub_types'] = $this->hosting_model->get_subscription_type();
          $data['customers'] = $this->hosting_model->get_customers();
          $data['sub_status'] = $this->hosting_model->get_sub_status();
-       echo '<pre>';print_r($data['sub_status']);exit; 
+     //  echo '<pre>';print_r($data['sub_status']);exit; 
         $this->load->view('hosting_view', $data);
     }
 
