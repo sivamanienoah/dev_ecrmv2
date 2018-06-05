@@ -123,7 +123,7 @@
 									</td>
 									<td>
 										<select style="width:180px" multiple="multiple" id="sub_type_name" name="sub_type_name[]">
-										<?php foreach($accounts as $sub_type) { ?>
+										<?php foreach($sub_types as $sub_type) { ?>
 											<option value="<?php echo $sub_type['subscriptions_type_name']; ?>" title="<?php echo $sub_type['subscriptions_type_name']; ?>"><?php echo $sub_type['subscriptions_type_name']; ?></option>	
 										<?php } ?>
 										</select> 
