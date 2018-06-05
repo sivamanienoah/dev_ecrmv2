@@ -401,7 +401,7 @@ class Hosting extends crm_controller {
         $filter_results = $this->hosting_model->get_filter_results($from_date, $to_date, $sub_name, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
         // echo $this->db->last_query(); die;
         $data['filter_results'] = $filter_results;
-        print_r($data['filter_results']);exit;
+        echo '<pre>';print_r($data['filter_results']);exit;
         $data['sub_name'] = $sub_name;
         $data['customer'] = $customer;
         $data['service'] = $service;
