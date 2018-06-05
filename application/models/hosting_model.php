@@ -229,7 +229,7 @@ class Hosting_model extends crm_model {
     }
 
     public function get_filter_results($from_date, $to_date, $sub_name, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end) {
-         print_r($sub_name);exit;
+        // print_r($sub_name);exit;
         $userdata = $this->session->userdata('logged_in_user');
 
         $sub_name = (count($sub_name) > 0) ? explode(',', $sub_name) : '';
@@ -292,7 +292,7 @@ class Hosting_model extends crm_model {
 
             if (!empty($sub_name) && count($sub_name) > 0) {
                 if ($sub_name[0] != 'null' && $sub_name[0] != 'all') {
-                    $this->db->where_in('a.domain_name', $sub_name);
+                    $this->db->where_in('a.hostingid', $sub_name);
                 }
             }
             if (!empty($customer) && count($customer) > 0) {
@@ -399,7 +399,7 @@ class Hosting_model extends crm_model {
                     $this->db->where($invwhere);
                 }
             }
-            //echo $this->db->last_query();exit;
+            echo $this->db->last_query();exit;
         } else if ($this->userdata['role_id'] == 14) { //for reseller role
             $curusid = $this->session->userdata['logged_in_user']['userid'];
             $this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
