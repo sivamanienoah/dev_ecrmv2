@@ -399,7 +399,7 @@ class Hosting_model extends crm_model {
                     $this->db->where($invwhere);
                 }
             }
-            echo $this->db->last_query();exit;
+           // echo $this->db->last_query();exit;
         } else if ($this->userdata['role_id'] == 14) { //for reseller role
             $curusid = $this->session->userdata['logged_in_user']['userid'];
             $this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry,
