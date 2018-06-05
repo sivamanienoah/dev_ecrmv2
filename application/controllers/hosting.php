@@ -16,9 +16,11 @@ class Hosting extends crm_controller {
 
     function index($limit = 0, $search = false) {
         $data['accounts'] = $this->hosting_model->account_list($limit, $search);
+         echo '<pre>';print_r($data['customers']);exit;
         $data['sub_names'] = $this->hosting_model->get_subscription_names();
-        $data['sub_type'] = $this->hosting_model->get_subscription_types();
+        $data['sub_types'] = $this->hosting_model->get_subscription_type();
          $data['customers'] = $this->hosting_model->get_customers();
+         $data['sub_status'] = $this->hosting_model->get_sub_status();
        // echo '<pre>';print_r($data['customers']);exit; 
         $this->load->view('hosting_view', $data);
     }
