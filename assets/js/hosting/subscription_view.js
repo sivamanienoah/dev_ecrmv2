@@ -29,6 +29,7 @@ if(query_type == 'load_proposal_expect_end'){
 	$('#advance_search_results').load(sturl);
 } else {
 	var sturl = site_base_url+"welcome/advance_filter_search/?"+Math.random();
+        alert(sturl);
 	$('#advance_search_results').load(sturl);
 }
 
