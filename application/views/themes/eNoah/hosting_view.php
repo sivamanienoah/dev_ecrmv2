@@ -27,8 +27,6 @@
 			<h2 class="pull-left borderBtm">Subscription Accounts</h2>
                           <div class="inner">
 		<div class="page-title-head">
-			<h2 class="pull-left borderBtm">Subscription Dashboard</h2>
-			
 			<a class="choice-box" onclick="advanced_filter();" >
 				<span>Advanced Filters</span>
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
@@ -65,13 +63,24 @@
 
 			<div class="section-right">
 				<!--search-->
-				<div class="form-cont search-table">
+<!--				<div class="form-cont search-table">
 					<form id="lead_search_form" name="lead_search_form" method="post">
 						<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Subscription Name, Subscription Type' ?>" class="textfield width200px g-search" />
 						<button type="submit" class="positive">Subscription Search</button>			
 					</form>
 				</div>
-				<!--search-->
+				search-->
+                                <?php if($this->session->userdata('add')==1) { ?>
+				<div class="section-right">
+					<div class="buttons add-new-button">
+						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>hosting/add_account'">
+							Add New Subscription
+						</button>
+					</div>
+				</div>
+                                
+			<?php } ?>
+			<div class="clearfix"></div>
 				
 			</div>
 		</div>
@@ -260,24 +269,14 @@
 		}
 	?>
 	</div>
-			<?php if($this->session->userdata('add')==1) { ?>
-				<div class="section-right">
-					<div class="buttons add-new-button">
-						<button type="button" class="positive" onclick="location.href='<?php echo base_url(); ?>hosting/add_account'">
-							Add New Subscription
-						</button>
-					</div>
-				</div>
-                                
-			<?php } ?>
-			<div class="clearfix"></div>
+			
 		</div>
 		
         <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
             <thead>
                 <tr>
                     <th>Subscription Name</th>
-					<th>Subscription type</th>
+                    <th>Subscription type</th>
                     <th>Customer</th>
                     <th>Subscription Status</th>
 					<th>DNS</th>
