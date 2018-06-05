@@ -90,7 +90,7 @@
 		
 			<div>			
 				<div id="advance_search" style="float:left;width:100%;">
-					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:157px; width:100%;">
+					<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:157  px; width:100%;">
 						
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 						
@@ -112,36 +112,33 @@
 										To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
 									</td>
 									<td>
-										<select style="width:148px" multiple="multiple" id="sub_name" name="stage[]">
+										<select style="width:148px" multiple="multiple" id="sub_name" name="sub_name[]">
 											<?php foreach($accounts as $name) { ?>
-													<option value="<?php echo $name['hostingid']; ?>" title="<?php echo $name['domain_name']; ?>"><?php echo $name['domain_name']; ?></option>
-											<?php } ?>
+													<option value="<?php echo $name['domain_name']; ?>" title="<?php echo $name['domain_name']; ?>"><?php echo $name['domain_name']; ?></option>
+											
                                                                                                        
 										</select> 
 									</td>
 									<td>
-										<select style="width:180px" multiple="multiple" id="customer" name="customer[]">
-										<?php foreach($customers as $customer) { ?>
-											<option value="<?php echo $customer['companyid']; ?>" title="<?php echo $customer['company']; ?>"><?php echo $customer['company']; ?></option>	
-										<?php } ?>
+										<select style="width:180px" multiple="multiple" id="sub_type" name="sub_type[]">
+										
+											<option value="<?php echo $name['subscriptions_type_name']; ?>" title="<?php echo $name['subscriptions_type_name']; ?>"><?php echo $name['subscriptions_type_name']; ?></option>	
+										
 										</select> 
 									</td>  
-									<td>
-										<select style="width:110px" multiple="multiple" id="worth" name="worth[]">
-											<option value="0-10000" title="< 10000"> < 10000 </option>
-											<option value="10000-20000" title="> 10000 < 20000"> > 10000 < 20000 </option>
-											<option value="20000-50000" title="> 20000 < 50000"> > 20000 < 50000 </option>
-											<option value="50000-above" title="> 50000"> > 50000 </option>
+                                                                        <td>
+										<select style="width:180px" multiple="multiple" id="sub_type" name="customer[]">
+										
+											<option value="<?php echo $name['customer']; ?>" title="<?php echo $name['customer']; ?>"><?php echo $name['customer']; ?></option>	
+										
 										</select> 
-									</td>
+									</td>  
+									
 									<td>
-										<select style="width:110px" multiple="multiple" id="owner" name="owner[]">
-											<?php foreach ($lead_owner as $owner) { 
-													if(!empty($owner['first_name'])) { ?>
-														<option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'].' - '.$owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
-											<?php 	}
-												} 
-											?>
+										<select style="width:110px" multiple="multiple" id="customer" name="customer[]">
+										
+                                                                                    <option value="<?php echo $name['userid'] ?>" title="<?php echo $owner['first_name'].' - '.$owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
+											
 										</select> 
 									</td>
 <!--									<td>
@@ -165,7 +162,7 @@
 											?>
 										</select>
 									</td>-->
-									
+									<?php } ?>
 								</tr>
                                                                 <tr align="right" >
 									
