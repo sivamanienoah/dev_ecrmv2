@@ -105,11 +105,11 @@ class Hosting_model extends crm_model {
     
     function get_subscription_type(){
        // $qry = $this->db->query("SELECT * from hosting a,customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
-       $this->db->select('a.*,b.*');
-        $this->db->from($this->cfg['dbpref'] . 'hosting as a');
-        $this->db->join($this->cfg['dbpref'] . 'subscriptions_type as b', 'a.subscriptions_type_id_fk = b.	subscriptions_type_id');
-        $this->db->group_by("a.subscriptions_type_id_fk");
-        $this->db->order_by("a.subscriptions_type_id_fk", "asc");
+       $this->db->select('b.*');
+        //$this->db->from($this->cfg['dbpref'] . 'hosting as a');
+        $this->db->from($this->cfg['dbpref'] . 'subscriptions_type as b');
+        $this->db->group_by("b.subscriptions_type_id");
+        $this->db->order_by("b.subscriptions_type_id", "asc");
         $qry = $this->db->get();
         $res = $qry->num_rows();
             if($res){
