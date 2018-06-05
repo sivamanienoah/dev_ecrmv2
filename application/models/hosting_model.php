@@ -229,8 +229,9 @@ class Hosting_model extends crm_model {
     }
 
     public function get_filter_results($from_date, $to_date, $sub_name, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end) {
-         print_r($sub_name);exit;
+        // print_r($sub_name);exit;
         $userdata = $this->session->userdata('logged_in_user');
+        print_r($userdata);exit;
 
         $sub_name = (count($sub_name) > 0) ? explode(',', $sub_name) : '';
         $owner = (count($owner) > 0) ? explode(',', $owner) : '';
