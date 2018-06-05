@@ -89,7 +89,7 @@ class Hosting_model extends crm_model {
     
     function get_customers(){
        // $qry = $this->db->query("SELECT * from hosting a,customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
-       $qry =  $this->db->select('a.*,b.*');
+       $qry = $this->db->select('a.*,b.*');
         $qry = $this->db->from($this->cfg['dbpref'] . 'hosting as a');
         $qry = $this->db->join($this->cfg['dbpref'] . 'customers as b', 'a.custid_fk = b.custid');
         $qry = $this->db->group_by("a.custid_fk");
@@ -169,8 +169,8 @@ class Hosting_model extends crm_model {
         $this->db->from($this->cfg['dbpref'] . 'hosting as h');
         $this->db->group_by("h.domain_name");
         $this->db->order_by("h.domain_name", "asc");
-        $query = $this->db->get();
-        $res = $query->num_rows();
+        $qry = $this->db->get();
+        $res = $qry->num_rows();
 		if($res){
 			return $qry->result_array();
 		}
