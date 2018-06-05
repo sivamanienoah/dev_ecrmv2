@@ -1,9 +1,6 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
-  <?php foreach($sub_names as $sub_name) { 
-     print_r($sub_name);exit;
-  }
-?>
+  
 	<div class="inner hosting-section">
 	<?php 
 	if($this->session->userdata('accesspage')==1) {
