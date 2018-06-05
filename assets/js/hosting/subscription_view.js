@@ -25,10 +25,10 @@ if(viewlead==1) {
 }
 //for ie ajax loading issue appending random number
 if(query_type == 'load_proposal_expect_end'){
-	var sturl = site_base_url+"hosting/advance_filter_search/load_proposal_expect_end/?"+Math.random();
+	var sturl = site_base_url+"welcome/advance_filter_search/load_proposal_expect_end/?"+Math.random();
 	$('#advance_search_results').load(sturl);
 } else {
-	var sturl = site_base_url+"hosting/advance_filter_search/?"+Math.random();
+	var sturl = site_base_url+"welcome/advance_filter_search/?"+Math.random();
 	$('#advance_search_results').load(sturl);
 }
 
