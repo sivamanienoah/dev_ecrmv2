@@ -427,7 +427,7 @@ class Hosting extends crm_controller {
                 $data['db_fields'][] = $record['column_name'];
             }
         }
-        print_r($data);exit;
+        //print_r($data);exit;
         $this->load->view('hosting/advance_filter_view', $data);
     }
 
