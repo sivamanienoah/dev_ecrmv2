@@ -99,9 +99,9 @@
 								<tr>
 									<td class="tblheadbg">By Created / Modified Date</td>
 									<td class="tblheadbg">By Subscription Name</td>
-									<td class="tblheadbg">By Customer</td>
-									<td class="tblheadbg">Expected Worth</td>
-									<td class="tblheadbg">By lead Owner</td>
+									<td class="tblheadbg">By Subscription Type</td>
+									<td class="tblheadbg">By Customer Worth</td>
+									<td class="tblheadbg">By Subscription Status</td>
 									<td class="tblheadbg">By Lead Assignee</td>
 									<td class="tblheadbg" colspan="2">By Service</td>
 									
@@ -113,7 +113,7 @@
 										To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
 									</td>
 									<td>
-										<select style="width:148px" multiple="multiple" id="subscriptions_type_name" name="stage[]">
+										<select style="width:148px" multiple="multiple" id="sub_name" name="stage[]">
 											<?php foreach($accounts as $name) { ?>
 													<option value="<?php echo $name['hostingid']; ?>" title="<?php echo $name['domain_name']; ?>"><?php echo $name['domain_name']; ?></option>
 											<?php } ?>
@@ -168,85 +168,7 @@
 									</td>
 									
 								</tr>
-								<tr>
-									<td class="tblheadbg">By Industry</td>
-									<td class="tblheadbg">By Source</td>
-									<td class="tblheadbg">By Region Wise</td>
-									<td class="tblheadbg">By Country Wise</td>
-									<td class="tblheadbg">By State Wise</td>
-									<td class="tblheadbg">By Location Wise</td>
-									<td class="tblheadbg">By Status</td>
-									<td class="tblheadbg">By Lead Indicator</td>
-								</tr>
-								<tr>
-									<td>
-										<select multiple="multiple" id="industry" name="industry[]" style="width:140px;" >
-											<?php
-												if(isset($industry) && count($industry)>0){
-													foreach($industry as $ind){ ?>
-														<option value="<?php echo $ind['id'] ?>" title="<?php echo $ind['industry'] ?>"><?php echo $ind['industry'] ?></option>
-													<?php }
-												}
-											?>
-										</select>
-									</td>
-									<td>
-										<select multiple="multiple" id="lead_src" name="lead_src[]" >
-											<?php
-												if(isset($sources) && count($sources)>0){
-													foreach($sources as $srcs){ ?>
-														<option value="<?php echo $srcs['lead_source_id'] ?>" title="<?php echo $srcs['lead_source_name'] ?>"><?php echo $srcs['lead_source_name'] ?></option>
-													<?php }
-												}
-											?>
-										</select> 
-									</td>
-									<td>
-										<select style="width:180px" multiple="multiple" id="regionname" name="regionname[]">
-											<?php foreach ($regions as $reg) {
-													if(!empty($reg['region_name'])) { ?>
-														<option value="<?php echo $reg['regionid'] ?>" title="<?php echo $reg['region_name'] ?>"><?php echo $reg['region_name'] ?></option>
-											<?php 	}
-												}
-											?>
-										</select> 
-									</td>
-									<td id="country_row">
-										<select style="width:110px" multiple="multiple" id="countryname" name="countryname[]">
-											
-										</select> 
-									</td>
-									<td>
-										<select style="width:120px" multiple="multiple" id="statename" name="statename[]">
-											
-										</select> 
-									</td>
-									<td>
-										<select style="width:120px" multiple="multiple" id="locname" name="locname[]">
-											
-										</select> 
-									</td>
-									<td>
-										<select style="width:120px" multiple="multiple" id="lead_status" name="lead_status[]">
-											<option value="1" title="Active">Active</option>
-											<option value="2" title="OnHold">OnHold</option>
-											<option value="3" title="Dropped">Dropped</option>
-											<option value="4" title="Closed">Closed</option>
-											<option value="5" title="Moved to Project">Moved to Project</option>
-										</select> 
-									</td>
-									<td>
-										<select style="width:85px" multiple="multiple" id="lead_indi" name="lead_indi[]">
-											<option value="HOT" title="Hot">Hot</option>
-											<option value="WARM" title="Warm">Warm</option>
-											<option value="COLD" title="Cold">Cold</option>
-										</select> 
-									</td>
-									
-								</tr>
-								
-								
-								<tr align="right" >
+                                                                <tr align="right" >
 									
 									<td colspan="8"><input type="reset" class="positive input-font" name="advance" value="Reset" />
 									<input type="button" class="positive input-font show-ajax-loader" name="advance" id="search_advance" value="Search" />
