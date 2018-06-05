@@ -22,12 +22,10 @@
 	}
 	else 
 	{	
-	?>
+	?>      <div class="inner">
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Subscription Accounts</h2>
-                          <div class="inner">
-		<div class="page-title-head">
-			<a class="choice-box" onclick="advanced_filter();" >
+                        <a class="choice-box" onclick="advanced_filter();" >
 				<span>Advanced Filters</span>
 				<img src="assets/img/advanced_filter.png" class="icon leads" />
 			</a>
@@ -83,7 +81,7 @@
 			<div class="clearfix"></div>
 				
 			</div>
-		</div>
+		
 	
 		<?php if($this->session->userdata('accesspage')==1) { ?>
 			<form id="lead_search_form" name="lead_search_form" action="" method="post" style="float:right; margin:0;">
