@@ -14,7 +14,7 @@ class Hosting extends crm_controller {
 	
 	function index($limit = 0, $search = false) {
 		$data['accounts'] = $this->hosting_model->account_list($limit, $search);
-                print_r($data['accounts']);exit; 
+                echo '<pre>';print_r($data['accounts']);exit; 
                 
 		$this->load->view('hosting_view', $data);
 	}
