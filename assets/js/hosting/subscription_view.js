@@ -28,7 +28,7 @@ if(query_type == 'load_proposal_expect_end'){
 	var sturl = site_base_url+"welcome/advance_filter_search/load_proposal_expect_end/?"+Math.random();
 	$('#advance_search_results').load(sturl);
 } else {
-    alert('hi');
+    
 	var sturl = site_base_url+"welcome/advance_filter_search/?"+Math.random();
 	$('#advance_search_results').load(sturl);
 }
