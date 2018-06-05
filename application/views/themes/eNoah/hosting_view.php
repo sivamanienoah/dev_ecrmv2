@@ -260,5 +260,6 @@ $(function() {
 </script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
+<script type="text/javascript" src="assets/js/hosting/advance_filter_view.js"></script>
 <script type="text/javascript" src="assets/js/hosting/hosting_view.js"></script>
 <?php require (theme_url() . '/tpl/footer.php'); ?>
