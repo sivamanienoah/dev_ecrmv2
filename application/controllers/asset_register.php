@@ -369,7 +369,7 @@ class Asset_register extends crm_controller {
     /**
      *  Set the quote editing interface
      */
-    function edit_quote($id = 0) {
+    function edit_asset($id = 0) {
         if (($data['quote_data'] = $this->asset_model->get_lead_all_detail($id)) !== FALSE) {
             $data['edit_quotation'] = true;
 
@@ -422,7 +422,7 @@ class Asset_register extends crm_controller {
             $data['sales_divisions'] = $this->asset_model->get_sales_divisions();
             $data['industry'] = $this->asset_model->get_industry();
 
-            $this->load->view('leads/welcome_view', $data);
+            $this->load->view('asset_register/asset_register', $data);
         } else {
             $this->session->set_flashdata('header_messages', array("Status Changed Successfully."));
             header('Location: ' . $_SERVER['HTTP_REFERER']);
