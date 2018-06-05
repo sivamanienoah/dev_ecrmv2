@@ -18,6 +18,7 @@ function cancelDel() {
 }
 
 function advanced_filter(){
+    alert('hi');return false;
 	$('#advance_search').slideToggle('slow');
 	var  keyword = $("#keyword").val("");
 	var status = document.getElementById('advance_search').style.display;
