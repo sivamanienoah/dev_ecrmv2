@@ -19,7 +19,7 @@ function cancelDel() {
 
 //For Advance Filters functionality.
 $("#search_advance").click(function() {
-alert('hi');return false;
+//alert('hi');return false;
 	$('#search_advance').hide();
 	$('#save_advance').hide();
 	$('#load').show();
