@@ -113,7 +113,9 @@
 									</td>
 									<td>
 										<select style="width:148px" multiple="multiple" id="sub_name" name="sub_name[]">
-											<?php foreach($accounts as $name) { ?>
+											<?php 
+                                                                                        $unique_acc = array_unique($accounts);
+                                                                                        foreach($unique_acc as $name) { ?>
 													<option value="<?php echo $name['hostingid']; ?>" title="<?php echo $name['domain_name']; ?>"><?php echo $name['domain_name']; ?></option>
 											<?php } ?>
                                                                                                        
