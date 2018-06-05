@@ -260,7 +260,7 @@ class Hosting_model extends crm_model {
             $this->db->where('j.hostingid != "null"');
             // $this->db->where('j.pjt_status', 0);
             $this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
-            $this->db->join($this->cfg['dbpref'] . 'subscriptions_type as b', 'b.subscriptions_type_id = j.subscriptions_type_id_fk');
+            $this->db->join($this->cfg['dbpref'] . 'subscriptions_type as b', 'b.subscriptions_type_id = j.subscriptions_type_id_fk', 'LEFT');
             // $this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
             //    $this->db->join($this->cfg['dbpref'] . 'users as u', ' FIND_IN_SET (u.userid , j.lead_assign) ');
             //     $this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
