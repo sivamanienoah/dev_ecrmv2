@@ -87,13 +87,43 @@ class Hosting_model extends crm_model {
         }
     }
     
-    function get_customers(){
+     function get_customers(){
        // $qry = $this->db->query("SELECT * from hosting a,customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
        $this->db->select('a.*,b.*');
         $this->db->from($this->cfg['dbpref'] . 'hosting as a');
         $this->db->join($this->cfg['dbpref'] . 'customers as b', 'a.custid_fk = b.custid');
         $this->db->group_by("a.custid_fk");
         $this->db->order_by("a.custid_fk", "asc");
+        $qry = $this->db->get();
+        $res = $qry->num_rows();
+            if($res){
+			return $qry->result_array();
+		}
+		return false;
+    }
+    
+    function get_subscription_type(){
+       // $qry = $this->db->query("SELECT * from hosting a,customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
+       $this->db->select('a.*,b.*');
+        $this->db->from($this->cfg['dbpref'] . 'hosting as a');
+        $this->db->join($this->cfg['dbpref'] . 'subscriptions_type as b', 'a.subscriptions_type_id_fk = b.	subscriptions_type_id');
+        $this->db->group_by("a.subscriptions_type_id_fk");
+        $this->db->order_by("a.subscriptions_type_id_fk", "asc");
+        $qry = $this->db->get();
+        $res = $qry->num_rows();
+            if($res){
+			return $qry->result_array();
+		}
+		return false;
+    }
+    
+    function get_sub_status(){
+       // $qry = $this->db->query("SELECT * from hosting a,customers b where a.custid_fk = b.custid group by a.custid_fk order by a.custid_fk asc");
+       $this->db->select('*');
+        $this->db->from($this->cfg['dbpref'] . 'hosting as a');
+       // $this->db->join($this->cfg['dbpref'] . 'subscriptions_type as b', 'a.subscriptions_type_id_fk = b.	subscriptions_type_id');
+        $this->db->group_by("a.subscriptions_type_id_fk");
+        $this->db->order_by("a.subscriptions_type_id_fk", "asc");
         $qry = $this->db->get();
         $res = $qry->num_rows();
             if($res){
