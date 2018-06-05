@@ -251,7 +251,7 @@ class Hosting_model extends crm_model {
         if (isset($proposal_expect_end) && ($proposal_expect_end == 'load_proposal_expect_end')) {
             $proposal_notify_day = get_notify_status(1);
         }
-        // echo $this->userdata['role_id'];exit;
+         echo $this->userdata['role_id'];exit;
         if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
             $this->db->select('*', FALSE);
             $this->db->from($this->cfg['dbpref'] . 'hosting as a');
