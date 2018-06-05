@@ -2,7 +2,7 @@
 <div id="content">
     <div class="inner">
 		<div class="page-title-head">
-			<h2 class="pull-left borderBtm">Lead Dashboard</h2>
+			<h2 class="pull-left borderBtm">Subscription Dashboard</h2>
 			
 			<a class="choice-box" onclick="advanced_filter();" >
 				<span>Advanced Filters</span>
@@ -42,29 +42,12 @@
 				<!--search-->
 				<div class="form-cont search-table">
 					<form id="lead_search_form" name="lead_search_form" method="post">
-						<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Lead No, Job Title, Name or Company' ?>" class="textfield width200px g-search" />
-						<button type="submit" class="positive">Lead Search</button>			
+						<input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword']; else echo 'Subscription Name, Subscription Type, Customer' ?>" class="textfield width200px g-search" />
+						<button type="submit" class="positive">Subscription Search</button>			
 					</form>
 				</div>
 				<!--search-->
-				<!--add-->
-				<?php if($this->session->userdata('add')==1) { ?>
-				<div class="buttons add-new-button">
-					<button onclick="location.href='<?php echo base_url(); ?>welcome/new_quote'" class="positive" type="button">
-						Add New Lead
-					</button>
-				</div>
-				<?php } ?>
-				<!--add-->
-				<!--export-->
-				<div class="buttons export-to-excel">
-					<!--a class="export-btn">Export to Excel</a-->
-					<button id="excel_lead" class="positive" type="button" >
-						Export to Excel
-					</button>
-					<input type="hidden" name="search_type" value="" id="search_type" />
-				</div>
-				<!--export-->
+				
 			</div>
 		</div>
 	
