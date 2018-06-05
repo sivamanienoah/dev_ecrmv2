@@ -1,6 +1,31 @@
 <?php require (theme_url().'/tpl/header.php'); ?>
 <div id="content">
-    <div class="inner">
+  
+	<div class="inner hosting-section">
+	<?php 
+	if($this->session->userdata('accesspage')==1) {
+	if(!empty($hosts)) {
+		if($hosts=='HOSTS') { 
+			echo '<form action="dns/submit" method="post">';
+			echo'<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" />';
+			echo '<select name="hostings" class="textfield" style="width:298px;">';
+			foreach($hosting as $key=>$val){
+				echo '<option value="'.$val['hostingid'].'">'.$val['domain_name'].'</option>';
+			}
+			echo '</select>';
+			
+			echo '<div class="buttons">
+				  <button type="submit" name="update_dns" class="positive">Edit DNS</button>
+				  <button type="submit" name="update_hosting" class="positive">Edit Hosting</button></div>
+				  </form>';
+		}
+	}
+	else 
+	{	
+	?>
+		<div class="page-title-head">
+			<h2 class="pull-left borderBtm">Subscription Accounts</h2>
+                          <div class="inner">
 		<div class="page-title-head">
 			<h2 class="pull-left borderBtm">Subscription Dashboard</h2>
 			
@@ -235,30 +260,6 @@
 		}
 	?>
 	</div>
-	<div class="inner hosting-section">
-	<?php 
-	if($this->session->userdata('accesspage')==1) {
-	if(!empty($hosts)) {
-		if($hosts=='HOSTS') { 
-			echo '<form action="dns/submit" method="post">';
-			echo'<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" />';
-			echo '<select name="hostings" class="textfield" style="width:298px;">';
-			foreach($hosting as $key=>$val){
-				echo '<option value="'.$val['hostingid'].'">'.$val['domain_name'].'</option>';
-			}
-			echo '</select>';
-			
-			echo '<div class="buttons">
-				  <button type="submit" name="update_dns" class="positive">Edit DNS</button>
-				  <button type="submit" name="update_hosting" class="positive">Edit Hosting</button></div>
-				  </form>';
-		}
-	}
-	else 
-	{	
-	?>
-		<div class="page-title-head">
-			<h2 class="pull-left borderBtm">Subscription Accounts</h2>
 			<?php if($this->session->userdata('add')==1) { ?>
 				<div class="section-right">
 					<div class="buttons add-new-button">
@@ -267,6 +268,7 @@
 						</button>
 					</div>
 				</div>
+                                
 			<?php } ?>
 			<div class="clearfix"></div>
 		</div>
