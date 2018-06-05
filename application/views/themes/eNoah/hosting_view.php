@@ -83,7 +83,7 @@
 		
 	
 		<?php if($this->session->userdata('accesspage')==1) { ?>
-			<form id="lead_search_form" name="lead_search_form" action="" method="post" style="float:right; margin:0;">
+			<form id="subscription_search_form" name="subscription_search_form" action="" method="post" style="float:right; margin:0;">
 				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 			</form>
 		
