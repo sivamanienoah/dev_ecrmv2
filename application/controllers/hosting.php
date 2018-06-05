@@ -23,7 +23,7 @@ class Hosting extends crm_controller {
          $data['customers'] = $this->hosting_model->get_customers();
          $data['sub_status'] = $this->hosting_model->get_sub_status();
      //  echo '<pre>';print_r($data['sub_status']);exit; 
-        $this->load->view('hosting_view', $data);
+        $this->load->view('hosting/advance_filter_view', $data);
     }
 
     function delete_account($id = false) {
