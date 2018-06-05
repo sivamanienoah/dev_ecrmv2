@@ -319,7 +319,7 @@ class Hosting extends crm_controller {
 
         if ($search_type == 'search' && $search_id == false) {
            // echo 'if';exit;
-            $filt = real_escape_array($this->input->post()); echo'<pre>filt1=>';print_r($filt);
+            $filt = real_escape_array($this->input->post()); //echo'<pre>filt1=>';print_r($filt);
             $this->session->set_userdata("lead_search_by_default", 0);
             $this->session->set_userdata("lead_search_by_id", 0);
             $this->session->set_userdata("lead_search_only", 1);
