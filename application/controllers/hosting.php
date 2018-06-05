@@ -428,7 +428,7 @@ class Hosting extends crm_controller {
             }
         }
         
-        $this->load->view('hosting/advanced_filter_view', $data);
+        $this->load->view('hosting/advance_filter_view', $data);
     }
 
 }
