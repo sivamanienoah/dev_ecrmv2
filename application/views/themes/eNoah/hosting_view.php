@@ -114,7 +114,7 @@
 									<td>
 										<select style="width:148px" multiple="multiple" id="sub_name" name="sub_name[]">
 											<?php 
-                                                                                             print_r($sub_names);exit;
+                                                                                             
                                                                                         foreach($sub_names as $sub_name) { 
                                                                                                  ?>
 													<option value="<?php echo $sub_name['hostingid']; ?>" title="<?php echo $sub_name['domain_name']; ?>"><?php echo $sub_name['domain_name']; ?></option>
