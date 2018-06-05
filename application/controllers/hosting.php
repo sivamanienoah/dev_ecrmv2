@@ -418,7 +418,7 @@ class Hosting extends crm_controller {
         $data['lead_status'] = $lead_status;
         $data['lead_indi'] = $lead_indi;
         $data['keyword'] = $keyword;
-        print_r($this->userdata['userid']);exit;
+       // print_r($this->userdata['userid']);exit;
         $db_fields = $this->hosting_model->get_subscription_dashboard_field($this->userdata['userid']);
         if (!empty($db_fields) && count($db_fields) > 0) {
             foreach ($db_fields as $record) {
@@ -426,7 +426,7 @@ class Hosting extends crm_controller {
             }
         }
 
-        $this->load->view('leads/advance_filter_view', $data);
+        $this->load->view('hosting/advance_filter_view', $data);
     }
 
 }
