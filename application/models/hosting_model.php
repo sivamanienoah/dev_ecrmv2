@@ -123,8 +123,8 @@ class Hosting_model extends crm_model {
        $this->db->select('*');
         $this->db->from($this->cfg['dbpref'] . 'hosting as a');
        // $this->db->join($this->cfg['dbpref'] . 'subscriptions_type as b', 'a.subscriptions_type_id_fk = b.	subscriptions_type_id');
-        $this->db->group_by("a.subscriptions_type_id_fk");
-        $this->db->order_by("a.subscriptions_type_id_fk", "asc");
+        $this->db->group_by("a.domain_status");
+        $this->db->order_by("a.domain_status", "asc");
         $qry = $this->db->get();
         $res = $qry->num_rows();
             if($res){
