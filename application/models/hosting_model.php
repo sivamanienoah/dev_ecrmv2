@@ -229,8 +229,7 @@ class Hosting_model extends crm_model {
         return $list;
     }
 
-    public function get_filter_results($from_date, $to_date, $sub_name, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end) 
-        {
+    public function get_filter_results($from_date, $to_date, $sub_name, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end) {
         // print_r($sub_name);exit;
         $userdata = $this->session->userdata('logged_in_user');
        // print_r($userdata);exit;
@@ -254,7 +253,7 @@ class Hosting_model extends crm_model {
         if (isset($proposal_expect_end) && ($proposal_expect_end == 'load_proposal_expect_end')) {
             $proposal_notify_day = get_notify_status(1);
         }
-         echo $this->userdata['role_id'];exit;
+        // echo $this->userdata['role_id'];exit;
         if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
             $this->db->select('*', FALSE);
             $this->db->from($this->cfg['dbpref'] . 'hosting as a');
@@ -378,27 +377,52 @@ class Hosting_model extends crm_model {
                     $this->db->where($invwhere);
                 }
             }
-            
-       
+            /* Advanced filter */
+            if (!empty($regionname) && $regionname[0] != 'null') {
+                $this->db->where_in('cc.add1_region', $regionname);
+            } else {
+                $this->db->where_in('cc.add1_region', $region);
+            }
+            if (!empty($countryname) && $countryname[0] != 'null') {
+                $this->db->where_in('cc.add1_country', $countryname);
+            } else if ((($this->userdata['level']) == 3) || (($this->userdata['level']) == 4) || (($this->userdata['level']) == 5)) {
+                $this->db->where_in('cc.add1_country', $countryid);
+            }
+            if (!empty($statename) && $statename[0] != 'null') {
+                $this->db->where_in('cc.add1_state', $statename);
+            } else if ((($this->userdata['level']) == 4) || (($this->userdata['level']) == 5)) {
+                $this->db->where_in('cc.add1_state', $stateid);
+            }
+            if (!empty($locname) && $locname[0] != 'null') {
+                $this->db->where_in('cc.add1_location', $locname);
+            } else if (($this->userdata['level']) == 5) {
+                $this->db->where_in('cc.add1_location', $locationid);
+            }
+
+            if (!empty($lead_indi) && $lead_indi[0] != 'null' && $lead_indi[0] != '') {
+                $this->db->where_in('j.lead_indicator', $lead_indi);
+            }
+            /* Advanced filter */
         } else {
             $curusid = $this->session->userdata['logged_in_user']['userid'];
-             $this->db->select('*', FALSE);
-            $this->db->from($this->cfg['dbpref'] . 'hosting as a');
-            $this->db->where('j.hostingid != "null"');
-            // $this->db->where('j.pjt_status', 0);
-            $this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = a.custid_fk');
-            $this->db->join($this->cfg['dbpref'] . 'subscriptions_type as b', 'b.subscriptions_type_id = a.subscriptions_type_id_fkS');
-            // $this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
-            //    $this->db->join($this->cfg['dbpref'] . 'users as u', ' FIND_IN_SET (u.userid , j.lead_assign) ');
-            //     $this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
-            //     $this->db->join($this->cfg['dbpref'] . 'users as ub', 'ub.userid = j.belong_to');
-            //     $this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
-            //      $this->db->join($this->cfg['dbpref'] . 'country as co', 'co.countryid = cc.add1_country');
-            //     $this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = cc.add1_state');
-            //      $this->db->join($this->cfg['dbpref'] . 'location as locn', 'locn.locationid = cc.add1_location');
-            //     $this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage', 'LEFT');
-            //       $this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
-            // date_created
+            $this->db->select('j.lead_id, j.invoice_no, j.lead_title, j.lead_service, j.lead_source, j.lead_stage, j.date_created, j.date_modified, j.belong_to, j.created_by, j.expect_worth_amount, j.expect_worth_id, j.lead_indicator, j.lead_status, j.pjt_status, j.lead_assign, j.proposal_expected_date, j.division, j.industry, c.customer_name, cc.company, c.email_1, c.phone_1, c.phone_2, rg.region_name, co.country_name, st.state_name, locn.location_name, us.first_name as usfname,	us.last_name as usslname, ub.first_name as ubfn, ub.last_name as ubln, ls.lead_stage_name,ew.expect_worth_name');
+            $this->db->select('GROUP_CONCAT(CONCAT(u.first_name, " " , u.last_name)) as ufname', FALSE);
+            $this->db->from($this->cfg['dbpref'] . 'leads as j');
+
+            $this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = j.custid_fk');
+            $this->db->join($this->cfg['dbpref'] . 'customers_company as cc', 'cc.companyid = c.company_id');
+            // $this->db->join($this->cfg['dbpref'].'users as u', 'u.userid = j.lead_assign');
+            $this->db->join($this->cfg['dbpref'] . 'users as u', ' FIND_IN_SET (u.userid , j.lead_assign) ');
+            $this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
+            $this->db->join($this->cfg['dbpref'] . 'users as ub', 'ub.userid = j.belong_to');
+            $this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
+            $this->db->join($this->cfg['dbpref'] . 'country as co', 'co.countryid = cc.add1_country');
+            $this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = cc.add1_state');
+            $this->db->join($this->cfg['dbpref'] . 'location as locn', 'locn.locationid = cc.add1_location');
+            $this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage');
+            $this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
+
+            $this->db->where('j.lead_id != "null" AND j.lead_stage IN ("' . $this->stages . '")');
 
             if (isset($from_date) && !empty($from_date) && empty($to_date)) {
                 $dt_query = 'DATE(j.date_created) >= "' . date('Y-m-d', strtotime($from_date)) . '"';
@@ -441,16 +465,87 @@ class Hosting_model extends crm_model {
                     $this->db->where_in('j.lead_source', $lead_src);
                 }
             }
-           
-        
+            if (!empty($industry) && count($industry) > 0) {
+                if ($industry[0] != 'null' && $industry[0] != 'all' && $industry[0] != '') {
+                    $this->db->where_in('j.industry', $industry);
+                }
+            }
+            /* Expected Worth amount filter search starts */
+            if (!empty($worth) && count($worth) > 0 && $worth[0] != 'null') {//print_r($worth);exit;
+                $where_query = '(';
+                foreach ($worth as $key => $worth_val) {
+                    $exploded_worth_val = explode('-', $worth_val);
+                    $left_side = $exploded_worth_val[0];
+                    $right_side = $exploded_worth_val[1];
+                    if ($right_side == 'above') {
+                        $where_query .= 'j.expect_worth_amount >= ' . $left_side;
+                    } else {
+                        $where_query .= 'j.expect_worth_amount BETWEEN ' . $left_side . ' AND ' . $right_side;
+                    }
+                    if ($key < count($worth) - 1) {
+                        $where_query .= ' OR ';
+                    }
+                    //$this->db->or_where('j.expect_worth_amount BETWEEN '.$left_side.' AND '.$right_side);
+                }
+                $where_query .= ')';
+                $this->db->where($where_query);
+                /*
+                  if($worth[0] != 'null' && $worth[0] != 'all'){
+                  if($worth[1] == 'above')
+                  $this->db->where('j.expect_worth_amount >= '.$worth['0']);
+                  else
+                  $this->db->where('j.expect_worth_amount BETWEEN '.$worth['0'].' AND '.$worth['1']);
+                  } */
+            }
+            /* Expected Worth amount filter search ends */
+            if (!empty($owner)) {
+                if ($owner[0] != 'null' && $owner[0] != 'all') {
+                    $this->db->where_in('j.belong_to', $owner);
+                }
+            }
+            if (!empty($leadassignee) && count($leadassignee) > 0) {
+                if ($leadassignee[0] != 'null' && $leadassignee[0] != 'all') {
+                    // $this->db->where_in('j.lead_assign', $leadassignee);
+                    $cnt = count($leadassignee);
+                    if (count($leadassignee) > 1) {
+                        $find_wh_id = '(';
+                        for ($i = 0; $i < count($leadassignee); $i++) {
+                            $find_wh_id .= $leadassignee[$i];
+                            if ($cnt != ($i + 1)) {
+                                $find_wh_id .= "|";
+                            }
+                        }
+                        $find_wh_id .= ')';
+                        $find_wh = 'CONCAT(",", j.lead_assign, ",") REGEXP "' . $find_wh_id . '" ';
+                    } else {
+                        $find_wh = "FIND_IN_SET('" . $leadassignee[0] . "', j.lead_assign)";
+                    }
+                    $this->db->where($find_wh);
+                }
+            }
             if (!empty($keyword) && count($keyword) > 0) {
                 if ($keyword != 'Lead No, Job Title, Name or Company' && $keyword != 'null') {
                     $invwhere = "( (j.invoice_no LIKE '%$keyword%' OR j.lead_title LIKE '%$keyword%' OR c.customer_name LIKE '%$keyword%' ))";
                     $this->db->where($invwhere);
                 }
             }
-        // $this->db->group_by("j.lead_id");
-        //$this->db->order_by("j.lead_id", "desc");
+
+            if (isset($this->session->userdata['region_id']))
+                $region = explode(',', $this->session->userdata['region_id']);
+            if (isset($this->session->userdata['countryid']))
+                $countryid = explode(',', $this->session->userdata['countryid']);
+            if (isset($this->session->userdata['stateid']))
+                $stateid = explode(',', $this->session->userdata['stateid']);
+            if (isset($this->session->userdata['locationid']))
+                $locationid = explode(',', $this->session->userdata['locationid']);
+
+
+       
+            /* Advanced filter */
+        }
+
+        $this->db->group_by("j.lead_id");
+        $this->db->order_by("j.lead_id", "desc");
         $query = $this->db->get();
         echo $this->db->last_query(); exit;
 
