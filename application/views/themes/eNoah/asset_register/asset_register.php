@@ -901,66 +901,112 @@ if (!isset($view_quotation)) {
                     </div>
                 </form>
 
-                <?php if (isset($edit_quotation) && isset($quote_data)) { ?>
-                    <h2> Edit Lead  
+                <?php if (isset($asset_data) && isset($edit_asset)) { ?>
+                    <h2> Edit Asset  
                         <div style="overflow:hidden; padding-bottom:10px;" class="buttons pull-right">
-                            <button onclick="document.location.href = '<?php echo base_url(); ?>welcome/view_quote/<?php echo $quote_data['lead_id']; ?>'" class="positive" type="submit">Back to View</button>
+                            <button onclick="document.location.href = '<?php echo base_url(); ?>asset_register/view_asset/<?php echo $asset_data['asset_id'];?>'" class="positive" type="submit">Back to View</button>
                         </div>
 
                     </h2>
-
-                    <form name="lead_dates" id="lead-change-date" style="padding:0 5px 0 0; margin:0 !important;">
-                        <table>
-                            <tr>
-                                <td valign="top" width="300">
-                                    <h6 class="lead-created-label">Lead Creation Date &raquo;<span><?php if ($quote_data['date_created'] != '')
-                echo date('d-m-Y', strtotime($quote_data['date_created']));
-            else
-                echo 'Not Set';
-            ?></span></h6>
-                                    <p><a href="#" onclick="$('.lead-created-change:hidden').show(200);
-                                            return false;">Change?</a></p>
-
-                                    <div class="lead-created-change">
-                                        <input type="text" value="" class="textfield pick-date" name="lead_creation_date" id="lead_creation_date" />
-                                        <div class="buttons clearfix">
-                                            <button type="submit" class="positive" onclick="setLeadCreationDate();
-                                                    return false;">Set</button>
-                                            <button type="submit" onclick="$('.lead-created-change:visible').hide(200);
-                                                    return false;">Cancel</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
-
-                    <form name="project_dates" id="project-date-assign" style="padding:5px 0 5px 0;">
-                        <table>
-                            <tr>
-                                <td valign="top" width="300">
-                                    <h6 class="project-startdate-label">Proposal Expected Date &raquo;<span><?php if ($quote_data['proposal_expected_date'] != '')
-                echo date('d-m-Y', strtotime($quote_data['proposal_expected_date']));
-            else
-                echo 'Not Set';
-            ?></span></h6>
-                                    <p><a href="#" onclick="$('.project-startdate-change:hidden').show(200);
-                                            return false;">Change?</a></p>
-
-                                    <div class="project-startdate-change">
-                                        <input type="text" value="" class="textfield pick-date" name="proposal_expected_date" id="project-start-date" />
-                                        <div class="buttons clearfix">
-                                            <button type="submit" class="positive" onclick="setProjectStatusDate('start'); return false;">Set</button>
-                                            <button type="submit" onclick="$('.project-startdate-change:visible').hide(200); return false;">Cancel</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
-
-                    <form action="" method="post" id="quote-edit-form" onsubmit="return false;">				
+                    <form action="" method="post" id="quote-edit-form" onsubmit="return false;">
+                        <input type="hidden" name="asset_id" id="asset_id" value="<?php echo $asset_data['asset_id'] ?>" />
                         <div>
+                             <div>
+                                 <p><label>Department</label></p>
+                                         <p><select name="department" id="department" class="textfield width300px" ;">
+                                                 <option value="not_select">Please Select</option>
+                                                 <?php
+                                                 foreach ($job_cate as $job) {
+                                                     ?>
+                                                     <option value="<?php echo $job['sid'] ?>"<?php echo ($asset_data['department_id'] == $job['sid']) ? ' selected="selected"' : '' ?>><?php echo $job['services'] ?></option>   
+                                                     <?php
+                                                 }
+                                                 ?>
+                                             </select>
+                                         </p>
+                        <p><label>Project</label></p>
+                        <p><select name="Project" id="Project" class="textfield width300px";">
+                                <option value="not_select">Please Select</option>
+                                <?php
+                                foreach ($project_listing_ls as $job) {
+                                    ?>
+                                    <option value="<?php echo $job['lead_id'] ?>"><?php echo $job['lead_title'] ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </p>
+                        <p><label>Asset Type</label></p>
+                        <p>
+                            <select name="asset_type" id="asset_type" class="textfield width300px">
+                                <option value="not_select">Please Select</option>
+                                <option value="Hardware">Hardware</option>
+                                <option value="Software">Software</option>
+                                <option value="Information">Information</option>
+                            </select>
+                        </p>
+                        <p><label>Storage Mode</label></p>
+                        <p>
+                            <select name="storage_mode" id="storage_mode" class="textfield width300px">
+                                <option value="not_select">Please Select</option>
+                                <option value="Hardcopy">Hardcopy</option>
+                                <option value="Softcopy">Softcopy</option>
+                            </select>
+                        </p>
+                        <p><label>Confidentiality</label></p>
+                        <p>
+                            <select name="confidentiality" id="confidentiality" class="textfield width300px">
+                                <option value="not_select">Please Select</option>
+                                <option value="Highly confidential">Highly confidential</option>
+                                <option value="Confidential">Confidential</option>
+                                <option value="Internal">Internal</option>
+                                <option value="Public">Public</option>
+                            </select>
+                        </p>
+                        <p><label>Integrity</label></p>
+                        <p>
+                            <select name="integrity" id="integrity" class="textfield width300px">
+                                <option value="not_select">Please Select</option>
+                                <option value="High">High</option>
+                            </select>
+                        </p>
+                        <p><label>Availability</label></p>
+                        <p>
+                            <select name="availability" id="availability" class="textfield width300px">
+                                <option value="not_select">Please Select</option>
+                                <option value="Low">Low</option>
+                                <option value="High">High</option>
+                                <option value="Severe">Severe</option>
+                            </select>
+                        </p>
+                        <p><label>Asset Name</label></p>
+                        <p><input type="text" name="asset_name" id="asset_name" class="textfield width300px" /></p>
+                        <p><label>Location</label></p>
+                        <p><input type="text" name="location" id="location" class="textfield width300px" /></p>
+                        <p><label>Labelling</label></p>
+                        <p><label>Select Location</label></p>
+                        <p><select name="location" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)">
+                                <option value="not_select">Please Select</option>
+                                <?php
+                                foreach ($location as $loc) {
+                                    ?>
+                                    <option value="<?php echo $loc['loc_id'] ?>"><?php echo $loc['asset_location'] ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </p>
+                       
+                        <div id="saveLocation" style="display: none">
+                            Location :
+                            <input type="text" id="saveLocationText" />
+                        </div>
+                       
+                        <div class="buttons clearfix">
+                            <button type="submit" class="positive" onclick="startQuote(); return false;">save asset</button>
+                        </div>
+                        <p>&nbsp;</p>
+                    </div>
                             <p><label>Customer</label></p>
                             <p><input type="text" name="customer_company_name" id="customer_company_name" class="textfield width300px" value="<?php echo $quote_data['company'] . ' - ' . $quote_data['customer_name'] ?>" /></p>
                             <input type="hidden" name="customer_id" id="customer_id" value="<?php echo $quote_data['custid_fk'] ?>" />
