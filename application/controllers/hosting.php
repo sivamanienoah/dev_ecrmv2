@@ -315,7 +315,7 @@ class Hosting extends crm_controller {
 
         if ($search_type == 'search' && $search_id == false) {
            // echo 'if';exit;
-            $filt = real_escape_array($this->input->post()); echo'<pre>filt1=>';print_r($filt);
+            $filt = real_escape_array($this->input->post()); //echo'<pre>filt1=>';print_r($filt);
             $this->session->set_userdata("lead_search_by_default", 0);
             $this->session->set_userdata("lead_search_by_id", 0);
             $this->session->set_userdata("lead_search_only", 1);
@@ -394,7 +394,7 @@ class Hosting extends crm_controller {
             $this->session->set_userdata("search_keyword", '');
         }
 
-        $filter_results = $this->welcome_model->get_filter_results($from_date, $to_date, $stage, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
+        $filter_results = $this->hosting_model->get_filter_results($from_date, $to_date, $sub_name, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
         // echo $this->db->last_query(); die;
         $data['filter_results'] = $filter_results;
 
