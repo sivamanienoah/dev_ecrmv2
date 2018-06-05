@@ -131,7 +131,8 @@
 									</td>  
 									<td>
 										<select style="width:110px" multiple="multiple" id="customer" name="customer[]">
-											<?php foreach(customers as $cus) { ?>
+											<?php foreach(customers as $cus) {
+                                                                                        //   print_r($cus);exit;?>
 											<option value="<?php echo $cus['custid_fk']; ?>" title="<?php echo $cus['customer_name']; ?>"><?php echo $cus['customer_name']; ?></option>	
 										<?php } ?>
 										</select> 
