@@ -455,6 +455,16 @@ class Hosting_model extends crm_model {
         $res = $query->result_array();
         return $res;
     }
+    
+    public function get_subscription_dashboard_field($id)
+	{
+		$this->db->select("column_name");
+		$this->db->from($this->cfg['dbpref'].'lead_dashboard_fields');
+		$this->db->where('user_id', $id);
+		$this->db->order_by('column_order', 'ASC');
+		$query = $this->db->get();
+		return $query->result_array();
+	}
 
 }
 
