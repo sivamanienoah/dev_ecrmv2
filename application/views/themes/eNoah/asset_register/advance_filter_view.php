@@ -72,7 +72,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 							<?php
 								$lead_assign_arr = array(0);
 								$lead_assign_arr = @explode(',',$filter_result['lead_assign']);
-							if (($this->session->userdata('editlead')==1 && $filter_result['belong_to'] == $userdata['userid'] || $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || (in_array($userdata['userid'], $lead_assign_arr))) && $filter_result['pjt_status']==0) { ?>				
+							if (( $userdata['role_id'] == 1 || $userdata['role_id'] == 2)) { ?>				
 								<a target="_blank" href="<?php echo base_url(); ?>welcome/edit_quote/<?php echo $filter_result['lead_id'] ?>" title='Edit'>
 									<img src="assets/img/edit.png" alt='edit' >
 								</a>
