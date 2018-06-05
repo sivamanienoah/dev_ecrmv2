@@ -370,9 +370,10 @@ class Asset_register extends crm_controller {
      *  Set the quote editing interface
      */
     function edit_asset($id = 0) {
-        if (($data['quote_data'] = $this->asset_model->get_lead_all_detail($id)) !== FALSE) {
-            $data['edit_quotation'] = true;
-
+        if (($data['asset_data'] = $this->asset_model->get_asset_detail($id)) !== FALSE) {
+            $data['edit_asset'] = true;
+            $data['sales_divisions'] = $this->asset_model->get_sales_divisions();
+            $data['project_listing_ls'] = $this->asset_model->ListActiveprojects();
             $data['categories'] = $this->asset_model->get_categories();
 
             $c = count($data['categories']);
