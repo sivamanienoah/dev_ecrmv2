@@ -293,7 +293,7 @@ class Hosting extends crm_controller {
     }
 
     public function advance_filter_search($search_type = false, $search_id = false) {
-        // echo"here";exit;
+       echo"here";exit;
         // echo'<pre>search_type=>';print_r($search_type);
         // echo'<pre>search_id=>';print_r($search_id);
         $filt = array();
