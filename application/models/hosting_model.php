@@ -87,9 +87,8 @@ class Hosting_model extends crm_model {
         }
     }
 
-    
     function check_unique($domain) {
-               
+
         $dom = $this->db->get_where($this->cfg['dbpref'] . 'hosting', array('domain_name' => $domain));
         return ($dom->num_rows() > 0) ? true : false;
     }
@@ -150,12 +149,14 @@ class Hosting_model extends crm_model {
         $this->db->where('jb.lead_id', $cond);
         return $this->db->get()->result_array();
     }
-    
+
     function get_subscription_name() {
-       $this->db->select('*');
+        $this->db->select('*');
         $this->db->from('hosting');
-         $this->db->distinct('domain_name');
+        $this->db->distinct('domain_name');
         $query = $this->db->get();
+        echo $this->db->last_query();
+        exit;
         return $query->result();
     }
 
@@ -179,7 +180,7 @@ class Hosting_model extends crm_model {
     }
 
     public function get_filter_results($from_date, $to_date, $sub_name, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end) {
-       // print_r($sub_name);exit;
+        // print_r($sub_name);exit;
         $userdata = $this->session->userdata('logged_in_user');
 
         $sub_name = (count($sub_name) > 0) ? explode(',', $sub_name) : '';
@@ -207,18 +208,18 @@ class Hosting_model extends crm_model {
             $this->db->from($this->cfg['dbpref'] . 'hosting as a');
             $this->db->where('j.hostingid != "null"');
             // $this->db->where('j.pjt_status', 0);
-           $this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = a.custid_fk');
-              $this->db->join($this->cfg['dbpref'] . 'subscriptions_type as b', 'b.subscriptions_type_id = a.subscriptions_type_id_fkS');
+            $this->db->join($this->cfg['dbpref'] . 'customers as c', 'c.custid = a.custid_fk');
+            $this->db->join($this->cfg['dbpref'] . 'subscriptions_type as b', 'b.subscriptions_type_id = a.subscriptions_type_id_fkS');
             // $this->db->join($this->cfg['dbpref'] . 'users as u', 'u.userid = j.lead_assign');
-        //    $this->db->join($this->cfg['dbpref'] . 'users as u', ' FIND_IN_SET (u.userid , j.lead_assign) ');
-       //     $this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
-       //     $this->db->join($this->cfg['dbpref'] . 'users as ub', 'ub.userid = j.belong_to');
-       //     $this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
-      //      $this->db->join($this->cfg['dbpref'] . 'country as co', 'co.countryid = cc.add1_country');
-       //     $this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = cc.add1_state');
-      //      $this->db->join($this->cfg['dbpref'] . 'location as locn', 'locn.locationid = cc.add1_location');
-       //     $this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage', 'LEFT');
-     //       $this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
+            //    $this->db->join($this->cfg['dbpref'] . 'users as u', ' FIND_IN_SET (u.userid , j.lead_assign) ');
+            //     $this->db->join($this->cfg['dbpref'] . 'users as us', 'us.userid = j.modified_by');
+            //     $this->db->join($this->cfg['dbpref'] . 'users as ub', 'ub.userid = j.belong_to');
+            //     $this->db->join($this->cfg['dbpref'] . 'region as rg', 'rg.regionid = cc.add1_region');
+            //      $this->db->join($this->cfg['dbpref'] . 'country as co', 'co.countryid = cc.add1_country');
+            //     $this->db->join($this->cfg['dbpref'] . 'state as st', 'st.stateid = cc.add1_state');
+            //      $this->db->join($this->cfg['dbpref'] . 'location as locn', 'locn.locationid = cc.add1_location');
+            //     $this->db->join($this->cfg['dbpref'] . 'lead_stage as ls', 'ls.lead_stage_id = j.lead_stage', 'LEFT');
+            //       $this->db->join($this->cfg['dbpref'] . 'expect_worth as ew', 'ew.expect_worth_id = j.expect_worth_id');
             // date_created
             if (isset($from_date) && !empty($from_date) && empty($to_date)) {
                 $dt_query = 'DATE(j.date_created) >= "' . date('Y-m-d', strtotime($from_date)) . '"';
