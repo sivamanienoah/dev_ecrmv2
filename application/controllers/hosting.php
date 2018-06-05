@@ -289,7 +289,7 @@ class Hosting extends crm_controller {
 
     public function advance_filter_search($search_type = false, $search_id = false) {
         // echo"here";exit;
-         echo'<pre>search_type=>';print_r($search_type);
+        // echo'<pre>search_type=>';print_r($search_type);
         // echo'<pre>search_id=>';print_r($search_id);
         $filt = array();
         $sub_name = null;
@@ -314,11 +314,13 @@ class Hosting extends crm_controller {
         $this->session->unset_userdata('load_proposal_expect_end');
 
         if ($search_type == 'search' && $search_id == false) {
+            echo 'if';exit;
             $filt = real_escape_array($this->input->post()); //echo'<pre>filt1=>';print_r($filt);
             $this->session->set_userdata("lead_search_by_default", 0);
             $this->session->set_userdata("lead_search_by_id", 0);
             $this->session->set_userdata("lead_search_only", 1);
         } else if ($search_type == 'search' && is_numeric($search_id)) {
+            echo 'elseif';exit;
             $wh_condn = array('search_id' => $search_id, 'search_for' => 1, 'user_id' => $this->userdata['userid']);
             $get_rec = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
             unset($get_rec['search_id']);
@@ -332,9 +334,11 @@ class Hosting extends crm_controller {
             $this->session->set_userdata("lead_search_by_id", $search_id);
             $this->session->set_userdata("lead_search_only", 0);
         } else if ($search_type == 'load_proposal_expect_end' && $search_id == false) {
+            echo 'elseif2';exit;
             $this->session->set_userdata("load_proposal_expect_end", 1);
             $proposal_expect_end = 'load_proposal_expect_end';
         } else {
+            echo 'else';exit;
             $wh_condn = array('search_for' => 1, 'user_id' => $this->userdata['userid'], 'is_default' => 1);
             $get_rec = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
             unset($get_rec['search_id']);
