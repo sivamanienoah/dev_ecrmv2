@@ -100,7 +100,7 @@
 									<td class="tblheadbg">By Created / Modified Date</td>
 									<td class="tblheadbg">By Subscription Name</td>
 									<td class="tblheadbg">By Subscription Type</td>
-									<td class="tblheadbg">By Customer Worth</td>
+									<td class="tblheadbg">By Customer</td>
 									<td class="tblheadbg">By Subscription Status</td>
 									
 									
@@ -116,7 +116,7 @@
 											<?php foreach($accounts as $name) { ?>
 													<option value="<?php echo $name['domain_name']; ?>" title="<?php echo $name['domain_name']; ?>"><?php echo $name['domain_name']; ?></option>
 											
-                                                                                                       
+                                                                                        <?php } ?>          
 										</select> 
 									</td>
 									<td>
