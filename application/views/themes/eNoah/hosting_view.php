@@ -1,7 +1,7 @@
 <?php require (theme_url() . '/tpl/header.php'); ?>
 <div id="content">
     <div class="inner hosting-section">
-        
+
         <?php
         if ($this->session->userdata('accesspage') == 1) {
             if (!empty($hosts)) {
@@ -36,15 +36,17 @@
                                 <img class="dpwn-arw" src="assets/img/drop-down-arrow.png" title="" alt="" />
                                 <ul class="search-root">
                                     <li class="save-search-heading"><span>Search Name</span><span>Set Default</span><span>Action</span></li>
-        <?php
-        if (sizeof($saved_search) > 0) {
-            foreach ($saved_search as $searc) {
-                ?>
+                                    <?php
+                                    if (sizeof($saved_search) > 0) {
+                                        foreach ($saved_search as $searc) {
+                                            ?>
                                             <li class="saved-search-res" id="item_<?php echo $searc['search_id']; ?>">
                                                 <span><a href="javascript:void(0)" onclick="show_search_results('<?php echo $searc['search_id'] ?>')"><?php echo $searc['search_name'] ?></a></span>
-                                                <span class='rd-set-default'><input type="radio" value="<?php echo $searc['search_id'] ?>" <?php if ($searc['is_default'] == 1) {
-                                echo "checked";
-                            } ?> name="set_default_search" class="set_default_search" /></span>
+                                                <span class='rd-set-default'><input type="radio" value="<?php echo $searc['search_id'] ?>" <?php
+                                                    if ($searc['is_default'] == 1) {
+                                                        echo "checked";
+                                                    }
+                                                    ?> name="set_default_search" class="set_default_search" /></span>
                                                 <span><a title="Delete" href="javascript:void(0)" onclick="delete_save_search('<?php echo $searc['search_id'] ?>')"><img alt="delete" src="assets/img/trash.png"></a></span>
                                             </li>
                                             <?php
@@ -63,8 +65,11 @@
                             <!--search-->
                             <!--				<div class="form-cont search-table">
                                                                     <form id="lead_search_form" name="lead_search_form" method="post">
-                                                                            <input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword'])) echo $_POST['keyword'];
-                            else echo 'Subscription Name, Subscription Type' ?>" class="textfield width200px g-search" />
+                                                                            <input type="text" name="keyword" id="keyword" value="<?php if (isset($_POST['keyword']))
+                                        echo $_POST['keyword'];
+                                    else
+                                        echo 'Subscription Name, Subscription Type'
+                                        ?>" class="textfield width200px g-search" />
                                                                             <button type="submit" class="positive">Subscription Search</button>			
                                                                     </form>
                                                             </div>
@@ -78,7 +83,7 @@
                                     </div>
                                 </div>
 
-        <?php } ?>
+                        <?php } ?>
                             <div class="clearfix"></div>
 
                         </div>
@@ -114,9 +119,9 @@
                                                     </td>
                                                     <td>
                                                         <select style="width:148px" multiple="multiple" id="sub_name" name="sub_name[]">
-                                                            <?php
-                                                            foreach ($sub_names as $sub_name) {
-                                                                ?>
+            <?php
+            foreach ($sub_names as $sub_name) {
+                ?>
                                                                 <option value="<?php echo $sub_name['hostingid']; ?>" title="<?php echo $sub_name['domain_name']; ?>"><?php echo $sub_name['domain_name']; ?></option>
                                                             <?php } ?>
 
@@ -124,42 +129,45 @@
                                                     </td>
                                                     <td>
                                                         <select style="width:180px" multiple="multiple" id="sub_type_name" name="sub_type_name[]">
-                                                            <?php foreach ($sub_types as $sub_type) { ?>
+            <?php foreach ($sub_types as $sub_type) { ?>
                                                                 <option value="<?php echo $sub_type['subscriptions_type_name']; ?>" title="<?php echo $sub_type['subscriptions_type_name']; ?>"><?php echo $sub_type['subscriptions_type_name']; ?></option>	
                                                             <?php } ?>
                                                         </select> 
                                                     </td>  
                                                     <td>
                                                         <select style="width:110px" multiple="multiple" id="customer" name="customer[]">
-                                                            <?php foreach ($customers as $cus) {
-                                                                //   print_r($cus);exit;
-                                                                ?>
+            <?php
+            foreach ($customers as $cus) {
+                //   print_r($cus);exit;
+                ?>
                                                                 <option value="<?php echo $cus['custid_fk']; ?>" title="<?php echo $cus['customer_name']; ?>"><?php echo $cus['customer_name']; ?></option>	
-            <?php } ?>
+                                                            <?php } ?>
                                                         </select> 
                                                     </td>
                                                     <td>
                                                         <select style="width:110px" multiple="multiple" id="owner" name="owner[]">
-                                                            <?php foreach ($lead_owner as $owner) {
+                                                            <?php
+                                                            foreach ($lead_owner as $owner) {
                                                                 if (!empty($owner['first_name'])) {
                                                                     ?>
                                                                     <option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'] . ' - ' . $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
-                                                                <?php
-                                                                }
-                                                            }
-                                                            ?>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
                                                         </select> 
                                                     </td>
             <!--									<td>
                                                             <select style="width:110px" multiple="multiple" id="leadassignee" name="leadassignee[]">
-                                                    <?php foreach ($lead_owner as $owner) {
+                                                    <?php
+                                                    foreach ($lead_owner as $owner) {
                                                         if (!empty($owner['first_name'])) {
                                                             ?>		
-                                                                                                    <option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'] . ' - ' . $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
-                <?php
-                }
-            }
-            ?>
+                                                                                                            <option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'] . ' - ' . $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
                                                             </select> 
                                                     </td>-->
             <!--									<td colspan="2">
@@ -168,8 +176,8 @@
                                                     if (isset($services) && count($services) > 0) {
                                                         foreach ($services as $se) {
                                                             ?>
-                                                                                                    <option value="<?php echo $se['sid'] ?>" title="<?php echo $se['services'] ?>"><?php echo $se['services'] ?></option>
-                <?php
+                                                                                                            <option value="<?php echo $se['sid'] ?>" title="<?php echo $se['services'] ?>"><?php echo $se['services'] ?></option>
+                    <?php
                 }
             }
             ?>
@@ -198,79 +206,11 @@
             echo "You have no rights to access this page";
         }
         ?>
-                    </div>
+                 </div>
 
                 </div>
 
-                <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Subscription Name</th>
-                            <th>Subscription type</th>
-                            <th>Customer</th>
-                            <th>Subscription Status</th>
-                            <th>DNS</th>
-                            <th>Subscription Expiry Date</th>
-                            <th>Hosting Expiry Date</th>
-                            <th>SSL Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (is_array($accounts) && count($accounts) > 0) {
-                            foreach ($accounts as $account) {
-                                $rem = strtotime($account['go_live_date']) - time();
-                                if ($account['login_url'] != '' && $account['login'] != '' && $account['registrar_password'] != '' && $account['email'] != '' && $account['cur_smtp_setting'] != '' && $account['cur_pop_setting'] != '' && $account['cur_dns_primary_url'] != '' && $account['cur_dns_primary_ip'] != '' && $account['cur_dns_secondary_url'] != '' && $account['cur_dns_secondary_ip'] != '')
-                                    $dns = 'green';
-                                else if ($account['login_url'] != '' && $account['login'] != '' && $account['registrar_password'] != '')
-                                    $dns = 'orange';
-                                else
-                                    $dns = 'red';
-                                ?>
-                                <tr>
-                                    <td>
-                                        <?php if ($this->session->userdata('edit') == 1) { ?><a href="hosting/add_account/update/<?php echo $account['hostingid'] ?>"><?php echo $account['domain_name'] ?></a><?php } else echo "Edit"; ?>
-                                    </td>
-                                    <td>
-                                        <?php echo ($account['subscriptions_type_name']) ? $account['subscriptions_type_name'] : '---'; ?>
-                                    </td>
-
-                                    <td>
-                                        <?php echo $account['customer'] ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $account['domain_status'] ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($this->session->userdata('accesspage') == 1) { ?>
-                                            <a href="dns/go_live/<?php echo $account['hostingid']; ?>" style="color:<?php echo $dns; ?>;">View</a>
-                <?php } else echo $dns; ?>
-                                    </td>
-                                    <td>
-                <?php echo $account['domain_expiry']; ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $account['expiry_date']; ?>
-                                    </td>
-                                    <td>
-                                            <?php echo $account['ssl']; ?>
-                                    </td>
-                                    <td>
-                                <?php if ($this->session->userdata('edit') == 1) { ?>
-                                            <a href="hosting/add_account/update/<?php echo $account['hostingid'] ?>" title='Edit'><img src="assets/img/edit.png" alt='edit'></a>
-                                <?php } ?>
-                                <?php if ($this->session->userdata('delete') == 1) { ?>
-                                            <a class="delete" href="javascript:void(0)" onclick="return delHosting(<?php echo $account['hostingid']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'></a> 
-                <?php } ?>
-                                    </td>
-                                </tr>
-                        <?php
-                    }
-                }
-                ?>
-                    </tbody>
-                </table>
+                
             <?php
         }
         ?>
@@ -281,6 +221,43 @@
 }
 ?>
 </div>
+<div id='popupGetSearchName'></div>
+<script>
+var query_type = '<?php echo isset($load_proposal_expect_end) ? $load_proposal_expect_end : '' ?>';
+$(function() {
+	$('#from_date').datepicker({ 
+		dateFormat: 'dd-mm-yy', 
+		changeMonth: true, 
+		changeYear: true, 
+		onSelect: function(date) {
+			if($('#to_date').val!='')
+			{
+				$('#to_date').val('');
+			}
+			var return_date = $('#from_date').val();
+			$('#to_date').datepicker("option", "minDate", return_date);
+		},
+		beforeShow: function(input, inst) {
+			/* if ((selDate = $(this).val()).length > 0) 
+			{
+				iYear = selDate.substring(selDate.length - 4, selDate.length);
+				iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+				$(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+				$(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+			} */
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
+	$('#to_date').datepicker({ 
+		dateFormat: 'dd-mm-yy', 
+		changeMonth: true, 
+		changeYear: true,
+		beforeShow: function(input, inst) {
+			$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+		}
+	});
+});
+</script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
 <script type="text/javascript" src="assets/js/hosting/hosting_view.js"></script>
