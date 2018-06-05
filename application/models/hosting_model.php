@@ -89,11 +89,15 @@ class Hosting_model extends crm_model {
 
     function get_unique_domain($domain) {
 //     /   print_r($domain);exit;
+        $dom = $this->db->select('domain_name');
+        $dom = $this->db->distinct();
         $dom = $this->db->get_where($this->cfg['dbpref'] . 'hosting', array('domain_name' => $domain));
+        echo $this->db->last_query();exit;
         return $dom->result_array();
     }
     
     function check_unique($domain) {
+               
         $dom = $this->db->get_where($this->cfg['dbpref'] . 'hosting', array('domain_name' => $domain));
         return ($dom->num_rows() > 0) ? true : false;
     }
