@@ -301,8 +301,8 @@ class Hosting extends crm_controller {
                 $options['start_date'] = $this->input->post('start_date');
 		$options['end_date'] = $this->input->post('end_date');
                 
-		$options['h_start_date'] = $this->input->post('h_start_date');
-		$options['h_end_date'] = $this->input->post('h_end_date');
+		$options['c_date'] = $this->input->post('c_date');
+		$options['m_date'] = $this->input->post('m_date');
 		
                 $options['sub_type_name'] = $this->input->post('sub_type_name');
 		$options['status'] = $this->input->post('status');
