@@ -41,8 +41,8 @@ $(function(){
 		$('#advance').hide();
 		$('#load').show();		
 		var base_url   = site_base_url; // site_base_url is global variable 
-		var start_date = $('#task_search_start_date').val();
-		var end_date   = $('#task_search_end_date').val();
+		var start_date = $('#from_date').val();
+		var end_date   = $('#to_date').val();
 		var stage = $('#stage').val();		
 		stage = stage + "";		
 		var sub_name = $('#sub_name').val();		
