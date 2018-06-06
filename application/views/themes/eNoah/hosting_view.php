@@ -1,8 +1,7 @@
 <?php require (theme_url() . '/tpl/header.php'); ?>
 <div id="content">
     <div class="inner hosting-section">
-
-        <?php
+     <?php
         if ($this->session->userdata('accesspage') == 1) {
             if (!empty($hosts)) {
                 if ($hosts == 'HOSTS') {
@@ -21,7 +20,7 @@
                 }
             } else {
                 ?>     
-                <div class="inner">
+               
                     <div class="page-title-head">
                         <h2 class="pull-left borderBtm">Subscription Accounts</h2>
                         <form name = 'sub_frm' id = 'sub_frm' action="<?php echo $this->uri->uri_string() ?>" method="post" >
@@ -49,6 +48,7 @@
                             <div class="clearfix"></div>
 
                     </div>
+
                         <div>			
                             <div id="advance_search" style="display:none;">
                                 <!--<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:157  px; width:100%;">-->
@@ -224,26 +224,15 @@
                                         ?>
                                     </tbody>
                                 </table>
-                        <?php
+            <?php } ?>
+    </div>
+                    <?php
                     } else {
                         echo "You have no rights to access this page";
                     }
                     ?>
                 </div>
 
-            </div>
-
-
-            <?php
-        }
-        ?>
-    </div>
-    <?php
-        } else {
-            echo "You have no rights to access this page";
-        }
-?>
-</div>
 <div id='popupGetSearchName'></div>
 <script>
     var query_type = '<?php echo isset($load_proposal_expect_end) ? $load_proposal_expect_end : '' ?>';
