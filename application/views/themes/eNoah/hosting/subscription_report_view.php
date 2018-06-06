@@ -107,6 +107,11 @@ if($num>0)
 				
 			$content .= "</tr>";
 			
+				
+				
+				createTable($content);				
+				$content='';
+			
 	}
 		
 	
