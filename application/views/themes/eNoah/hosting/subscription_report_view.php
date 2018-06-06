@@ -43,7 +43,7 @@ if($num>0)
 	foreach ($res as $lead)
 	{	
                         $domain_status = $this->cfg['domain_status'][$lead['domain_status']];	
-                        print_r($domain_status);exit;
+//                       / print_r($domain_status);exit;
 			$res_cnt++;			
 			$content.= "<tr>";
 				/*$content .= "<td>";
