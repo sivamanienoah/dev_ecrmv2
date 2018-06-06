@@ -503,11 +503,23 @@ class Hosting_model extends crm_model {
             $this->db->where('date(crm_hosting.domain_expiry ) <=',$end_date);
         }
         
+         if(!empty($options['sub_type_name']) && $options['sub_type_name'] != 'null')
+        {
+            $sub_type_name = @explode(',', $options['sub_type_name']);
+            $this->db->where_in('crm_hosting.subscriptions_type_id_fk ',$sub_type_name);
+        }   
+        
         if(!empty($options['customer']) && $options['customer'] != 'null')
         {
             $customer = @explode(',', $options['customer']);
-            $this->db->where_in('cc.companyid',$customer);
-        }       
+            $this->db->where_in('crm_hosting.custid_fk',$customer);
+        } 
+        
+         if(!empty($options['status']) && $options['status'] != 'null')
+        {
+            $status = @explode(',', $options['status']);
+            $this->db->where_in('crm_hosting.domain_status',$status);
+        } 
         $this->db->select('*');
        $this->db->from($this->cfg['dbpref'] . 'hosting');
         $this->db->join($this->cfg['dbpref'] . 'dns', $this->cfg['dbpref'] . 'dns.hostingid ='. $this->cfg['dbpref'] . 'hosting.hostingid','left');
@@ -538,7 +550,7 @@ class Hosting_model extends crm_model {
      //   $query = $this->db->get($this->cfg['dbpref'].'hosting jb');
         $result['res'] = $query->result();
         $result['num'] = $query->num_rows();
-        //echo $this->db->last_query();exit;
+        echo $this->db->last_query();exit;
         return $result;     
     }
     
