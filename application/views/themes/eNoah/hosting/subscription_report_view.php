@@ -65,7 +65,9 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->domain_status;
+				$content .=  if ($this->session->userdata('accesspage') == 1) { 
+                                                            <a href="dns/go_live/$lead->hostingid">View</a>
+                                                         } else echo $dns; 
 				$content .= "</td>";
 				
 				
@@ -84,7 +86,7 @@ if($num>0)
                                
                                 
                              $content .= "</tr>";
-			
+			echo $content;exit;
 			if(empty($res[$res_cnt]->$sort) || $res[$res_cnt]->$sort != $lead->$sort)
 			//if(empty($res[$res_cnt]->country_name) || $res[$res_cnt]->country_name != $lead->country_name)
 			{
