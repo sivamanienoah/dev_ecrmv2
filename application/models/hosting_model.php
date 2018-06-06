@@ -494,11 +494,11 @@ class Hosting_model extends crm_model {
             $this->db->where_in('cc.companyid',$customer);
         }       
         $this->db->select('*, '.$this->cfg['dbpref'] . 'jb.hostingid');
-       $this->db->from($this->cfg['dbpref'] . 'hosting jb');
+       $this->db->from($this->cfg['dbpref'] . 'hosting as jb');
         $this->db->join($this->cfg['dbpref'] . 'dns', $this->cfg['dbpref'] . 'jb.hostingid ='. $this->cfg['dbpref'] . 'dns.hostingid','left');
         $this->db->join($this->cfg['dbpref'] . 'subscriptions_type', $this->cfg['dbpref'] . 'subscriptions_type.subscriptions_type_id ='. $this->cfg['dbpref'] . 'jb.subscriptions_type_id_fk','left');
         $query = $this->db->get();     
-        echo $this->db->last_query();exit
+        echo $this->db->last_query();exit;
        //  $this->db->select('*');
        // $this->db->from($this->cfg['dbpref'] . 'leads as j');
        
