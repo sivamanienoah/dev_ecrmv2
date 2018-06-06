@@ -499,7 +499,7 @@ class Hosting_model extends crm_model {
         $this->db->join($this->cfg['dbpref'] . 'subscriptions_type', $this->cfg['dbpref'] . 'subscriptions_type.subscriptions_type_id ='. $this->cfg['dbpref'] . 'hosting.subscriptions_type_id_fk','left');
         $this->db->join($this->cfg['dbpref'] . 'customers', $this->cfg['dbpref'] . 'customers.custid ='. $this->cfg['dbpref'] . 'hosting.custid_fk','left');
         $query = $this->db->get();     
-        echo $this->db->last_query();exit;
+       // echo $this->db->last_query();exit;
        //  $this->db->select('*');
        // $this->db->from($this->cfg['dbpref'] . 'leads as j');
        
