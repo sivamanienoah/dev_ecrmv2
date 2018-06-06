@@ -110,7 +110,7 @@ if($num>0)
 }
 
 //function createTable($content,$reg)
-function createTable($content,$reg)
+function createTable($content)
 {
 //	if(!empty($reg)){
 //		echo "<h3 style='border-bottom:1px solid #ccc;'>$reg</h3>";
