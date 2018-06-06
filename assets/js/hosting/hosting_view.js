@@ -43,29 +43,23 @@ $(function(){
 		var base_url   = site_base_url; // site_base_url is global variable 
 		var start_date = $('#from_date').val();
 		var end_date   = $('#to_date').val();
-		var stage = $('#stage').val();		
-		stage = stage + "";		
+                
+                var h_start_date = $('#h_from_date').val();
+		var h_end_date   = $('#h_to_date').val();
+                
+                
+		var sub_type_name = $('#sub_type_name').val();		
+		sub_type_name = sub_type_name + "";
+                
 		var sub_name = $('#sub_name').val();		
 		sub_name = sub_name + "";			
 		var customer = $('#customer').val();
 		customer = customer + "";
-		var worth = $('#worth').val();
-		worth = worth+"";
-		var owner = $('#owner').val();
-		owner = owner+"";
-		var leadassignee = $('#leadassignee').val();		
-		leadassignee = leadassignee+"";
-
-		var regionname = $('#regionname').val();	
-		regionname = regionname+"";	
-		var countryname = $('#countryname').val();
-		countryname = countryname+"";
-		var statename = $('#statename').val();
-		statename = statename+"";
-		var locname = $('#locname').val();
-		locname = locname+"";
+		var status = $('#staus').val();
+                status = status + "";
 		
-		var params = {start_date:start_date,end_date:end_date,sub_name:sub_name,customer:customer,worth:worth,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname};
+		var params = {sub_type_name:sub_type_name,start_date:start_date,end_date:end_date,h_start_date:h_start_date,h_end_date:h_end_date,sub_name:sub_name,customer:customer,
+                    status:status,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname};
 		params[csrf_token_name] = csrf_hash_token; 
 		$('#hostme').load(base_url+'hosting/get_subscription_report',params,function(){
 			$('#advance').show();
