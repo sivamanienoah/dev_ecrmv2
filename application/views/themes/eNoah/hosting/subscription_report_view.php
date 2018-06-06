@@ -104,6 +104,7 @@ if($num>0)
 	createTable($content);		
 	
 }else{
+        $content = '';
 	$content .= "<tr>";
 		$content .= "<td colspan = '9' align = 'center'><strong>No result</strong></td>";
 		//$content .= "<td colspan = '4'><strong>".$amount."</strong></td>";
