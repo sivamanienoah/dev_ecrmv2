@@ -107,34 +107,6 @@ if($num>0)
 				
 			$content .= "</tr>";
 			
-			if(empty($res[$res_cnt]->$sort) || $res[$res_cnt]->$sort != $lead->$sort)
-			//if(empty($res[$res_cnt]->country_name) || $res[$res_cnt]->country_name != $lead->country_name)
-			{
-				
-				$gross+=$amount;
-				if($total_cnt == $res_cnt)
-				{
-					$content .= "<tfoot>";
-					$content .= "<tr>";
-						$content .= "<td colspan = '8' align = 'right'><strong>Gross (".$GLOBALS['default_cur_names'].")</strong></td>";
-						$content .= "<td align = 'right'><strong>".$gross."</strong></td>";
-					$content .= "</tr>";
-					$content .= "</tfoot>";	
-				}			
-				
-				$content .= "<tfoot>";
-					$content .= "<tr>";
-						$content .= "<td colspan = '8' align = 'right'><strong>Total (".$GLOBALS['default_cur_names'].")</strong></td>";
-						$content .= "<td align = 'right'><strong>".$amount."</strong></td>";
-					$content .= "</tr>";
-				$content .= "</tfoot>";
-				
-				//$res_cnt = 0;
-				$amount=0;
-				$region[] = $lead->region_name;
-				createTable($content,$lead->$sort);				
-				$content='';
-			}
 	}
 		
 	
