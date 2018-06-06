@@ -59,6 +59,7 @@
                                     <table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
                                         <tr>
                                             <td class="tblheadbg">By Subscription Expiry Date</td>
+                                            <td class="tblheadbg">By Hosting Expiry Date</td>
                                             <td class="tblheadbg">By Subscription Name</td>
                                             <td class="tblheadbg">By Subscription Type</td>
                                             <td class="tblheadbg">By Customer</td>
@@ -71,6 +72,11 @@
                                                 From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:57px;" />
                                                 <br />
                                                 To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
+                                            </td>
+                                            <td>
+                                                From <input type="text" data-calendar="true" name="h_from_date" id="h_from_date" class="textfield" style="width:57px;" />
+                                                <br />
+                                                To <input type="text" data-calendar="true" name="h_to_date" id="h_to_date" class="textfield" style="width:57px; margin-left: 13px;" />
                                             </td>
                                             <td>
                                                 <select style="width:148px" multiple="multiple" id="sub_name" name="sub_name[]">
