@@ -88,8 +88,8 @@ if($num>0)
                                $content .= "<td>";
                                $hostingid  =   $lead->hostingid;
                                  if ($this->session->userdata('edit') == 1) { 
-                                     echo 'hi';exit;
-                                       $content .= '<a href="hosting/add_account/update/"'.$hostingid.' title="Edit"><img src="assets/img/edit.png" alt="edit"></a>';
+                                    // echo 'hi';exit;
+                                       $content .= '<a href="hosting/add_account/update/'.$hostingid.' title="Edit"><img src="assets/img/edit.png" alt="edit"></a>';
                                                         } 
                                                          if ($this->session->userdata('delete') == 1) { 
                                          $content .= '<a class="delete" href="javascript:void(0)" onclick="return delHosting($lead->hostingid);" title="Delete"><img src="assets/img/trash.png" alt="delete"> </a>';
