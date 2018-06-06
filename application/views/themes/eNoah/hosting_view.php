@@ -276,6 +276,40 @@
             }
         });
     });
+    
+     $(function () {
+        $('#h_from_date').datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function (date) {
+                if ($('#to_date').val != '')
+                {
+                    $('#to_date').val('');
+                }
+                var return_date = $('#h_from_date').val();
+                $('#to_date').datepicker("option", "minDate", return_date);
+            },
+            beforeShow: function (input, inst) {
+                /* if ((selDate = $(this).val()).length > 0) 
+                 {
+                 iYear = selDate.substring(selDate.length - 4, selDate.length);
+                 iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+                 $(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+                 $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+                 } */
+                $('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+            }
+        });
+        $('#h_to_date').datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true,
+            beforeShow: function (input, inst) {
+                $('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
+            }
+        });
+    });
 </script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
