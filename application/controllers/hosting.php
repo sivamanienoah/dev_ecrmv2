@@ -291,6 +291,43 @@ class Hosting extends crm_controller {
         $data['packageid'] = $packageid;
         $this->load->view('package_due_date', $data);
     }
+    
+      public function get_subscription_report() {
+    	$data =array();
+    	$options = array();
+    	$options['sub_name'] = $this->input->post('sub_name');
+    	$options['customer'] = $this->input->post('customer');
+		$options['end_date'] = $this->input->post('end_date');
+		$options['leadassignee'] = $this->input->post('leadassignee');
+		$options['owner'] = $this->input->post('owner');
+		$options['stage'] = $this->input->post('stage');
+		$options['start_date'] = $this->input->post('start_date');
+		$options['worth'] = $this->input->post('worth');
+		
+		$options['regionname'] = $this->input->post('regionname');		
+		$options['countryname'] = $this->input->post('countryname');		
+		$options['statename'] = $this->input->post('statename');		
+		$options['locname'] = $this->input->post('locname');
+		
+		$data['regionname'] = $options['regionname'];
+		$data['countryname'] = $options['countryname'];
+		$data['statename'] = $options['statename'];
+		$data['locname'] = $options['locname'];
+		
+		//print_r($options);exit;
+    	$res = $this->hosting_model->getSubscriptionReport($options);
+    	
+    	$data['res'] = $res['res'];
+    	$data['num'] = $res['num'];
+    	if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {    	
+    	//echo "hi";exit;	
+   			$this->load->view('hosting/subscription_report_view',$data);
+		}else{
+			//echo "else";exit;
+    		return $this->load->view('hosting/subscription_report_view',$data,true);
+		}    	
+    }
+
 
     public function advance_filter_search($search_type = false, $search_id = false) {
       // echo"here";exit;
