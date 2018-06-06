@@ -78,15 +78,10 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";	
-				$content .= $lead->ssl;
+				$content .= $this->cfg['domain_ssl_status'][$lead->ssl];
 				$content .= "</td>";
                                 
-                                 
-				
-				
-				
-				
-			$content .= "</tr>";
+                             $content .= "</tr>";
 			
 			if(empty($res[$res_cnt]->$sort) || $res[$res_cnt]->$sort != $lead->$sort)
 			//if(empty($res[$res_cnt]->country_name) || $res[$res_cnt]->country_name != $lead->country_name)
