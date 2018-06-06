@@ -39,7 +39,7 @@ if($num>0)
 	$gross=0;
 	$region = array();
 	$total_cnt = count($res);
-	//echo "<pre>";print_r($res); exit;
+	echo "<pre>";print_r($res); exit;
 	foreach ($res as $lead)
 	{				
 			$res_cnt++;			
