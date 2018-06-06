@@ -492,15 +492,15 @@ class Hosting_model extends crm_model {
             $this->db->where('date(crm_hosting.expiry_date ) <=',$end_date);
         }
         
-        if(!empty($options['h_start_date']))
+        if(!empty($options['c_date']))
         {
-            $start_date = @date('Y-m-d',strtotime($options['h_start_date']));
-            $this->db->where('date(crm_hosting.domain_expiry ) >=',$start_date);
+            $c_date = @date('Y-m-d',strtotime($options['c_date']));
+            $this->db->where('date(crm_hosting.created_on ) >=',$c_date);
         }
-        if(!empty($options['h_end_date']))
+        if(!empty($options['m_date']))
         {
-            $end_date = @date('Y-m-d',strtotime($options['h_end_date']));
-            $this->db->where('date(crm_hosting.domain_expiry ) <=',$end_date);
+            $m_date = @date('Y-m-d',strtotime($options['m_date']));
+            $this->db->where('date(crm_hosting.modified_on ) <=',$m_date);
         }
         
          if(!empty($options['sub_type_name']) && $options['sub_type_name'] != 'null')
