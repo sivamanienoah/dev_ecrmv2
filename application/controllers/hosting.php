@@ -296,7 +296,7 @@ class Hosting extends crm_controller {
     	$data =array();
     	$options = array();
     	$options['sub_name'] = $this->input->post('sub_name');
-        print_r($options);exit;
+        
     	$options['customer'] = $this->input->post('customer');
                 $options['start_date'] = $this->input->post('start_date');
 		$options['end_date'] = $this->input->post('end_date');
@@ -320,7 +320,7 @@ class Hosting extends crm_controller {
 		$data['statename'] = $options['statename'];
 		$data['locname'] = $options['locname'];
 		
-		print_r($options);exit;
+//		/print_r($options);exit;
     	$res = $this->hosting_model->getSubscriptionReport($options);
     //	echo '<pre>';            print_r($res);exit;
     	$data['res'] = $res['res'];
