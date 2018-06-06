@@ -526,7 +526,7 @@ class Hosting_model extends crm_model {
      //   $query = $this->db->get($this->cfg['dbpref'].'hosting jb');
         $result['res'] = $query->result();
         $result['num'] = $query->num_rows();
-        echo $this->db->last_query();exit;
+//        /echo $this->db->last_query();exit;
         return $result;     
     }
     
