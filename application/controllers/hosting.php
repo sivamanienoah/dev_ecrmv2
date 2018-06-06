@@ -316,7 +316,7 @@ class Hosting extends crm_controller {
 		$data['statename'] = $options['statename'];
 		$data['locname'] = $options['locname'];
 		
-		print_r($options);exit;
+		//print_r($options);exit;
     	$res = $this->hosting_model->getSubscriptionReport($options);
     //	echo '<pre>';            print_r($res);exit;
     	$data['res'] = $res['res'];
