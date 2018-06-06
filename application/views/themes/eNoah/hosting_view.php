@@ -108,11 +108,12 @@
                                             <td>
                                                 <select style="width:110px" multiple="multiple" id="staus" name="staus[]">
                                                     <?php
-                                                    foreach ($sub_status as $staus) {
+                                                    foreach ($sub_status as $key=>$value){
+                                                          
                                                     //    print_r($status);exit;
-                                                        if (!empty($staus)) {
+                                                        if (!empty($key)) {
                                                             ?>
-                                                            <option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'] . ' - ' . $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
+                                                            <option value="<?php echo $key?>" title="<?php echo $value?>"><?php echo $value ?></option>
                                                             <?php
                                                         }
                                                     }
