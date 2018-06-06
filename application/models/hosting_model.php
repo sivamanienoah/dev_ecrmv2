@@ -33,6 +33,7 @@ class Hosting_model extends crm_model {
             $val = (array) $val;
             $delist[$key]['customer'] = preg_replace('/\|[0-9]+$/', '', $this->customer_account($val['custid_fk']));
             $delist[$key]['domain_status'] = $this->cfg['domain_status'][$val['domain_status']];
+            print_r($delist[$key]['domain_status']);exit;
             $delist[$key]['expiry_date'] = date('d-m-Y', strtotime($val['expiry_date']));
             if (($val['domain_expiry']) == "") {
                 $delist[$key]['domain_expiry'] = '-';
@@ -56,7 +57,7 @@ class Hosting_model extends crm_model {
             $delist[$key]['cur_dns_secondary_url'] = $val['cur_dns_secondary_url'];
             $delist[$key]['cur_dns_secondary_ip'] = $val['cur_dns_secondary_ip'];
         }
-        echo'<pre>';print_r($delist);exit;
+        //echo'<pre>';print_r($delist);exit;
         return $delist;
     }
 
