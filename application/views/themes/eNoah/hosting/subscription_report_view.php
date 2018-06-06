@@ -82,12 +82,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				
-				$content .= "<td align = 'right'>";
-				//$content .= $lead->expect_worth_amount;				 
-				$amt_converted = conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$GLOBALS['default_cur_ids']]);
-				$content .= $amt_converted;
-				$content .= "</td>";
-				$amount += $amt_converted;
+				
 				
 			$content .= "</tr>";
 			
