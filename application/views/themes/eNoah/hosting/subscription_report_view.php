@@ -41,7 +41,9 @@ if($num>0)
 	$total_cnt = count($res);
 	//echo "<pre>";print_r($res); exit;
 	foreach ($res as $lead)
-	{				
+	{	
+                        $domain_status = $this->cfg['domain_status'][$lead['domain_status']];	
+                        print_r($domain_status);exit;
 			$res_cnt++;			
 			$content.= "<tr>";
 				/*$content .= "<td>";
@@ -61,7 +63,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->domain_status;
+				$content .= $domain_status;
 				$content .= "</td>";
 				
 				$content .= "<td>";
