@@ -81,6 +81,15 @@ if($num>0)
 				$content .= $this->cfg['domain_ssl_status'][$lead->ssl];
 				$content .= "</td>";
                                 
+                                 $content .= "<td>";
+				 if ($this->session->userdata('edit') == 1) { 
+                                           $content .=  "<a href='hosting/add_account/update/'".$lead['hostingid']." title='Edit'><img src='assets/img/edit.png' alt='edit'></a>";
+                                                         } 
+                                            if ($this->session->userdata('delete') == 1) { 
+                                               $content .= "<a class='delete' href='javascript:void(0)' onclick='return delHosting(".$lead['hostingid'].") title='Delete'> <img src='assets/img/trash.png' alt='delete'></a>";
+                                                         } 
+				$content .= "</td>";
+                                
                              $content .= "</tr>";
 			
 			if(empty($res[$res_cnt]->$sort) || $res[$res_cnt]->$sort != $lead->$sort)
