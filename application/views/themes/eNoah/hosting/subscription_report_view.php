@@ -65,9 +65,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .=  if ($this->session->userdata('accesspage') == 1) { 
-                                                            <a href="dns/go_live/$lead->hostingid">View</a>
-                                                         } else echo $dns; 
+				$content .=  $this->cfg['domain_status'][$lead->domain_status];
 				$content .= "</td>";
 				
 				
