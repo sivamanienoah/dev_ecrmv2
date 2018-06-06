@@ -60,50 +60,6 @@ if($num>0)
 				$content .= $lead->customer_name;
 				$content .= "</td>";
 				
-				$content .= "<td>";
-				$content .= $lead->owner_first_name.' '.$lead->owner_last_name;
-				$content .= "</td>";
-				
-				$content .= "<td>";
-				$content .= get_lead_assigne_names($lead->lead_assign);
-				$content .= "</td>";
-				
-				
-				
-				$content .= "<td>";
-				$content .= $lead->lead_indicator;
-				$content .= "</td>";
-				
-				$content .= "<td>";
-				$content .= $lead->lead_stage_name;
-				$content .= "</td>";
-				
-				$content .= "<td>";	
-				switch ($lead->lead_status)
-				{
-					case 1:
-						$status = 'Active';
-					break;
-					case 2:
-						$status = 'On Hold';
-					break;
-					case 3:
-						$status = 'Dropped';
-					break;
-					case 4:
-						$status = 'Closed';
-					break;
-				}
-				$content .= $status;
-				$content .= "</td>";
-				
-				
-				$content .= "<td align = 'right'>";
-				//$content .= $lead->expect_worth_amount;				 
-				$amt_converted = conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$GLOBALS['default_cur_ids']]);
-				$content .= $amt_converted;
-				$content .= "</td>";
-				$amount += $amt_converted;
 				
 			$content .= "</tr>";
 			
