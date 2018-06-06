@@ -65,9 +65,11 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= ' <?php if ($this->session->userdata("accesspage") == 1) { ?>
-                                                            <a href="dns/go_live/<?php echo $account["hostingid"]; ?>" style="color:<?php echo $dns; ?>;">View</a>
-                                                        <?php } else echo $dns; ?>';
+                               $hostingid=   $lead->hostingid;
+                                if ($this->session->userdata("accesspage") == 1) {
+                                   $content .= '<a href="dns/go_live/"'.$hostingid.'">View</a>';
+                               }
+				
 				$content .= "</td>";
 				
 				
