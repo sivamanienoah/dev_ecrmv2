@@ -33,7 +33,7 @@ class Hosting_model extends crm_model {
             $val = (array) $val;
             $delist[$key]['customer'] = preg_replace('/\|[0-9]+$/', '', $this->customer_account($val['custid_fk']));
             $delist[$key]['domain_status'] = $this->cfg['domain_status'][$val['domain_status']];
-            print_r($delist[$key]['domain_status']);exit;
+           // print_r($delist[$key]['domain_status']);exit;
             $delist[$key]['expiry_date'] = date('d-m-Y', strtotime($val['expiry_date']));
             if (($val['domain_expiry']) == "") {
                 $delist[$key]['domain_expiry'] = '-';
