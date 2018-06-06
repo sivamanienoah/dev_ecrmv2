@@ -109,11 +109,12 @@ if($num>0)
 	createTable($content);
 }
 
+//function createTable($content,$reg)
 function createTable($content,$reg)
 {
-	if(!empty($reg)){
-		echo "<h3 style='border-bottom:1px solid #ccc;'>$reg</h3>";
-	}
+//	if(!empty($reg)){
+//		echo "<h3 style='border-bottom:1px solid #ccc;'>$reg</h3>";
+//	}
 	$table = '<table border="0" cellpadding="0" cellspacing="0" class="data-table lead-table" width="100%">';
 	$table .= "<thead>";
 	$table .= "<tr>";
