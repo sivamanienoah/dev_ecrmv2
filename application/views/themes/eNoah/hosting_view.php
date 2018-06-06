@@ -91,7 +91,7 @@
                                             <td>
                                                 <select style="width:180px" multiple="multiple" id="sub_type_name" name="sub_type_name[]">
                                                     <?php foreach ($sub_types as $sub_type) { ?>
-                                                        <option value="<?php echo $sub_type['subscriptions_type_id_fk']; ?>" title="<?php echo $sub_type['subscriptions_type_name']; ?>"><?php echo $sub_type['subscriptions_type_name']; ?></option>	
+                                                        <option value="<?php echo $sub_type['subscriptions_type_id']; ?>" title="<?php echo $sub_type['subscriptions_type_name']; ?>"><?php echo $sub_type['subscriptions_type_name']; ?></option>	
                                                     <?php } ?>
                                                 </select> 
                                             </td>  
