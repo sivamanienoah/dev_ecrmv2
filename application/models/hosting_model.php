@@ -472,7 +472,7 @@ class Hosting_model extends crm_model {
         
         public function getSubscriptionReport($options = array()) {
        // $order_by = 'reg.region_name';
-       print_r($options);exit;
+       //print_r($options);exit;
          if(!empty($options['sub_name']) && $options['sub_name'] != 'null')
         {
             $sub_name = explode(',', $options['sub_name']);
@@ -550,7 +550,7 @@ class Hosting_model extends crm_model {
      //   $query = $this->db->get($this->cfg['dbpref'].'hosting jb');
         $result['res'] = $query->result();
         $result['num'] = $query->num_rows();
-        //echo $this->db->last_query();exit;
+        echo $this->db->last_query();exit;
         return $result;     
     }
     
