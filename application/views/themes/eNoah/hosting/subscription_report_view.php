@@ -39,7 +39,7 @@ if($num>0)
 	$gross=0;
 	$region = array();
 	$total_cnt = count($res);
-	//echo "<pre>";print_r($res); exit;
+	echo "<pre>";print_r($res); exit;
 	foreach ($res as $lead)
 	{				
 			$res_cnt++;			
@@ -67,7 +67,7 @@ if($num>0)
 				$content .= "<td>";
                                $hostingid=   $lead->hostingid;
                                 if ($this->session->userdata("accesspage") == 1) {
-                                   $content .= '<a href="dns/go_live/"'.$hostingid.'">View</a>';
+                                   $content .= '<a href="dns/go_live/"'.$hostingid.'>View</a>';
                                }
 				
 				$content .= "</td>";
@@ -84,15 +84,22 @@ if($num>0)
 				$content .= "<td>";	
 				$content .= $this->cfg['domain_ssl_status'][$lead->ssl];
 				$content .= "</td>";
-                                
-                               
+                                $hostingid  =   $lead->hostingid;
+                               $content .= "<td>";
+                                 if ($this->session->userdata('edit') == 1) { 
+                                       $content .= '<a href="hosting/add_account/update/"'.$hostingid.' title="Edit"><img src="assets/img/edit.png" alt="edit"></a>';
+                                                        } 
+                                                         if ($this->session->userdata('delete') == 1) { 
+                                         $content .= '<a class="delete" href="javascript:void(0)" onclick="return delHosting($lead->hostingid);" title="Delete"><img src="assets/img/trash.png" alt="delete"> </a>';
+                                                         } 
+                                         $content .=  "</td>";
                                 
                              $content .= "</tr>";
 			
 			if(empty($res[$res_cnt]->$sort) || $res[$res_cnt]->$sort != $lead->$sort)
 			//if(empty($res[$res_cnt]->country_name) || $res[$res_cnt]->country_name != $lead->country_name)
 			{
-                         //   echo'hi';exit;
+                         //   echo"hi';exit;
 				
 				
 				
