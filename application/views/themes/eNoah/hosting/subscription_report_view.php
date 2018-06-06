@@ -39,7 +39,7 @@ if($num>0)
 	$gross=0;
 	$region = array();
 	$total_cnt = count($res);
-	//echo "<pre>";print_r($res); exit;
+	echo "<pre>";print_r($res); exit;
 	foreach ($res as $lead)
 	{				
 			$res_cnt++;			
@@ -156,15 +156,15 @@ function createTable($content,$reg)
 	$table .= "<tr>";
 	//$table .= "<th>Region</th>";
 	$table .= "<th>Subscription Name</th>";
-	$table .= "<th>Subscription Name</th>";
+	$table .= "<th>Subscription type</th>";
 	$table .= "<th>Customer</th>";
-	$table .= "<th>Subscription Name</th>";
-	$table .= "<th>Lead Assignee</th>";	
+	$table .= "<th>Subscription Status</th>";
+	$table .= "<th>DNS</th>";	
 	
-	$table .= "<th>Lead Indicator</th>";
-	$table .= "<th>Lead Stage</th>";
-	$table .= "<th>Status</th>";
-	$table .= "<th>Expected Worth (".$GLOBALS['default_cur_names'].")</th>";
+	$table .= "<th>Subscription Expiry Date</th>";
+	$table .= "<th>Hosting Expiry Date</th>";
+	$table .= "<th>SSL Status</th>";
+	$table .= "<th>Actions</th>";
 	$table .= "</tr>";
 	$table .= "</thead>";
 	$table .= $content;
