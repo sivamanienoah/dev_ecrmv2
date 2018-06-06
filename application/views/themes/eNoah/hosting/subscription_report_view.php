@@ -115,11 +115,11 @@ if($num>0)
 				
 				
 				
-				createTable($content);				
+				//createTable($content);				
 				$content='';
 			}
 	}
-		
+	createTable($content);		
 	
 }else{
 	$content .= "<tr>";
