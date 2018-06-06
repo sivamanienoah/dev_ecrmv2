@@ -67,7 +67,7 @@ if($num>0)
 				$content .= "<td>";
                                $hostingid=   $lead->hostingid;
                                 if ($this->session->userdata("accesspage") == 1) {
-                                   $content .= '<a href="dns/go_live/"'.$hostingid.'>View</a>';
+                                   $content .= '<a href="dns/go_live/'.$hostingid.'">View</a>';
                                }
 				
 				$content .= "</td>";
