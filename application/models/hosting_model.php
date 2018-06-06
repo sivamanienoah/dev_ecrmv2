@@ -465,6 +465,62 @@ class Hosting_model extends crm_model {
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+        
+        public function getSubscriptionReport($options = array()) {
+       // $order_by = 'reg.region_name';
+
+         if(!empty($options['sub_name']) && $options['sub_name'] != 'null')
+        {
+            $sub_name = explode(',', $options['sub_name']);
+            $this->db->where_in('jb.hostingid',$sub_name);
+        } 
+        if(!empty($options['cust_id'])){            
+            $this->db->where_in('cc.companyid',$options['cust_id']);
+        }
+        if(!empty($options['start_date']))
+        {
+            $start_date = @date('Y-m-d',strtotime($options['start_date']));
+            $this->db->where('date(jb.date_created) >=',$start_date);
+        }
+        if(!empty($options['end_date']))
+        {
+            $end_date = @date('Y-m-d',strtotime($options['end_date']));
+            $this->db->where('date(jb.date_created) <=',$end_date);
+        }
+        
+        if(!empty($options['customer']) && $options['customer'] != 'null')
+        {
+            $customer = @explode(',', $options['customer']);
+            $this->db->where_in('cc.companyid',$customer);
+        }       
+        
+       //  $this->db->select('*');
+       // $this->db->from($this->cfg['dbpref'] . 'leads as j');
+       
+        //$this->db->join($this->cfg['dbpref'].'customers cust','jb.custid_fk = cust.custid','INNER');
+        //$this->db->join($this->cfg['dbpref'].'customers_company cc', 'cc.companyid = cust.company_id','INNER')//;
+        //$this->db->join($this->cfg['dbpref'].'region reg','cc.add1_region = reg.regionid','INNER');
+        //$this->db->join($this->cfg['dbpref'].'country country','cc.add1_country = country.countryid','INNER');
+        //$this->db->join($this->cfg['dbpref'].'state state','cc.add1_state = state.stateid','INNER');
+        //$this->db->join($this->cfg['dbpref'].'location location','cc.add1_location = location.locationid','INNER');
+        //$this->db->join($this->cfg['dbpref'].'users u','u.userid = jb.created_by','INNER');
+        //$this->db->join($this->cfg['dbpref'].'lead_stage ls','lead_stage_id = jb.lead_stage','INNER');      
+       // $this->db->join($this->cfg['dbpref'].'expect_worth ew','ew.expect_worth_id = jb.expect_worth_id','INNER');
+       // $this->db->join($this->cfg['dbpref'].'users mu','mu.userid = jb.modified_by','LEFT');
+     //   $this->db->where_in('jb.lead_stage', $this->stg);
+     //   $this->db->group_by('jb.');
+     //   $this->db->order_by($order_by,'ASC');
+     //   $this->db->where('lead_status',1);
+        
+        
+
+        $query = $this->db->get($this->cfg['dbpref'].'hosting jb');
+        $result['res'] = $query->result();
+        $result['num'] = $query->num_rows();
+       // echo $this->db->last_query();exit;
+        return $result;     
+    }
+    
 
 }
 
