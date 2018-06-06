@@ -39,7 +39,7 @@ if($num>0)
 	$gross=0;
 	$region = array();
 	$total_cnt = count($res);
-	echo "<pre>";print_r($res); exit;
+	//echo "<pre>";print_r($res); exit;
 	foreach ($res as $lead)
 	{				
 			$res_cnt++;			
@@ -49,11 +49,11 @@ if($num>0)
 				$content .= "</td>";*/
 				
 				$content .= "<td>";
-				$content .= $lead->hostingid;
+				$content .= $lead->domain_name;
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->custid_fk;
+				$content .= $lead->subscriptions_type_name;
 				$content .= "</td>";
 				
 				$content .= "<td>";
