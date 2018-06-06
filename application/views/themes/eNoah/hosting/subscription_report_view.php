@@ -41,7 +41,7 @@ if($num>0)
 	$total_cnt = count($res);
 	//echo "<pre>";print_r($res); exit;
 	foreach ($res as $lead)
-	{		print_r($lead->hostingid);exit;		
+	{		//print_r($lead->hostingid);exit;		
 			$res_cnt++;			
 			$content.= "<tr>";
 				/*$content .= "<td>";
@@ -88,6 +88,7 @@ if($num>0)
                                $content .= "<td>";
                                $hostingid  =   $lead->hostingid;
                                  if ($this->session->userdata('edit') == 1) { 
+                                     echo 'hi';exit;
                                        $content .= '<a href="hosting/add_account/update/"'.$hostingid.' title="Edit"><img src="assets/img/edit.png" alt="edit"></a>';
                                                         } 
                                                          if ($this->session->userdata('delete') == 1) { 
