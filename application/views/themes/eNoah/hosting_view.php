@@ -283,12 +283,12 @@
             changeMonth: true,
             changeYear: true,
             onSelect: function (date) {
-                if ($('#to_date').val != '')
+                if ($('#h_to_date').val != '')
                 {
-                    $('#to_date').val('');
+                    $('#h_to_date').val('');
                 }
                 var return_date = $('#h_from_date').val();
-                $('#to_date').datepicker("option", "minDate", return_date);
+                $('#h_to_date').datepicker("option", "minDate", return_date);
             },
             beforeShow: function (input, inst) {
                 /* if ((selDate = $(this).val()).length > 0) 
