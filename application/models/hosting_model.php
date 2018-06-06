@@ -472,7 +472,7 @@ class Hosting_model extends crm_model {
          if(!empty($options['sub_name']) && $options['sub_name'] != 'null')
         {
             $sub_name = explode(',', $options['sub_name']);
-            $this->db->where_in('jb.hostingid',$sub_name);
+            $this->db->where_in('hosting.hostingid',$sub_name);
         } 
         if(!empty($options['cust_id'])){            
             $this->db->where_in('cc.companyid',$options['cust_id']);
@@ -494,8 +494,8 @@ class Hosting_model extends crm_model {
             $this->db->where_in('cc.companyid',$customer);
         }       
         $this->db->select('*');
-       $this->db->from($this->cfg['dbpref'] . 'hosting as jb');
-        $this->db->join($this->cfg['dbpref'] . 'dns', $this->cfg['dbpref'] . 'dns.hostingid ='. $this->cfg['dbpref'] . 'hosting.hostingid','left');
+       $this->db->from($this->cfg['dbpref'] . 'hosting');
+        $this->db->join($this->cfg['dbpref'] . 'dns', $this->cfg['dbpref'] . 'hosting.hostingid ='. $this->cfg['dbpref'] . 'crm_dns.hostingid','left');
         $this->db->join($this->cfg['dbpref'] . 'subscriptions_type', $this->cfg['dbpref'] . 'subscriptions_type.subscriptions_type_id ='. $this->cfg['dbpref'] . 'hosting.subscriptions_type_id_fk','left');
         $query = $this->db->get();     
         echo $this->db->last_query();exit;
