@@ -472,7 +472,7 @@ class Hosting_model extends crm_model {
          if(!empty($options['sub_name']) && $options['sub_name'] != 'null')
         {
             $sub_name = explode(',', $options['sub_name']);
-            $this->db->where_in('hosting.hostingid',$sub_name);
+            $this->db->where_in('crm_hosting.hostingid',$sub_name);
         } 
         if(!empty($options['cust_id'])){            
             $this->db->where_in('cc.companyid',$options['cust_id']);
