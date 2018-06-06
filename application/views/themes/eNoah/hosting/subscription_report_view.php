@@ -116,9 +116,10 @@ if($num>0)
 				
 				
 				//createTable($content);				
-				$content='';
+				//$content='';
 			}
 	}
+        
 	createTable($content);		
 	
 }else{
