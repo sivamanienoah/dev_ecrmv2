@@ -74,9 +74,9 @@
                                                 To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
                                             </td>
                                             <td>
-                                                From <input type="text" data-calendar="true" name="h_from_date" id="h_from_date" class="textfield" style="width:57px;" />
+                                                From <input type="text" data-calendar="true" name="c_date" id="c_date" class="textfield" style="width:57px;" />
                                                 <br />
-                                                To <input type="text" data-calendar="true" name="h_to_date" id="h_to_date" class="textfield" style="width:57px; margin-left: 13px;" />
+                                                To <input type="text" data-calendar="true" name="m_date" id="m_date" class="textfield" style="width:57px; margin-left: 13px;" />
                                             </td>
                                             <td>
                                                 <select style="width:148px" multiple="multiple" id="sub_name" name="sub_name[]">
@@ -279,17 +279,17 @@
     });
     
      $(function () {
-        $('#h_from_date').datepicker({
+        $('#c_date').datepicker({
             dateFormat: 'dd-mm-yy',
             changeMonth: true,
             changeYear: true,
             onSelect: function (date) {
-                if ($('#h_to_date').val != '')
+                if ($('#m_date').val != '')
                 {
-                    $('#h_to_date').val('');
+                    $('#m_date').val('');
                 }
-                var return_date = $('#h_from_date').val();
-                $('#h_to_date').datepicker("option", "minDate", return_date);
+                var return_date = $('#c_date').val();
+                $('#m_date').datepicker("option", "minDate", return_date);
             },
             beforeShow: function (input, inst) {
                 /* if ((selDate = $(this).val()).length > 0) 
@@ -302,7 +302,7 @@
                 $('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
             }
         });
-        $('#h_to_date').datepicker({
+        $('#m_date').datepicker({
             dateFormat: 'dd-mm-yy',
             changeMonth: true,
             changeYear: true,

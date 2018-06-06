@@ -132,7 +132,7 @@ function createTable($content)
 	$table .= "<th>Subscription Expiry Date</th>";
 	$table .= "<th>Hosting Expiry Date</th>";
 	$table .= "<th>SSL Status</th>";
-	//$table .= "<th>Actions</th>";
+	$table .= "<th>Actions</th>";
 	$table .= "</tr>";
 	$table .= "</thead>";
 	$table .= $content;
