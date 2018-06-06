@@ -109,8 +109,7 @@
                                                 <select style="width:110px" multiple="multiple" id="staus" name="staus[]">
                                                     <?php
                                                     foreach ($sub_status as $key=>$value){
-                                                          
-//                                                       // print_r($key);exit;
+                                                          // print_r($key);exit;
                                                         if (!empty($key)) {
                                                             ?>
                                                             <option value="<?php echo $key?>" title="<?php echo $value?>"><?php echo $value ?></option>
