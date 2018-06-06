@@ -84,8 +84,9 @@ if($num>0)
 				$content .= "<td>";	
 				$content .= $this->cfg['domain_ssl_status'][$lead->ssl];
 				$content .= "</td>";
-                                $hostingid  =   $lead->hostingid;
+                                
                                $content .= "<td>";
+                               $hostingid  =   $lead->hostingid;
                                  if ($this->session->userdata('edit') == 1) { 
                                        $content .= '<a href="hosting/add_account/update/"'.$hostingid.' title="Edit"><img src="assets/img/edit.png" alt="edit"></a>';
                                                         } 
