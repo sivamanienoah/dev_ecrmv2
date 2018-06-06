@@ -63,7 +63,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $domain_status;
+				$content .= $lead->domain_status;
 				$content .= "</td>";
 				
 				$content .= "<td>";
