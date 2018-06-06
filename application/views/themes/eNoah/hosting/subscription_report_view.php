@@ -39,7 +39,7 @@ if($num>0)
 	$gross=0;
 	$region = array();
 	$total_cnt = count($res);
-	echo "<pre>";print_r($res); exit;
+//	/echo "<pre>";print_r($res); exit;
 	foreach ($res as $lead)
 	{				
 			$res_cnt++;			
@@ -57,7 +57,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->company.' - '.$lead->cust_first_name;
+				$content .= $lead->customer_name;
 				$content .= "</td>";
 				
 				$content .= "<td>";
