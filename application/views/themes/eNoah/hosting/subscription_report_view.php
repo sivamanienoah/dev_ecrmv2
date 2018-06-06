@@ -61,41 +61,32 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->owner_first_name.' '.$lead->owner_last_name;
+				$content .= $lead->domain_status;
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= get_lead_assigne_names($lead->lead_assign);
+				$content .= if ($this->session->userdata('accesspage')==1) { 
+								<a href="dns/go_live/<?php echo $lead['hostingid'];?>" style="color:<?php echo $dns; ?>;">View</a>
+							 } else {
+                                                             echo $dns
+                                                         }; 
 				$content .= "</td>";
 				
 				
 				
 				$content .= "<td>";
-				$content .= $lead->lead_indicator;
+				$content .= $lead->domain_expiry;
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->lead_stage_name;
+				$content .= $lead->expiry_date;
 				$content .= "</td>";
 				
-				$content .= "<td>";	
-				switch ($lead->lead_status)
-				{
-					case 1:
-						$status = 'Active';
-					break;
-					case 2:
-						$status = 'On Hold';
-					break;
-					case 3:
-						$status = 'Dropped';
-					break;
-					case 4:
-						$status = 'Closed';
-					break;
-				}
-				$content .= $status;
+                                
+				$content .= "<td>";
+				$content .= $lead->ssl;
 				$content .= "</td>";
+				
 				
 				
 				$content .= "<td align = 'right'>";
