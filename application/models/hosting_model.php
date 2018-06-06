@@ -472,7 +472,7 @@ class Hosting_model extends crm_model {
          if(!empty($options['sub_name']) && $options['sub_name'] != 'null')
         {
             $sub_name = explode(',', $options['sub_name']);
-            $this->db->where_in('jb.hostingid',$sub_name);
+            $this->db->where_in('hostingid',$sub_name);
         } 
         if(!empty($options['cust_id'])){            
             $this->db->where_in('cc.companyid',$options['cust_id']);
@@ -480,12 +480,12 @@ class Hosting_model extends crm_model {
         if(!empty($options['start_date']))
         {
             $start_date = @date('Y-m-d',strtotime($options['start_date']));
-            $this->db->where('date(jb.date_created) >=',$start_date);
+            $this->db->where('date(date_created) >=',$start_date);
         }
         if(!empty($options['end_date']))
         {
             $end_date = @date('Y-m-d',strtotime($options['end_date']));
-            $this->db->where('date(jb.date_created) <=',$end_date);
+            $this->db->where('date(date_created) <=',$end_date);
         }
         
         if(!empty($options['customer']) && $options['customer'] != 'null')
