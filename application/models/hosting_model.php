@@ -24,7 +24,7 @@ class Hosting_model extends crm_model {
         $this->db->join($this->cfg['dbpref'] . 'subscriptions_type', $this->cfg['dbpref'] . 'subscriptions_type.subscriptions_type_id =' . $this->cfg['dbpref'] . 'hosting.subscriptions_type_id_fk', 'left');
         //$this->db->limit(30,$offset);
         $accounts = $this->db->get();
-       // echo $this->db->last_query();exit;
+       echo $this->db->last_query();exit;
         //$accounts = $this->db->get($this->login_model->cfg['dbpref'] . 'hosting', 20, $offset);
         $list = $accounts->result();
         $delist = array();
