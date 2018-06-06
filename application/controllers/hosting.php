@@ -22,9 +22,6 @@ class Hosting extends crm_controller {
         $data['sub_types'] = $this->hosting_model->get_subscription_type();
          $data['customers'] = $this->hosting_model->get_customers();
          $data['sub_status'] = $this->cfg['domain_status'];
-           foreach ($sub_status as $key=>$value){
-               print_r($key);exit;
-           }
      // echo '<pre>';print_r($data['sub_status']);exit; 
         $this->load->view('hosting_view', $data);
     }
@@ -298,30 +295,18 @@ class Hosting extends crm_controller {
       public function get_subscription_report() {
     	$data =array();
     	$options = array();
-    	$options['sub_name'] = $this->input->post('sub_name');
+                $options['sub_name'] = $this->input->post('sub_name');
         
-    	$options['customer'] = $this->input->post('customer');
+                $options['customer'] = $this->input->post('customer');
                 $options['start_date'] = $this->input->post('start_date');
 		$options['end_date'] = $this->input->post('end_date');
                 
 		$options['h_start_date'] = $this->input->post('h_start_date');
 		$options['h_end_date'] = $this->input->post('h_end_date');
 		
-                $options['leadassignee'] = $this->input->post('leadassignee');
-		$options['owner'] = $this->input->post('owner');
-		$options['stage'] = $this->input->post('stage');
-		$options['start_date'] = $this->input->post('start_date');
-		$options['worth'] = $this->input->post('worth');
+                $options['sub_type_name'] = $this->input->post('sub_type_name');
+		$options['status'] = $this->input->post('status');
 		
-		$options['regionname'] = $this->input->post('regionname');		
-		$options['countryname'] = $this->input->post('countryname');		
-		$options['statename'] = $this->input->post('statename');		
-		$options['locname'] = $this->input->post('locname');
-		
-		$data['regionname'] = $options['regionname'];
-		$data['countryname'] = $options['countryname'];
-		$data['statename'] = $options['statename'];
-		$data['locname'] = $options['locname'];
 		
 //print_r($options);exit;
     	$res = $this->hosting_model->getSubscriptionReport($options);
