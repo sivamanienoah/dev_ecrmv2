@@ -491,6 +491,19 @@ class Hosting_model extends crm_model {
             $this->db->where('date(crm_hosting.expiry_date ) <=',$end_date);
         }
         
+        if(!empty($options['h_start_date']))
+        {
+            $start_date = @date('Y-m-d',strtotime($options['h_start_date']));
+            $this->db->where('date(crm_hosting.domain_expiry ) >=',$start_date);
+        }
+        if(!empty($options['h_end_date']))
+        {
+            $end_date = @date('Y-m-d',strtotime($options['h_end_date']));
+            $this->db->where('date(crm_hosting.domain_expiry ) <=',$end_date);
+        }
+        
+        
+        
         if(!empty($options['customer']) && $options['customer'] != 'null')
         {
             $customer = @explode(',', $options['customer']);
