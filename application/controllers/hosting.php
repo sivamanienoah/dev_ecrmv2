@@ -296,7 +296,7 @@ class Hosting extends crm_controller {
     	$data =array();
     	$options = array();
     	$options['sub_name'] = $this->input->post('sub_name');
-        print_r($options);exit;
+      //  print_r($options);exit;
     	$options['customer'] = $this->input->post('customer');
 		$options['end_date'] = $this->input->post('end_date');
 		$options['leadassignee'] = $this->input->post('leadassignee');
