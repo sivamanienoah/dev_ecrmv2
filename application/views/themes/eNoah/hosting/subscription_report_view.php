@@ -107,7 +107,7 @@ if($num>0)
 				
 			$content .= "</tr>";
 			
-			if(!empty($res[$res_cnt]->$sort) || $res[$res_cnt]->$sort != $lead->$sort)
+			if(empty($res[$res_cnt]->$sort) || $res[$res_cnt]->$sort != $lead->$sort)
 			//if(empty($res[$res_cnt]->country_name) || $res[$res_cnt]->country_name != $lead->country_name)
 			{
                          //   echo'hi';exit;
