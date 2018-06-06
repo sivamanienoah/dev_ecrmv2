@@ -39,7 +39,7 @@ if($num>0)
 	$gross=0;
 	$region = array();
 	$total_cnt = count($res);
-//	/echo "<pre>";print_r($res); exit;
+	//echo "<pre>";print_r($res); exit;
 	foreach ($res as $lead)
 	{				
 			$res_cnt++;			
@@ -60,14 +60,82 @@ if($num>0)
 				$content .= $lead->customer_name;
 				$content .= "</td>";
 				
+				$content .= "<td>";
+				$content .= $lead->owner_first_name.' '.$lead->owner_last_name;
+				$content .= "</td>";
+				
+				$content .= "<td>";
+				$content .= get_lead_assigne_names($lead->lead_assign);
+				$content .= "</td>";
+				
+				
+				
+				$content .= "<td>";
+				$content .= $lead->lead_indicator;
+				$content .= "</td>";
+				
+				$content .= "<td>";
+				$content .= $lead->lead_stage_name;
+				$content .= "</td>";
+				
+				$content .= "<td>";	
+				switch ($lead->lead_status)
+				{
+					case 1:
+						$status = 'Active';
+					break;
+					case 2:
+						$status = 'On Hold';
+					break;
+					case 3:
+						$status = 'Dropped';
+					break;
+					case 4:
+						$status = 'Closed';
+					break;
+				}
+				$content .= $status;
+				$content .= "</td>";
+				
+				
+				$content .= "<td align = 'right'>";
+				//$content .= $lead->expect_worth_amount;				 
+				$amt_converted = conver_currency($lead->expect_worth_amount,$rates[$lead->expect_worth_id][$GLOBALS['default_cur_ids']]);
+				$content .= $amt_converted;
+				$content .= "</td>";
+				$amount += $amt_converted;
 				
 			$content .= "</tr>";
 			
+			if(empty($res[$res_cnt]->$sort) || $res[$res_cnt]->$sort != $lead->$sort)
+			//if(empty($res[$res_cnt]->country_name) || $res[$res_cnt]->country_name != $lead->country_name)
+			{
+                            echo'hi';exit;
 				
+				$gross+=$amount;
+				if($total_cnt == $res_cnt)
+				{
+					$content .= "<tfoot>";
+					$content .= "<tr>";
+						$content .= "<td colspan = '8' align = 'right'><strong>Gross (".$GLOBALS['default_cur_names'].")</strong></td>";
+						$content .= "<td align = 'right'><strong>".$gross."</strong></td>";
+					$content .= "</tr>";
+					$content .= "</tfoot>";	
+				}			
 				
-				createTable($content);				
+				$content .= "<tfoot>";
+					$content .= "<tr>";
+						$content .= "<td colspan = '8' align = 'right'><strong>Total (".$GLOBALS['default_cur_names'].")</strong></td>";
+						$content .= "<td align = 'right'><strong>".$amount."</strong></td>";
+					$content .= "</tr>";
+				$content .= "</tfoot>";
+				
+				//$res_cnt = 0;
+				$amount=0;
+				$region[] = $lead->region_name;
+				createTable($content,$lead->$sort);				
 				$content='';
-			
+			}
 	}
 		
 	
