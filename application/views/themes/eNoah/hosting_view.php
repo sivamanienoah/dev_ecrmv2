@@ -49,13 +49,6 @@
                             <div class="clearfix"></div>
 
                     </div>
-
-
-                    <?php if ($this->session->userdata('accesspage') == 1) { ?>
-                        <form id="subscription_search_form" name="subscription_search_form" action="" method="post" style="float:right; margin:0;">
-                            <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-                        </form>
-
                         <div>			
                             <div id="advance_search" style="display:none;">
                                 <!--<form name="advanceFilters" id="advanceFilters" method="post" style="overflow:auto; height:157  px; width:100%;">-->
@@ -290,7 +283,6 @@
 </script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/data-tbl.js"></script>
-<script type="text/javascript" src="assets/js/hosting/quotation_view.js"></script>
 <script type="text/javascript" src="assets/js/hosting/subscription_view.js"></script>
 <script type="text/javascript" src="assets/js/hosting/hosting_view.js"></script>
 <?php require (theme_url() . '/tpl/footer.php'); ?>
