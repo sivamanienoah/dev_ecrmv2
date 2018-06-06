@@ -493,7 +493,11 @@ class Hosting_model extends crm_model {
             $customer = @explode(',', $options['customer']);
             $this->db->where_in('cc.companyid',$customer);
         }       
-        
+        $this->db->select('*, '.$this->cfg['dbpref'] . 'hosting.hostingid');
+       $this->db->from($this->cfg['dbpref'] . 'hosting');
+        $this->db->join($this->cfg['dbpref'] . 'dns', $this->cfg['dbpref'] . 'hosting.hostingid ='. $this->cfg['dbpref'] . 'dns.hostingid','left');
+        $this->db->join($this->cfg['dbpref'] . 'subscriptions_type', $this->cfg['dbpref'] . 'subscriptions_type.subscriptions_type_id ='. $this->cfg['dbpref'] . 'hosting.subscriptions_type_id_fk','left');
+        $query = $this->db->get();        
        //  $this->db->select('*');
        // $this->db->from($this->cfg['dbpref'] . 'leads as j');
        
@@ -513,11 +517,11 @@ class Hosting_model extends crm_model {
      //   $this->db->where('lead_status',1);
         
         
-
-        $query = $this->db->get($this->cfg['dbpref'].'hosting jb');
+                
+     //   $query = $this->db->get($this->cfg['dbpref'].'hosting jb');
         $result['res'] = $query->result();
         $result['num'] = $query->num_rows();
-       // echo $this->db->last_query();exit;
+        echo $this->db->last_query();exit;
         return $result;     
     }
     
