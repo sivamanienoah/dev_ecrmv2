@@ -317,7 +317,7 @@ class Hosting extends crm_controller {
 		
 		//print_r($options);exit;
     	$res = $this->hosting_model->getSubscriptionReport($options);
-    	echo '<pre>';            print_r($res);exit;
+    //	echo '<pre>';            print_r($res);exit;
     	$data['res'] = $res['res'];
     	$data['num'] = $res['num'];
     	if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {    	
