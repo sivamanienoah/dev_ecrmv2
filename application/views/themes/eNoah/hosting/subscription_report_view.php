@@ -65,36 +65,20 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= get_lead_assigne_names($lead->lead_assign);
+				$content .= $lead->domain_status;
 				$content .= "</td>";
 				
 				
-				
 				$content .= "<td>";
-				$content .= $lead->lead_indicator;
+				$content .= $lead->domain_expiry;
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->lead_stage_name;
+				$content .= $lead->expiry_date;
 				$content .= "</td>";
 				
 				$content .= "<td>";	
-				switch ($lead->lead_status)
-				{
-					case 1:
-						$status = 'Active';
-					break;
-					case 2:
-						$status = 'On Hold';
-					break;
-					case 3:
-						$status = 'Dropped';
-					break;
-					case 4:
-						$status = 'Closed';
-					break;
-				}
-				$content .= $status;
+				$content .= $lead->ssl;
 				$content .= "</td>";
 				
 				
