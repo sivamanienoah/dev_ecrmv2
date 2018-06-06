@@ -70,11 +70,11 @@ if($num>0)
 				
 				
 				$content .= "<td>";
-				$content .= $lead->domain_expiry;
+				$content .= $lead->expiry_date;
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->expiry_date;
+				$content .= $lead->domain_expiry;
 				$content .= "</td>";
 				
 				$content .= "<td>";	
