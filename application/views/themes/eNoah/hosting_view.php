@@ -106,10 +106,11 @@
                                                 </select> 
                                             </td>
                                             <td>
-                                                <select style="width:110px" multiple="multiple" id="owner" name="owner[]">
+                                                <select style="width:110px" multiple="multiple" id="staus" name="staus[]">
                                                     <?php
-                                                    foreach ($lead_owner as $owner) {
-                                                        if (!empty($owner['first_name'])) {
+                                                    foreach ($sub_status as $staus) {
+                                                        print_r($status);exit;
+                                                        if (!empty($staus)) {
                                                             ?>
                                                             <option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'] . ' - ' . $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
                                                             <?php
@@ -124,7 +125,7 @@
                                             foreach ($lead_owner as $owner) {
                                                 if (!empty($owner['first_name'])) {
                                                     ?>		
-                                                                                                            <option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'] . ' - ' . $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
+                                                    <option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'] . ' - ' . $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
                                                     <?php
                                                 }
                                             }
