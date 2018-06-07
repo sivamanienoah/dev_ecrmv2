@@ -64,7 +64,7 @@ $(function(){
 		$('#hostme').load(base_url+'hosting/get_subscription_report',params,function(){
 			$('#advance').show();
 			$('#load').hide();
-                       
+                       // $.fn.dataTable.ext.errMode = 'throw';
                         $('.data-table1').dataTable({
                           "aaSorting": [[ 0, "asc" ]],
                             "iDisplayLength": 10,
@@ -79,6 +79,7 @@ $(function(){
                             "bAutoWidth": false,
                             "bDestroy": true
                     });
+                
 		});
 		
 	});
