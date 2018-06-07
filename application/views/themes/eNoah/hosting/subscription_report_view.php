@@ -128,7 +128,7 @@ function createTable($content)
 //	if(!empty($reg)){
 //		echo "<h3 style='border-bottom:1px solid #ccc;'>$reg</h3>";
 //	}
-	$table = '<table border="0" cellpadding="0" cellspacing="0" class="data-table lead-table" width="100%">';
+	$table = '<table border="0" cellpadding="0" cellspacing="0" class="data-table1 lead-table" width="100%">';
 	$table .= "<thead>";
 	$table .= "<tr>";
 	//$table .= "<th>Region</th>";
