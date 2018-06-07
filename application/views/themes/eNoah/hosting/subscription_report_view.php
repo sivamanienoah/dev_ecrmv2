@@ -53,7 +53,7 @@ if($num>0)
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->subscriptions_type_name;
+                                $content .= $lead->subscriptions_type_name ? $lead->subscriptions_type_name : '---';
 				$content .= "</td>";
 				
 				$content .= "<td>";
@@ -115,10 +115,10 @@ if($num>0)
 	
 }else{
         $content = '';
-	$content .= "<tr>";
-		$content .= "<td colspan = '9' align = 'center'><strong>No result</strong></td>";
+	//$content .= "<tr>";
+		//$content .= "<td colspan = '9' align = 'center'><strong>No result</strong></td>";
 		//$content .= "<td colspan = '4'><strong>".$amount."</strong></td>";
-	$content .= "</tr>";
+	//$content .= "</tr>";
 	createTable($content);
 }
 
@@ -136,16 +136,15 @@ function createTable($content)
 	$table .= "<th>Subscription type</th>";
 	$table .= "<th>Customer</th>";
 	$table .= "<th>Subscription Status</th>";
-	$table .= "<th>DNS</th>";	
-	
+	$table .= "<th>DNS</th>";
 	$table .= "<th>Subscription Expiry Date</th>";
 	$table .= "<th>Hosting Expiry Date</th>";
 	$table .= "<th>SSL Status</th>";
 	$table .= "<th>Actions</th>";
 	$table .= "</tr>";
-	$table .= "</thead>";
+	$table .= "</thead><tbody>";
 	$table .= $content;
-	$table .= "</table>";
+	$table .= "</tbody></table>";
 	echo $table."<br/>";
 }
 
