@@ -79,7 +79,7 @@
                                                 To <input type="text" data-calendar="true" name="m_date" id="m_date" class="textfield" style="width:57px; margin-left: 13px;" />
                                             </td>
                                             <td>
-                                                <select style="width:148px" multiple="multiple" id="sub_name" name="sub_name[]">
+                                                <select style="width:180px" multiple="multiple" id="sub_name" name="sub_name[]">
                                                     <?php
                                                     foreach ($sub_names as $sub_name) {
                                                         ?>
@@ -96,7 +96,7 @@
                                                 </select> 
                                             </td>  
                                             <td>
-                                                <select style="width:110px" multiple="multiple" id="customer" name="customer[]">
+                                                <select style="width:180px" multiple="multiple" id="customer" name="customer[]">
                                                     <?php
                                                     foreach ($customers as $cus) {
                                                         //   print_r($cus);exit;
@@ -106,7 +106,7 @@
                                                 </select> 
                                             </td>
                                             <td>
-                                                <select style="width:110px" multiple="multiple" id="staus" name="staus[]">
+                                                <select style="width:180px" multiple="multiple" id="staus" name="staus[]">
                                                     <?php
                                                     foreach ($sub_status as $key=>$value){
                                                           // print_r($key);exit;
@@ -162,7 +162,8 @@
                             </div>
                             <!--<div id="advance_search_results" style="clear:both" ></div>-->
                         </div>
-                    <table id="hostme" border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
+        <div class="hostme" id="hostme">
+                    <table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>Subscription Name</th>
@@ -232,6 +233,7 @@
                                         ?>
                                     </tbody>
                                 </table>
+                </div>
             <?php } ?>
     </div>
                     <?php
