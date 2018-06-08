@@ -59,7 +59,7 @@
                                     <table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
                                         <tr>
                                             <td class="tblheadbg">By Subscription Expiry Date</td>
-                                            <td class="tblheadbg">By Creation / Modified Date</td>
+<!--                                            <td class="tblheadbg">By Creation / Modified Date</td>-->
                                             <td class="tblheadbg">By Subscription Name</td>
                                             <td class="tblheadbg">By Subscription Type</td>
                                             <td class="tblheadbg">By Customer</td>
@@ -73,11 +73,11 @@
                                                 <br />
                                                 To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
                                             </td>
-                                            <td>
+<!--                                            <td>
                                                 From <input type="text" data-calendar="true" name="c_date" id="c_date" class="textfield" style="width:57px;" />
                                                 <br />
                                                 To <input type="text" data-calendar="true" name="m_date" id="m_date" class="textfield" style="width:57px; margin-left: 13px;" />
-                                            </td>
+                                            </td>-->
                                             <td>
                                                 <select style="width:180px" multiple="multiple" id="sub_name" name="sub_name[]">
                                                     <?php
