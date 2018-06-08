@@ -18,6 +18,7 @@ class Asset_register extends crm_controller {
         $this->load->model('dashboard_model');
         $this->load->model('request_model');
         $this->load->model('asset_model');
+        $this->load->model('project_model');
         $this->load->model('asset_location_model');
         $this->load->model('manage_service_model');
 
@@ -350,6 +351,8 @@ class Asset_register extends crm_controller {
     public function new_asset($lead = FALSE, $customer = FALSE) {
         /* additional item list */
         // $data['item_mgmt_add_list'] = $data['item_mgmt_saved_list'] = array();
+        $usid = $this->session->userdata('logged_in_user');
+    //    print_r($usid['userid']);exit;
         $data['categories'] = $this->asset_model->get_categories();
         $c = count($data['categories']);
         for ($i = 0; $i < $c; $i++) {
@@ -357,11 +360,14 @@ class Asset_register extends crm_controller {
         }
         $data['lead_source'] = $this->asset_model->get_lead_sources();
         $data['expect_worth'] = $this->asset_model->get_expect_worths();
-        $data['job_cate'] = $this->asset_model->get_lead_services();
+        $data['dep_details'] = $this->asset_model->get_department_details();
         $data['project_listing_ls'] = $this->asset_model->ListActiveprojects();
         $data['sales_divisions'] = $this->asset_model->get_sales_divisions();
         $data['industry'] = $this->asset_model->get_industry();
         $data['location'] = $this->asset_model->get_locations();
+        $data['all_users'] = $this->project_model->get_users_list();
+        $data['asset_owner_details'] = $this->asset_model->get_user_name_by_id($usid['userid']);
+       //echo '<pre>';print_r($all_users);exit;
 
         $this->load->view('asset_register/asset_register', $data);
     }
@@ -467,7 +473,7 @@ class Asset_register extends crm_controller {
     function ajax_create_quote() {
         // echo 'hi';exit;
         $data = real_escape_array($this->input->post());
-//   /print_r($data);exit;
+//print_r($data);exit;
         $ins['asset_name'] = $data['asset_name'];
 
         $chkAssetName = $this->asset_model->checkAssetName($ins['asset_name']);
@@ -478,19 +484,25 @@ class Asset_register extends crm_controller {
         } else {
             //   echo 'else';exit;
             $ins['department_id'] = $data['department'];
-            $ins['project_id'] = $data['Project'];
+            $ins['project_id'] = $data['project_names'];
             $ins['asset_type'] = $data['asset_type'];
             $ins['storage_mode'] = $data['storage_mode'];
             $ins['location'] = $data['location'];
             $ins['asset_owner'] = $data['username'];
             $ins['labelling'] = $data['labelling'];
             $ins['confidentiality'] = $data['confidentiality'];
-            $ins['integrity'] = $data['integrity'];
+           // $ins['integrity'] = $data['integrity'];
             $ins['availability'] = $data['availability'];
-            $ins['asset_location'] = $data['asset_location'];
-            $ins['saveLocationText'] = $data['saveLocationText'];
+            
+            $asset_location = $data['asset_location'];
+            $ins['asset_location'] = implode(",",  $asset_location);
+           
+            $position= $data['position'];
+             $ins['asset_position']  = implode(",",  $position);
+           // print_r($arr_asset);exit;
+          //  $ins['saveLocationText'] = $data['saveLocationText'];
             $ins['created_by'] = $data['username'];
-            //print_r($ins);exit;
+           
             $insert_asset = $this->asset_model->insert_row_return_id('asset_register', $ins);
             // print_r($insert_asset);exit;
             // $insert_asset = $this->db->insert_id();
@@ -526,13 +538,77 @@ class Asset_register extends crm_controller {
         }
     }
 
+  
+    
     /*
+     * provide the list of projects
+     * @return string (json formatted)
+     */
+    function ajax_projects_search(){
+       //echo "string";exit;
+        if ($this->input->post('project_name')) {
+
+            $result = $this->asset_model->get_projects_list(0, $this->input->post('project_name'));
+            
+           
+            
+            if ($result && count($result) > 0) {
+                    $i=0;
+                    foreach($result as $rec){
+                        $res[$i]['label']      = $rec['lead_title'];
+                        $res[$i]['value']      = $rec['lead_title'];
+                        $res[$i]['lead_id']      = $rec['lead_id'];
+                        // $res[$i]['lead_title']   = $rec['lead_title'];
+                        $i++;
+                }
+            }
+        }
+        // print_r($res);die;
+        echo json_encode($res);     
+    }
+    
+    
+     private function get_default_projects($start_date, $end_date, $department_ids, $practice_ids) {
+        $this->db->distinct('l.lead_title');
+        $this->db->select('t.dept_id, t.dept_name, t.project_code, l.lead_title');
+        // t.practice_id, t.practice_name
+        $this->db->from($this->cfg['dbpref'] . 'timesheet_month_data as t');
+        $this->db->join($this->cfg['dbpref'] . 'leads as l', 'l.pjt_id = t.project_code', 'LEFT');
+        $this->db->join($this->cfg['dbpref'] . 'practices as p', 'p.id = l.practice', 'LEFT');
+        $this->db->where("t.resoursetype !=", '');
+        if (!empty($start_date) && !empty($end_date)) {
+            $this->db->where("(t.start_time >='" . date('Y-m-d', strtotime($start_date)) . "')", NULL, FALSE);
+            $this->db->where("(t.start_time <='" . date('Y-m-d', strtotime($end_date)) . "')", NULL, FALSE);
+        }
+
+        if (!empty($practice_ids) && count($practice_ids) > 0) {
+            $this->db->where_in('l.practice', $practice_ids);
+        }
+
+        if (count($department_ids) > 0 && !empty($department_ids)) {
+            $dids = implode(",", $department_ids);
+            if (!empty($dids)) {
+                $this->db->where_in("t.dept_id", $department_ids);
+            }
+        } else {
+            $deptwhere = "t.dept_id IN ('10','11')";
+            $this->db->where($deptwhere);
+        }
+
+        $this->db->where('l.practice is not null');
+        $this->db->where('l.lead_title is not null');
+        $query = $this->db->get();
+        // echo $this->db->last_query(); die;
+        return $query->result();
+    }
+    
+    
+      /*
      * provide the list of users
      * for a region id, country id, state id, location id
      * @param regId, cntryId, stId, locId
      * @return string (json formatted)
      */
-
     function user_level_details($regId, $cntryId, $stId, $locId) {
         $this->load->model('user_model');
         $result = $this->user_model->get_userslist($regId, $cntryId, $stId, $locId);
