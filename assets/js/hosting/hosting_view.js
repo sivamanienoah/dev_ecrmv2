@@ -55,7 +55,7 @@ $(function(){
 		sub_name = sub_name + "";			
 		var customer = $('#customer').val();
 		customer = customer + "";
-		var status = $('#staus').val();
+		var status = $('#status').val();
                 status = status + "";
 		   
 		var params = {sub_type_name:sub_type_name,start_date:start_date,end_date:end_date,c_date:c_date,m_date:m_date,sub_name:sub_name,customer:customer,
