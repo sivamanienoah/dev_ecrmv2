@@ -22,7 +22,7 @@ class Hosting extends crm_controller {
         $data['sub_types'] = $this->hosting_model->get_subscription_type();
          $data['customers'] = $this->hosting_model->get_customers();
          $data['sub_status'] = $this->cfg['domain_status'];
-     // echo '<pre>';print_r($data['sub_status']);exit; 
+    // echo '<pre>';print_r($data['sub_status']);exit; 
         $this->load->view('hosting_view', $data);
     }
 
@@ -40,7 +40,7 @@ class Hosting extends crm_controller {
     }
 
     function add_account($update = false, $id = false) {
-
+        
         $data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
         $data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
         $data['subscription_types'] = $this->hosting_model->get_subscription_types(); // Mani.S
@@ -90,6 +90,7 @@ class Hosting extends crm_controller {
                 }
         }
         if ($this->validation->run() == false) {
+
             $this->load->view('hosting_add_view', $data);
         } else {
             foreach ($fields as $key => $val) {
@@ -301,8 +302,8 @@ class Hosting extends crm_controller {
                 $options['start_date'] = $this->input->post('start_date');
 		$options['end_date'] = $this->input->post('end_date');
                 
-		$options['c_date'] = $this->input->post('c_date');
-		$options['m_date'] = $this->input->post('m_date');
+		//$options['c_date'] = $this->input->post('c_date');
+		//$options['m_date'] = $this->input->post('m_date');
 		
                 $options['sub_type_name'] = $this->input->post('sub_type_name');
 		$options['status'] = $this->input->post('status');
