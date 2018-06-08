@@ -823,7 +823,7 @@ class Welcome extends crm_controller {
     function ajax_edit_quote() {
 
         $data = real_escape_array($this->input->post());
-
+     //print_r($data);exit;
         if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_service']))) {
             echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
         } else if (!preg_match('/^[0-9]+$/', trim($data['jobid_edit']))) {
@@ -852,7 +852,10 @@ class Welcome extends crm_controller {
               } */
 
             // $ins['lead_assign']     = @implode(",",$data['lead_assign_edit_hidden']);
-            $ins['lead_assign'] = $data['lead_assign_edit_hidden'];
+           
+            $lead_assign = $data['lead_assign_edit'];
+            $ins['lead_assign'] = implode(',', $lead_assign);
+         //   $ins['lead_assign'] = $data['lead_assign_edit_hidden'];
 
             // for lead status history - starts here
             if ($_POST['lead_status'] != $_POST['lead_status_hidden']) {
@@ -908,7 +911,7 @@ class Welcome extends crm_controller {
             }
             /* end proposal adjust date insert */
             $lead_id = $data['jobid_edit'];
-
+           // print_r($ins);exit;
             $updt_job = $this->welcome_model->update_row('leads', $ins, $data['jobid_edit']);
 
             if ($data['customer_id'] != $data['customer_id_old']) {
