@@ -108,9 +108,10 @@
                                             <td>
                                                 <select style="width:180px" multiple="multiple" id="staus" name="staus[]">
                                                     <?php
+                                                                                                    
                                                     foreach ($sub_status as $key=>$value){
-                                                          // print_r($key);exit;
-                                                        if (!empty($key)) {
+                                                         // print_r($key);exit;
+                                                        if (!empty($value)) {
                                                             ?>
                                                             <option value="<?php echo $key?>" title="<?php echo $value?>"><?php echo $value ?></option>
                                                             <?php
@@ -138,7 +139,7 @@
                                             if (isset($services) && count($services) > 0) {
                                                 foreach ($services as $se) {
                                                     ?>
-                                                                                                            <option value="<?php echo $se['sid'] ?>" title="<?php echo $se['services'] ?>"><?php echo $se['services'] ?></option>
+                                                    <option value="<?php echo $se['sid'] ?>" title="<?php echo $se['services'] ?>"><?php echo $se['services'] ?></option>
                                                     <?php
                                                 }
                                             }
@@ -180,6 +181,7 @@
                                     <tbody>
                                         <?php
                                         if (is_array($accounts) && count($accounts) > 0) {
+                                     //   if (is_array($accounts) && count($accounts) < 0) {
                                             foreach ($accounts as $account) {
 //                                              /  print_r($account);exit;
                                                 $rem = strtotime($account['go_live_date']) - time();
