@@ -492,16 +492,16 @@ class Hosting_model extends crm_model {
             $this->db->where('date(crm_hosting.expiry_date ) <=',$end_date);
         }
         
-        if(!empty($options['c_date']))
-        {
-            $c_date = @date('Y-m-d',strtotime($options['c_date']));
-            $this->db->where('date(crm_hosting.created_on ) >=',$c_date);
-        }
-        if(!empty($options['m_date']))
-        {
-            $m_date = @date('Y-m-d',strtotime($options['m_date']));
-            $this->db->where('date(crm_hosting.modified_on ) <=',$m_date);
-        }
+//        if(!empty($options['c_date']))
+//        {
+//            $c_date = @date('Y-m-d',strtotime($options['c_date']));
+//            $this->db->where('date(crm_hosting.created_on ) >=',$c_date);
+//        }
+//        if(!empty($options['m_date']))
+//        {
+//            $m_date = @date('Y-m-d',strtotime($options['m_date']));
+//            $this->db->where('date(crm_hosting.modified_on ) <=',$m_date);
+//        }
         
          if(!empty($options['sub_type_name']) && $options['sub_type_name'] != 'null')
         {
@@ -516,7 +516,7 @@ class Hosting_model extends crm_model {
         } 
         
          if(!empty($options['status']) && $options['status'] != 'null')
-        {
+        {            // echo 'hi';exit;
             $status = @explode(',', $options['status']);
             $this->db->where_in('crm_hosting.domain_status',$status);
         } 
@@ -550,7 +550,7 @@ class Hosting_model extends crm_model {
      //   $query = $this->db->get($this->cfg['dbpref'].'hosting jb');
         $result['res'] = $query->result();
         $result['num'] = $query->num_rows();
-//       / echo $this->db->last_query();exit;
+// echo $this->db->last_query();exit;
         return $result;     
     }
     
