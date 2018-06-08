@@ -106,7 +106,7 @@
                                                 </select> 
                                             </td>
                                             <td>
-                                                <select style="width:180px" multiple="multiple" id="staus" name="staus[]">
+                                                <select style="width:180px" multiple="multiple" id="status" name="status[]">
                                                     <?php
                                                                                                     
                                                     foreach ($sub_status as $key=>$value){
