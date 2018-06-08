@@ -74,11 +74,12 @@ if($num>0)
 				
 				
 				$content .= "<td>";
-				$content .= $lead->expiry_date;
+				$content .= date("d-m-Y", strtotime($lead->expiry_date));
 				$content .= "</td>";
 				
 				$content .= "<td>";
-				$content .= $lead->domain_expiry;
+				$content .=  date("d-m-Y", strtotime($lead->domain_expiry));
+                               
 				$content .= "</td>";
 				
 				$content .= "<td>";	
@@ -132,14 +133,14 @@ function createTable($content)
 	$table .= "<thead>";
 	$table .= "<tr>";
 	//$table .= "<th>Region</th>";
-	$table .= "<th>Subscription Name</th>";
-	$table .= "<th>Subscription type</th>";
-	$table .= "<th>Customer</th>";
-	$table .= "<th>Subscription Status</th>";
-	$table .= "<th>DNS</th>";
-	$table .= "<th>Subscription Expiry Date</th>";
-	$table .= "<th>Hosting Expiry Date</th>";
-	$table .= "<th>SSL Status</th>";
+	$table .= "<th class='sorting'>Subscription Name</th>";
+	$table .= "<th class='sorting'>Subscription type</th>";
+	$table .= "<th class='sorting'>Customer</th>";
+	$table .= "<th class='sorting'>Subscription Status</th>";
+	$table .= "<th class='sorting'>DNS</th>";
+	$table .= "<th class='sorting'>Subscription Expiry Date</th>";
+	$table .= "<th class='sorting'>Hosting Expiry Date</th>";
+	$table .= "<th class='sorting'>SSL Status</th>";
 	$table .= "<th>Actions</th>";
 	$table .= "</tr>";
 	$table .= "</thead><tbody>";
