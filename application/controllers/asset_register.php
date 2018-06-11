@@ -505,7 +505,7 @@ class Asset_register extends crm_controller {
             $ins['created_by'] = $data['username'];
            
             $insert_asset = $this->asset_model->insert_row_return_id('asset_register', $ins);
-             print_r($insert_asset);exit;
+           //  print_r($insert_asset);exit;
             // $insert_asset = $this->db->insert_id();
             $json['error'] = true;
             $json['insert_id'] = $insert_asset;
