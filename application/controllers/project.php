@@ -370,7 +370,7 @@ class Project extends crm_controller {
 	 */
 	public function view_project($id = 0)
 	{
-            //echo 'hi';exit;
+         //   echo 'hi';exit;
 		// ini_set("display_errors",1);
 		// error_reporting(1);
                 $this->load->helper('text');
@@ -385,7 +385,7 @@ class Project extends crm_controller {
 		if(!empty($result)) {
 			
 			$data['quote_data']		= $result[0];
-			// echo'<pre>';print_r($data['quote_data']);exit;
+			//echo'<pre>';print_r($data['quote_data']);exit;
 			$data['view_quotation'] = true;
 			
 			//get customers & company
@@ -780,8 +780,8 @@ class Project extends crm_controller {
 			$user_id 					= $this->userdata['userid'];
 			$data['email_templates'] 	= $this->project_model->get_user_email_templates($user_id);
 			$data['email_signatures'] 	= $this->project_model->get_user_email_signatures($user_id);
-			$data['default_signature'] 	= $this->project_model->get_user_default_signature($user_id);
-			
+//		/	$data['default_signature'] 	= $this->project_model->get_user_default_signature($user_id);
+		//print_r($data);exit;	
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
@@ -2745,7 +2745,7 @@ class Project extends crm_controller {
 				$ins['log_content']   = $pay_det;
                             // print_r($ins);exit;
 				$insert_logs = $this->project_model->insert_row('logs', $ins);
-                                redirect('project');
+                             //    redirect('project');
                                 
 			}
 			else 
