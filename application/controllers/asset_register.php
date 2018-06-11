@@ -472,8 +472,8 @@ class Asset_register extends crm_controller {
      */
     function ajax_create_quote() {
         // echo 'hi';exit;
-        $data = real_escape_array($this->input->post());
-//print_r($data);exit;
+        $data = real_escape_array($this->input->post());//
+///print_r($data);exit;
         $ins['asset_name'] = $data['asset_name'];
 
         $chkAssetName = $this->asset_model->checkAssetName($ins['asset_name']);
@@ -488,7 +488,8 @@ class Asset_register extends crm_controller {
             $ins['asset_type'] = $data['asset_type'];
             $ins['storage_mode'] = $data['storage_mode'];
             $ins['location'] = $data['location'];
-            $ins['asset_owner'] = $data['username'];
+            $asset_owners = $data['arr_asset_owners'];
+            $ins['asset_owner'] = implode(',', $asset_owners);
             $ins['labelling'] = $data['labelling'];
             $ins['confidentiality'] = $data['confidentiality'];
            // $ins['integrity'] = $data['integrity'];
@@ -504,7 +505,7 @@ class Asset_register extends crm_controller {
             $ins['created_by'] = $data['username'];
            
             $insert_asset = $this->asset_model->insert_row_return_id('asset_register', $ins);
-            // print_r($insert_asset);exit;
+             print_r($insert_asset);exit;
             // $insert_asset = $this->db->insert_id();
             $json['error'] = true;
             $json['insert_id'] = $insert_asset;
