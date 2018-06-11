@@ -224,6 +224,7 @@ class email_template_model extends crm_model {
                     echo 'ok';exit;
 			return true;
 		} else {
+                    echo 'false';exit;
 			return false;
 		}
 	}
