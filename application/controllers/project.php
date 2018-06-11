@@ -2745,12 +2745,12 @@ class Project extends crm_controller {
 				$ins['log_content']   = $pay_det;
                             // print_r($ins);exit;
 				$insert_logs = $this->project_model->insert_row('logs', $ins);
-                                $output = '';
+                                //$output = '';
 				// $payment_det = $this->project_model->get_expect_payment_terms($data['sp_form_jobid']); //after update
-				$output .= $this->retrieve_pr_payment_terms($data['sp_form_jobid']);
-				echo $output;
+				//$output .= $this->retrieve_pr_payment_terms($data['sp_form_jobid']);
+				//echo $output;
                               // echo $this->retrieve_pr_payment_terms($data['sp_form_jobid']);
-                              //  redirect('project/view_project/'.$data['sp_form_jobid']);
+                                redirect('project/view_project/'.$data['sp_form_jobid']);
                                     
                                 
 			}
