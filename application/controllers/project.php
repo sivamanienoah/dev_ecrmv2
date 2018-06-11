@@ -2632,7 +2632,7 @@ class Project extends crm_controller {
         
         function set_pr_payment_terms($update = false)
 	{
-           echo 'hi';exit;
+           //echo 'hi';exit;
 		$errors = array();
 		$res_file = array();
 		$today = time();
