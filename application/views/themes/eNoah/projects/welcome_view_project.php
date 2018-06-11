@@ -1181,7 +1181,7 @@
 							$pt_select_box .= '<option value="0"> &nbsp; </option>';
 							
 							$output .= '<div align="left" style="background: none repeat scroll 0 0;">
-							<h6>Agreed Payment Terms</h6>
+							<h6></h6>
 							<div class=payment_legend>
 							<div class="pull-left"><img src=assets/img/payment-received.jpg><span>Payment Received</span></div>
 							<div class="pull-left"><img src=assets/img/payment-pending.jpg><span>Partial Payment</span></div>
