@@ -173,6 +173,13 @@ class Asset_model extends crm_model {
              //     echo $this->db->last_query(); exit;
 		return $user->result_array();
 	}
+        function get_department_details() {
+           $this->db->select('d.department_id, d.department_name,d.active');
+	    $this->db->from($this->cfg['dbpref'] . 'department as d');
+            $this->db->where('d.active', 1);
+	    $dep_det = $this->db->get();
+	    return $dep_det->result_array();
+	}
         
          function get_department_by_id($id) {
             // echo $id;
@@ -448,6 +455,7 @@ class Asset_model extends crm_model {
     }
 	
 	function insert_row_return_id($tbl, $ins) {
+         //   print_r($ins);exit;
 		$this->db->insert($this->cfg['dbpref'] . $tbl, $ins);
 		return $this->db->insert_id();
     }
@@ -1539,6 +1547,35 @@ class Asset_model extends crm_model {
 	    $res =  $sql->result_array();
 	    return $res;
     }
+    
+    
+    public function get_projects_list($offset, $search, $order_field='last_name', $order_type='asc', $limit = false)
+	{
+        $restrict = '';
+        $restrict_search = '';
+		//customer restriction on level based.
+		
+       
+        $offset = $this->db->escape_str($offset);	
+		$this->db->select('*');
+		$this->db->from($this->cfg['dbpref'].'leads as prj');
+		//$this->db->join($this->cfg['dbpref'].'region as REG', 'CUST.add1_region = REG.regionid', 'left');
+		//$this->db->join($this->cfg['dbpref'].'country as COUN', 'CUST.add1_country = COUN.countryid', 'left');
+	
+		
+		if($search != false) {
+			$search = $this->db->escape_str(urldecode($search));
+			$this->db->where("(prj.lead_title LIKE '%$search%')");
+		}
+		
+		if(!empty($limit)){
+			$this->db->limit($limit);
+		}
+		$projects = $this->db->get();
+        // echo $this->db->last_query(); exit;
+        return $projects->result_array();
+    }
+    
     
 
 }
