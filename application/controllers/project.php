@@ -6194,7 +6194,21 @@ HDOC;
 		$param['from_email_name'] = 'Webmaster';
 		$param['template_name']	  = "test email";
 		$param['subject'] 		  = "test email";
+                
+                
+                 $to = "kbalaji@enoahisolution.com"; // this is your Email address
+    $from = "raamsri14@gmail.com"; // this is the sender's Email address
+   
+    $subject = "Form submission";
+    $subject2 = "Copy of your form submission";
+    $message = "Hi";
+    $message2 = "Here is a copy of your message ";
 
+    $headers = "From:" . $from;
+    $headers2 = "From:" . $to;
+    mail($to,$subject,$message,$headers);
+    mail($from,$subject2,$message2,$headers2); 
+    
 		if($this->email_template_model->sent_email($param)){
 			echo "Email Sent";
 		} else {
