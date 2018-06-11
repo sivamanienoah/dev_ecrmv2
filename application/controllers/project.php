@@ -2638,7 +2638,7 @@ class Project extends crm_controller {
 		$today = time();
 		
 		$data = real_escape_array($this->input->post());
-		//print_r($data);exit;
+		print_r($data);exit;
 		$fname = $_FILES['newfile_upload'];
 	
 		if($fname!="") {
