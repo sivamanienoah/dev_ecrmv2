@@ -219,7 +219,7 @@ class email_template_model extends crm_model {
 		// $this->email->send();
 		// echo $this->email->print_debugger();exit;
 		//return true;
-		//echo $email_template;
+		echo $email_template;
 		if($this->email->send()) { 
 			return true;
 		} else {
