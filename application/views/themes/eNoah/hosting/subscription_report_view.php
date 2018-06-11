@@ -157,4 +157,3 @@ function conver_currency($amount,$val)
 	
 </div>
 <script type="text/javascript" src="assets/js/tablesort.min.js"></script>
-<script type="text/javascript" src="assets/js/report/lead_report_region_view.js"></script>
