@@ -75,22 +75,25 @@ $config['crm']['billing_type'] 			= array(1 => 'Milestone Based',2 => 'Monthly B
 $config['crm']['tasks_search']  		= array(0 => 'Work In Progress',1 => 'Completed',-1 => 'All');
 
 $config['crm']['max_allowed_users'] 	= array(0=>1500);
-//$config['crm']['director_emails']  		= array('Admin' => 'ssriram@enoahisolution.com',);		
-$config['crm']['director_emails']  		= array('Admin' => 'kbalaji@enoahisolution.com',);		
+$config['crm']['director_emails']  		= array('Admin' => 'ssriram@enoahisolution.com',);		
+//$config['crm']['director_emails']  		= array('Admin' => 'kbalaji@enoahisolution.com',);		
 
-$config['crm']['management_emails'] 	= array('Senior Management' => 'kbalaji@enoahisolution.com',);
-//$config['crm']['management_emails'] 	= array('Senior Management' => 'ssriram@enoahisolution.com',);
-$config['crm']['account_emails'] 		= array('Accounts' => 'skbalaji43@gmail.com',);
-//$config['crm']['account_emails'] 		= array('Accounts' => 'ssriram@enoahisolution.com',);
+//$config['crm']['management_emails'] 	= array('Senior Management' => 'kbalaji@enoahisolution.com',);
+$config['crm']['management_emails'] 	= array('Senior Management' => 'ssriram@enoahisolution.com',);
+//$config['crm']['account_emails'] 		= array('Accounts' => 'kbalaji@enoahisolution.com',);
+$config['crm']['account_emails'] 		= array('Accounts' => 'ssriram@enoahisolution.com',);
 /* $config['crm']['account_emails_cc'] 	= array('mukesh' => 'ssriram@enoahisolution.com',);
 $config['crm']['bpo_account_emails_cc'] = array('mukesh' => 'ssriram@enoahisolution.com',);
 $config['crm']['eads_account_emails_cc']= array('mukesh' => 'ssriram@enoahisolution.com',); */
-$config['crm']['its_invoice_emails_cc'] = array('Mukesh' => 'kbalaji@enoahisolution.com','Harihara' => 'kbalaji@enoahisolution.com',);
-$config['crm']['bpo_invoice_emails_cc'] = array('Subbu' => 'kbalaji@enoahisolution.com',);
-$config['crm']['crm_admin'] 			= array('crm_admin' => 'kbalaji@enoahisolution.com');
-//$config['crm']['its_invoice_emails_cc'] = array('Mukesh' => 'ssriram@enoahisolution.com','Harihara' => 'ssriram@enoahisolution.com',);
-//$config['crm']['bpo_invoice_emails_cc'] = array('Subbu' => 'ssriram@enoahisolution.com',);
-//$config['crm']['crm_admin'] 			= array('crm_admin' => 'ssriram@enoahisolution.com');
+
+//$config['crm']['its_invoice_emails_cc'] = array('Mukesh' => 'kbalaji@enoahisolution.com','Harihara' => 'kbalaji@enoahisolution.com',);
+//$config['crm']['bpo_invoice_emails_cc'] = array('Subbu' => 'kbalaji@enoahisolution.com',);
+//$config['crm']['crm_admin'] 			= array('crm_admin' => 'kbalaji@enoahisolution.com');
+
+$config['crm']['its_invoice_emails_cc'] = array('Mukesh' => 'ssriram@enoahisolution.com','Harihara' => 'ssriram@enoahisolution.com',);
+$config['crm']['bpo_invoice_emails_cc'] = array('Subbu' => 'ssriram@enoahisolution.com',);
+$config['crm']['crm_admin'] 			= array('crm_admin' => 'ssriram@enoahisolution.com');
+
 $config['crm']['fy_months']  			= array('04'=>'Apr','05'=>'May','06'=>'Jun','07'=>'Jul','08'=>'Aug','09'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Dec','01'=>'Jan','02'=>'Feb','03'=>'Mar');
 # keep in sync with above
 
