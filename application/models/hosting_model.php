@@ -515,7 +515,7 @@ class Hosting_model extends crm_model {
             $this->db->where_in('crm_hosting.custid_fk',$customer);
         } 
         
-         if($options['status'] == 0 || $options['status'] != 'null')
+         if($options['status'] == 0 && $options['status'] != 'null')
         {            
             $status = @explode(',', $options['status']);
             $this->db->where_in('crm_hosting.domain_status',$status);
@@ -550,7 +550,7 @@ class Hosting_model extends crm_model {
      //   $query = $this->db->get($this->cfg['dbpref'].'hosting jb');
         $result['res'] = $query->result();
         $result['num'] = $query->num_rows();
-// echo $this->db->last_query();exit;
+ //echo $this->db->last_query();exit;
         return $result;     
     }
     
