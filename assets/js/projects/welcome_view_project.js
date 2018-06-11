@@ -3201,7 +3201,7 @@ function generate_inv(eid) {
 function generate_proforma_inv(eid) {
     
  //alert('hi');return false;
- // alert(eid);return false;
+  alert(eid);return false;
 	// window.location.href = site_base_url+'project/generateInvoice/'+eid+"/"+pjtid;
 	$('#pr_rec_paymentfadeout').empty();
 	var agree = confirm("Are you sure you want to generate proforma invoice?\nIt will send an email to accounts department.");
