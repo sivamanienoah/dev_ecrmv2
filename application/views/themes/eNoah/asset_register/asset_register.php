@@ -793,7 +793,7 @@ if (!isset($view_quotation)) {
     <?php //echo '<pre>'; print_r($quote_data); echo '</pre>';  ?>
     <div class="inner">
         <?php if (($this->session->userdata('add') == 1 && $this->uri->segment(2) != 'edit_quote') || ($this->session->userdata('edit') == 1) && ($this->uri->segment(2) == 'edit_quote' && is_numeric($this->uri->segment(3)))) { ?>
-            <div class="q-main-left">
+            <div class="q-main-left" style="width: auto;">
                 <form action="" method="post" id="quote-init-form" class="<?php echo (isset($view_quotation) || isset($edit_quotation)) ? 'display-none' : '' ?>" onsubmit="return false;">
 
                     <input type="hidden" name="username" id="username" value= "<?php echo $userdata['userid'] ?>" />
@@ -804,26 +804,50 @@ if (!isset($view_quotation)) {
                         <p><select name="department" id="department" class="textfield width300px" ;">
                                 <option value="not_select">Please Select</option>
                                 <?php
-                                foreach ($job_cate as $job) {
+                                foreach ($dep_details as $dep) {
                                     ?>
-                                    <option value="<?php echo $job['sid'] ?>"><?php echo $job['services'] ?></option>
+                                    <option value="<?php echo $dep['department_id'] ?>"><?php echo $dep['department_name'] ?></option>
                                     <?php
                                 }
                                 ?>
                             </select>
                         </p>
                         <p><label>Project</label></p>
-                        <p><select name="Project" id="Project" class="textfield width300px";">
-                                <option value="not_select">Please Select</option>
-                                <?php
-                                foreach ($project_listing_ls as $job) {
-                                    ?>
-                                    <option value="<?php echo $job['lead_id'] ?>"><?php echo $job['lead_title'] ?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
+                        <p><p><input type="text" name="project_names" id="project_names" class="textfield width300px" />
+                            <input type="hidden" name="project_id" id="project_id" class="textfield width300px" />
                         </p>
+                        </p>
+               
+
+			<div class="clear-both" ></div>
+			<div class="pull-left team-mem">
+			<p><label class="project-stake-members">Asset Owner</label></p>
+				<p><select  multiple="multiple" class="chzn-select" data-placeholder="Select Owners"  id="arr_asset_owners" name="arr_asset_owners[]">
+					<?php if(!empty($all_users)):
+                                             $usid = $this->session->userdata('logged_in_user');
+                                ?>
+                                     
+							<!--option value=""></option-->
+							<?php foreach($all_users as $pms):  
+                                                                 $selected = '';
+									if($usid['userid']==$pms['userid']) $selected = 'selected="selected"';?>
+									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>
+							<?php endforeach;?>
+					<?php endif; ?>
+				</select>
+                                </p>
+			</div>
+			<?php 
+			if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+			<div class="team-mem-btn">
+				<div class="buttons">
+					<button onclick="setStakeMembers(); return false;" style="margin:0 0 0 5px;" id="stake_members_id" class="positive" type="submit">Set</button>
+					<div class="error-msg" id="resmsg3"></div>
+				</div>
+			</div>
+			<?php } ?>
+			<div style="margin:10px;" class="clear-both"></div>		
+			
                         <p><label>Asset Type</label></p>
                         <p>
                             <select name="asset_type" id="asset_type" class="textfield width300px">
@@ -851,13 +875,13 @@ if (!isset($view_quotation)) {
                                 <option value="Public">Public</option>
                             </select>
                         </p>
-                        <p><label>Integrity</label></p>
+<!--                        <p><label>Integrity</label></p>
                         <p>
                             <select name="integrity" id="integrity" class="textfield width300px">
                                 <option value="not_select">Please Select</option>
                                 <option value="High">High</option>
                             </select>
-                        </p>
+                        </p>-->
                         <p><label>Availability</label></p>
                         <p>
                             <select name="availability" id="availability" class="textfield width300px">
@@ -869,28 +893,61 @@ if (!isset($view_quotation)) {
                         </p>
                         <p><label>Asset Name</label></p>
                         <p><input type="text" name="asset_name" id="asset_name" class="textfield width300px" /></p>
-                        <p><label>Location</label></p>
-                        <p><textarea name="location" id="location" class="textfield width300px"></textarea></p>
                         <p><label>Labelling</label></p>
                         <p><input type="text" name="labelling" id="labelling" class="textfield width300px" /></p>
-                        <p><label>Select Location</label></p>
+                        <p><label>Asset Current Location</label></p>
+                        <p><textarea name="location" id="location" class="textfield width300px"></textarea></p>
+<!--                        <p><label>Labelling</label></p>
+                        <p><input type="text" name="labelling" id="labelling" class="textfield width300px" /></p>-->
+<!--                        <p><label>Select Location</label></p>
                         <p><select name="asset_location" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)"">
-                                <option value="not_select">Please Select</option>
-                                <?php
-                                foreach ($location as $loc) {
-                                    ?>
-                                    <option value="<?php echo $loc['loc_id'] ?>"><?php echo $loc['asset_location'] ?></option>
-                                    <?php
-                                }
-                                ?>
+                              
                             </select>
                         </p>
                         
                         <div id="saveLocation" style="display: none">
                            <p><label>Save Location:</label></p>
                            <p><textarea name="saveLocationText" id="saveLocationText"  class="textfield width300px"></textarea></p>
+                        </div>-->
+                        <div>
+                             <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >
+							<thead>
+								<tr class="bg-blue">
+									<td>choose Location<span class='mandatory_asterick'>*</span></td>
+									<td>Location</td>
+                                                                        <td>Action</td>
+									
+									
+								</tr>
+							</thead>
+							
+										<tr>
+											<td>
+                                                                                        <select name="asset_location[]" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)"">
+                                                                                            <option value="not_select">Please Select</option>
+                                                                                            <?php
+                                                                                            foreach ($location as $loc) {
+                                                                                                ?>
+                                                                                                <option value="<?php echo $loc['loc_id'] ?>"><?php echo $loc['asset_location'] ?></option>
+                                                                                                <?php
+                                                                                            }
+                                                                                            ?>
+                                                                                        </select>
+											</td>
+											<td>
+											   <input type="text" name="position[]" value="<?php echo $row['asset_location']; ?>" class="position_title textfield width180px required" />
+												<span class="position_title_err_msg text-danger"></span>
+											</td>
+											
+										
+											<td width="100">
+												<a id="addRow" class="createBtn" <?=$disp_style?> ></a>
+												<a id="deleteRow" hyperid="<?=$loc['loc_id']?>" class="del_file"></a>
+											</td>
+										</tr>
+									
+						</table>
                         </div>
-                       
                         
                        
                         
@@ -1110,6 +1167,146 @@ echo $menu, $data;
      *File projects/leads_confirm_view.php
      *Author eNoah - Mani.S
      */
+    //code added for when the customer name field is empty it will show the notice div.
+  
+
+    $(document).ready(function(){
+        $( "#project_name" ).autocomplete({
+                    //  alert('hi');return false;
+			minLength: 2,
+			source: function(request, response) {
+				$.ajax({
+                                        url: site_base_url+ 'asset_register/ajax_project_search',
+					data: { 'project_name': $("#project_name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+					type: "POST",
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						response( data );
+					}
+				});
+			},
+			select: function(event, ui) {
+				// $('#cust_id').val(ui.item.id);
+				ex_cust_id = ui.item.id;
+				regId = ui.item.regId;
+				cntryId = ui.item.cntryId;
+				stId = ui.item.stId;
+				locId = ui.item.locId;
+				prepareQuoteForClient(ex_cust_id);
+				getUserForLeadAssign(regId,cntryId,stId,locId);
+			}
+		});
+		
+		$( "#customer_company_name" ).autocomplete({
+			minLength: 2,
+			source: function(request, response) {
+				$.ajax({ 
+					url: "hosting/ajax_customer_search",
+					data: { 'cust_name': $("#customer_company_name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+					type: "POST",
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						response( data );
+					}
+				});
+			},
+			select: function(event, ui) {
+				$('#customer_id').val(ui.item.id);
+				// ex_cust_id = ui.item.id;
+				// regId = ui.item.regId;
+				// cntryId = ui.item.cntryId;
+				// stId = ui.item.stId;
+				// locId = ui.item.locId;
+				// prepareQuoteForClient(ex_cust_id);
+				// getUserForLeadAssign(regId,cntryId,stId,locId);
+			}
+		});
+		
+		<?php
+		if (isset($existing_lead) && isset($lead_customer))
+		{
+			echo 'ex_cust_id = ', $lead_customer, ";\n";
+			echo 'existing_lead = ', $existing_lead, ";\n";
+			echo 'existing_lead_service = "', $existing_lead_service, '";', "\n";
+			echo "prepareQuoteForClient(ex_cust_id);\n";
+		}
+		?>
+        
+      $('.modal-new-cust').click(function(){
+           $.blockUI({
+                        message:nc_form_msg,
+                        css: {width: '820px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
+                        overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
+                    });
+            $.get(
+                'ajax/data_forms/new_customer_form',
+                {},
+                function(data){
+                    $('.new-cust-form-loader').slideUp(500, function(){
+                        $(this).parent().css({backgroundColor: '#fff', color: '#333'});
+                        $(this).css('text-align', 'left').html(data).slideDown(500, function(){
+                            $('.error-cont').css({margin:'10px 25px 10px 0', padding:'10px 10px 0 10px', backgroundColor:'#CEB1B0'});
+                        });
+                    })
+                }
+            );
+            return false;
+        });
+	        
+        $('.q-item-details div').css('display', 'none')
+                                .siblings('a:first').next().show().end()
+                                .parent().children('a').click(function() {
+                                    $(this).next().slideToggle(500);
+                                    return false;
+                                });
+        
+        <?php
+		/*
+		 * This is applicable when not viewing a quote
+		 * on edit or create mode
+		 */
+		if (!isset($view_quotation))
+		{
+			?>
+        
+        $('#q-sort-items').sortable({axis:'y', cursor:'move', update:prepareSortedItems});
+        
+		$('#q-sort-items li').livequery(function(){ 
+		// use the helper function hover to bind a mouseover and mouseout event 
+			$(this) 
+				.hover(function() { 
+					quoteItemOver($(this)); 
+				}, function() { 
+					quoteItemOut($(this)); 
+				}); 
+		}, function() { 
+			// unbind the mouseover and mouseout events 
+			$(this) 
+				.unbind('mouseover') 
+				.unbind('mouseout'); 
+		});
+        
+       
+       
+        <?php
+		} // end edit mode
+		?>
+        <?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
+        
+        populateQuote(<?php echo $quote_data['lead_id'] ?>);
+        
+        <?php } ?>
+        <?php if (isset($edit_quotation)) { ?>
+        $('#item-submit').css('display', 'block');
+        <?php } ?>
+            
+	}
+);
+
+
+
     function runSOWAjaxFileUpload() {
         var _uid = new Date().getTime();
         var params = {};
@@ -1546,4 +1743,160 @@ echo $menu, $data;
 
     }
 </script>
+<script>
+$(document).ready(function(){
+
+        $( "#project_names" ).autocomplete({
+            minLength: 2,
+            source: function(request, response) {
+                $.ajax({
+                    url: "asset_register/ajax_projects_search",
+                    data: { 'project_name': $("#project_names").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+                    type: "POST",
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) {
+                        // console.log(data);
+                        response( data );
+                    }
+                });
+            },
+            select: function(event, ui) {
+                console.log(ui.item);
+                $( "#project_names" ).val(ui.item.label);
+                $( "#project_id" ).val(ui.item.lead_id);
+                // $('#cust_id').val(ui.item.id);
+                // ex_cust_id = ui.item.lead_id;
+                // regId = ui.item.lead_title;
+                // prepareQuoteForClient(ex_cust_id);
+                // getUserForLeadAssign(regId,cntryId,stId,locId);
+            }
+        });
+        
+        $( "#customer_company_name" ).autocomplete({
+            minLength: 2,
+            source: function(request, response) {
+                $.ajax({ 
+                    url: "hosting/ajax_customer_search",
+                    data: { 'cust_name': $("#customer_company_name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+                    type: "POST",
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) {
+                        response( data );
+                    }
+                });
+            },
+            select: function(event, ui) {
+                $('#customer_id').val(ui.item.id);
+                // ex_cust_id = ui.item.id;
+                // regId = ui.item.regId;
+                // cntryId = ui.item.cntryId;
+                // stId = ui.item.stId;
+                // locId = ui.item.locId;
+                // prepareQuoteForClient(ex_cust_id);
+                // getUserForLeadAssign(regId,cntryId,stId,locId);
+            }
+        });
+        
+        <?php
+        if (isset($existing_lead) && isset($lead_customer))
+        {
+            echo 'ex_cust_id = ', $lead_customer, ";\n";
+            echo 'existing_lead = ', $existing_lead, ";\n";
+            echo 'existing_lead_service = "', $existing_lead_service, '";', "\n";
+            echo "prepareQuoteForClient(ex_cust_id);\n";
+        }
+        ?>
+        
+      $('.modal-new-cust').click(function(){
+           $.blockUI({
+                        message:nc_form_msg,
+                        css: {width: '820px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
+                        overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
+                    });
+            $.get(
+                'ajax/data_forms/new_customer_form',
+                {},
+                function(data){
+                    $('.new-cust-form-loader').slideUp(500, function(){
+                        $(this).parent().css({backgroundColor: '#fff', color: '#333'});
+                        $(this).css('text-align', 'left').html(data).slideDown(500, function(){
+                            $('.error-cont').css({margin:'10px 25px 10px 0', padding:'10px 10px 0 10px', backgroundColor:'#CEB1B0'});
+                        });
+                    })
+                }
+            );
+            return false;
+        });
+            
+        $('.q-item-details div').css('display', 'none')
+                                .siblings('a:first').next().show().end()
+                                .parent().children('a').click(function() {
+                                    $(this).next().slideToggle(500);
+                                    return false;
+                                });
+        
+        <?php
+        /*
+         * This is applicable when not viewing a quote
+         * on edit or create mode
+         */
+        if (!isset($view_quotation))
+        {
+            ?>
+        
+        $('#q-sort-items').sortable({axis:'y', cursor:'move', update:prepareSortedItems});
+        
+        $('#q-sort-items li').livequery(function(){ 
+        // use the helper function hover to bind a mouseover and mouseout event 
+            $(this) 
+                .hover(function() { 
+                    quoteItemOver($(this)); 
+                }, function() { 
+                    quoteItemOut($(this)); 
+                }); 
+        }, function() { 
+            // unbind the mouseover and mouseout events 
+            $(this) 
+                .unbind('mouseover') 
+                .unbind('mouseout'); 
+        });
+        
+        $('#q-sort-items li .ip-delete').livequery(function(){
+            $(this).click(function(){
+                quoteItemDelete($(this));
+            });
+        });
+        $('#q-sort-items li .ip-edit').livequery(function(){
+            $(this).click(function(){
+                quoteItemEdit($(this));
+            });
+        });
+        
+        <?php
+        } // end edit mode
+        ?>
+        <?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
+        
+        populateQuote(<?php echo $quote_data['lead_id'] ?>);
+        
+        <?php } ?>
+        <?php if (isset($edit_quotation)) { ?>
+        $('#item-submit').css('display', 'block');
+        <?php } ?>
+    }
+);
+
+$("#asset_location").on('change',function(){
+    // alert('catch');
+    $("#as_location").hide();
+});
+
+$('#addRow').on('click',function(){
+    $('#as_location').append('<input type="text"><input type="text"><button id="addRow">Add</button>');
+});
+
+</script>
 <?php require (theme_url() . '/tpl/footer.php'); ?>
+<script type="text/javascript" src="assets/js/asset_register/asset_add_view.js"></script>
