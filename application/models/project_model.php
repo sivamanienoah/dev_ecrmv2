@@ -374,8 +374,20 @@ class Project_model extends crm_model
 		$this->db->where('username != ',"admin.enoah");
     	$this->db->order_by('first_name',"asc");
 		$q = $this->db->get($this->cfg['dbpref'] . 'users');
+                  //   echo $this->db->last_query(); exit;
 		return $q->result_array();
-    }
+        }
+        
+        function get_users_list() 
+	{
+    	$this->db->select('userid,first_name,last_name,username,level,role_id,inactive,emp_id');
+		//$this->db->where('inactive',0);
+		//$this->db->where('username != ',"admin.enoah");
+    	$this->db->order_by('first_name',"asc");
+		$q = $this->db->get($this->cfg['dbpref'] . 'users');
+                  //   echo $this->db->last_query(); exit;
+		return $q->result_array();
+        }
 	
 	public function get_practices()
 	{
@@ -500,7 +512,7 @@ class Project_model extends crm_model
     	$this->db->where('expm.jobid_fk', $id);
     	$this->db->order_by('expm.expectid');
 		$results = $this->db->get();
-            //    echo $this->db->last_query(); exit;
+          
         return $results->result_array();
         }
 	
