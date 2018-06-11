@@ -2638,7 +2638,7 @@ class Project extends crm_controller {
 		$today = time();
 		
 		$data = real_escape_array($this->input->post());
-		print_r($data);exit;
+		//print_r($data);exit;
 		$fname = $_FILES['newfile_upload'];
 	
 		if($fname!="") {
@@ -2745,7 +2745,8 @@ class Project extends crm_controller {
 				$ins['log_content']   = $pay_det;
                             // print_r($ins);exit;
 				$insert_logs = $this->project_model->insert_row('logs', $ins);
-                                redirect('project');
+                                redirect('project/view_project/'.$data['sp_form_jobid']);
+                                  
                                 
 			}
 			else 
