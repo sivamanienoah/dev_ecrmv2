@@ -5381,7 +5381,7 @@ HDOC;
 			$ins_log['date_created'] 	= $inv_gen_time;
 			$ins_log['userid_fk']   	= $this->userdata['userid'];
 			$insert_log = $this->welcome_model->insert_row('logs', $ins_log);
-                      //  print_r($param);exit;
+                       print_r($param);exit;
 			$this->email_template_model->sent_email($param);
 		} else {
 			$output['error'] = true;
