@@ -58,7 +58,10 @@ $(function(){
 		var status = $('#status').val();
                 status = status + "";
 		   
-		var params = {sub_type_name:sub_type_name,start_date:start_date,end_date:end_date,c_date:c_date,m_date:m_date,sub_name:sub_name,customer:customer,
+//		var params = {sub_type_name:sub_type_name,start_date:start_date,end_date:end_date,c_date:c_date,m_date:m_date,sub_name:sub_name,customer:customer,
+//                    status:status,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname};
+                   
+		var params = {sub_type_name:sub_type_name,start_date:start_date,end_date:end_date,sub_name:sub_name,customer:customer,
                     status:status,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname};
 		params[csrf_token_name] = csrf_hash_token; 
 		$('#hostme').load(base_url+'hosting/get_subscription_report',params,function(){
