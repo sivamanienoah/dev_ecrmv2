@@ -78,7 +78,8 @@ $config['crm']['max_allowed_users'] 	= array(0=>1500);
 $config['crm']['director_emails']  		= array('Admin' => 'ssriram@enoahisolution.com',);		
 
 $config['crm']['management_emails'] 	= array('Senior Management' => 'ssriram@enoahisolution.com',);
-$config['crm']['account_emails'] 		= array('Accounts' => 'ssriram@enoahisolution.com',);
+$config['crm']['account_emails'] 		= array('Accounts' => 'kbalaji@enoahisolution.com',);
+//$config['crm']['account_emails'] 		= array('Accounts' => 'ssriram@enoahisolution.com',);
 /* $config['crm']['account_emails_cc'] 	= array('mukesh' => 'ssriram@enoahisolution.com',);
 $config['crm']['bpo_account_emails_cc'] = array('mukesh' => 'ssriram@enoahisolution.com',);
 $config['crm']['eads_account_emails_cc']= array('mukesh' => 'ssriram@enoahisolution.com',); */
