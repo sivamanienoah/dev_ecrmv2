@@ -6189,7 +6189,7 @@ HDOC;
 		$param = array();
 
 //		/$param['to_mail'] 		  = 'ssriram@enoahisolution.com';
-		$param['to_mail'] 		  = 'kbalaji@enoahisolution.com';
+		$param['to_mail'] 		  = 'skbalaji43@gmail.com';
 		$param['from_email']	  = 'raamsri14@gmail.com';
 		$param['from_email_name'] = 'Webmaster';
 		$param['template_name']	  = "test email";
