@@ -3219,10 +3219,10 @@ function generate_proforma_inv(eid) {
 			function(data) {
 				if (data.error) {
 					// alert(data.errormsg);
-					$('#rec_paymentfadeout').html(data.errormsg);
+					$('#pr_rec_paymentfadeout').html(data.errormsg);
 				} else {
-					$('#rec_paymentfadeout').html('<span class=ajx_success_msg>Status Updated</span>');
-					loadPayment();
+					$('#pr_rec_paymentfadeout').html('<span class=ajx_success_msg>Status Updated</span>');
+					loadPrPayment();
 					reset_paymentdata();
 				}
 				$.unblockUI();
