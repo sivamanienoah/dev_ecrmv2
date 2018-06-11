@@ -150,7 +150,7 @@ class email_template_model extends crm_model {
 	*@Method sent_email
 	*/
 	public function sent_email($data=array()) {
-		print_r($data);exit;
+		//print_r($data);exit;
 		$email_hf = $this->get_row('email_template_hf', array('id'=>1));
 		$email_header = $email_hf[0]['email_template_header'];
 		$email_footer =  $email_hf[0]['email_template_footer'];
