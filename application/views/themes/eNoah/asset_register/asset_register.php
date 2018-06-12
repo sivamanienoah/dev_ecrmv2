@@ -1,7 +1,7 @@
 <?php require (theme_url() . '/tpl/header.php'); ?>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <style>
-    .ui-autocomplete { max-height:200px; overflow-y:auto; overflow-x: hidden; }
+    .ui-autocomplete { z-index: 9999; max-height:200px; overflow-y:auto; overflow-x: hidden; }
     #ui-datepicker-div {z-index: 999 !important;}
 </style>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
@@ -818,7 +818,7 @@ if (!isset($view_quotation)) {
                             <input type="hidden" name="project_id" id="project_id" class="textfield width300px" />
                         </p>
                       
-               
+              
 
 			<div class="clear-both" ></div>
 			<div class="pull-left team-mem">
