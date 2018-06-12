@@ -19,6 +19,7 @@ class Asset_register extends crm_controller {
         $this->load->model('request_model');
         $this->load->model('asset_model');
         $this->load->model('project_model');
+        $this->load->model('welcome_model');
         $this->load->model('asset_location_model');
         $this->load->model('manage_service_model');
 
@@ -206,21 +207,22 @@ class Asset_register extends crm_controller {
      */
 
     public function view_asset($id = 0, $quote_section = '') {
-        // print_r($id);exit;
+//        / print_r($id);exit;
         $this->load->helper('text');
         $this->load->helper('fix_text');
-
+        $data['view_asset'] = true;
         $usid = $this->session->userdata('logged_in_user');
 
         $getAssetDet = $this->asset_model->get_asset_detail($id); 
-      //  print_r($getAssetDet);exit;
+        //S echo '<pre>';print_r($getAssetDet);exit;
         $data['quote_data'] = $getAssetDet;
         $data['departments'] = $this->asset_model->get_department_by_id($getAssetDet[0]['department_id']); 
         $data['projects'] = $this->asset_model->get_project_by_id($getAssetDet[0]['project_id']);
+ 
         $data['asset_owner'] = $this->asset_model->get_user_name_by_id($getAssetDet[0]['asset_owner']);   
       //  $data['asset_owner'] = $this->asset_model->get_user_name_by_id($getAssetDet[0]['asset_owner']);   
         
-      //  print_r($data['asset_owner']);exit;
+   
         // $arrLeadInfo = $this->request_model->get_lead_info($id);
 
         if (!empty($getAssetDet)) {
@@ -377,59 +379,18 @@ class Asset_register extends crm_controller {
      */
     function edit_asset($id = 0) {
         if (($data['asset_data'] = $this->asset_model->get_asset_detail($id)) !== FALSE) {
+            $data['asset_data'] = $this->asset_model->get_asset_detail($id);
+       //  print_r($data['asset_data']);exit;
             $data['edit_asset'] = true;
-            $data['sales_divisions'] = $this->asset_model->get_sales_divisions();
-            $data['project_listing_ls'] = $this->asset_model->ListActiveprojects();
-            $data['categories'] = $this->asset_model->get_categories();
-
-            $c = count($data['categories']);
-
-            for ($i = 0; $i < $c; $i++) {
-                $data['categories'][$i]['records'] = $this->asset_model->get_cat_records($data['categories'][$i]['cat_id']);
-            }
-
-            $data['lead_source_edit'] = $this->asset_model->get_lead_sources();
-
-            $regid = $data['quote_data']['add1_region'];
-            $cntryid = $data['quote_data']['add1_country'];
-            $steid = $data['quote_data']['add1_state'];
-            $locid = $data['quote_data']['add1_location'];
-
-            //for new level concept - start here
-            $reg_lvl_id = array(5, 4, 3);
-            $cont_lvl_id = array(5, 4, 2);
-            $ste_lvl_id = array(5, 3, 2);
-            $loc_lvl_id = array(4, 3, 2);
-
-            $regUserList = $this->asset_model->get_lvl_users('levels_region', 'region_id', $regid, $reg_lvl_id);
-            $cntryUserList = $this->asset_model->get_lvl_users('levels_country', 'country_id', $cntryid, $cont_lvl_id);
-            $steUserList = $this->asset_model->get_lvl_users('levels_state', 'state_id', $steid, $ste_lvl_id);
-            $locUserList = $this->asset_model->get_lvl_users('levels_location', 'location_id', $locid, $loc_lvl_id);
-            $globalUserList = $this->asset_model->get_lvlOne_users();
-            $getcustomerdetail = $this->asset_model->get_customer_name_by_lead($id);
-
-            // echo "<pre>"; print_r($getcustomerdetail); die;
-
-            $userList = array_merge_recursive($regUserList, $cntryUserList, $steUserList, $locUserList, $globalUserList);
-            $users[] = 0;
-            foreach ($userList as $us) {
-                $users[] = $us['user_id'];
-            }
-
-            $userList = array_unique($users);
-            $userList = array_values($userList);
-
-            // $userList = implode(',', $userList);
-            $data['lead_assign_edit'] = $this->asset_model->get_userlist($userList);
-            //for new level concept - end here
-
-            $data['expect_worth'] = $this->asset_model->get_expect_worths();
-            $data['lead_stage'] = $this->asset_model->get_lead_stage();
-            $data['job_cate'] = $this->asset_model->get_lead_services();
-            $data['sales_divisions'] = $this->asset_model->get_sales_divisions();
-            $data['industry'] = $this->asset_model->get_industry();
-
-            $this->load->view('asset_register/asset_register', $data);
+            $data['edit_dep_details'] = $this->asset_model->get_department_details();
+            $data['projects'] = $this->asset_model->get_project_by_id($data['asset_data'] [0]['project_id']);
+            $data['location'] = $this->asset_model->get_locations();
+            //print_r($data['projects']);exit;
+            
+            $data['lead_assign_edit'] = $this->welcome_model->get_userlist($userList);
+         //  print_r($data['edit_dep_details']);exit;
+            
+              $this->load->view('asset_register/asset_register', $data);
         } else {
             $this->session->set_flashdata('header_messages', array("Status Changed Successfully."));
             header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -473,7 +434,7 @@ class Asset_register extends crm_controller {
     function ajax_create_quote() {
         // echo 'hi';exit;
         $data = real_escape_array($this->input->post());//
-///print_r($data);exit;
+/// print_r($data);exit;
         $ins['asset_name'] = $data['asset_name'];
 
         $chkAssetName = $this->asset_model->checkAssetName($ins['asset_name']);
@@ -484,7 +445,8 @@ class Asset_register extends crm_controller {
         } else {
             //   echo 'else';exit;
             $ins['department_id'] = $data['department'];
-            $ins['project_id'] = $data['project_names'];
+            $ins['project_id'] = $data['project_id'];
+         //   $ins['project_id'] = $data['project_names'];
             $ins['asset_type'] = $data['asset_type'];
             $ins['storage_mode'] = $data['storage_mode'];
             $ins['location'] = $data['location'];
@@ -523,6 +485,74 @@ class Asset_register extends crm_controller {
             //  redirect('asset_register/quotation');
         }
     }
+    
+     function ajax_edit_asset() {
+        // echo 'hi';exit;
+        $data = real_escape_array($this->input->post());//
+ //print_r($data);exit;
+         $usid = $this->session->userdata('logged_in_user');
+        
+        $ins['asset_name'] = $data['edit_asset_name'];
+
+//        $chkAssetName = $this->asset_model->checkAssetName($ins['asset_name']);
+//        if (is_array($chkAssetName) && count($chkAssetName) > 0) {
+//            $json['error'] = false;
+//            $json['errormsg'] = 'Asset already registered';
+//            echo json_encode($json);
+//        } else {
+            //   echo 'else';exit;
+            $ins['department_id'] = $data['department_edit'];
+            $ins['project_id'] = $data['e_project_id'];
+         //   $ins['project_id'] = $data['project_names'];
+            $ins['asset_type'] = $data['edit_asset_type'];
+            $ins['storage_mode'] = $data['storage_mode'];
+            $ins['location'] = $data['edit_location'];
+            $asset_owners = $data['owner_assign_edit'];
+            $ins['asset_owner'] = implode(',', $asset_owners);
+            $ins['labelling'] = $data['edit_labelling'];
+            $ins['confidentiality'] = $data['edit_confidentiality'];
+           // $ins['integrity'] = $data['integrity'];
+            $ins['availability'] = $data['edit_availability'];
+            
+//            $asset_location = $data['asset_location'];
+//            $ins['asset_location'] = implode(",",  $asset_location);
+//           
+//            $position= $data['position'];
+//             $ins['asset_position']  = implode(",",  $position);
+           // print_r($arr_asset);exit;
+          //  $ins['saveLocationText'] = $data['saveLocationText'];
+            $ins['created_by'] = $usid['username'];
+          //  print_r($ins);exit;
+            $updt_asset = $this->asset_model->update_row_asset('asset_register', $ins, $data['asset_id']);
+            $res = array();
+            if ($updt_asset) {
+                $res['error'] = false;
+            } else {
+                $res['error'] = true;
+            }
+            echo json_encode($res);
+            exit;
+            
+            
+//            $insert_asset = $this->asset_model->insert_row_return_id('asset_register', $ins);
+//           //  print_r($insert_asset);exit;
+//            // $insert_asset = $this->db->insert_id();
+//            $json['error'] = true;
+//            $json['insert_id'] = $insert_asset;
+//            echo json_encode($json);
+//            //  print_r($insert_asset);
+//            //insert logs
+//            $ins_log = array();
+//            $ins_log['log_content'] = "Asset Created For the " . $customer['company'] . " - " . $customer['customer_name'] . " On :" . " " . date('M j, Y g:i A');
+//            $ins_log['log_content'] .= "\n Lead Title " . $get_det['lead_title'];
+//            $ins_log['jobid_fk'] = $insert_asset;
+//            $ins_log['date_created'] = date('Y-m-d H:i:s');
+//            $ins_log['userid_fk'] = $this->userdata['userid'];
+//            $insert_log = $this->asset_model->insert_row_return_id('logs', $ins_log);
+//        /  print_r($insert_log);
+            //  redirect('asset_register/quotation');
+        
+    }
 
     /*
      * provides details of the customer
@@ -546,7 +576,7 @@ class Asset_register extends crm_controller {
      * @return string (json formatted)
      */
     function ajax_projects_search(){
-       //echo "string";exit;
+      // echo "string";exit;
         if ($this->input->post('project_name')) {
 
             $result = $this->asset_model->get_projects_list(0, $this->input->post('project_name'));
