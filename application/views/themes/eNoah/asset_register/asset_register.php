@@ -296,9 +296,9 @@ if (!isset($view_quotation)) {
 
 
     function startQuote() {
-       // alert('hi');return false;
+        // alert('hi');return false;
         var err = [];
-        
+
         if ($.trim($('#department').val()) == '') {
             err.push('department is required');
         }
@@ -335,9 +335,9 @@ if (!isset($view_quotation)) {
 //        if ($.trim($('#archivalLocation').val()) == '') {
 //            err.push('archivalLocation is required');
 //        }
-        
+
 //     
-        
+
         if (err.length > 0) {
             // alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
             $.blockUI({
@@ -351,24 +351,105 @@ if (!isset($view_quotation)) {
                 message: '<h4>Processing...</h4>'
             });
             // add id to form
-         //   $('#hidden_custid_fk').val(ex_cust_id);
+            //   $('#hidden_custid_fk').val(ex_cust_id);
             // get form data
             var form_data = $('#quote-init-form').serialize() + '&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
-           // alert(form_data);return false;
+            // alert(form_data);return false;
             $.post('asset_register/ajax_create_quote', form_data, function (res) {
-              // alert(res);return false;
-               console.log(res);
+                // alert(res);return false;
+                console.log(res);
                 if (typeof (res) == 'object') {
                     if (res.error == true) {
                         // good to go
                         window.location = '<?php echo $this->config->item('base_url') ?>asset_register/quotation/';
                     } else {
                         // alert(res.errormsg);
-                         alert('Asset already registered!');                    
+                        alert('Asset already registered!');
                     }
                 } else {
                     alert('Your session timed out!');
-                }   
+                }
+                $('#content').unblock();
+            },
+                    "json"
+                    );
+        }
+    }
+
+    function editAssetDetails(arg) {
+
+        var err = [];
+
+        if ($.trim($('#department_edit').val()) == '') {
+            err.push('department is required');
+        }
+        if ($('#e_project_id').val() == 'not_select') {
+            err.push('Project must be selected');
+        }
+        if ($('#edit_asset_type').val() == 'not_select') {
+            err.push('Asset type must be selected');
+        }
+        if ($('#owner_assign_edit').val() == 'not_select') {
+            err.push('Asset Owner must be selected');
+        }
+        if ($('#edit_confidentiality').val() == 'not_select') {
+            err.push('Confidentiality must be selected');
+        }
+        if ($('#edit_availability').val() == 'not_select') {
+            err.push('Availability must be selected');
+        }
+        if ($('#edit_asset_name').val() == '') {
+            err.push('asset_name is required');
+        }
+//         if ($('#Integrity').val() == 'not_select') {
+//            err.push('Integrity must be selected');
+//        }
+//        if ($.trim($('#location').val()) == '') {
+//            err.push('location is required');
+//        }
+//        if ($.trim($('#labelling').val()) == '') {
+//            err.push('labelling is required');
+//        }
+//        if ($.trim($('#backupLocation').val()) == '') {
+//            err.push('backupLocation is required');
+//        }
+//        if ($.trim($('#archivalLocation').val()) == '') {
+//            err.push('archivalLocation is required');
+//        }
+
+//     
+
+        if (err.length > 0) {
+            // alert('Few errors occured! Please correct them and submit again!\n\n' + err.join('\n'));
+            $.blockUI({
+                message: '<br /><h5>Few errors occured! Please correct them and submit again!\n\n</h5><div class="modal-errmsg overflow-hidden"><div class="buttons">' + err.join('<br />') + '</div><div class="buttons pull-right"><button type="submit" class="positive" onclick="cancelDel(); return false;">Ok</button></div></div>',
+                css: {width: '440px'}
+            });
+            return false;
+        } else {
+            // block
+            $('#content').block({
+                message: '<h4>Processing...</h4>'
+            });
+            // add id to form
+            //   $('#hidden_custid_fk').val(ex_cust_id);
+            // get form data
+            var form_data = $('#asset-edit-form').serialize() + '&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
+            // alert(form_data);return false;
+            $.post('asset_register/ajax_edit_asset', form_data, function (res) {
+                // alert(res);return false;
+                console.log(res);
+                if (typeof (res) == 'object') {
+                    if (res.error == true) {
+                        // good to go
+                        window.location = '<?php echo $this->config->item('base_url') ?>asset_register/quotation/';
+                    } else {
+                        // alert(res.errormsg);
+                        alert('Asset already registered!');
+                    }
+                } else {
+                    alert('Your session timed out!');
+                }
                 $('#content').unblock();
             },
                     "json"
@@ -547,6 +628,7 @@ if (!isset($view_quotation)) {
         $.unblockUI();
     }
 
+
     function editQuoteDetails(arg) {
 
         var err = [];
@@ -600,7 +682,7 @@ if (!isset($view_quotation)) {
                 message: '<h4>Processing</h4>'
             });
             // get form data
-            var form_data = $('#quote-edit-form').serialize() + '&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
+            var form_data = $('#asset-edit-form').serialize() + '&<?php echo $this->security->get_csrf_token_name(); ?>=<?php echo $this->security->get_csrf_hash(); ?>';
             // add cutomer id
             var csrf_token = '<?php echo $this->security->get_csrf_token_name() ?>';
             var csrf_hasf = '<?php echo $this->security->get_csrf_hash() ?>';
@@ -790,12 +872,11 @@ if (!isset($view_quotation)) {
     }
 </style>
 <div id="content">
-    <?php //echo '<pre>'; print_r($quote_data); echo '</pre>';  ?>
+    <?php //echo '<pre>'; print_r($this->session->userdata); echo '</pre>';  ?>
     <div class="inner">
-        <?php 
-        if (($this->session->userdata('add') == 1 && $this->uri->segment(2) != 'edit_quote') || ($this->session->userdata('edit') == 1) && ($this->uri->segment(2) == 'edit_quote' && is_numeric($this->uri->segment(3)))) { ?>
+        <?php if (($this->session->userdata('add') == 1 && $this->uri->segment(2) != 'edit_asset') || ($this->session->userdata('edit') == 1) && ($this->uri->segment(2) == 'edit_asset' && is_numeric($this->uri->segment(3)))) { ?>
             <div class="q-main-left" style="width: auto;">
-                <form action="" method="post" id="quote-init-form" class="<?php echo (isset($view_quotation) || isset($edit_quotation)) ? 'display-none' : '' ?>" onsubmit="return false;">
+                <form action="" method="post" id="quote-init-form" class="<?php echo (isset($view_asset) || isset($edit_asset)) ? 'display-none' : '' ?>" onsubmit="return false;">
 
                     <input type="hidden" name="username" id="username" value= "<?php echo $userdata['userid'] ?>" />
                     <h2>Create a Asset</h2>
@@ -814,41 +895,44 @@ if (!isset($view_quotation)) {
                             </select>
                         </p>
                         <p><label>Project</label></p>
-                        <p><input type="text" name="project_names" id="project_names" class="textfield width300px" />
+                        <p><input type="text" name="project_names" id="project_names" class="textfield width300px" placeholder="please type the name of the project to search" />
                             <input type="hidden" name="project_id" id="project_id" class="textfield width300px" />
                         </p>
-                      
-              
 
-			<div class="clear-both" ></div>
-			<div class="pull-left team-mem">
-			<p><label class="project-stake-members">Asset Owner</label></p>
-				<p><select  multiple="multiple" class="chzn-select" data-placeholder="Select Owners"  id="arr_asset_owners" name="arr_asset_owners[]">
-					<?php if(!empty($all_users)):
-                                             $usid = $this->session->userdata('logged_in_user');
-                                ?>
-                                     
-							<!--option value=""></option-->
-							<?php foreach($all_users as $pms):  
-                                                                 $selected = '';
-									if($usid['userid']==$pms['userid']) $selected = 'selected="selected"';?>
-									<option <?php echo $selected; ?> value="<?php echo $pms['userid']?>"><?php echo $pms['first_name'].' '.$pms['last_name'].'-'.$pms['emp_id'];?></option>
-							<?php endforeach;?>
-					<?php endif; ?>
-				</select>
-                                </p>
-			</div>
-			<?php 
-			if($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
-			<div class="team-mem-btn">
-				<div class="buttons">
-					<button onclick="setStakeMembers(); return false;" style="margin:0 0 0 5px;" id="stake_members_id" class="positive" type="submit">Set</button>
-					<div class="error-msg" id="resmsg3"></div>
-				</div>
-			</div>
-			<?php } ?>
-			<div style="margin:10px;" class="clear-both"></div>		
-			
+
+
+                        <div class="clear-both" ></div>
+                        <div class="pull-left team-mem">
+                            <p><label class="project-stake-members">Asset Owner</label></p>
+                            <p><select  multiple="multiple" class="chzn-select" data-placeholder="Select Owners"  id="arr_asset_owners" name="arr_asset_owners[]">
+                                    <?php
+                                    if (!empty($all_users)):
+                                        $usid = $this->session->userdata('logged_in_user');
+                                        ?>
+
+                                        <!--option value=""></option-->
+                                        <?php
+                                        foreach ($all_users as $pms):
+                                            $selected = '';
+                                            if ($usid['userid'] == $pms['userid'])
+                                                $selected = 'selected="selected"';
+                                            ?>
+                                            <option <?php echo $selected; ?> value="<?php echo $pms['userid'] ?>"><?php echo $pms['first_name'] . ' ' . $pms['last_name'] . '-' . $pms['emp_id']; ?></option>
+        <?php endforeach; ?>
+                        <?php endif; ?>
+                                </select>
+                            </p>
+                        </div>
+    <?php if ($chge_access == 1 && $quote_data['pjt_status'] != 2) { ?>
+                            <div class="team-mem-btn">
+                                <div class="buttons">
+                                    <button onclick="setStakeMembers(); return false;" style="margin:0 0 0 5px;" id="stake_members_id" class="positive" type="submit">Set</button>
+                                    <div class="error-msg" id="resmsg3"></div>
+                                </div>
+                            </div>
+    <?php } ?>
+                        <div style="margin:10px;" class="clear-both"></div>		
+
                         <p><label>Asset Type</label></p>
                         <p>
                             <select name="asset_type" id="asset_type" class="textfield width300px">
@@ -876,7 +960,7 @@ if (!isset($view_quotation)) {
                                 <option value="Public">Public</option>
                             </select>
                         </p>
-<!--                        <p><label>Integrity</label></p>
+    <!--                        <p><label>Integrity</label></p>
                         <p>
                             <select name="integrity" id="integrity" class="textfield width300px">
                                 <option value="not_select">Please Select</option>
@@ -893,14 +977,14 @@ if (!isset($view_quotation)) {
                             </select>
                         </p>
                         <p><label>Asset Name</label></p>
-                        <p><input type="text" name="asset_name" id="asset_name" class="textfield width300px" /></p>
+                        <p><input type="text" name="asset_name" id="asset_name" class="textfield width300px" placeholder="Enter the asset name"/></p>
                         <p><label>Labelling</label></p>
-                        <p><input type="text" name="labelling" id="labelling" class="textfield width300px" /></p>
+                        <p><input type="text" name="labelling" id="labelling" class="textfield width300px" placeholder="Enter the defined labelling for this asset"/></p>
                         <p><label>Asset Current Location</label></p>
-                        <p><textarea name="location" id="location" class="textfield width300px"></textarea></p>
-<!--                        <p><label>Labelling</label></p>
+                        <p><textarea name="location" id="location" class="textfield width300px" placeholder="Enter the asset current location"></textarea></p>
+    <!--                        <p><label>Labelling</label></p>
                         <p><input type="text" name="labelling" id="labelling" class="textfield width300px" /></p>-->
-<!--                        <p><label>Select Location</label></p>
+    <!--                        <p><label>Select Location</label></p>
                         <p><select name="asset_location" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)"">
                               
                             </select>
@@ -911,161 +995,161 @@ if (!isset($view_quotation)) {
                            <p><textarea name="saveLocationText" id="saveLocationText"  class="textfield width300px"></textarea></p>
                         </div>-->
                         <div>
-                             <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >
-							<thead>
-								<tr class="bg-blue">
-									<td>choose Location<span class='mandatory_asterick'>*</span></td>
-									<td>Location</td>
-                                                                        <td>Action</td>
-									
-									
-								</tr>
-							</thead>
-							
-										<tr>
-											<td>
-                                                                                        <select name="asset_location[]" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)"">
-                                                                                            <option value="not_select">Please Select</option>
-                                                                                            <?php
-                                                                                            foreach ($location as $loc) {
-                                                                                                ?>
-                                                                                                <option value="<?php echo $loc['loc_id'] ?>"><?php echo $loc['asset_location'] ?></option>
-                                                                                                <?php
-                                                                                            }
-                                                                                            ?>
-                                                                                        </select>
-											</td>
-											<td>
-											   <input type="text" name="position[]" value="<?php echo $row['asset_location']; ?>" class="position_title textfield width180px required" />
-												<span class="position_title_err_msg text-danger"></span>
-											</td>
-											
-										
-											<td width="100">
-												<a id="addRow" class="createBtn" <?=$disp_style?> ></a>
-												<a id="deleteRow" hyperid="<?=$loc['loc_id']?>" class="del_file"></a>
-											</td>
-										</tr>
-									
-						</table>
+                            <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >
+                                <thead>
+                                    <tr class="bg-blue">
+                                        <td>choose Location<span class='mandatory_asterick'>*</span></td>
+                                        <td>Location</td>
+                                        <td>Action</td>
+
+
+                                    </tr>
+                                </thead>
+
+                                <tr>
+                                    <td>
+                                        <select name="asset_location[]" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)"">
+                                            <option value="not_select">Please Select</option>
+                                            <?php
+                                            foreach ($location as $loc) {
+                                                ?>
+                                                <option value="<?php echo $loc['loc_id'] ?>"><?php echo $loc['asset_location'] ?></option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="position[]" value="<?php echo $row['asset_location']; ?>" class="position_title textfield width180px required" />
+                                        <span class="position_title_err_msg text-danger"></span>
+                                    </td>
+
+
+                                    <td width="100">
+                                        <a id="addRow" class="createBtn" <?= $disp_style ?> ></a>
+                                        <a id="deleteRow" hyperid="<?= $loc['loc_id'] ?>" class="del_file"></a>
+                                    </td>
+                                </tr>
+
+                            </table>
                         </div>
-                        
-                       
-                        
+
+
+
                         <div class="buttons clearfix">
-                            <button type="submit" class="positive" onclick="startQuote(); return false;">save asset</button>
+                            <button type="submit" class="positive" onclick="startQuote();
+                                    return false;">save asset</button>
                         </div>
                         <p>&nbsp;</p>
                     </div>
                 </form>
 
-                <?php if (isset($asset_data) && isset($edit_asset)) { ?>
+                    <?php if (isset($asset_data) && isset($edit_asset)) { ?>
                     <h2> Edit Asset  
-                        <div style="overflow:hidden; padding-bottom:10px;" class="buttons pull-right">
-                            <button onclick="document.location.href = '<?php echo base_url(); ?>asset_register/view_asset/<?php echo $asset_data['asset_id'];?>'" class="positive" type="submit">Back to View</button>
-                        </div>
+        <?php foreach ($asset_data as $ass) {
+            ?>
+                            <div style="overflow:hidden; padding-bottom:10px;" class="buttons pull-right">
+                                <button onclick="document.location.href = '<?php echo base_url(); ?>asset_register/view_asset/<?php echo $ass['asset_id']; ?>'" class="positive" type="submit">Back to View</button>
+                            </div>
 
-                    </h2>
-                    <form action="" method="post" id="quote-edit-form" onsubmit="return false;">
-                        <input type="hidden" name="asset_id" id="asset_id" value="<?php echo $asset_data['asset_id'] ?>" />
-                        <div>
-                             <div>
-                                 <p><label>Department</label></p>
-                                         <p><select name="department" id="department" class="textfield width300px" ;">
-                                                 <option value="not_select">Please Select</option>
-                                                 <?php
-                                                 foreach ($job_cate as $job) {
-                                                     ?>
-                                                     <option value="<?php echo $job['sid'] ?>"<?php echo ($asset_data['department_id'] == $job['sid']) ? ' selected="selected"' : '' ?>><?php echo $job['services'] ?></option>   
-                                                     <?php
-                                                 }
-                                                 ?>
-                                             </select>
-                                         </p>
-                        <p><label>Project</label></p>
-                        <p><select name="Project" id="Project" class="textfield width300px";">
-                                <option value="not_select">Please Select</option>
-                                <?php
-                                foreach ($project_listing_ls as $job) {
-                                    ?>
-                                    <option value="<?php echo $job['lead_id'] ?>"><?php echo $job['lead_title'] ?></option>
+                        </h2>
+                        <form action="" method="post" id="asset-edit-form" onsubmit="return false;">
+                            <input type="hidden" name="asset_id" id="asset_id" value="<?php echo $ass['asset_id'] ?>" />
+                            <div>
+                                <div>
+
+                                    <p><label>Department</label></p>
+
+                                    <p><select name="department_edit" id="department_edit" class="textfield width300px" ;">
+                                            <option value="not_select">Please Select</option>
+                                            <?php
+                                            foreach ($edit_dep_details as $dept) {
+                                                // echo $dept['department_id']."dept";
+                                                ?>
+                                                <option value="<?php echo $dept['department_id'] ?>"<?php echo ($ass['department_id'] == $dept['department_id']) ? ' selected="selected"' : '' ?>><?php echo $dept['department_name'] ?></option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </p>
+                                    <p><label>Project</label></p>
+                                    <?php foreach ($projects as $project) {
+                                        ?>     
+                                        <p><input type="text" name="e_project_names" id="e_project_names" class="textfield width300px" value="<?php echo htmlentities($project['lead_title'], ENT_QUOTES) ?>"/>
+                                            <input type="hidden" name="e_project_id" id="e_project_id" class="textfield width300px" 
+                                                   value="<?php echo htmlentities($project['lead_id'], ENT_QUOTES) ?>"  />
+            <?php } ?>
+                                    </p>              
+                                    <p><label>Asset Owner</label></p>
                                     <?php
-                                }
-                                ?>
-                            </select>
-                        </p>
-                        <p><label>Asset Type</label></p>
-                        <p>
-                            <select name="asset_type" id="asset_type" class="textfield width300px">
-                                <option value="not_select">Please Select</option>
-                                <option value="Hardware">Hardware</option>
-                                <option value="Software">Software</option>
-                                <option value="Information">Information</option>
-                            </select>
-                        </p>
-                        <p><label>Storage Mode</label></p>
-                        <p>
-                            <select name="storage_mode" id="storage_mode" class="textfield width300px">
-                                <option value="not_select">Please Select</option>
-                                <option value="Hardcopy">Hardcopy</option>
-                                <option value="Softcopy">Softcopy</option>
-                            </select>
-                        </p>
-                        <p><label>Confidentiality</label></p>
-                        <p>
-                            <select name="confidentiality" id="confidentiality" class="textfield width300px">
-                                <option value="not_select">Please Select</option>
-                                <option value="Highly confidential">Highly confidential</option>
-                                <option value="Confidential">Confidential</option>
-                                <option value="Internal">Internal</option>
-                                <option value="Public">Public</option>
-                            </select>
-                        </p>
-                        <p><label>Integrity</label></p>
-                        <p>
-                            <select name="integrity" id="integrity" class="textfield width300px">
-                                <option value="not_select">Please Select</option>
-                                <option value="High">High</option>
-                            </select>
-                        </p>
-                        <p><label>Availability</label></p>
-                        <p>
-                            <select name="availability" id="availability" class="textfield width300px">
-                                <option value="not_select">Please Select</option>
-                                <option value="Low">Low</option>
-                                <option value="High">High</option>
-                                <option value="Severe">Severe</option>
-                            </select>
-                        </p>
-                        <p><label>Asset Name</label></p>
-                        <p><input type="text" name="asset_name" id="asset_name" class="textfield width300px" /></p>
-                        <p><label>Location</label></p>
-                        <p><input type="text" name="location" id="location" class="textfield width300px" /></p>
-                        <p><label>Labelling</label></p>
-                        <p><label>Select Location</label></p>
-                        <p><select name="location" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)">
-                                <option value="not_select">Please Select</option>
-                                <?php
-                                foreach ($location as $loc) {
+                                    $prj_assign_arr = array(0);
+                                    $prj_assign_arr = @explode(',', $ass['asset_owner']);
                                     ?>
-                                    <option value="<?php echo $loc['loc_id'] ?>"><?php echo $loc['asset_location'] ?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                        </p>
-                       
-                        <div id="saveLocation" style="display: none">
-                            Location :
-                            <input type="text" id="saveLocationText" />
-                        </div>
-                       
-                        <div class="buttons clearfix">
-                            <button type="submit" class="positive" onclick="startQuote(); return false;">save asset</button>
-                        </div>
-                        <p>&nbsp;</p>
-                    </div>
-                            
+                                    <select data-placeholder="Choose Owner..." name="owner_assign_edit[]" multiple id="owner_assign_edit" class="chzn-select width300px">
+                                        <?php foreach ($lead_assign_edit as $leadassignedit) { ?>
+                                            <option value="<?php echo $leadassignedit['userid'] ?>"<?php echo (in_array($leadassignedit['userid'], $prj_assign_arr) ) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] . " - " . $leadassignedit['emp_id']; ?></option>
+            <?php } ?>
+                                    </select>
+            <!--                        <p><input type="text" name="project_names" id="project_names" class="textfield width300px" placeholder="please type the name of the project to search" />
+            <input type="hidden" name="project_id" id="project_id" class="textfield width300px" />
+            </p>-->
+                                    <p><label>Asset Type</label></p>
+                                    <p>
+                                        <select name="edit_asset_type" id="edit_asset_type" class="textfield width300px">
+                                            <option value="not_select">Please Select</option>
+                                            <option value="Hardware" <?php if ($ass['asset_type'] == "Hardware") echo "selected"; ?>>Hardware</option>
+                                            <option value="Software" <?php if ($ass['asset_type'] == "Software") echo "selected"; ?>>Software</option>
+                                            <option value="Information" <?php if ($ass['asset_type'] == "Information") echo "selected"; ?>>Information</option>
+                                        </select>
+                                    </p>
+
+                                    <p><label>Storage Mode</label></p>
+                                    <p>
+                                        <select name="storage_mode" id="storage_mode" class="textfield width300px">
+                                            <option value="not_select">Please Select</option>
+                                            <option value="Hardcopy" <?php if ($ass['storage_mode'] == "Hardcopy") echo "selected"; ?>>Hardcopy</option>
+                                            <option value="Softcopy" <?php if ($ass['storage_mode'] == "Softcopy") echo "selected"; ?>>Softcopy</option>
+                                        </select>
+                                    </p>
+                                    <p><label>Confidentiality</label></p>
+                                    <p>
+                                        <select name="edit_confidentiality" id="editconfidentiality" class="textfield width300px">
+                                            <option value="not_select">Please Select</option>
+                                            <option value="Highly confidential" <?php if ($ass['storage_mode'] == "Highly confidential") echo "selected"; ?>>Highly confidential</option>
+                                            <option value="Confidential" <?php if ($ass['confidentiality'] == "Confidential") echo "selected"; ?>>Confidential</option>
+                                            <option value="Internal" <?php if ($ass['confidentiality'] == "Internal") echo "selected"; ?>>Internal</option>
+                                            <option value="Public" <?php if ($ass['confidentiality'] == "Public") echo "selected"; ?>>Public</option>
+                                        </select>
+                                    </p>
+
+                                    <p><label>Availability</label></p>
+                                    <p>
+                                        <select name="edit_availability" id="edit_availability" class="textfield width300px">
+                                            <option value="not_select">Please Select</option>
+                                            <option value="Low" <?php if ($ass['availability'] == "Low") echo "selected"; ?>>Low</option>
+                                            <option value="High" <?php if ($ass['availability'] == "High") echo "selected"; ?>>High</option>
+                                            <option value="Severe"  <?php if ($ass['availability'] == "Severe") echo "selected"; ?>>Severe</option>
+                                        </select>
+                                    </p>
+                                    <p><label>Asset Name</label></p>
+                                    <p><input type="text" name="edit_asset_name" id="edit_asset_name" class="textfield width300px" 
+                                              value="<?php echo htmlentities($ass['asset_name'], ENT_QUOTES) ?>"/></p>
+                                    <p><label>Labelling</label></p>
+                                    <p><input type="text" name="edit_labelling" id="edit_labelling" class="textfield width300px"
+                                              value="<?php echo htmlentities($ass['labelling'], ENT_QUOTES) ?>"/></p>
+                                    <p><label>Asset Current Location</label></p>
+                                    <p><input type="text" name="edit_location" id="edit_location" class="textfield width300px" 
+                                              value="<?php echo htmlentities($ass['location'], ENT_QUOTES) ?>"/></p>
+
+                              
+                                    <div class="buttons clearfix">
+                                        <button type="submit" class="positive" onclick="editAssetDetails('save');
+                                                return false;">save</button>
+                                    </div>
+                                    <p>&nbsp;</p>
+        <?php } ?>
+                            </div>
+
                     </form>
     <?php } ?>
 
@@ -1117,12 +1201,12 @@ if (!isset($view_quotation)) {
 
 
             </div>
-           
-    <?php
-} else {
-    echo "You have no rights to access this page";
-}
-?>
+
+            <?php
+        } else {
+            echo "You have no rights to access this page";
+        }
+        ?>
     </div>
 </div>
 </div>
@@ -1142,7 +1226,7 @@ if (!isset($view_quotation)) {
             ?>
             <div id="cat_<?php echo $cat['cat_id'] ?>">
                 <ul>
-            <?php foreach ($records as $record) { ?>
+    <?php foreach ($records as $record) { ?>
                         <li>
                             <span onclick="resetCounter();" class="desc"><?php echo nl2br($record['item_desc']) ?></span><br />
                             <span class="hidden"><?php echo $record['item_price'] ?></span>
@@ -1151,13 +1235,13 @@ if (!isset($view_quotation)) {
             <?php } ?>
                 </ul>
             </div>
-    <?php
-    $data .= ob_get_clean();
-}
-$menu .= '</ul>';
+            <?php
+            $data .= ob_get_clean();
+        }
+        $menu .= '</ul>';
 
-echo $menu, $data;
-?>
+        echo $menu, $data;
+        ?>
 
     </div>
 </div>
@@ -1170,142 +1254,115 @@ echo $menu, $data;
      *Author eNoah - Mani.S
      */
     //code added for when the customer name field is empty it will show the notice div.
-  
 
-    $(document).ready(function(){
-        $( "#project_name" ).autocomplete({
-                    //  alert('hi');return false;
-			minLength: 2,
-			source: function(request, response) {
-				$.ajax({
-                                        url: site_base_url+ 'asset_register/ajax_project_search',
-					data: { 'project_name': $("#project_name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-					type: "POST",
-					dataType: 'json',
-					async: false,
-					success: function(data) {
-						response( data );
-					}
-				});
-			},
-			select: function(event, ui) {
-				// $('#cust_id').val(ui.item.id);
-				ex_cust_id = ui.item.id;
-				regId = ui.item.regId;
-				cntryId = ui.item.cntryId;
-				stId = ui.item.stId;
-				locId = ui.item.locId;
-				prepareQuoteForClient(ex_cust_id);
-				getUserForLeadAssign(regId,cntryId,stId,locId);
-			}
-		});
-		
-		$( "#customer_company_name" ).autocomplete({
-			minLength: 2,
-			source: function(request, response) {
-				$.ajax({ 
-					url: "hosting/ajax_customer_search",
-					data: { 'cust_name': $("#customer_company_name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
-					type: "POST",
-					dataType: 'json',
-					async: false,
-					success: function(data) {
-						response( data );
-					}
-				});
-			},
-			select: function(event, ui) {
-				$('#customer_id').val(ui.item.id);
-				// ex_cust_id = ui.item.id;
-				// regId = ui.item.regId;
-				// cntryId = ui.item.cntryId;
-				// stId = ui.item.stId;
-				// locId = ui.item.locId;
-				// prepareQuoteForClient(ex_cust_id);
-				// getUserForLeadAssign(regId,cntryId,stId,locId);
-			}
-		});
-		
-		<?php
-		if (isset($existing_lead) && isset($lead_customer))
-		{
-			echo 'ex_cust_id = ', $lead_customer, ";\n";
-			echo 'existing_lead = ', $existing_lead, ";\n";
-			echo 'existing_lead_service = "', $existing_lead_service, '";', "\n";
-			echo "prepareQuoteForClient(ex_cust_id);\n";
-		}
-		?>
-        
-      $('.modal-new-cust').click(function(){
-           $.blockUI({
-                        message:nc_form_msg,
-                        css: {width: '820px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
-                        overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
-                    });
+
+    $(document).ready(function () {
+
+
+        $("#customer_company_name").autocomplete({
+            minLength: 2,
+            source: function (request, response) {
+                $.ajax({
+                    url: "hosting/ajax_customer_search",
+                    data: {'cust_name': $("#customer_company_name").val(), '<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>'},
+                    type: "POST",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                $('#customer_id').val(ui.item.id);
+                // ex_cust_id = ui.item.id;
+                // regId = ui.item.regId;
+                // cntryId = ui.item.cntryId;
+                // stId = ui.item.stId;
+                // locId = ui.item.locId;
+                // prepareQuoteForClient(ex_cust_id);
+                // getUserForLeadAssign(regId,cntryId,stId,locId);
+            }
+        });
+
+<?php
+if (isset($existing_lead) && isset($lead_customer)) {
+    echo 'ex_cust_id = ', $lead_customer, ";\n";
+    echo 'existing_lead = ', $existing_lead, ";\n";
+    echo 'existing_lead_service = "', $existing_lead_service, '";', "\n";
+    echo "prepareQuoteForClient(ex_cust_id);\n";
+}
+?>
+
+        $('.modal-new-cust').click(function () {
+            $.blockUI({
+                message: nc_form_msg,
+                css: {width: '820px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
+                overlayCSS: {backgroundColor: '#EAEAEA', opacity: '0.9', cursor: 'wait'}
+            });
             $.get(
-                'ajax/data_forms/new_customer_form',
-                {},
-                function(data){
-                    $('.new-cust-form-loader').slideUp(500, function(){
-                        $(this).parent().css({backgroundColor: '#fff', color: '#333'});
-                        $(this).css('text-align', 'left').html(data).slideDown(500, function(){
-                            $('.error-cont').css({margin:'10px 25px 10px 0', padding:'10px 10px 0 10px', backgroundColor:'#CEB1B0'});
-                        });
-                    })
-                }
+                    'ajax/data_forms/new_customer_form',
+                    {},
+                    function (data) {
+                        $('.new-cust-form-loader').slideUp(500, function () {
+                            $(this).parent().css({backgroundColor: '#fff', color: '#333'});
+                            $(this).css('text-align', 'left').html(data).slideDown(500, function () {
+                                $('.error-cont').css({margin: '10px 25px 10px 0', padding: '10px 10px 0 10px', backgroundColor: '#CEB1B0'});
+                            });
+                        })
+                    }
             );
             return false;
         });
-	        
+
         $('.q-item-details div').css('display', 'none')
-                                .siblings('a:first').next().show().end()
-                                .parent().children('a').click(function() {
-                                    $(this).next().slideToggle(500);
-                                    return false;
-                                });
-        
-        <?php
-		/*
-		 * This is applicable when not viewing a quote
-		 * on edit or create mode
-		 */
-		if (!isset($view_quotation))
-		{
-			?>
-        
-        $('#q-sort-items').sortable({axis:'y', cursor:'move', update:prepareSortedItems});
-        
-		$('#q-sort-items li').livequery(function(){ 
-		// use the helper function hover to bind a mouseover and mouseout event 
-			$(this) 
-				.hover(function() { 
-					quoteItemOver($(this)); 
-				}, function() { 
-					quoteItemOut($(this)); 
-				}); 
-		}, function() { 
-			// unbind the mouseover and mouseout events 
-			$(this) 
-				.unbind('mouseover') 
-				.unbind('mouseout'); 
-		});
-        
-       
-       
-        <?php
-		} // end edit mode
-		?>
-        <?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
-        
-        populateQuote(<?php echo $quote_data['lead_id'] ?>);
-        
-        <?php } ?>
-        <?php if (isset($edit_quotation)) { ?>
-        $('#item-submit').css('display', 'block');
-        <?php } ?>
-            
-	}
-);
+                .siblings('a:first').next().show().end()
+                .parent().children('a').click(function () {
+            $(this).next().slideToggle(500);
+            return false;
+        });
+
+<?php
+/*
+ * This is applicable when not viewing a quote
+ * on edit or create mode
+ */
+if (!isset($view_quotation)) {
+    ?>
+
+            $('#q-sort-items').sortable({axis: 'y', cursor: 'move', update: prepareSortedItems});
+
+            $('#q-sort-items li').livequery(function () {
+                // use the helper function hover to bind a mouseover and mouseout event 
+                $(this)
+                        .hover(function () {
+                            quoteItemOver($(this));
+                        }, function () {
+                            quoteItemOut($(this));
+                        });
+            }, function () {
+                // unbind the mouseover and mouseout events 
+                $(this)
+                        .unbind('mouseover')
+                        .unbind('mouseout');
+            });
+
+
+
+    <?php
+} // end edit mode
+?>
+<?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
+
+            populateQuote(<?php echo $quote_data['lead_id'] ?>);
+
+<?php } ?>
+<?php if (isset($edit_quotation)) { ?>
+            $('#item-submit').css('display', 'block');
+<?php } ?>
+
+    }
+    );
 
 
 
@@ -1737,36 +1794,36 @@ echo $menu, $data;
             }
         });
     }
-    
-     function getContractsDetails(cont_id)
-    {    
-         $("#saveLocation").show();
+
+    function getContractsDetails(cont_id)
+    {
+        $("#saveLocation").show();
 
 
     }
 </script>
 <script>
-$(document).ready(function(){
+    $(document).ready(function () {
 
-        $( "#project_names" ).autocomplete({
+        $("#project_names").autocomplete({
             minLength: 2,
-            source: function(request, response) {
+            source: function (request, response) {
                 $.ajax({
                     url: "asset_register/ajax_projects_search",
-                    data: { 'project_name': $("#project_names").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+                    data: {'project_name': $("#project_names").val(), '<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>'},
                     type: "POST",
                     dataType: 'json',
                     async: false,
-                    success: function(data) {
+                    success: function (data) {
                         // console.log(data);
-                        response( data );
+                        response(data);
                     }
                 });
             },
-            select: function(event, ui) {
+            select: function (event, ui) {
                 console.log(ui.item);
-                $( "#project_names" ).val(ui.item.label);
-                $( "#project_id" ).val(ui.item.lead_id);
+                $("#project_names").val(ui.item.label);
+                $("#project_id").val(ui.item.lead_id);
                 // $('#cust_id').val(ui.item.id);
                 // ex_cust_id = ui.item.lead_id;
                 // regId = ui.item.lead_title;
@@ -1774,22 +1831,50 @@ $(document).ready(function(){
                 // getUserForLeadAssign(regId,cntryId,stId,locId);
             }
         });
-        
-        $( "#customer_company_name" ).autocomplete({
+
+        $("#e_project_names").autocomplete({
+
             minLength: 2,
-            source: function(request, response) {
-                $.ajax({ 
-                    url: "hosting/ajax_customer_search",
-                    data: { 'cust_name': $("#customer_company_name").val(),'<?php echo $this->security->get_csrf_token_name(); ?>':'<?php echo $this->security->get_csrf_hash(); ?>'},
+            source: function (request, response) {
+                $.ajax({
+                    url: "asset_register/ajax_projects_search",
+                    data: {'project_name': $("#e_project_names").val(), '<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>'},
                     type: "POST",
                     dataType: 'json',
                     async: false,
-                    success: function(data) {
-                        response( data );
+                    success: function (data) {
+                        // console.log(data);
+                        response(data);
                     }
                 });
             },
-            select: function(event, ui) {
+            select: function (event, ui) {
+                console.log(ui.item);
+                $("#e_project_names").val(ui.item.label);
+                $("#e_project_id").val(ui.item.lead_id);
+                // $('#cust_id').val(ui.item.id);
+                // ex_cust_id = ui.item.lead_id;
+                // regId = ui.item.lead_title;
+                // prepareQuoteForClient(ex_cust_id);
+                // getUserForLeadAssign(regId,cntryId,stId,locId);
+            }
+        });
+
+        $("#customer_company_name").autocomplete({
+            minLength: 2,
+            source: function (request, response) {
+                $.ajax({
+                    url: "hosting/ajax_customer_search",
+                    data: {'cust_name': $("#customer_company_name").val(), '<?php echo $this->security->get_csrf_token_name(); ?>': '<?php echo $this->security->get_csrf_hash(); ?>'},
+                    type: "POST",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            select: function (event, ui) {
                 $('#customer_id').val(ui.item.id);
                 // ex_cust_id = ui.item.id;
                 // regId = ui.item.regId;
@@ -1800,104 +1885,102 @@ $(document).ready(function(){
                 // getUserForLeadAssign(regId,cntryId,stId,locId);
             }
         });
-        
-        <?php
-        if (isset($existing_lead) && isset($lead_customer))
-        {
-            echo 'ex_cust_id = ', $lead_customer, ";\n";
-            echo 'existing_lead = ', $existing_lead, ";\n";
-            echo 'existing_lead_service = "', $existing_lead_service, '";', "\n";
-            echo "prepareQuoteForClient(ex_cust_id);\n";
-        }
-        ?>
-        
-      $('.modal-new-cust').click(function(){
-           $.blockUI({
-                        message:nc_form_msg,
-                        css: {width: '820px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
-                        overlayCSS: {backgroundColor:'#EAEAEA', opacity: '0.9', cursor: 'wait'}
-                    });
+
+<?php
+if (isset($existing_lead) && isset($lead_customer)) {
+    echo 'ex_cust_id = ', $lead_customer, ";\n";
+    echo 'existing_lead = ', $existing_lead, ";\n";
+    echo 'existing_lead_service = "', $existing_lead_service, '";', "\n";
+    echo "prepareQuoteForClient(ex_cust_id);\n";
+}
+?>
+
+        $('.modal-new-cust').click(function () {
+            $.blockUI({
+                message: nc_form_msg,
+                css: {width: '820px', marginLeft: '50%', left: '-345px', padding: '20px 0 20px 20px', top: '10%', border: 'none', cursor: 'default', position: 'absolute'},
+                overlayCSS: {backgroundColor: '#EAEAEA', opacity: '0.9', cursor: 'wait'}
+            });
             $.get(
-                'ajax/data_forms/new_customer_form',
-                {},
-                function(data){
-                    $('.new-cust-form-loader').slideUp(500, function(){
-                        $(this).parent().css({backgroundColor: '#fff', color: '#333'});
-                        $(this).css('text-align', 'left').html(data).slideDown(500, function(){
-                            $('.error-cont').css({margin:'10px 25px 10px 0', padding:'10px 10px 0 10px', backgroundColor:'#CEB1B0'});
-                        });
-                    })
-                }
+                    'ajax/data_forms/new_customer_form',
+                    {},
+                    function (data) {
+                        $('.new-cust-form-loader').slideUp(500, function () {
+                            $(this).parent().css({backgroundColor: '#fff', color: '#333'});
+                            $(this).css('text-align', 'left').html(data).slideDown(500, function () {
+                                $('.error-cont').css({margin: '10px 25px 10px 0', padding: '10px 10px 0 10px', backgroundColor: '#CEB1B0'});
+                            });
+                        })
+                    }
             );
             return false;
         });
-            
+
         $('.q-item-details div').css('display', 'none')
-                                .siblings('a:first').next().show().end()
-                                .parent().children('a').click(function() {
-                                    $(this).next().slideToggle(500);
-                                    return false;
-                                });
-        
-        <?php
-        /*
-         * This is applicable when not viewing a quote
-         * on edit or create mode
-         */
-        if (!isset($view_quotation))
-        {
-            ?>
-        
-        $('#q-sort-items').sortable({axis:'y', cursor:'move', update:prepareSortedItems});
-        
-        $('#q-sort-items li').livequery(function(){ 
-        // use the helper function hover to bind a mouseover and mouseout event 
-            $(this) 
-                .hover(function() { 
-                    quoteItemOver($(this)); 
-                }, function() { 
-                    quoteItemOut($(this)); 
-                }); 
-        }, function() { 
-            // unbind the mouseover and mouseout events 
-            $(this) 
-                .unbind('mouseover') 
-                .unbind('mouseout'); 
+                .siblings('a:first').next().show().end()
+                .parent().children('a').click(function () {
+            $(this).next().slideToggle(500);
+            return false;
         });
-        
-        $('#q-sort-items li .ip-delete').livequery(function(){
-            $(this).click(function(){
-                quoteItemDelete($(this));
+
+<?php
+/*
+ * This is applicable when not viewing a quote
+ * on edit or create mode
+ */
+if (!isset($view_quotation)) {
+    ?>
+
+            $('#q-sort-items').sortable({axis: 'y', cursor: 'move', update: prepareSortedItems});
+
+            $('#q-sort-items li').livequery(function () {
+                // use the helper function hover to bind a mouseover and mouseout event 
+                $(this)
+                        .hover(function () {
+                            quoteItemOver($(this));
+                        }, function () {
+                            quoteItemOut($(this));
+                        });
+            }, function () {
+                // unbind the mouseover and mouseout events 
+                $(this)
+                        .unbind('mouseover')
+                        .unbind('mouseout');
             });
-        });
-        $('#q-sort-items li .ip-edit').livequery(function(){
-            $(this).click(function(){
-                quoteItemEdit($(this));
+
+            $('#q-sort-items li .ip-delete').livequery(function () {
+                $(this).click(function () {
+                    quoteItemDelete($(this));
+                });
             });
-        });
-        
-        <?php
-        } // end edit mode
-        ?>
-        <?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
-        
-        populateQuote(<?php echo $quote_data['lead_id'] ?>);
-        
-        <?php } ?>
-        <?php if (isset($edit_quotation)) { ?>
-        $('#item-submit').css('display', 'block');
-        <?php } ?>
+            $('#q-sort-items li .ip-edit').livequery(function () {
+                $(this).click(function () {
+                    quoteItemEdit($(this));
+                });
+            });
+
+    <?php
+} // end edit mode
+?>
+<?php if (isset($quote_data) && (isset($edit_quotation) || isset($view_quotation))) { ?>
+
+            populateQuote(<?php echo $quote_data['lead_id'] ?>);
+
+<?php } ?>
+<?php if (isset($edit_quotation)) { ?>
+            $('#item-submit').css('display', 'block');
+<?php } ?>
     }
-);
+    );
 
-$("#asset_location").on('change',function(){
-    // alert('catch');
-    $("#as_location").hide();
-});
+    $("#asset_location").on('change', function () {
+        // alert('catch');
+        $("#as_location").hide();
+    });
 
-$('#addRow').on('click',function(){
-    $('#as_location').append('<input type="text"><input type="text"><button id="addRow">Add</button>');
-});
+    $('#addRow').on('click', function () {
+        $('#as_location').append('<input type="text"><input type="text"><button id="addRow">Add</button>');
+    });
 
 </script>
 <?php require (theme_url() . '/tpl/footer.php'); ?>

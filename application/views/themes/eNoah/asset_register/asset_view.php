@@ -727,27 +727,13 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
                 <?php
                 if (isset($quote_data)) {
                     foreach ($quote_data as $asset) {
+                       
 
 // print_r($asset);exit;
                         ?>
 
-                        <!--					<form name="project_dates" id="project-date-assign" style="padding:15px 0 5px 0;">
-                                                                        <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />	
-                                                                        <table>
-                                                                                <tr>
-                                                                                        <td valign="top" width="300">
-                                                                                                <h6 class="project-startdate-label">Proposal Expected Date &raquo;<span><?php if ($quote_data['proposal_expected_date'] != '')
-                    echo date('d-m-Y', strtotime($quote_data['proposal_expected_date']));
-                else
-                    echo 'Not Set';
-                ?></span></h6>		
-                                                                                        </td>
-                                                                                </tr>
-                                                                        </table>
-                                                                </form>-->
-
-
-                        <div class="q-init-details">
+                          <div class="q-init-details">
+                           
                             <p class="clearfix"><label>Asset No</label>  <span><?php echo $asset['asset_id'] ?></span></p>
                             <p class="clearfix"><label>Department Name</label>  <span><?php     
                             foreach ($departments as $department){
@@ -763,13 +749,17 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
 
                             <p class="clearfix"><label>Location</label><span><?php echo $asset['saveLocationText'] ?></span></p>
                             
-                            <p class="clearfix"><label>Asset Owner</label> <span><?php     
-                            foreach ($asset_owner as $owner_name){
-                                                    echo $owner_name['first_name']. ' ' .$owner_name['last_name'];
-                                                } ?></span></p>
+                            <p class="clearfix"><label>Asset Owner</label> <span><?php    
+                              $get_user_details = get_lead_assigne_names($asset['asset_owner']); 
+                             echo $get_user_details;
+//                            foreach ($asset_owner as $owner_name){
+//                                                    echo $owner_name['first_name']. ' ' .$owner_name['last_name'];
+//                                                } 
+//                                                ?>
+                                </span></p>
                             <p class="clearfix"><label>Labelling</label><span><?php echo $asset['labelling']; ?></span></p>
                             <p class="clearfix"><label>Confidentiality</label><span><?php echo $asset['confidentiality'] ?></span></p>
-                            <p class="clearfix"><label>Integrity</label><span><?php echo $asset['integrity'] ?></span></p>
+                           
                             <p class="clearfix"><label>Availability</label><span><?php echo $asset['availability'] ?></span></p>
 
 
