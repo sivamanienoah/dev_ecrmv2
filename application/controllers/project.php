@@ -789,6 +789,7 @@ class Project extends crm_controller {
 			$data['email_signatures'] 	= $this->project_model->get_user_email_signatures($user_id);
 //		/	$data['default_signature'] 	= $this->project_model->get_user_default_signature($user_id);
 		//print_r($data);exit;	
+                        
             $this->load->view('projects/welcome_view_project', $data);
         }
         else
