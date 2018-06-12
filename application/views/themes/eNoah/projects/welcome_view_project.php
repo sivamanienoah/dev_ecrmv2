@@ -834,7 +834,7 @@
 									<td>Milestone date *</td><td><input type="text" data-calendar="true" name="pr_sp_date_2" id="pr_sp_date_2" class="textfield width200px" readonly /> </td>
 								</tr>
 								<tr>
-                                                            <td>For the Month & Year *</td>
+                                                             <td>For the Month & Year *</td>
 									<td><input type="text" data-calendar="false" class="textfield width200px" name="pr_month_year" id="pr_month_year" readonly /></td>
 								</tr>
 								<tr>
