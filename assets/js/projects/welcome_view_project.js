@@ -1672,6 +1672,7 @@ function addURLtoJob()
 				$('#ui-datepicker-div')[ $(input).is('[data-calendar="false"]') ? 'addClass' : 'removeClass' ]('hide-calendar');
 			}
 		});
+                
                 	$('#pr_month_year').datepicker({
 			changeMonth: true,
 			changeYear: true,
