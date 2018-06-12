@@ -1,5 +1,4 @@
 <!--form id="update-payment-terms"-->
-
 <?php $attributes = array('id' => 'update-payment-terms','name' => 'update-payment-terms'); ?>
 <?php echo form_open_multipart("project/set_pr_payment_terms/".$expect_id, $attributes); ?>
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
