@@ -5383,6 +5383,7 @@ HDOC;
 			$insert_log = $this->welcome_model->insert_row('logs', $ins_log);
                      //  print_r($param);exit;
 			$this->email_template_model->sent_email($param);
+                        
 		} else {
 			$output['error'] = true;
 			$output['errormsg'] = 'An error occured. Milestone cannot be updated.';
@@ -6188,8 +6189,8 @@ HDOC;
 		//email sent by email template
 		$param = array();
 
-//		/$param['to_mail'] 		  = 'ssriram@enoahisolution.com';
-		$param['to_mail'] 		  = 'kbalaji@enoahisolution.com';
+		$param['to_mail'] 		  = 'ssriram@enoahisolution.com';
+//		$param['to_mail'] 		  = 'kbalaji@enoahisolution.com';
 		$param['from_email']	  = 'raamsri14@gmail.com';
 		$param['from_email_name'] = 'Webmaster';
 		$param['template_name']	  = "test email";
