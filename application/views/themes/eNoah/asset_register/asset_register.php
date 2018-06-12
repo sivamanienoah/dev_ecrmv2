@@ -443,10 +443,7 @@ if (!isset($view_quotation)) {
                     if (res.error == true) {
                         // good to go
                         window.location = '<?php echo $this->config->item('base_url') ?>asset_register/quotation/';
-                    } else {
-                        // alert(res.errormsg);
-                        alert('Asset already registered!');
-                    }
+                    } 
                 } else {
                     alert('Your session timed out!');
                 }
