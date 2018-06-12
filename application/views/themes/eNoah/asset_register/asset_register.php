@@ -792,7 +792,8 @@ if (!isset($view_quotation)) {
 <div id="content">
     <?php //echo '<pre>'; print_r($quote_data); echo '</pre>';  ?>
     <div class="inner">
-        <?php if (($this->session->userdata('add') == 1 && $this->uri->segment(2) != 'edit_quote') || ($this->session->userdata('edit') == 1) && ($this->uri->segment(2) == 'edit_quote' && is_numeric($this->uri->segment(3)))) { ?>
+        <?php 
+        if (($this->session->userdata('add') == 1 && $this->uri->segment(2) != 'edit_quote') || ($this->session->userdata('edit') == 1) && ($this->uri->segment(2) == 'edit_quote' && is_numeric($this->uri->segment(3)))) { ?>
             <div class="q-main-left" style="width: auto;">
                 <form action="" method="post" id="quote-init-form" class="<?php echo (isset($view_quotation) || isset($edit_quotation)) ? 'display-none' : '' ?>" onsubmit="return false;">
 
@@ -813,10 +814,10 @@ if (!isset($view_quotation)) {
                             </select>
                         </p>
                         <p><label>Project</label></p>
-                        <p><p><input type="text" name="project_names" id="project_names" class="textfield width300px" />
+                        <p><input type="text" name="project_names" id="project_names" class="textfield width300px" />
                             <input type="hidden" name="project_id" id="project_id" class="textfield width300px" />
                         </p>
-                        </p>
+                      
                
 
 			<div class="clear-both" ></div>
@@ -1123,6 +1124,7 @@ if (!isset($view_quotation)) {
 }
 ?>
     </div>
+</div>
 </div>
 <div id="drag-item-list">
     <div class="close">X</div>
