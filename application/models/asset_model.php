@@ -193,7 +193,7 @@ class Asset_model extends crm_model {
             // echo $id;
 		$this->db->where('lead_id', $id);
 		$user = $this->db->get($this->cfg['dbpref'] . 'leads');
-             //     echo $this->db->last_query(); exit;
+             //   echo $this->db->last_query(); exit;
 		return $user->result_array();
 	}
 	
@@ -470,6 +470,13 @@ class Asset_model extends crm_model {
 	function update_row_item($tbl, $ins, $jid) {
 		$this->db->where('itemid', $jid);
 		$this->db->update($this->cfg['dbpref'] . $tbl, $ins);
+		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+    }
+    
+    function update_row_asset($tbl, $ins, $jid) {
+		$this->db->where('asset_id', $jid);
+		$this->db->update($this->cfg['dbpref'] . $tbl, $ins);
+                  // echo $this->db->last_query(); exit;
 		return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
     }
 	
@@ -1532,7 +1539,7 @@ class Asset_model extends crm_model {
 		// $this->db->where('j.pjt_status', 0);
 		
 		$sql = $this->db->get();
-//		/echo $this->db->last_query(); exit;
+///echo $this->db->last_query(); exit;
 	    $res =  $sql->result_array();
 	    return $res;
     }
