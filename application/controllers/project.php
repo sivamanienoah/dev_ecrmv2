@@ -382,6 +382,7 @@ class Project extends crm_controller {
 			$data['chge_access'] = $this->project_model->get_access($id, $usernme['userid']);
 		}
 		$result = $this->project_model->get_quote_data($id);
+               
 		if(!empty($result)) {
 			
 			$data['quote_data']		= $result[0];
@@ -425,6 +426,7 @@ class Project extends crm_controller {
 			}
 			
 			$deposits = $this->project_model->get_deposits_data($data['quote_data']['lead_id']);
+                       
 			if (!empty($deposits))
 			{
 				$data['deposits_data'] = $deposits;
@@ -474,7 +476,8 @@ class Project extends crm_controller {
 				// echo '<pre>'; print_r($timesheet); die;
 
 				$data['timesheetProjectType']   = $this->project_model->get_timesheet_project_type($data['quote_data']['pjt_id']);
-				$data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
+				//print_r($data['timesheetProjectType']);exit;
+                                $data['timesheetProjectLead']   = $this->project_model->get_timesheet_project_lead($data['quote_data']['pjt_id']);
 				$timesheet_users = $this->project_model->get_timesheet_users($data['quote_data']['pjt_id']);
 				if(count($timesheet_users['name'])>0) {
 					$data['timesheetAssignedUsers'] = $timesheet_users['name'];
@@ -508,6 +511,7 @@ class Project extends crm_controller {
 				
 				//Set the Project Team Members in our CRM DB.
 				$result = $this->identical_values($team_mem,$ts_team_members);
+//                              
 				if(!$result) {
 					$wh_condn = array('jobid_fk'=>$data['quote_data']['lead_id']);
 					$this->db->delete($this->cfg['dbpref'].'contract_jobs',$wh_condn);
@@ -523,15 +527,18 @@ class Project extends crm_controller {
 			
 			//For list the particular lead owner, project manager & lead assigned_to in the welcome_view_project page.
 			$data['list_users'] 		 = $this->project_model->get_list_users($id);
+                         
 			$data['category_listing_ls'] = $this->project_model->getTaskCategoryList();
+                         
 			$data['task_stages'] 		 = $this->request_model->get_task_stages();
 			
 			//For list the particular project team member in the welcome_view_project page.
 			$data['contract_users'] 	= $this->project_model->get_contract_users($id);
+                        
 			$data['stake_holders']  	= $this->project_model->get_stake_holders($id);
-
+                        
 			$rates = $this->get_currency_rates();
-
+                       
 			$data['timesheet_data'] = array();
 				
 			if(count($timesheet)>0) {
@@ -624,9 +631,9 @@ class Project extends crm_controller {
 			$project_code_ts = $data['quote_data']['pjt_id'];
 		
 			$qry_pv = $timesheet_db->query("SELECT tt.task_id,tt.name as taskName, sum(pte.prj_task_hours) As EstimatedHours, pe.prj_est_id,pe.proj_est_name,pte.prj_est_id,pte.proj_id,pte.task_id,(select sum(tim.duration)/60 from ".$timesheet_db->dbprefix('times')." As tim where tim.proj_id = tt.proj_id and tim.task_id = tt.task_id) As actualHours from ".$timesheet_db->dbprefix('task')." AS tt LEFT JOIN ".$timesheet_db->dbprefix('project_task_estimation')." AS pte ON pte.task_id = tt.task_id LEFT JOIN ".$timesheet_db->dbprefix('project_estimation')." AS pe ON pe.prj_est_id = pte.prj_est_id  left join ".$timesheet_db->dbprefix('project')." as prj on prj.proj_id = tt.proj_id WHERE prj.project_code='".$project_code_ts."' group by tt.task_id");
-			// echo $timesheet_db->last_query();exit;
+			 echo $timesheet_db->last_query();exit;
 			if($qry_pv->num_rows()>0){
-				$res_pv 					= $qry_pv->result();
+				$res_pv = $qry_pv->result();
 				$data['timesheet_variance'] = $res_pv;
 			}
 			$timesheet_db->close();
