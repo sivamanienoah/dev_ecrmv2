@@ -165,7 +165,7 @@ function get_lead_assigne_names($user_id)
 	$CI->db->where_in('u.userid', @explode(',', $user_id));
 	$sql = $CI->db->get($cfg['dbpref'].'users u');
 	$res = $sql->row_array();
-	//echo $CI->db->last_query() . '<br>'; exit;
+//echo $CI->db->last_query() . '<br>'; exit;
 	return $res['assignees'];
 }
 
