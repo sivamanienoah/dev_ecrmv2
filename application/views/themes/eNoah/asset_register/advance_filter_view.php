@@ -1,6 +1,4 @@
 <?php 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 $cfg = $this->config->item('crm');
 $userdata = $this->session->userdata('logged_in_user');
 
@@ -62,7 +60,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 //                                  /  print_r($filter_result);    
                                     $view_url = base_url().'asset_register/view_asset/'.$filter_result['asset_id'];
 					
-					//$get_user_details = get_lead_assigne_names($filter_result['asset_owner']);
+					$get_user_details = get_lead_assigne_names($filter_result['asset_owner']);
                                       //  print_r($get_user_details);
 					//get the lead assign names - changes based on multiple lead assign
 				//$assign_names = get_lead_assigne_names($filter_result['lead_assign']);
