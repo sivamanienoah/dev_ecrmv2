@@ -37,7 +37,7 @@ if(!empty($db_fields) && count($db_fields)>0){
 			<th>Asset Name</th>
                         <th>Asset Type</th>
                         <th>Storage Mode</th>
-                        <th>Location</th>
+                        <th>Asset Current Location</th>
                         <th>Asset Owner</th>
                         <th>Labelling</th>
                         <th>Confidentiality</th>
@@ -101,7 +101,7 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                 <td><?php echo  $filter_result['availability']; ?></td>
                                                 <td><?php echo  $filter_result['created_on']; ?></td>
                                                 <td><?php echo  $filter_result['modified_on']; ?></td>
-                                                <td><?php echo  $filter_result['saveLocationText']; ?></td>
+                                                <td><?php echo  $filter_result['asset_position']; ?></td>
 						
 					</tr> 
 		<?php 
