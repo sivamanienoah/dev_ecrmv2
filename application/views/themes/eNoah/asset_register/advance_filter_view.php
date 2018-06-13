@@ -50,11 +50,14 @@ if(!empty($db_fields) && count($db_fields)>0){
 		</thead>
 		<tbody>
 		<?php
+                 echo '<pre>';print_r($filter_results);
 			if(!empty($filter_results)) 
 			{
+                            
+                            echo 'hi';exit;
 				foreach($filter_results as $filter_result) 
 				{
-//					/print_r($filter_result);exit;
+print_r($filter_result);exit;
 						$view_url = base_url().'asset_register/view_asset/'.$filter_result['asset_id'];
 					
 					$get_user_details = get_lead_assigne_names($filter_result['asset_owner']);
@@ -103,7 +106,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 					</tr> 
 		<?php 
 				} 
-			}
+			}else{
+                            echo 'else';exit;
+                        }
 		?>
 	</tbody>
 	</table>
