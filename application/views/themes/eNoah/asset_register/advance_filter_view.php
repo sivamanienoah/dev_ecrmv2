@@ -58,10 +58,11 @@ if(!empty($db_fields) && count($db_fields)>0){
 					//print_r($filter_result);exit;
 						$view_url = base_url().'asset_register/view_asset/'.$filter_result['asset_id'];
 					
-					
+					$get_user_details = get_lead_assigne_names($filter_result['asset_owner']);
 					//get the lead assign names - changes based on multiple lead assign
 				//$assign_names = get_lead_assigne_names($filter_result['lead_assign']);
-		?>
+		?> 
+                    
 					<tr id='<?php echo $filter_result['asset_id'] ?>'>
 						<td class="actions" align="center">
 							<?php if ($this->session->userdata('viewlead')==1) { ?>
@@ -87,10 +88,12 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                 <td><?php echo  $filter_result['storage_mode']; ?></td>
                                                 <td><?php echo  $filter_result['location']; ?></td>
                                                 <td><?php 
-                                                $get_user_details = $this->asset_model->get_user_name_by_id($filter_result['asset_owner']);
-                                                foreach ($get_user_details as $user_details){
-                                                    echo $user_details['first_name']. ' ' .$user_details['last_name'];
-                                                }
+                                               
+                                                echo $get_user_details;
+                                            //    $get_user_details = $this->asset_model->get_user_name_by_id($filter_result['asset_owner']);
+                                          //      foreach ($get_user_details as $user_details){
+                                           //         echo $user_details['first_name']. ' ' .$user_details['last_name'];
+                                        //        }
                                                  // print_r($get_user_details['first_name'].$get_user_details['last_name']); ?></td>
                                                 <td><?php echo  $filter_result['labelling']; ?></td>
                                                 <td><?php echo  $filter_result['confidentiality']; ?></td>
@@ -98,7 +101,7 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                 <td><?php echo  $filter_result['availability']; ?></td>
                                                 <td><?php echo  $filter_result['created_on']; ?></td>
                                                 <td><?php echo  $filter_result['modified_on']; ?></td>
-                                                <td><?php echo  $filter_result['asset_position']; ?></td>
+                                                <td><?php echo  $filter_result['saveLocationText']; ?></td>
 						
 					</tr> 
 		<?php 
