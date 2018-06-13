@@ -168,36 +168,27 @@ class Asset_register extends crm_controller {
         }
 
         $filter_results = $this->asset_model->get_filter_results($department_id, $project_id, $asset_name, $asset_type, $storage_mode, $location, $asset_owner, $labelling, $confidentiality, $integrity, $availability, $keyword);
-        // echo $this->db->last_query(); die;
-        $data['filter_results'] = $filter_results;
-         //echo '<pre>';print_r($data['filter_results']);exit;
-        $data['department_id'] = $department_id;
-        //  echo '<pre>';print_r($data['department_id']);exit;
-        $data['project_id'] = $project_id;
-        $data['asset_name'] = $asset_name;
-        $data['asset_type'] = $asset_type;
-        $data['storage_mode'] = $storage_mode;
-        $data['location'] = $location;
-        $data['asset_owner'] = $asset_owner;
-        //   $data['asset_owner'] = $this->asset_model->get_user_data_by_id($asset_owner);
+//        / echo $this->db->last_query(); die;
+       $data['filter_results'] = $filter_results;
+//         //echo '<pre>';print_r($data['filter_results']);exit;
+//        $data['department_id'] = $department_id;
+//        //  echo '<pre>';print_r($data['department_id']);exit;
+//        $data['project_id'] = $project_id;
+//        $data['asset_name'] = $asset_name;
+//        $data['asset_type'] = $asset_type;
+//        $data['storage_mode'] = $storage_mode;
+//        $data['location'] = $location;
+//        $data['asset_owner'] = $asset_owner;
+//        //   $data['asset_owner'] = $this->asset_model->get_user_data_by_id($asset_owner);
+//
+//        $data['labelling'] = $labelling;
+//        $data['confidentiality'] = $confidentiality;
+//        $data['integrity'] = $integrity;
+//        $data['availability'] = $availability;
+//        $data['asset_location'] = $asset_location;
+//        $data['asset_position'] = $asset_position;
+//        $data['created_by'] = $data['username'];
 
-        $data['labelling'] = $labelling;
-        $data['confidentiality'] = $confidentiality;
-        $data['integrity'] = $integrity;
-        $data['availability'] = $availability;
-        $data['asset_location'] = $asset_location;
-        $data['asset_position'] = $asset_position;
-        $data['created_by'] = $data['username'];
-//        $data['lead_status'] = $lead_status;
-//        $data['lead_indi'] = $lead_indi;
-//        $data['keyword'] = $keyword;
-        // $db_fields = $this->asset_model->get_lead_dashboard_field($this->userdata['userid']);
-        //  if (!empty($db_fields) && count($db_fields) > 0) {
-        //      foreach ($db_fields as $record) {
-        //         $data['db_fields'][] = $record['column_name'];
-        //       }
-        //  }
-        //  echo '<pre>';      print_r($data);exit;
         $this->load->view('asset_register/advance_filter_view', $data);
     }
 
