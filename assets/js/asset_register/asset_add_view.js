@@ -248,6 +248,7 @@
 //Multiple customer add
 //for document format form
 $('#document_tbl').delegate( '#addRow', 'click', function () {
+	// alert('me');
 	var thisRow = $(this).closest('tr');
 	$(this).hide();
 	$("#document_tbl tbody tr").find('.del_file').show();	
@@ -269,8 +270,54 @@ $('#document_tbl').delegate( '#addRow', 'click', function () {
 		obj.find("#deleteRow").attr('hyperid','0');
 		obj.find('.createBtn').show();
 });
-
+$('#document_tbl2').delegate( '#addRow', 'click', function () {
+	// alert('me');
+	var thisRow = $(this).closest('tr');
+	$(this).hide();
+	$("#document_tbl tbody tr").find('.del_file').show();	
+	var obj = $(thisRow).clone().insertAfter(thisRow);
+		obj.find(".contact_id").val("");
+		obj.find(".first_name").val("");
+		obj.find(".last_name").val("");
+		obj.find(".position_title").val("");
+		obj.find(".phone").val("");
+		obj.find(".email").val("");
+		obj.find(".skype").val("");
+		obj.find(".hyperfields").css('border','');
+		obj.find(".first_name_err_msg").text('');
+		obj.find(".last_name_err_msg").text('');
+		obj.find(".position_title_err_msg").text('');
+		obj.find(".phone_err_msg").text('');
+		obj.find(".email_err_msg").text('');
+		obj.find(".skype_err_msg").text('');
+		obj.find("#deleteRow").attr('hyperid','0');
+		obj.find('.createBtn').show();
+});
+$('#document_tbl2').delegate( '.del_file', 'click', function () {
+	// alert('test');
+	var thisRow = $(this).parent('td').parent('tr');
+	if( $(this).attr('hyperid') !=0 ) {
+		var hyperid = $(this).attr('hyperid');
+		var x = confirm("Are you Sure want to remove?");
+		if(x==true)
+		{
+			$(thisRow).remove();
+		}
+	} else {
+		$(thisRow).remove();
+		
+		if($('#document_tbl2 tbody tr').length<=1){
+			$('#document_tbl2 .del_file').show();
+			$('#document_tbl2 .createBtn').show();
+		}
+	}
+	$("#document_tbl2 tbody tr").each(function(){
+		$("#document_tbl2 tbody tr:last").find('.createBtn').show();
+		// $("#document_tbl2 tbody tr:last").find('.del_file').hide();
+	})
+});
 $('#document_tbl').delegate( '.del_file', 'click', function () {
+	// alert('test');
 	var thisRow = $(this).parent('td').parent('tr');
 	if( $(this).attr('hyperid') !=0 ) {
 		var hyperid = $(this).attr('hyperid');
