@@ -41,7 +41,6 @@ if(!empty($db_fields) && count($db_fields)>0){
                         <th>Asset Owner</th>
                         <th>Labelling</th>
                         <th>Confidentiality</th>
-                      
                         <th>Availability</th>
                         <th>Asset Created Date</th>
                         <th>Asset Modified Date</th>
@@ -97,7 +96,6 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                  // print_r($get_user_details['first_name'].$get_user_details['last_name']); ?></td>
                                                 <td><?php echo  $filter_result['labelling']; ?></td>
                                                 <td><?php echo  $filter_result['confidentiality']; ?></td>
-                                               
                                                 <td><?php echo  $filter_result['availability']; ?></td>
                                                 <td><?php echo  $filter_result['created_on']; ?></td>
                                                 <td><?php echo  $filter_result['modified_on']; ?></td>
