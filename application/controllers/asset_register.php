@@ -488,6 +488,7 @@ class Asset_register extends crm_controller {
     
      function ajax_edit_asset() {
         // echo 'hi';exit;
+
         $data = real_escape_array($this->input->post());//
  //print_r($data);exit;
          $usid = $this->session->userdata('logged_in_user');
@@ -512,17 +513,18 @@ class Asset_register extends crm_controller {
             $ins['labelling'] = $data['edit_labelling'];
             $ins['confidentiality'] = $data['edit_confidentiality'];
            // $ins['integrity'] = $data['integrity'];
+            // for():
             $ins['availability'] = $data['edit_availability'];
-            
-//            $asset_location = $data['asset_location'];
-//            $ins['asset_location'] = implode(",",  $asset_location);
+            // endfor;
+           $asset_location = $data['asset_location'];
+           $ins['asset_location'] = implode(",",  $asset_location);
 //           
-//            $position= $data['position'];
-//             $ins['asset_position']  = implode(",",  $position);
+           $position= $data['position'];
+            $ins['asset_position']  = implode(",",  $position);
            // print_r($arr_asset);exit;
           //  $ins['saveLocationText'] = $data['saveLocationText'];
             $ins['created_by'] = $usid['username'];
-          //  print_r($ins);exit;
+           // print_r($ins);exit;
             $updt_asset = $this->asset_model->update_row_asset('asset_register', $ins, $data['asset_id']);
             $res = array();
             if ($updt_asset) {
