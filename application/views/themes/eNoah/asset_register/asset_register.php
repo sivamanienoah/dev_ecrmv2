@@ -441,9 +441,12 @@ if (!isset($view_quotation)) {
                 console.log(res);
                 if (typeof (res) == 'object') {
                     if (res.error == true) {
-                        // good to go
-                        window.location = '<?php echo $this->config->item('base_url') ?>asset_register/quotation/';
-                    } 
+                        // if error occurs
+                        window.location =  '<?php echo current_url();?>';
+                    }else {
+                        //successfully updated 
+                         window.location = '<?php echo $this->config->item('base_url') ?>asset_register/quotation/';
+                    }   
                 } else {
                     alert('Your session timed out!');
                 }
@@ -1042,8 +1045,10 @@ if (!isset($view_quotation)) {
                 </form>
 
                     <?php if (isset($asset_data) && isset($edit_asset)) { ?>
-                    <h2> Edit Asset  
-        <?php foreach ($asset_data as $ass) {
+                    <h2> Edit Asset 
+        <?php foreach ($asset_data as $ass) { 
+                $AL = explode(',',$ass['asset_location']);
+                $AV  = explode(',',$ass['asset_position']);
             ?>
                             <div style="overflow:hidden; padding-bottom:10px;" class="buttons pull-right">
                                 <button onclick="document.location.href = '<?php echo base_url(); ?>asset_register/view_asset/<?php echo $ass['asset_id']; ?>'" class="positive" type="submit">Back to View</button>
@@ -1137,7 +1142,50 @@ if (!isset($view_quotation)) {
                                     <p><label>Asset Current Location</label></p>
                                     <p><input type="text" name="edit_location" id="edit_location" class="textfield width300px" 
                                               value="<?php echo htmlentities($ass['location'], ENT_QUOTES) ?>"/></p>
+                                             
+                        <div>
+                            <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl2" >
+                                <thead>
+                                    <tr class="bg-blue">
+                                        <td>choose Location<span class='mandatory_asterick'>*</span></td>
+                                        <td>Location</td>
+                                        <td>Action</td>
 
+
+                                    </tr>
+                                </thead>
+                                 <?php for($i=0; $i < count($AL); $i++):?>
+                                <tr>
+
+                                    <td>
+                                        <select name="asset_location[]" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)"">
+                                            <option value="not_select">Please Select</option>
+                                            <?php
+                                            foreach ($location as $loc) {
+                                                ?>
+                                                <option <?php echo ($AL[$i] == $loc['loc_id'])?'selected':''?> value="<?php echo $loc['loc_id'] ?>"><?php echo $loc['asset_location'] ?></option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </td>
+                                   
+                                    <td>
+                                        <input type="text" name="position[]" value="<?php echo $AV[$i]; ?>" class="position_title textfield width180px required" />
+                                        <span class="position_title_err_msg text-danger"></span>
+                                    </td>
+
+
+                                    <td width="100">
+                                        <a id="addRow" class="createBtn" style="display:<?php echo ($i==count($AV)-1)?'':'none'?>"; ></a>
+                                        <a id="deleteRow" hyperid="<?= $loc['loc_id'] ?>" class="del_file"></a>
+                                    </td>
+                                    
+                                </tr>
+                                 <?php endfor;?>
+                            </table>
+                        </div>
+                   
                               
                                     <div class="buttons clearfix">
                                         <button type="submit" class="positive" onclick="editAssetDetails('save');
@@ -1975,9 +2023,6 @@ if (!isset($view_quotation)) {
         $("#as_location").hide();
     });
 
-    $('#addRow').on('click', function () {
-        $('#as_location').append('<input type="text"><input type="text"><button id="addRow">Add</button>');
-    });
 
 </script>
 <?php require (theme_url() . '/tpl/footer.php'); ?>
