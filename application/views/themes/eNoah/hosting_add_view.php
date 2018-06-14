@@ -155,13 +155,11 @@ $usernme = $this->session->userdata('logged_in_user');
                                     <?php
                                     foreach ($all_users as $pms):
                                         $selected = '';
-                                        if (isset($edit_sub_owner)) {
-                                            $edit_sub_owner == $pms['userid'];
+                                       
+                                        
+                                        if($usid['userid'] == $pms['userid'])
                                             $selected = 'selected="selected"';
-                                        }else{
-                                            $usid['userid'] == $pms['userid'];
-                                            $selected = 'selected="selected"';
-                                        }
+                                        
                                         ?>
                                         <option <?php echo $selected; ?> value="<?php echo $pms['userid'] ?>"><?php echo $pms['first_name'] . ' ' . $pms['last_name'] . '-' . $pms['emp_id']; ?></option>
                                     <?php endforeach; ?>
