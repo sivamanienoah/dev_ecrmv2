@@ -7,7 +7,7 @@ class Hosting extends crm_controller {
 
     function Hosting() {
         parent::__construct();
-         $this->userdata = $this->session->userdata('logged_in_user');
+        $this->userdata = $this->session->userdata('logged_in_user');
         $this->login_model->check_login();
         $this->load->model('hosting_model');
         $this->load->model('customer_model');
@@ -20,9 +20,9 @@ class Hosting extends crm_controller {
         // echo '<pre>';print_r($data['accounts']);exit;
         $data['sub_names'] = $this->hosting_model->get_subscription_names();
         $data['sub_types'] = $this->hosting_model->get_subscription_type();
-         $data['customers'] = $this->hosting_model->get_customers();
-         $data['sub_status'] = $this->cfg['domain_status'];
-    // echo '<pre>';print_r($data['sub_status']);exit; 
+        $data['customers'] = $this->hosting_model->get_customers();
+        $data['sub_status'] = $this->cfg['domain_status'];
+        // echo '<pre>';print_r($data['sub_status']);exit; 
         $this->load->view('hosting_view', $data);
     }
 
@@ -40,11 +40,12 @@ class Hosting extends crm_controller {
     }
 
     function add_account($update = false, $id = false) {
-        
+// print_r($_POST);exit;
+
         $data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
         $data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
         $data['subscription_types'] = $this->hosting_model->get_subscription_types(); // Mani.S
-
+        $data['all_users'] = $this->hosting_model->get_users_list();
 
 
         $rules['customer_id'] = "required|integer|callback_is_valid_customer";
@@ -74,8 +75,10 @@ class Hosting extends crm_controller {
         $data['test_data'] = '';
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_account'])) {
             $account = $this->hosting_model->get_account($id);
+           
             if (is_array($account) && count($account) > 0)
                 foreach ($account[0] as $k => $v) {
+             
                     if (isset($this->validation->$k)) {
                         if ($k == 'expiry_date')
                             $v = date('d-m-Y', strtotime($v));
@@ -86,6 +89,10 @@ class Hosting extends crm_controller {
                     if ($k == 'custid_fk') {
                         $data['customer_id'] = $v;
                         $data['customer_name'] = preg_replace('/\|[0-9]+$/', '', $this->hosting_model->customer_account($v));
+                    }
+                    
+                    if($k == 'created_by'){
+                        $data['edit_sub_owner'] = $v;
                     }
                 }
         }
@@ -110,7 +117,9 @@ class Hosting extends crm_controller {
             } else {
                 $update_data['domain_expiry'] = NULL;
             }
+            $update_data['created_by'] = $this->input->post('sub_owner');
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
+              //  print_r($update_data);exit;
                 if ($this->hosting_model->update_account($id, $update_data)) {
                     //delete and again inserting into hosting_package - Starts here
                     $this->hosting_model->delete_row('hosting_package', 'hostingid_fk', $id);
@@ -292,40 +301,39 @@ class Hosting extends crm_controller {
         $data['packageid'] = $packageid;
         $this->load->view('package_due_date', $data);
     }
-    
-      public function get_subscription_report() {
-    	$data =array();
-    	$options = array();
-                $options['sub_name'] = $this->input->post('sub_name');
-        
-                $options['customer'] = $this->input->post('customer');
-                $options['start_date'] = $this->input->post('start_date');
-		$options['end_date'] = $this->input->post('end_date');
-                
-		//$options['c_date'] = $this->input->post('c_date');
-		//$options['m_date'] = $this->input->post('m_date');
-		
-                $options['sub_type_name'] = $this->input->post('sub_type_name');
-		$options['status'] = $this->input->post('status');
-		
-		
+
+    public function get_subscription_report() {
+        $data = array();
+        $options = array();
+        $options['sub_name'] = $this->input->post('sub_name');
+
+        $options['customer'] = $this->input->post('customer');
+        $options['start_date'] = $this->input->post('start_date');
+        $options['end_date'] = $this->input->post('end_date');
+
+        //$options['c_date'] = $this->input->post('c_date');
+        //$options['m_date'] = $this->input->post('m_date');
+
+        $options['sub_type_name'] = $this->input->post('sub_type_name');
+        $options['status'] = $this->input->post('status');
+
+
 //print_r($options);exit;
-            $res = $this->hosting_model->getSubscriptionReport($options);
-    	//echo '<pre>';            print_r($res);exit;
-    	$data['res'] = $res['res'];
-    	$data['num'] = $res['num'];
-    	if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {    	
-    		
-   			$this->load->view('hosting/subscription_report_view',$data);
-		}else{
-			
-    		return $this->load->view('hosting/subscription_report_view',$data,true);
-		}    	
+        $res = $this->hosting_model->getSubscriptionReport($options);
+        //echo '<pre>';            print_r($res);exit;
+        $data['res'] = $res['res'];
+        $data['num'] = $res['num'];
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+
+            $this->load->view('hosting/subscription_report_view', $data);
+        } else {
+
+            return $this->load->view('hosting/subscription_report_view', $data, true);
+        }
     }
 
-
     public function advance_filter_search($search_type = false, $search_id = false) {
-      // echo"here";exit;
+        // echo"here";exit;
         // echo'<pre>search_type=>';print_r($search_type);
         // echo'<pre>search_id=>';print_r($search_id);
         $filt = array();
@@ -347,18 +355,18 @@ class Hosting extends crm_controller {
         $lead_indi = null;
         $keyword = null;
         $proposal_expect_end = null;
-       
+
 
         $this->session->unset_userdata('load_proposal_expect_end');
 
         if ($search_type == 'search' && $search_id == false) {
-          //  echo 'if';exit;
+            //  echo 'if';exit;
             $filt = real_escape_array($this->input->post()); //echo'<pre>filt1=>';print_r($filt);
             $this->session->set_userdata("lead_search_by_default", 0);
             $this->session->set_userdata("lead_search_by_id", 0);
             $this->session->set_userdata("lead_search_only", 1);
         } else if ($search_type == 'search' && is_numeric($search_id)) {
-         //  echo 'elseif';exit;
+            //  echo 'elseif';exit;
             $wh_condn = array('search_id' => $search_id, 'search_for' => 1, 'user_id' => $this->userdata['userid']);
             $get_rec = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
             unset($get_rec['search_id']);
@@ -372,11 +380,11 @@ class Hosting extends crm_controller {
             $this->session->set_userdata("lead_search_by_id", $search_id);
             $this->session->set_userdata("lead_search_only", 0);
         } else if ($search_type == 'load_proposal_expect_end' && $search_id == false) {
-        //  echo 'elseif2';exit;
+            //  echo 'elseif2';exit;
             $this->session->set_userdata("load_proposal_expect_end", 1);
             $proposal_expect_end = 'load_proposal_expect_end';
         } else {
-         //  echo 'else';exit;
+            //  echo 'else';exit;
             $wh_condn = array('search_for' => 1, 'user_id' => $this->userdata['userid'], 'is_default' => 1);
             $get_rec = $this->welcome_model->get_data_by_id('saved_search_critriea', $wh_condn);
             unset($get_rec['search_id']);
@@ -435,7 +443,7 @@ class Hosting extends crm_controller {
         $filter_results = $this->hosting_model->get_filter_results($from_date, $to_date, $sub_name, $customer, $service, $lead_src, $industry, $worth, $owner, $leadassignee, $regionname, $countryname, $statename, $locname, $lead_status, $lead_indi, $keyword, $proposal_expect_end);
         // echo $this->db->last_query(); die;
         $data['filter_results'] = $filter_results;
-       // echo '<pre>';print_r($data['filter_results']);exit;
+        // echo '<pre>';print_r($data['filter_results']);exit;
         $data['sub_name'] = $sub_name;
         $data['customer'] = $customer;
         $data['service'] = $service;
@@ -451,8 +459,8 @@ class Hosting extends crm_controller {
         $data['lead_status'] = $lead_status;
         $data['lead_indi'] = $lead_indi;
         $data['keyword'] = $keyword;
-       
-       // print_r($this->userdata['userid']);exit;
+
+        // print_r($this->userdata['userid']);exit;
         $db_fields = $this->hosting_model->get_subscription_dashboard_field($this->userdata['userid']);
         if (!empty($db_fields) && count($db_fields) > 0) {
             foreach ($db_fields as $record) {
