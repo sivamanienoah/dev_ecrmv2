@@ -561,6 +561,17 @@ class Hosting_model extends crm_model {
         return $result;     
     }
     
+     function get_users_list() 
+	{
+    	$this->db->select('userid,first_name,last_name,username,level,role_id,inactive,emp_id');
+		//$this->db->where('inactive',0);
+		//$this->db->where('username != ',"admin.enoah");
+    	$this->db->order_by('first_name',"asc");
+		$q = $this->db->get($this->cfg['dbpref'] . 'users');
+                  //   echo $this->db->last_query(); exit;
+		return $q->result_array();
+        }
+    
 
 }
 
