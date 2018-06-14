@@ -13,16 +13,21 @@ class Hosting extends crm_controller {
         $this->load->model('customer_model');
         $this->load->model('package_model');
         $this->load->library('validation');
+        $this->load->helper('hosting_helper');
     }
 
     function index($limit = 0, $search = false) {
         $data['accounts'] = $this->hosting_model->account_list($limit, $search);
-        // echo '<pre>';print_r($data['accounts']);exit;
+     //   echo '<pre>';print_r($data['accounts']);exit; 
         $data['sub_names'] = $this->hosting_model->get_subscription_names();
         $data['sub_types'] = $this->hosting_model->get_subscription_type();
         $data['customers'] = $this->hosting_model->get_customers();
         $data['sub_status'] = $this->cfg['domain_status'];
-        // echo '<pre>';print_r($data['sub_status']);exit; 
+        
+        $data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
+        $data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
+    
+       
         $this->load->view('hosting_view', $data);
     }
 
@@ -42,10 +47,11 @@ class Hosting extends crm_controller {
     function add_account($update = false, $id = false) {
 // print_r($_POST);exit;
 
-        $data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
+      $data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
         $data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
+       
         $data['subscription_types'] = $this->hosting_model->get_subscription_types(); // Mani.S
-        $data['all_users'] = $this->hosting_model->get_users_list();
+      //  $data['all_users'] = $this->hosting_model->get_users_list();
 
 
         $rules['customer_id'] = "required|integer|callback_is_valid_customer";
@@ -74,8 +80,7 @@ class Hosting extends crm_controller {
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
         $data['test_data'] = '';
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_account'])) {
-            $account = $this->hosting_model->get_account($id);
-           
+            $account = $this->hosting_model->get_account($id); 
             if (is_array($account) && count($account) > 0)
                 foreach ($account[0] as $k => $v) {
              
@@ -93,6 +98,7 @@ class Hosting extends crm_controller {
                     
                     if($k == 'created_by'){
                         $data['edit_sub_owner'] = $v;
+                     // print_r($v);exit;
                     }
                 }
         }
@@ -306,6 +312,7 @@ class Hosting extends crm_controller {
         $data = array();
         $options = array();
         $options['sub_name'] = $this->input->post('sub_name');
+        $options['package_id'] = $this->input->post('package_id');
 
         $options['customer'] = $this->input->post('customer');
         $options['start_date'] = $this->input->post('start_date');
