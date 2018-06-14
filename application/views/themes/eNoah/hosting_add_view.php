@@ -143,30 +143,7 @@ $usernme = $this->session->userdata('logged_in_user');
 
                     </tr>
 
-                    <tr>
-                        <td>Subscription Owner</td>
-                        <td><select  class="chzn-select" data-placeholder="Select Owners"  id="sub_owner" name="sub_owner">
-                                <?php
-                                if (!empty($all_users)):
-                                    $usid = $this->session->userdata('logged_in_user');
-                                    ?>
-
-                                    <!--option value=""></option-->
-                                    <?php
-                                    foreach ($all_users as $pms):
-                                        $selected = '';
-                                       
-                                        
-                                        if($usid['userid'] == $pms['userid'])
-                                            $selected = 'selected="selected"';
-                                        
-                                        ?>
-                                        <option <?php echo $selected; ?> value="<?php echo $pms['userid'] ?>"><?php echo $pms['first_name'] . ' ' . $pms['last_name'] . '-' . $pms['emp_id']; ?></option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
-                        </td>
-                    </tr>
+                   
                     <tr>
                         <td>&nbsp;</td>
                         <td>
