@@ -36,7 +36,7 @@ $(function(){
 	});
 	
 	$('#sub_frm').submit(function(e){
-		//alert('hi');return false;
+//		/alert($('#pack_name').val());return false;
 		e.preventDefault();		
 		$('#advance').hide();
 		$('#load').show();		
@@ -47,6 +47,9 @@ $(function(){
                 var c_date = $('#c_date').val();
 		var m_date   = $('#m_date').val();
                 
+                
+                var pack_name = $('#pack_name').val();
+                pack_name = pack_name + "";
                 
 		var sub_type_name = $('#sub_type_name').val();		
 		sub_type_name = sub_type_name + "";
@@ -61,7 +64,7 @@ $(function(){
 //		var params = {sub_type_name:sub_type_name,start_date:start_date,end_date:end_date,c_date:c_date,m_date:m_date,sub_name:sub_name,customer:customer,
 //                    status:status,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname};
                    
-		var params = {sub_type_name:sub_type_name,start_date:start_date,end_date:end_date,sub_name:sub_name,customer:customer,
+		var params = {package_id:pack_name,sub_type_name:sub_type_name,start_date:start_date,end_date:end_date,sub_name:sub_name,customer:customer,
                     status:status,owner:owner,leadassignee:leadassignee,regionname:regionname,countryname:countryname,statename:statename,locname:locname};
 		params[csrf_token_name] = csrf_hash_token; 
 		$('#hostme').load(base_url+'hosting/get_subscription_report',params,function(){
