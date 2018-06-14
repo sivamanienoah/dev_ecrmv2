@@ -18,14 +18,15 @@ class Hosting_model extends crm_model {
             $search = urldecode($search);
             $this->db->like('domain_name', $search);
         }
-        $this->db->select('*, ' . $this->cfg['dbpref'] . 'hosting.hostingid');
+        $this->db->select('*, ' . $this->cfg['dbpref'] . 'hosting.hostingid,' . $this->cfg['dbpref'] . 'hosting_package.packageid_fk');
         $this->db->from($this->cfg['dbpref'] . 'hosting');
         $this->db->join($this->cfg['dbpref'] . 'dns', $this->cfg['dbpref'] . 'hosting.hostingid =' . $this->cfg['dbpref'] . 'dns.hostingid', 'left');
+        $this->db->join($this->cfg['dbpref'] . 'hosting_package', $this->cfg['dbpref'] . 'hosting.hostingid =' . $this->cfg['dbpref'] . 'hosting_package.hostingid_fk', 'left');
         $this->db->join($this->cfg['dbpref'] . 'subscriptions_type', $this->cfg['dbpref'] . 'subscriptions_type.subscriptions_type_id =' . $this->cfg['dbpref'] . 'hosting.subscriptions_type_id_fk', 'left');
         //$this->db->limit(30,$offset);
         $accounts = $this->db->get();
        
-        //echo $this->db->last_query();exit;
+       // echo $this->db->last_query();exit;
         //$accounts = $this->db->get($this->login_model->cfg['dbpref'] . 'hosting', 20, $offset);
         $list = $accounts->result();
         $delist = array();
@@ -56,6 +57,7 @@ class Hosting_model extends crm_model {
             $delist[$key]['cur_dns_primary_ip'] = $val['cur_dns_primary_ip'];
             $delist[$key]['cur_dns_secondary_url'] = $val['cur_dns_secondary_url'];
             $delist[$key]['cur_dns_secondary_ip'] = $val['cur_dns_secondary_ip'];
+            $delist[$key]['packageid_fk'] = $val['packageid_fk'];
         }
         //echo'<pre>';print_r($delist);exit;
         return $delist;
@@ -503,6 +505,12 @@ class Hosting_model extends crm_model {
 //            $this->db->where('date(crm_hosting.modified_on ) <=',$m_date);
 //        }
         
+         if(!empty($options['package_id']) && $options['package_id'] != 'null')
+        {
+            $package_name = @explode(',', $options['package_id']);
+            $this->db->where_in('crm_hosting_package.packageid_fk ',$package_name);
+        }  
+        
          if(!empty($options['sub_type_name']) && $options['sub_type_name'] != 'null')
         {
             $sub_type_name = @explode(',', $options['sub_type_name']);
@@ -532,8 +540,9 @@ class Hosting_model extends crm_model {
         $this->db->join($this->cfg['dbpref'] . 'dns', $this->cfg['dbpref'] . 'dns.hostingid ='. $this->cfg['dbpref'] . 'hosting.hostingid','left');
         $this->db->join($this->cfg['dbpref'] . 'subscriptions_type', $this->cfg['dbpref'] . 'subscriptions_type.subscriptions_type_id ='. $this->cfg['dbpref'] . 'hosting.subscriptions_type_id_fk','left');
         $this->db->join($this->cfg['dbpref'] . 'customers', $this->cfg['dbpref'] . 'customers.custid ='. $this->cfg['dbpref'] . 'hosting.custid_fk','left');
+        $this->db->join($this->cfg['dbpref'] . 'hosting_package', $this->cfg['dbpref'] . 'hosting_package.hostingid_fk ='. $this->cfg['dbpref'] . 'hosting.hostingid','left');
         $query = $this->db->get();     
-       // echo $this->db->last_query();exit;
+      //  echo $this->db->last_query();exit;
        //  $this->db->select('*');
        // $this->db->from($this->cfg['dbpref'] . 'leads as j');
        
