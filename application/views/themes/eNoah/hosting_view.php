@@ -1,4 +1,12 @@
-<?php require (theme_url() . '/tpl/header.php'); ?>
+<?php require (theme_url() . '/tpl/header.php');
+$p = array();
+if (!empty($packageid_fk)) {
+    foreach ($packageid_fk as $val) {
+        $k = $val['packageid_fk'];
+        $p[$k] = $val['due_date'];
+    }
+}
+?>
 <div id="content">
     <div class="inner hosting-section">
      <?php
@@ -60,7 +68,8 @@
                                         <tr>
                                             <td class="tblheadbg">By Subscription Expiry Date</td>
 <!--                                            <td class="tblheadbg">By Creation / Modified Date</td>-->
-                                            <td class="tblheadbg">By Subscription Name</td>
+                                             <td class="tblheadbg">By Package Name</td>
+<!--                                            <td class="tblheadbg">By Subscription Name</td>-->
                                             <td class="tblheadbg">By Subscription Type</td>
                                             <td class="tblheadbg">By Customer</td>
                                             <td class="tblheadbg">By Subscription Status</td>
@@ -69,7 +78,7 @@
                                         </tr>
                                         <tr>	
                                             <td>
-                                                From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:57px;" />
+                                                From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:57px;  " />
                                                 <br />
                                                 To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:57px; margin-left: 13px;" />
                                             </td>
@@ -79,15 +88,18 @@
                                                 To <input type="text" data-calendar="true" name="m_date" id="m_date" class="textfield" style="width:57px; margin-left: 13px;" />
                                             </td>-->
                                             <td>
-                                                <select style="width:180px" multiple="multiple" id="sub_name" name="sub_name[]">
-                                                    <?php
-                                                    foreach ($sub_names as $sub_name) {
-                                                        ?>
-                                                        <option value="<?php echo $sub_name['hostingid']; ?>" title="<?php echo $sub_name['domain_name']; ?>"><?php echo $sub_name['domain_name']; ?></option>
-                                                    <?php } ?>
-
-                                                </select> 
+                                                  <select style="width:180px" name="packageid[]" id="pack_name"  multiple="multiple" >
+                                           
+                                            <?php
+                                            if (!empty($package)) {
+                                                foreach ($package as $val) {   ?>
+                                                     <option value="<?php echo $val['package_id'];?>" title="<?php echo $val['package_name'];?>"><?php echo $val['package_name'];?></option>
+                                              <?php  }
+                                            }
+                                            ?>
+                                        </select> 
                                             </td>
+                                            
                                             <td>
                                                 <select style="width:180px" multiple="multiple" id="sub_type_name" name="sub_type_name[]">
                                                     <?php foreach ($sub_types as $sub_type) { ?>
@@ -148,6 +160,23 @@
                                             </td>-->
 
                                         </tr>
+                                        <tr>
+									<td class="tblheadbg">By Subscription Name</td>
+									
+                                        </tr>
+                                                <tr>
+                                                    <td>
+                                                        <select style="width:180px" multiple="multiple" id="sub_name" name="sub_name[]">
+                                                            <?php
+                                                            foreach ($sub_names as $sub_name) {
+                                                                ?>
+                                                                <option value="<?php echo $sub_name['hostingid']; ?>" title="<?php echo $sub_name['domain_name']; ?>"><?php echo $sub_name['domain_name']; ?></option>
+                                                            <?php } ?>
+
+                                                        </select> 
+                                                    </td>
+
+                                                </tr>
                                        	
                                         <tr align="right" >
                                             <td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
@@ -168,6 +197,7 @@
                                     <thead>
                                         <tr>
                                             <th>Subscription Name</th>
+                                            <th>Package Name</th>
                                             <th>Subscription type</th>
                                             <th>Customer</th>
                                             <th>Subscription Status</th>
@@ -183,7 +213,9 @@
                                         if (is_array($accounts) && count($accounts) > 0) {
                                      //   if (is_array($accounts) && count($accounts) < 0) {
                                             foreach ($accounts as $account) {
-//                                              /  print_r($account);exit;
+                                                
+                                                $get_package_name = get_package_details($account['packageid_fk']);
+                                                
                                                 $rem = strtotime($account['go_live_date']) - time();
                                                 if ($account['login_url'] != '' && $account['login'] != '' && $account['registrar_password'] != '' && $account['email'] != '' && $account['cur_smtp_setting'] != '' && $account['cur_pop_setting'] != '' && $account['cur_dns_primary_url'] != '' && $account['cur_dns_primary_ip'] != '' && $account['cur_dns_secondary_url'] != '' && $account['cur_dns_secondary_ip'] != '')
                                                     $dns = 'green';
@@ -195,6 +227,9 @@
                                                 <tr>
                                                     <td>
                                                         <?php if ($this->session->userdata('edit') == 1) { ?><a href="hosting/add_account/update/<?php echo $account['hostingid'] ?>"><?php echo $account['domain_name'] ?></a><?php } else echo "Edit"; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $get_package_name; ?>
                                                     </td>
                                                     <td>
                                                         <?php echo ($account['subscriptions_type_name']) ? $account['subscriptions_type_name'] : '---'; ?>
