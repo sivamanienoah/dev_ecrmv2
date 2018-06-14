@@ -41,7 +41,8 @@ if($num>0)
 	$total_cnt = count($res);
 	//echo "<pre>";print_r($res); exit;
 	foreach ($res as $lead)
-	{		//print_r($lead->hostingid);exit;		
+	{		//print_r($lead->hostingid);exit;	
+             $get_package_name = get_package_details($lead->packageid_fk);
 			$res_cnt++;			
 			$content.= "<tr>";
 				/*$content .= "<td>";
@@ -52,6 +53,10 @@ if($num>0)
 				$content .= $lead->domain_name;
 				$content .= "</td>";
 				
+                                $content .= "<td>";
+				$content .= $get_package_name;
+				$content .= "</td>";
+                                
 				$content .= "<td>";
                                 $content .= $lead->subscriptions_type_name ? $lead->subscriptions_type_name : '---';
 				$content .= "</td>";
@@ -134,6 +139,7 @@ function createTable($content)
 	$table .= "<tr>";
 	//$table .= "<th>Region</th>";
 	$table .= "<th class='sorting'>Subscription Name</th>";
+	$table .= "<th class='sorting'>Package Name</th>";
 	$table .= "<th class='sorting'>Subscription type</th>";
 	$table .= "<th class='sorting'>Customer</th>";
 	$table .= "<th class='sorting'>Subscription Status</th>";
