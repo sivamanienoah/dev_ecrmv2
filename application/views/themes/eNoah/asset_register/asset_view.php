@@ -517,20 +517,14 @@ if ($userdata['level'] > 1)
             });
             $(this).__tabs(a, b, c, d, e, f);
         };
+        
         $("#lead_tab").tabs({
             beforeActivate: function (event, ui) {
-                if (ui.newPanel[0].id == 'jv-tab-4')
-                    loadExistingTasks();
-                if (ui.newPanel[0].id == 'jv-tab-3') {
-                    getFolderdata($('#filefolder_id').val());
-                    // showBreadCrumbs($('#filefolder_id').val());
-                }
+              
                 if (ui.newPanel[0].id == 'jv-tab-8') {
                     loadLogs(quote_id);
                 }
-                if (ui.newPanel[0].id == 'jv-tab-6') {
-                    loadCustomer(quote_id);
-                }
+                
             }
         });
 
@@ -644,7 +638,7 @@ if ($userdata['level'] > 1)
             $lead_assign_arr = array(0);
             $lead_assign_arr = @explode(',', $quote_data['lead_assign']);
 
-            if ($quote_data['belong_to'] == $userdata['userid'] || (in_array($userdata['userid'], $lead_assign_arr) ) || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) {
+            if ($quote_data['belong_to'] == $userdata['userid'] || (in_array($userdata['userid'], $lead_assign_arr) ) || $userdata['role_id'] == 1 || $userdata['role_id'] == 2  || $userdata['role_id'] == 3) {
                 ?>
                 <form id="comm-log-form">
                      <?php
@@ -727,9 +721,10 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
                 <?php
                 if (isset($quote_data)) {
                     foreach ($quote_data as $asset) {
-                       
+                        $AL = explode(',',$asset['asset_location']);
+                        $AV  = explode(',',$asset['asset_position']);
 
-// print_r($asset);exit;
+// /print_r($asset);exit;
                         ?>
 
                           <div class="q-init-details">
@@ -747,7 +742,7 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
                             <p class="clearfix"><label>Asset Type</label><span><?php echo $asset['asset_type'] ?></span></p>
                             <p class="clearfix"><label>Storage Mode</label>  <span><?php echo $asset['storage_mode'] ?></span></p>
 
-                            <p class="clearfix"><label>Location</label><span><?php echo $asset['saveLocationText'] ?></span></p>
+                            <p class="clearfix"><label>Asset Current Location</label><span><?php echo $asset['location'] ?></span></p>
                             
                             <p class="clearfix"><label>Asset Owner</label> <span><?php    
                               $get_user_details = get_lead_assigne_names($asset['asset_owner']); 
@@ -761,13 +756,70 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
                             <p class="clearfix"><label>Confidentiality</label><span><?php echo $asset['confidentiality'] ?></span></p>
                            
                             <p class="clearfix"><label>Availability</label><span><?php echo $asset['availability'] ?></span></p>
+                            
+                            <?php for($i=0; $i < count($AL); $i++):?>
+                            <p class="clearfix"><label>
+                                <?php foreach($location as $loc):
+                                if($AL[$i] == $loc['loc_id']){
+                                    echo $loc['asset_location'];
+                                } //echo $r;?>
+                                <?php endforeach;?></label><span><?php echo $AV[$i];?></span></p>
+                            <?php   endfor;?>
+                            <div>
+                            <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl2" >
+                          
+                                 <!-- <?php for($i=0; $i < count($AL); $i++):?>
+                                <tr>
 
+                                    <td>
+                                       
+                                            <?php
+                                            foreach ($location as $loc) {
+                                                ?>
+                                        <p class="clearfix"><label><?php echo ($AL[$i] == $loc['loc_id'])?'selected':''?></label><span><?php echo $loc['asset_location'] ?><</span></p>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </td>
+                                   
+                                    <td>
+                                        <input type="text" name="position[]" value="<?php echo $AV[$i]; ?>" class="position_title textfield width180px required" />
+                                        <span class="position_title_err_msg text-danger"></span>
+                                    </td>
+
+
+                                    
+                                </tr>
+                                 <?php endfor;?> -->
+                            </table>
+                        </div>
 
                         </div>
+                
                 <div class="buttons">
                             <button type="button" class="negative" onclick="location.href = '<?php echo base_url(); ?>asset_register/quotation'">Cancel</button>
                         </div>
-
+                <div id="lead_tab">
+			<ul id="job-view-tabs">
+				<li><a href="<?php echo current_url() ?>#jv-tab-1">Lead History</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-2">Estimate</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-6">Customer</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-7">Query</a></li>
+				<li><a href="<?php echo current_url() ?>#jv-tab-8">History</a></li>
+			</ul>
+                    <div id="jv-tab-8">
+		
+		
+		
+		
+		
+		<h4>Comments</h4>
+		<div id="load-log"></div>
+	</div>
+   </div>
                     <?php
                     }
                 }
@@ -776,7 +828,7 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
                 <?php
                 include theme_url() . '/tpl/user_accounts_options.php';
 
-                if ($quote_data['belong_to'] == $userdata['userid'] || (in_array($userdata['userid'], $lead_assign_arr) ) || $userdata['role_id'] == 1 || $userdata['role_id'] == 2) {
+                if ($quote_data['belong_to'] == $userdata['userid'] || (in_array($userdata['userid'], $lead_assign_arr) ) || $userdata['role_id'] == 1 || $userdata['role_id'] == 2  || $userdata['role_id'] == 3) {
                     ?>
 
                     <?php
@@ -787,6 +839,92 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
     </div>
 </div>
 <script>
+    var asset_id  = "<?php echo isset($asset['asset_id']) ? $asset['asset_id'] : 0 ?>";
+    $( "#project-tabs" ).tabs({
+			beforeActivate: function( event, ui ) {
+				
+				var evnt_id = ui.newPanel[0].id;
+				
+				switch(evnt_id){
+					case 'jv-tab-0':
+						if(metrics_reload == true) {
+							updtActualProjectValue(project_jobid);
+						}
+					break;
+					case 'jv-tab-0-a':
+						viewOtherCost(project_jobid);
+					break;
+					case 'jv-tab-1':
+						$('.payment-terms-mini-view1').html('');
+						loadPayment();
+					break;
+                                        case 'jv-tab-12':
+                                            $('.pr_payment-terms-mini-view1').html('');
+						loadPrPayment();
+                                            
+					case 'jv-tab-3':
+						loadExistingFiles($('#filefolder_id').val());
+						showBreadCrumbs($('#filefolder_id').val());
+					break;
+					case 'jv-tab-4':
+						loadExistingTasks();
+					break;
+					case 'jv-tab-4-5':
+						$('.payment-received-mini-view1').hide();
+					break;
+					case 'jv-tab-5':
+						loadCustomer(quote_id);
+					break;
+					case 'jv-tab-9':
+						loadLogs(project_jobid);
+					break;
+				}
+			}
+		});
+              
+    $( "#lead_tab" ).tabs({
+		beforeActivate: function( event, ui ) {
+			if (ui.newPanel[0].id=='jv-tab-4')
+				loadExistingTasks();
+			if (ui.newPanel[0].id=='jv-tab-3') {
+				getFolderdata($('#filefolder_id').val());
+				// showBreadCrumbs($('#filefolder_id').val());
+			}
+			if (ui.newPanel[0].id=='jv-tab-8') {
+                          
+				loadLogs(asset_id);
+			}
+			if (ui.newPanel[0].id=='jv-tab-6') {
+				loadCustomer(quote_id);
+			}
+		}
+	});
+        function fullScreenLogs()
+	{
+		var fsl_height = parseInt($(window).height()) - 80;
+		fsl_height = fsl_height + 'px';
+
+		var params = {};
+		params[csrf_token_name] = csrf_hash_token;
+		$.post( 
+			site_base_url+'project/getLogs/'+project_jobid,params,
+			function(data) {
+				if (data.error) {
+					alert(data.errormsg);
+				} else {
+					$('.comments-log-container').html(data);
+				}
+			}
+		);
+		
+		$.blockUI({
+			message:$('.comments-log-container'),
+			css: {background:'#fff', border: '1px solid #999', padding:'4px', height:fsl_height, color:'#000000', width:'600px', overflow:'auto', top:'40px', left:'50%', marginLeft:'-300px'},
+			overlayCSS:  {backgroundColor:'#fff', opacity:0.9}
+		});
+		$('.blockUI:not(.blockMsg)').append('<p onclick="$.unblockUI();$(this).remove();" id="fsl-close">CLOSE</p>');
+	}
+
     $(function () {
         $(".cancel").click(function () {
             $('#querylead_table').slideToggle();
@@ -812,7 +950,7 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
         var params = {};
         params[csrf_token_name] = csrf_hash_token;
         $.post(
-                site_base_url + 'welcome/getLogs/' + id, params,
+                site_base_url + 'asset_register/getLogs/' + id, params,
                 function (data) {
                     if (data.error) {
                         alert(data.errormsg);

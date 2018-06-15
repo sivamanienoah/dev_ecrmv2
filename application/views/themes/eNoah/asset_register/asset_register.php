@@ -299,35 +299,41 @@ if (!isset($view_quotation)) {
         // alert('hi');return false;
         var err = [];
 
-        if ($.trim($('#department').val()) == '') {
-            err.push('department is required');
+        if ($('#department').val() == 'not_select') {
+            err.push('department must be selected');
         }
-        if ($('#Project').val() == 'not_select') {
+        if ($('#project_names').val() == '') {
             err.push('Project must be selected');
+        }
+        if ($('#arr_asset_owners').val() == 'not_select') {
+            err.push('Asset Owner must be selected');
         }
         if ($('#asset_type').val() == 'not_select') {
             err.push('Asset type must be selected');
         }
-//        if ($('#storage_mode').val() == 'not_select') {
-//            err.push('Storage mode must be selected');
-//        }
+        if ($('#storage_mode').val() == 'not_select') {
+            err.push('Storage Mode must be selected');
+        }
         if ($('#confidentiality').val() == 'not_select') {
             err.push('Confidentiality must be selected');
         }
-        if ($('#Availability').val() == 'not_select') {
+        if ($('#availability').val() == 'not_select') {
             err.push('Availability must be selected');
         }
         if ($('#asset_name').val() == '') {
-            err.push('asset_name is required');
+            err.push('Asset Name is required');
         }
 //         if ($('#Integrity').val() == 'not_select') {
 //            err.push('Integrity must be selected');
 //        }
-//        if ($.trim($('#location').val()) == '') {
-//            err.push('location is required');
-//        }
-//        if ($.trim($('#labelling').val()) == '') {
-//            err.push('labelling is required');
+        if ($.trim($('#location').val()) == '') {
+            err.push('Location is required');
+        }
+        if ($.trim($('#labelling').val()) == '') {
+            err.push('Labelling is required');
+        }
+//        if ($('#asset_location').val() == 'not_select') {
+//            err.push('Other Location must be selected');
 //        }
 //        if ($.trim($('#backupLocation').val()) == '') {
 //            err.push('backupLocation is required');
@@ -1008,7 +1014,7 @@ if (!isset($view_quotation)) {
 
                                 <tr>
                                     <td>
-                                        <select name="asset_location[]" id="location" class="textfield width300px"; onchange="getContractsDetails(this.value)"">
+                                        <select name="asset_location[]" id="asset_location" class="textfield width300px"; onchange="getContractsDetails(this.value)"">
                                             <option value="not_select">Please Select</option>
                                             <?php
                                             foreach ($location as $loc) {
@@ -1073,25 +1079,27 @@ if (!isset($view_quotation)) {
                                             }
                                             ?>
                                         </select>
+                                        <input type="hidden" value="<?php echo $ass['department_id']; ?>" id="department_id_hidden" name="department_id_hidden" />
                                     </p>
                                     <p><label>Project</label></p>
                                     <?php foreach ($projects as $project) {
                                         ?>     
                                         <p><input type="text" name="e_project_names" id="e_project_names" class="textfield width300px" value="<?php echo htmlentities($project['lead_title'], ENT_QUOTES) ?>"/>
                                             <input type="hidden" name="e_project_id" id="e_project_id" class="textfield width300px" 
-                                                   value="<?php echo htmlentities($project['lead_id'], ENT_QUOTES) ?>"  />
+                                                   value="<?php echo htmlentities($project['lead_title'], ENT_QUOTES) ?>"  />
             <?php } ?>
                                     </p>              
                                     <p><label>Asset Owner</label></p>
                                     <?php
-                                    $prj_assign_arr = array(0);
-                                    $prj_assign_arr = @explode(',', $ass['asset_owner']);
+                                    $edit_owner_arr = array(0);
+                                    $edit_owner_arr = @explode(',', $ass['asset_owner']);
                                     ?>
                                     <select data-placeholder="Choose Owner..." name="owner_assign_edit[]" multiple id="owner_assign_edit" class="chzn-select width300px">
-                                        <?php foreach ($lead_assign_edit as $leadassignedit) { ?>
-                                            <option value="<?php echo $leadassignedit['userid'] ?>"<?php echo (in_array($leadassignedit['userid'], $prj_assign_arr) ) ? ' selected="selected"' : '' ?>><?php echo $leadassignedit['first_name'] . " " . $leadassignedit['last_name'] . " - " . $leadassignedit['emp_id']; ?></option>
+                                        <?php  foreach ($all_users as $pms) { ?>
+                                          <option value="<?php echo $pms['userid'] ?>"<?php echo (in_array($pms['userid'], $edit_owner_arr) ) ? ' selected="selected"' : '' ?>><?php echo $pms['first_name'] . ' ' . $pms['last_name'] . '-' . $pms['emp_id']; ?></option>
             <?php } ?>
                                     </select>
+                                    <input type="hidden" value="<?php echo $pms['userid']; ?>" id="userid_hidden" name="userid_hidden" />
             <!--                        <p><input type="text" name="project_names" id="project_names" class="textfield width300px" placeholder="please type the name of the project to search" />
             <input type="hidden" name="project_id" id="project_id" class="textfield width300px" />
             </p>-->
@@ -1103,7 +1111,9 @@ if (!isset($view_quotation)) {
                                             <option value="Software" <?php if ($ass['asset_type'] == "Software") echo "selected"; ?>>Software</option>
                                             <option value="Information" <?php if ($ass['asset_type'] == "Information") echo "selected"; ?>>Information</option>
                                         </select>
+                                        <input type="hidden" value="<?php echo $ass['asset_type']; ?>" id="asset_type_hidden" name="asset_type_hidden" />
                                     </p>
+                                    
 
                                     <p><label>Storage Mode</label></p>
                                     <p>
@@ -1112,16 +1122,18 @@ if (!isset($view_quotation)) {
                                             <option value="Hardcopy" <?php if ($ass['storage_mode'] == "Hardcopy") echo "selected"; ?>>Hardcopy</option>
                                             <option value="Softcopy" <?php if ($ass['storage_mode'] == "Softcopy") echo "selected"; ?>>Softcopy</option>
                                         </select>
+                                         <input type="hidden" value="<?php echo $ass['storage_mode']; ?>" id="storage_mode_hidden" name="storage_mode_hidden" />
                                     </p>
                                     <p><label>Confidentiality</label></p>
                                     <p>
                                         <select name="edit_confidentiality" id="editconfidentiality" class="textfield width300px">
                                             <option value="not_select">Please Select</option>
-                                            <option value="Highly confidential" <?php if ($ass['storage_mode'] == "Highly confidential") echo "selected"; ?>>Highly confidential</option>
+                                            <option value="Highly confidential" <?php if ($ass['confidentiality'] == "Highly confidential") echo "selected"; ?>>Highly confidential</option>
                                             <option value="Confidential" <?php if ($ass['confidentiality'] == "Confidential") echo "selected"; ?>>Confidential</option>
                                             <option value="Internal" <?php if ($ass['confidentiality'] == "Internal") echo "selected"; ?>>Internal</option>
                                             <option value="Public" <?php if ($ass['confidentiality'] == "Public") echo "selected"; ?>>Public</option>
                                         </select>
+                                         <input type="hidden" value="<?php echo $ass['confidentiality']; ?>" id="confidentiality_hidden" name="confidentiality_hidden" />
                                     </p>
 
                                     <p><label>Availability</label></p>
@@ -1132,23 +1144,29 @@ if (!isset($view_quotation)) {
                                             <option value="High" <?php if ($ass['availability'] == "High") echo "selected"; ?>>High</option>
                                             <option value="Severe"  <?php if ($ass['availability'] == "Severe") echo "selected"; ?>>Severe</option>
                                         </select>
+                                        <input type="hidden" value="<?php echo $ass['availability']; ?>" id="availability_hidden" name="availability_hidden" />
                                     </p>
                                     <p><label>Asset Name</label></p>
                                     <p><input type="text" name="edit_asset_name" id="edit_asset_name" class="textfield width300px" 
-                                              value="<?php echo htmlentities($ass['asset_name'], ENT_QUOTES) ?>"/></p>
+                                              value="<?php echo htmlentities($ass['asset_name'], ENT_QUOTES) ?>"/>
+                                         <input type="hidden" value="<?php echo htmlentities($ass['asset_name'], ENT_QUOTES) ?>" id="asset_name_hidden" name="asset_name_hidden" />
+                                    </p>
                                     <p><label>Labelling</label></p>
                                     <p><input type="text" name="edit_labelling" id="edit_labelling" class="textfield width300px"
-                                              value="<?php echo htmlentities($ass['labelling'], ENT_QUOTES) ?>"/></p>
+                                              value="<?php echo htmlentities($ass['labelling'], ENT_QUOTES) ?>"/>
+                                    <input type="hidden" value="<?php echo htmlentities($ass['labelling'], ENT_QUOTES) ?>" id="labelling_hidden" name="labelling_hidden" />
+                                    </p>
                                     <p><label>Asset Current Location</label></p>
                                     <p><input type="text" name="edit_location" id="edit_location" class="textfield width300px" 
-                                              value="<?php echo htmlentities($ass['location'], ENT_QUOTES) ?>"/></p>
+                                              value="<?php echo htmlentities($ass['location'], ENT_QUOTES) ?>"/>
+                                    <input type="hidden" value="<?php echo htmlentities($ass['location'], ENT_QUOTES) ?>" id="location_hidden" name="location_hidden" /></p>
                                              
                         <div>
                             <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl2" >
                                 <thead>
                                     <tr class="bg-blue">
-                                        <td>choose Location<span class='mandatory_asterick'>*</span></td>
-                                        <td>Location</td>
+                                        <td>Other Location Type<span class='mandatory_asterick'>*</span></td>
+                                        <td>Enter Location</td>
                                         <td>Action</td>
 
 
@@ -1168,10 +1186,12 @@ if (!isset($view_quotation)) {
                                             }
                                             ?>
                                         </select>
+                                         <input type="hidden" value="<?php echo htmlentities($loc['loc_id'], ENT_QUOTES) ?>" id="other_location_hidden" name="other_location_hidden" /></p>
                                     </td>
                                    
                                     <td>
                                         <input type="text" name="position[]" value="<?php echo $AV[$i]; ?>" class="position_title textfield width180px required" />
+                                        <input type="hidden" value="<?php echo $AV[$i] ?>" id="position_hidden" name="position_hidden" /></p>
                                         <span class="position_title_err_msg text-danger"></span>
                                     </td>
 

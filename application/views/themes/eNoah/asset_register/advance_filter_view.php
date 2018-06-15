@@ -33,8 +33,9 @@ if(!empty($db_fields) && count($db_fields)>0){
 		<tr>
 		<tr>
 			<th>Action</th>
-			
-			<th>Asset Name</th>
+                        <th>Asset Name</th>
+			<th>Department Name</th>
+			<th>Project Name</th>
                         <th>Asset Type</th>
                         <th>Storage Mode</th>
                         <th>Asset Current Location</th>
@@ -57,7 +58,7 @@ if(!empty($db_fields) && count($db_fields)>0){
                             
                                     foreach($filter_results as $filter_result) 
 				{
-//                                  /  print_r($filter_result);    
+                                    // echo '<pre>'; print_r($filter_result);    
                                     $view_url = base_url().'asset_register/view_asset/'.$filter_result['asset_id'];
 					
 					$get_user_details = get_lead_assigne_names($filter_result['asset_owner']);
@@ -86,8 +87,14 @@ if(!empty($db_fields) && count($db_fields)>0){
 								<a href="javascript:void(0)" onclick="return deleteAsset(<?php echo $filter_result['asset_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
 							<?php } ?>
 						</td>
-						<td><a target="_blank" href="<?php echo $view_url;?>"><?php echo $filter_result['asset_name']; ?></a> </td>
-                                                <td><?php echo  $filter_result['asset_type']; ?></td>
+                                                <td><a target="_blank" href="<?php echo $view_url;?>"><?php echo $filter_result['asset_name']; ?></a> </td>
+                                                  <td><?php  foreach ($departments as $department){
+                                                    echo $department['department_name'];
+                                                } ?></td>
+                                                  <td><?php  foreach ($projects as $project){
+                                                    echo $project['lead_title'];
+                                                } ?></td>
+						  <td><?php echo  $filter_result['asset_type']; ?></td>
                                                 <td><?php echo  $filter_result['storage_mode']; ?></td>
                                                 <td><?php echo  $filter_result['location']; ?></td>
                                                 <td><?php 
