@@ -258,10 +258,26 @@ class Asset_model extends crm_model {
 		return $this->db->update($this->cfg['dbpref'] . 'leads', $log);
 	}
 	
-	function get_logs($id) {
-		$this->db->order_by('date_created', 'desc');
-		$query = $this->db->get_where($this->cfg['dbpref'] . 'logs', array('jobid_fk' => $id));
-		return $query->result_array();
+	function get_logs($id,$log_type) {
+          //  print_r($id);exit;
+//                $this->db->select('*');
+//                $this->db->from($this->cfg['dbpref'] . 'logs');
+//                $this->db->where('jobid_fk', $id);
+//                $this->db->where('log_type', $log_type);
+//		$this->db->order_by('date_created', 'desc');
+                
+                $this->db->select('*');
+		$this->db->where('jobid_fk', $id);
+		$this->db->where('log_type', $log_type);
+                $this->db->order_by('date_created', 'desc');
+                $sql = $this->db->get($this->cfg['dbpref'] . 'logs');
+                
+		//$lead_det = $sql->row_array();
+                
+//		$query = $this->db->get_where($this->cfg['dbpref'] . 'logs', array('jobid_fk' => $id));
+//                $query = $this->db->get_where($this->cfg['dbpref'] . 'logs', array('log_type' => $log_type));
+    //echo $this->db->last_query(); exit;
+		return $sql->result_array();
 	}
 	
 	function get_last_logs($id) {
@@ -325,7 +341,7 @@ class Asset_model extends crm_model {
 		
 		$this->db->select('lead_assign,belong_to');
 		$this->db->where('lead_id', $lead_id);
-        $sql = $this->db->get($this->cfg['dbpref'] . 'leads');
+                $sql = $this->db->get($this->cfg['dbpref'] . 'leads');
 		$lead_det = $sql->row_array();
 		
         $data['query_files1_html'] = '';       
@@ -588,9 +604,9 @@ class Asset_model extends crm_model {
 	
 	public function get_filter_results($department_id, $project_id, $asset_name, $asset_type, $storage_mode, $location, $asset_owner, $labelling, $confidentiality, $integrity, $availability,$keyword)
 	{
-         //   print_r($keyword);exit;
+     // print_r($keyword);exit;
         $userdata = $this->session->userdata('logged_in_user');
-
+        //print_r($userdata);exit;
         $department_id = (count($department_id) > 0) ? explode(',', $department_id) : '';
         $project_id = (count($project_id) > 0) ? explode(',', $project_id) : '';
         $asset_name = (count($asset_name) > 0) ? explode(',', $asset_name) : '';
@@ -604,7 +620,7 @@ class Asset_model extends crm_model {
         $availability = (count($availability) > 0) ? explode(',', $availability) : '';
        
 //		/echo $this->userdata['role_id'];exit;
-		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2 || $this->userdata['role_id'] == 3) {
                    // echo 'hi';exit;
 			$this->db->select('*');	
 			$this->db->from($this->cfg['dbpref']. 'asset_register as j');
