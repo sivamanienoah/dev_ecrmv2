@@ -78,7 +78,8 @@ class Asset_register extends crm_controller {
      */
 
     // public function advance_filter_search($stage='null', $customer='null', $worth='null', $owner='null', $leadassignee='null', $regionname='null',$countryname='null', $statename='null', $locname='null', $lead_status='null', $lead_indi='null', $keyword='null') 
-    public function advance_filter_search($search_type = false, $search_id = false) {// echo"here";exit;
+    public function advance_filter_search($search_type = false, $search_id = false) {
+    //echo"here";exit;
         //echo'<pre>search_type=>';print_r($search_type);exit;
         // echo'<pre>search_id=>';print_r($search_id);
         $filt = array();
@@ -104,13 +105,13 @@ class Asset_register extends crm_controller {
         $this->session->unset_userdata('load_proposal_expect_end');
 
         if ($search_type == 'search' && $search_id == false) {
-            // echo 'if';exit;
+         //  echo 'if';exit;
             $filt = real_escape_array($this->input->post()); //echo'<pre>filt1=>';print_r($filt);
             $this->session->set_userdata("lead_search_by_default", 0);
             $this->session->set_userdata("lead_search_by_id", 0);
             $this->session->set_userdata("lead_search_only", 1);
         } else if ($search_type == 'search' && is_numeric($search_id)) {
-            //   echo 'elsif';exit;
+          //  echo 'elsif';exit;
             $wh_condn = array('search_id' => $search_id, 'search_for' => 1, 'user_id' => $this->userdata['userid']);
             $get_rec = $this->asset_model->get_data_by_id('saved_search_critriea', $wh_condn);
             unset($get_rec['search_id']);
@@ -124,11 +125,11 @@ class Asset_register extends crm_controller {
             $this->session->set_userdata("lead_search_by_id", $search_id);
             $this->session->set_userdata("lead_search_only", 0);
         } else if ($search_type == 'load_proposal_expect_end' && $search_id == false) {
-            //   echo 'elsif2';exit;
+           echo 'elsif2';exit;
             $this->session->set_userdata("load_proposal_expect_end", 1);
             $proposal_expect_end = 'load_proposal_expect_end';
         } else {
-            
+          //  echo else;exit;
         }
         //echo'<pre>filt2=>';print_r($filt);
         // echo'<pre>';print_r(count($filt));exit;
@@ -166,10 +167,12 @@ class Asset_register extends crm_controller {
         } else {
             $this->session->set_userdata("search_keyword", '');
         }
-
+      // echo 'hi';exit;
         $filter_results = $this->asset_model->get_filter_results($department_id, $project_id, $asset_name, $asset_type, $storage_mode, $location, $asset_owner, $labelling, $confidentiality, $integrity, $availability, $keyword);
-//        / echo $this->db->last_query(); die;
+///echo $this->db->last_query(); die;
        $data['filter_results'] = $filter_results;
+       $data['departments'] = $this->asset_model->get_department_by_id($filter_results[0]['department_id']);
+       $data['projects'] = $this->asset_model->get_project_by_id($filter_results[0]['project_id']);
 //         //echo '<pre>';print_r($data['filter_results']);exit;
 //        $data['department_id'] = $department_id;
 //        //  echo '<pre>';print_r($data['department_id']);exit;
@@ -206,15 +209,15 @@ class Asset_register extends crm_controller {
         $usid = $this->session->userdata('logged_in_user');
 
         $getAssetDet = $this->asset_model->get_asset_detail($id);
-        //S echo '<pre>';print_r($getAssetDet);exit;
+        
         $data['quote_data'] = $getAssetDet;
         $data['departments'] = $this->asset_model->get_department_by_id($getAssetDet[0]['department_id']);
         $data['projects'] = $this->asset_model->get_project_by_id($getAssetDet[0]['project_id']);
-
+         $data['location'] = $this->asset_model->get_locations();
         $data['asset_owner'] = $this->asset_model->get_user_name_by_id($getAssetDet[0]['asset_owner']);
         //  $data['asset_owner'] = $this->asset_model->get_user_name_by_id($getAssetDet[0]['asset_owner']);   
         // $arrLeadInfo = $this->request_model->get_lead_info($id);
-
+//echo '<pre>';print_r($data);exit;
         if (!empty($getAssetDet)) {
 
             $this->load->view('asset_register/asset_view', $data);
@@ -230,10 +233,11 @@ class Asset_register extends crm_controller {
      */
 
     function getLogs($id) {
-
+       //print_r($id);exit;
         $data['log_html'] = '';
-        $getLogsData = $this->asset_model->get_logs($id);
-        // echo "<pre>"; print_r($getLogsData); exit;
+        $log_type = 'asset_log';
+        $getLogsData = $this->asset_model->get_logs($id,$log_type);
+        
         $data['log_html'] .= '<table width="100%" id="lead_log_list" class="log-container logstbl">';
         $data['log_html'] .= '<thead><tr><th>&nbsp;</th></tr></thead><tbody>';
 
@@ -242,8 +246,9 @@ class Asset_register extends crm_controller {
             $this->load->helper('url');
             $this->load->helper('text');
             $this->load->helper('fix_text');
-
+          //  print_r($log_data);exit;
             foreach ($log_data as $ld) {
+           //  echo "<pre>"; print_r($ld); exit;
                 // $wh_condn = array('userid'=>$ld['userid_fk']);
                 $user_data = $this->asset_model->get_user_data_by_id($ld['userid_fk']);
 
@@ -370,11 +375,12 @@ class Asset_register extends crm_controller {
     function edit_asset($id = 0) {
         if (($data['asset_data'] = $this->asset_model->get_asset_detail($id)) !== FALSE) {
             $data['asset_data'] = $this->asset_model->get_asset_detail($id);
-            //  print_r($data['asset_data']);exit;
+           //print_r($data['asset_data']);exit;
             $data['edit_asset'] = true;
             $data['edit_dep_details'] = $this->asset_model->get_department_details();
             $data['projects'] = $this->asset_model->get_project_by_id($data['asset_data'] [0]['project_id']);
             $data['location'] = $this->asset_model->get_locations();
+            $data['all_users'] = $this->project_model->get_users_list();
             //print_r($data['projects']);exit;
 
            // $data['lead_assign_edit'] = $this->welcome_model->get_userlist($userList);
@@ -387,7 +393,8 @@ class Asset_register extends crm_controller {
             //redirect('welcome/quotation');
         }
     }
-
+    
+    
     function custom_update_users() {
         $res = array();
         $post_data = real_escape_array($this->input->post());
@@ -423,9 +430,10 @@ class Asset_register extends crm_controller {
      */
     function ajax_create_quote() {
         // echo 'hi';exit;
+        
         $data = real_escape_array($this->input->post()); //
-/// print_r($data);exit;
-        $ins['asset_name'] = $data['asset_name'];
+ //print_r($data);exit;
+        $ins['asset_name'] = trim(strtolower($data['asset_name']));
 
         $chkAssetName = $this->asset_model->checkAssetName($ins['asset_name']);
         if (is_array($chkAssetName) && count($chkAssetName) > 0) {
@@ -436,12 +444,20 @@ class Asset_register extends crm_controller {
             //   echo 'else';exit;
             $ins['department_id'] = $data['department'];
             $ins['project_id'] = $data['project_id'];
+             $department = $this->asset_model->get_department_by_id($ins['department_id']);
+            
+            $project = $this->asset_model->get_project_by_id($ins['project_id']);
             //   $ins['project_id'] = $data['project_names'];
             $ins['asset_type'] = $data['asset_type'];
             $ins['storage_mode'] = $data['storage_mode'];
             $ins['location'] = $data['location'];
             $asset_owners = $data['arr_asset_owners'];
             $ins['asset_owner'] = implode(',', $asset_owners);
+//            foreach ($asset_owners as $ass ){
+//                $get_user_details = get_lead_assigne_names($ass['asset_owner']);
+//                print_r($get_user_details);exit;  
+//                            
+//            }
             $ins['labelling'] = $data['labelling'];
             $ins['confidentiality'] = $data['confidentiality'];
             // $ins['integrity'] = $data['integrity'];
@@ -464,14 +480,21 @@ class Asset_register extends crm_controller {
             echo json_encode($json);
             //  print_r($insert_asset);
             //insert logs
+              $usid = $this->session->userdata('logged_in_user');
+           //   $data['asset_owner_details'] = $this->asset_model->get_user_name_by_id($usid['userid']);
+              //$pms = $this->asset_model->get_asset_detail($usid);
+       // print_r($usid);exit;
+              //  $data['quote_data'] = $getAssetDet;
             $ins_log = array();
-            $ins_log['log_content'] = "Asset Created For the " . $customer['company'] . " - " . $customer['customer_name'] . " On :" . " " . date('M j, Y g:i A');
-            $ins_log['log_content'] .= "\n Lead Title " . $get_det['lead_title'];
+            $ins_log['log_content'] = "Asset Created For the  " . $department[0]['department_name'] . " - " . $project[0]['lead_title'] . " On :" . " " . date('M j, Y g:i A');
+            $ins_log['log_content'] .= "\n By Asset Owner - " . $usid['username'];;
             $ins_log['jobid_fk'] = $insert_asset;
+            $ins_log['log_type'] = 'asset_log';
             $ins_log['date_created'] = date('Y-m-d H:i:s');
             $ins_log['userid_fk'] = $this->userdata['userid'];
+           // print_r($ins_log);
             $insert_log = $this->asset_model->insert_row_return_id('logs', $ins_log);
-//        /  print_r($insert_log);
+//        /print_r($insert_log);
             //  redirect('asset_register/quotation');
         }
     }
@@ -480,6 +503,7 @@ class Asset_register extends crm_controller {
 //balaji    
     function ajax_edit_asset() {
          $data = real_escape_array($this->input->post()); //
+         //echo '<pre>';print_r($data);exit;
         $usid = $this->session->userdata('logged_in_user');
         $ins['asset_name'] = $data['edit_asset_name'];
         $ins['department_id'] = $data['department_edit'];
@@ -500,6 +524,78 @@ class Asset_register extends crm_controller {
         $ins['created_by'] = $usid['username'];
         $updt_asset = $this->asset_model->update_row_asset('asset_register', $ins, $data['asset_id']);
         $res = array();
+         if ($data['department_edit'] != $data['department_id_hidden']) {
+            // $department = $this->asset_model->get_department_by_id($ins['department_id']);
+                $inser['log_content'] = "Department has changed";
+                $inser['jobid_fk'] = $data['asset_id'];
+                $inser['userid_fk'] = $this->userdata['userid'];
+                $inser['log_type'] = 'asset_log';
+                $insert_log = $this->welcome_model->insert_row('logs', $inser);
+            }
+             if ($data['edit_asset_type'] != $data['asset_type_hidden']) {
+            // $department = $this->asset_model->get_department_by_id($ins['department_id']);
+                $inser['log_content'] = "Asset Type  has changed from ' " . $data['asset_type_hidden'] . " ' to ' " . $data['edit_asset_type'] . " '";
+                $inser['jobid_fk'] = $data['asset_id'];
+                $inser['userid_fk'] = $this->userdata['userid'];
+                $inser['log_type'] = 'asset_log';
+                $insert_log = $this->welcome_model->insert_row('logs', $inser);
+            }
+            
+             if ($data['storage_mode_hidden'] != $data['storage_mode']) {
+            // $department = $this->asset_model->get_department_by_id($ins['department_id']);
+                $inser['log_content'] = "Storage Mode  has changed from ' " . $data['asset_type_hidden'] . " ' to ' " . $data['edit_asset_type'] . " '";
+                $inser['jobid_fk'] = $data['asset_id'];
+                $inser['userid_fk'] = $this->userdata['userid'];
+                $inser['log_type'] = 'asset_log';
+                $insert_log = $this->welcome_model->insert_row('logs', $inser);
+            }
+            
+             if ($data['confidentiality_hidden'] != $data['edit_confidentiality']) {
+            // $department = $this->asset_model->get_department_by_id($ins['department_id']);
+                $inser['log_content'] = "Confidentiality  has changed  from ' " . $data['confidentiality_hidden'] . " ' to ' " . $data['edit_confidentiality'] . " '";
+                $inser['jobid_fk'] = $data['asset_id'];
+                $inser['userid_fk'] = $this->userdata['userid'];
+                $inser['log_type'] = 'asset_log';
+                $insert_log = $this->welcome_model->insert_row('logs', $inser);
+            }
+            
+             if ($data['edit_availability'] != $data['availability_hidden']) {
+            // $department = $this->asset_model->get_department_by_id($ins['department_id']);
+                $inser['log_content'] = "Availability  has changed  from ' " . $data['availability_hidden'] . " ' to ' " . $data['edit_availability'] . " '";
+                $inser['jobid_fk'] = $data['asset_id'];
+                $inser['userid_fk'] = $this->userdata['userid'];
+                $inser['log_type'] = 'asset_log';
+                $insert_log = $this->welcome_model->insert_row('logs', $inser);
+            }
+            
+             if ($data['edit_asset_name'] != $data['asset_name_hidden']) {
+            // $department = $this->asset_model->get_department_by_id($ins['department_id']);
+                $inser['log_content'] = "Asset Name  has changed  from ' " . $data['asset_name_hidden'] . " ' to ' " . $data['edit_asset_name'] . " '";
+                $inser['jobid_fk'] = $data['asset_id'];
+                $inser['userid_fk'] = $this->userdata['userid'];
+                $inser['log_type'] = 'asset_log';
+                $insert_log = $this->welcome_model->insert_row('logs', $inser);
+            }
+            
+             if ($data['edit_labelling'] != $data['labelling_hidden']) {
+            // $department = $this->asset_model->get_department_by_id($ins['department_id']);
+                $inser['log_content'] = "Labelling has changed  from ' " . $data['labelling_hidden'] . " ' to ' " . $data['edit_labelling'] . " '";
+                $inser['jobid_fk'] = $data['asset_id'];
+                $inser['userid_fk'] = $this->userdata['userid'];
+                $inser['log_type'] = 'asset_log';
+                $insert_log = $this->welcome_model->insert_row('logs', $inser);
+            }
+            
+            if ($data['edit_location'] != $data['location_hidden']) {
+            // $department = $this->asset_model->get_department_by_id($ins['department_id']);
+                $inser['log_content'] = "Asset Location has changed  from ' " . $data['location_hidden'] . " ' to ' " . $data['edit_location'] . " '";
+                $inser['jobid_fk'] = $data['asset_id'];
+                $inser['userid_fk'] = $this->userdata['userid'];
+                $inser['log_type'] = 'asset_log';
+                $insert_log = $this->welcome_model->insert_row('logs', $inser);
+            }
+            
+           
         if ($updt_asset) {
             $res['error'] = false;
         } else {
@@ -3171,6 +3267,8 @@ HDOC;
         }
         $this->load->view('location/manage_location_add_view', $data);
     }
+    
+ 
 
 }
 
