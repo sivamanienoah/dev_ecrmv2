@@ -31,7 +31,7 @@ class hosting_cron extends crm_controller {
 		$this->email->subject($subject);
 		$data['failmail'] = 0;
 		$data['successmail'] = 0;
-                echo '<pre>';print_r($data['members']);exit;
+              //  echo '<pre>';print_r($data['members']);exit;
 	if (!empty($data['members'])) {
 		foreach($data['members'] as $member) {
 			$hostid = $member['hostingid'];
