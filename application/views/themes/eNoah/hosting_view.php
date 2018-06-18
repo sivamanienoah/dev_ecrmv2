@@ -44,7 +44,7 @@ if (!empty($packageid_fk)) {
 
 
 
-        <?php if ($this->session->userdata('add') == 1) { ?>
+                        <?php if ($this->session->userdata('add') == 1) { ?>
                             <div class="section-right">
                                 <div class="buttons add-new-button">
                                     <button type="button" class="positive" onclick="location.href = '<?php echo base_url(); ?>hosting/add_account'">
@@ -53,7 +53,7 @@ if (!empty($packageid_fk)) {
                                 </div>
                             </div>
 
-        <?php } ?>
+                        <?php } ?>
                         <div class="clearfix"></div>
 
                 </div>
@@ -66,128 +66,139 @@ if (!empty($packageid_fk)) {
 
                         <div style="border: 1px solid #DCDCDC;">
                             <table cellpadding="0" cellspacing="0" class="data-table leadAdvancedfiltertbl" >
-                                <tr>
-                                    <td class="tblheadbg">By Subscription Expiry Date</td>
-        <!--                                            <td class="tblheadbg">By Creation / Modified Date</td>-->
-                                    <td class="tblheadbg">By Package Name</td>
-        <!--                                            <td class="tblheadbg">By Subscription Name</td>-->
-                                    <td class="tblheadbg">By Subscription Type</td>
-                                    <td class="tblheadbg">By Customer</td>
-                                    <td class="tblheadbg">By Subscription Status</td>
+                                <thead>
+                                    <tr>
+                                        <th>By Subscription Expiry Date</th>
+            <!--                                            <td class="tblheadbg">By Creation / Modified Date</td>-->
+                                        <th>By Package Name</th>
+            <!--                                            <td class="tblheadbg">By Subscription Name</td>-->
+                                        <th>By Subscription Type</th>
+                                        <th>By Customer</th>
+                                        <th>By Subscription Status</th>
 
 
-                                </tr>
-                                <tr>	
-                                    <td>
-                                        From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:157px;  " />
-                                        <br />
-                                        To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:157px; margin-left: 13px;" />
-                                    </td>
-        <!--                                            <td>
-                                        From <input type="text" data-calendar="true" name="c_date" id="c_date" class="textfield" style="width:57px;" />
-                                        <br />
-                                        To <input type="text" data-calendar="true" name="m_date" id="m_date" class="textfield" style="width:57px; margin-left: 13px;" />
-                                    </td>-->
-                                    <td>
-                                        <select style="width:180px" name="packageid[]" id="pack_name"  multiple="multiple" >
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>	
+                                        <td>
+                                            From <input type="text" data-calendar="true" name="from_date" id="from_date" class="textfield" style="width:157px;  " />
+                                            <br />
+                                            To <input type="text" data-calendar="true" name="to_date" id="to_date" class="textfield" style="width:157px; margin-left: 13px;" />
+                                        </td>
+            <!--                                            <td>
+                                            From <input type="text" data-calendar="true" name="c_date" id="c_date" class="textfield" style="width:57px;" />
+                                            <br />
+                                            To <input type="text" data-calendar="true" name="m_date" id="m_date" class="textfield" style="width:57px; margin-left: 13px;" />
+                                        </td>-->
+                                        <td>
+                                            <select style="width:180px" name="packageid[]" id="pack_name"  multiple="multiple" >
 
-                                            <?php
-                                            if (!empty($package)) {
-                                                foreach ($package as $val) {
-                                                    ?>
-                                                    <option value="<?php echo $val['package_id']; ?>" title="<?php echo $val['package_name']; ?>"><?php echo $val['package_name']; ?></option>
                                                 <?php
+                                                if (!empty($package)) {
+                                                    foreach ($package as $val) {
+                                                        ?>
+                                                        <option value="<?php echo $val['package_id']; ?>" title="<?php echo $val['package_name']; ?>"><?php echo $val['package_name']; ?></option>
+                                                        <?php
+                                                    }
                                                 }
-                                            }
-                                            ?>
-                                        </select> 
-                                    </td>
-
-                                    <td>
-                                        <select style="width:180px" multiple="multiple" id="sub_type_name" name="sub_type_name[]">
-        <?php foreach ($sub_types as $sub_type) { ?>
-                                                <option value="<?php echo $sub_type['subscriptions_type_id']; ?>" title="<?php echo $sub_type['subscriptions_type_name']; ?>"><?php echo $sub_type['subscriptions_type_name']; ?></option>	
-        <?php } ?>
-                                        </select> 
-                                    </td>  
-                                    <td>
-                                        <select style="width:180px" multiple="multiple" id="customer" name="customer[]">
-                                            <?php
-                                            foreach ($customers as $cus) {
-                                                //   print_r($cus);exit;
                                                 ?>
-                                                <option value="<?php echo $cus['custid_fk']; ?>" title="<?php echo $cus['customer_name']; ?>"><?php echo $cus['customer_name']; ?></option>	
-        <?php } ?>
-                                        </select> 
-                                    </td>
-                                    <td>
-                                        <select style="width:180px" multiple="multiple" id="status" name="status[]">
-                                            <?php
-                                            foreach ($sub_status as $key => $value) {
-                                                // print_r($key);exit;
-                                                if (!empty($value)) {
-                                                    ?>
-                                                    <option value="<?php echo $key ?>" title="<?php echo $value ?>"><?php echo $value ?></option>
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                        </select> 
-                                    </td>
-        <!--									<td>
-                                            <select style="width:110px" multiple="multiple" id="leadassignee" name="leadassignee[]">
-                                    <?php
-                                    foreach ($lead_owner as $owner) {
-                                        if (!empty($owner['first_name'])) {
-                                            ?>		
-                                                    <option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'] . ' - ' . $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
                                             </select> 
-                                    </td>-->
-        <!--									<td colspan="2">
-                                            <select multiple="multiple" id="service" name="service[]" >
-                                    <?php
-                                    if (isset($services) && count($services) > 0) {
-                                        foreach ($services as $se) {
-                                            ?>
-                                                    <option value="<?php echo $se['sid'] ?>" title="<?php echo $se['services'] ?>"><?php echo $se['services'] ?></option>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                            </select>
-                                    </td>-->
+                                        </td>
 
-                                </tr>
-                                <tr>
-                                    <td class="tblheadbg">By Subscription Name</td>
-
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <select style="width:180px" multiple="multiple" id="sub_name" name="sub_name[]">
-                                            <?php
-                                            foreach ($sub_names as $sub_name) {
+                                        <td>
+                                            <select style="width:180px" multiple="multiple" id="sub_type_name" name="sub_type_name[]">
+                                                <?php foreach ($sub_types as $sub_type) { ?>
+                                                    <option value="<?php echo $sub_type['subscriptions_type_id']; ?>" title="<?php echo $sub_type['subscriptions_type_name']; ?>"><?php echo $sub_type['subscriptions_type_name']; ?></option>	
+                                                <?php } ?>
+                                            </select> 
+                                        </td>  
+                                        <td>
+                                            <select style="width:180px" multiple="multiple" id="customer" name="customer[]">
+                                                <?php
+                                                foreach ($customers as $cus) {
+                                                    //   print_r($cus);exit;
+                                                    ?>
+                                                    <option value="<?php echo $cus['custid_fk']; ?>" title="<?php echo $cus['customer_name']; ?>"><?php echo $cus['customer_name']; ?></option>	
+                                                <?php } ?>
+                                            </select> 
+                                        </td>
+                                        <td>
+                                            <select style="width:180px" multiple="multiple" id="status" name="status[]">
+                                                <?php
+                                                foreach ($sub_status as $key => $value) {
+                                                    // print_r($key);exit;
+                                                    if (!empty($value)) {
+                                                        ?>
+                                                        <option value="<?php echo $key ?>" title="<?php echo $value ?>"><?php echo $value ?></option>
+                                                        <?php
+                                                    }
+                                                }
                                                 ?>
-                                                <option value="<?php echo $sub_name['hostingid']; ?>" title="<?php echo $sub_name['domain_name']; ?>"><?php echo $sub_name['domain_name']; ?></option>
-        <?php } ?>
+                                            </select> 
+                                        </td>
+            <!--									<td>
+                                                <select style="width:110px" multiple="multiple" id="leadassignee" name="leadassignee[]">
+                                        <?php
+                                        foreach ($lead_owner as $owner) {
+                                            if (!empty($owner['first_name'])) {
+                                                ?>		
+                                                                <option value="<?php echo $owner['userid'] ?>" title="<?php echo $owner['first_name'] . ' - ' . $owner['emp_id'] ?>"><?php echo $owner['first_name'] ?></option>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                                </select> 
+                                        </td>-->
+            <!--									<td colspan="2">
+                                                <select multiple="multiple" id="service" name="service[]" >
+                                        <?php
+                                        if (isset($services) && count($services) > 0) {
+                                            foreach ($services as $se) {
+                                                ?>
+                                                                <option value="<?php echo $se['sid'] ?>" title="<?php echo $se['services'] ?>"><?php echo $se['services'] ?></option>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                                </select>
+                                        </td>-->
 
-                                        </select> 
-                                    </td>
+                                    </tr>
+                                </tbody>
+                                <thead>
+                                    <tr>
+                                        <th>By Subscription Name</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select style="width:180px" multiple="multiple" id="sub_name" name="sub_name[]">
+                                                <?php
+                                                foreach ($sub_names as $sub_name) {
+                                                    ?>
+                                                    <option value="<?php echo $sub_name['hostingid']; ?>" title="<?php echo $sub_name['domain_name']; ?>"><?php echo $sub_name['domain_name']; ?></option>
+                                                <?php } ?>
 
-                                </tr>
+                                            </select> 
+                                        </td>
 
-                                <tr align="right" >
-                                    <td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
-                                        <input type="submit" class="positive" name="advance" id = 'advance' value="Search" />
-                                        <div id = 'load' style = 'float:right;display:none;height:1px;'>
-                                            <img src = '<?php echo base_url() . 'assets/images/loading.gif'; ?>' width="54" />
-                                        </div> 
-                                    </td>
-                                </tr>
+                                    </tr>
+
+                                    <tr align="right" >
+                                        <td colspan="6"><input type="reset" class="positive" name="advance" value="Reset" />
+                                            <input type="submit" class="positive" name="advance" id = 'advance' value="Search" />
+                                            <div id = 'load' style = 'float:right;display:none;height:1px;'>
+                                                <img src = '<?php echo base_url() . 'assets/images/loading.gif'; ?>' width="54" />
+                                            </div> 
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                         </form>
@@ -234,7 +245,7 @@ if (!empty($packageid_fk)) {
                                             <?php echo $get_package_name; ?>
                                         </td>
                                         <td>
-                <?php echo ($account['subscriptions_type_name']) ? $account['subscriptions_type_name'] : '---'; ?>
+                                            <?php echo ($account['subscriptions_type_name']) ? $account['subscriptions_type_name'] : '---'; ?>
                                         </td>
 
                                         <td>
@@ -263,7 +274,7 @@ if (!empty($packageid_fk)) {
                                             <?php } ?>
                                             <?php if ($this->session->userdata('delete') == 1) { ?>
                                                 <a class="delete" href="javascript:void(0)" onclick="return delHosting(<?php echo $account['hostingid']; ?>);" title='Delete'> <img src="assets/img/trash.png" alt='delete'></a> 
-                                    <?php } ?>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                     <?php
@@ -273,7 +284,7 @@ if (!empty($packageid_fk)) {
                         </tbody>
                     </table>
                 </div>
-        <?php } ?>
+            <?php } ?>
         </div>
         <?php
     } else {
