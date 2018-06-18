@@ -202,22 +202,23 @@ class Asset_register extends crm_controller {
      */
 
     public function view_asset($id = 0, $quote_section = '') {
-//        / print_r($id);exit;
+///print_r($id);exit;
         $this->load->helper('text');
         $this->load->helper('fix_text');
         $data['view_asset'] = true;
         $usid = $this->session->userdata('logged_in_user');
 
         $getAssetDet = $this->asset_model->get_asset_detail($id);
-        
+       
         $data['quote_data'] = $getAssetDet;
         $data['departments'] = $this->asset_model->get_department_by_id($getAssetDet[0]['department_id']);
         $data['projects'] = $this->asset_model->get_project_by_id($getAssetDet[0]['project_id']);
+        //echo '<pre>';print_r($data['projects']);exit;
          $data['location'] = $this->asset_model->get_locations();
         $data['asset_owner'] = $this->asset_model->get_user_name_by_id($getAssetDet[0]['asset_owner']);
         //  $data['asset_owner'] = $this->asset_model->get_user_name_by_id($getAssetDet[0]['asset_owner']);   
         // $arrLeadInfo = $this->request_model->get_lead_info($id);
-//echo '<pre>';print_r($data);exit;
+
         if (!empty($getAssetDet)) {
 
             $this->load->view('asset_register/asset_view', $data);
@@ -503,12 +504,20 @@ class Asset_register extends crm_controller {
 //balaji    
     function ajax_edit_asset() {
          $data = real_escape_array($this->input->post()); //
-         //echo '<pre>';print_r($data);exit;
+  //echo '<pre>';print_r($data);exit;
+        $sql = "SELECT * FROM crm_leads  WHERE `lead_title` LIKE '%{$data['e_project_names']}%' ";
+          $q = $this->db->query($sql);
+            //echo $this->db->last_query();
+          $result = $q->row_array();
+         
         $usid = $this->session->userdata('logged_in_user');
+        
         $ins['asset_name'] = $data['edit_asset_name'];
         $ins['department_id'] = $data['department_edit'];
-        $ins['project_id'] = $data['e_project_id'];
-        //   $ins['project_id'] = $data['project_names'];
+      $ins['project_id'] = $result['lead_id'];
+      //changed project name
+   //     $ins['project_id'] = $data['e_project_names'];
+       
         $ins['asset_type'] = $data['edit_asset_type'];
         $ins['storage_mode'] = $data['storage_mode'];
         $ins['location'] = $data['edit_location'];
@@ -526,12 +535,28 @@ class Asset_register extends crm_controller {
         $res = array();
          if ($data['department_edit'] != $data['department_id_hidden']) {
             // $department = $this->asset_model->get_department_by_id($ins['department_id']);
-                $inser['log_content'] = "Department has changed";
+                $department_edit = $this->asset_model->get_department_by_id($data['department_edit']);
+                $department_id_hidden = $this->asset_model->get_department_by_id($data['department_id_hidden']);
+
+                $inser['log_content'] = "Department has changed from ' " . $department_id_hidden[0]['department_name'] . " ' to ' " . $department_edit[0]['department_name']. " '";
                 $inser['jobid_fk'] = $data['asset_id'];
                 $inser['userid_fk'] = $this->userdata['userid'];
                 $inser['log_type'] = 'asset_log';
                 $insert_log = $this->welcome_model->insert_row('logs', $inser);
             }
+            
+                if ($data['e_project_names_hidden'] != $data['e_project_names']) {
+            // $department = $this->asset_model->get_department_by_id($ins['department_id']);
+              //  $department_edit = $this->asset_model->get_department_by_id($data['department_edit']);
+             //   $department_id_hidden = $this->asset_model->get_department_by_id($data['department_id_hidden']);
+
+                $inser['log_content'] = "Project has changed from ' " . $data['e_project_names_hidden'] . " ' to ' " . $data['e_project_names']. " '";
+                $inser['jobid_fk'] = $data['asset_id'];
+                $inser['userid_fk'] = $this->userdata['userid'];
+                $inser['log_type'] = 'asset_log';
+                $insert_log = $this->welcome_model->insert_row('logs', $inser);
+            }
+            
              if ($data['edit_asset_type'] != $data['asset_type_hidden']) {
             // $department = $this->asset_model->get_department_by_id($ins['department_id']);
                 $inser['log_content'] = "Asset Type  has changed from ' " . $data['asset_type_hidden'] . " ' to ' " . $data['edit_asset_type'] . " '";
