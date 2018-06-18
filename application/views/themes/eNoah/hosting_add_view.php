@@ -142,6 +142,33 @@ $usernme = $this->session->userdata('logged_in_user');
                         <td><textarea name="other_info" class="textfield width200px"><?php echo $this->validation->other_info ?></textarea></td>
 
                     </tr>
+                     <tr>
+                        <td>Subscription Owner</td>
+                        <?php echo $edit_sub_owner.'asd'; ?>
+                        <td><select  class="chzn-select" data-placeholder="Select Owners"  id="sub_owner" name="sub_owner">
+                                <?php
+                                if (!empty($all_users)):
+                                    $usid = $this->session->userdata('logged_in_user');
+                                    ?>
+                                    <!--option value=""></option-->
+                                    <?php
+                                    foreach ($all_users as $pms):
+                                        $selected = '';
+                                        if($edit_sub_owner == $pms['userid']){
+                                            $selected = 'selected="selected"';
+                                        }
+                                        elseif($usid['userid'] == $pms['userid'] && $this->uri->segment(3) != 'update' ){
+                                            $selected = 'selected="selected"';
+                                        }else{
+                                            $selected = '';
+                                        }
+                                        ?>
+                                        <option <?php echo $selected; ?> value="<?php echo $pms['userid'] ?>"><?php echo $pms['first_name'] . ' ' . $pms['last_name'] . '-' . $pms['emp_id']; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </td>
+                    </tr>
 
                    
                     <tr>
