@@ -802,13 +802,10 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
                         </div>
                 <div id="lead_tab">
 			<ul id="job-view-tabs">
-				<li><a href="<?php echo current_url() ?>#jv-tab-1">Lead History</a></li>
-				<li><a href="<?php echo current_url() ?>#jv-tab-2">Estimate</a></li>
-				<li><a href="<?php echo current_url() ?>#jv-tab-3">Files</a></li>
-				<li><a href="<?php echo current_url() ?>#jv-tab-4">Tasks</a></li>
-				<li><a href="<?php echo current_url() ?>#jv-tab-6">Customer</a></li>
-				<li><a href="<?php echo current_url() ?>#jv-tab-7">Query</a></li>
+			
 				<li><a href="<?php echo current_url() ?>#jv-tab-8">History</a></li>
+                            
+
 			</ul>
                     <div id="jv-tab-8">
 		
@@ -947,6 +944,7 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
         }
     });
     function loadLogs(id) {
+        
         var params = {};
         params[csrf_token_name] = csrf_hash_token;
         $.post(
@@ -961,6 +959,9 @@ echo htmlentities($quote_data['lead_title'], ENT_QUOTES);
                 }
         );
     }
+    $( document ).ready(function() {
+    loadLogs(asset_id);
+});
     function loadCustomer(id)
     {
         var params = {};

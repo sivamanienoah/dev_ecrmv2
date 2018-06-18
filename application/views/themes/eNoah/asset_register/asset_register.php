@@ -1085,10 +1085,11 @@ if (!isset($view_quotation)) {
                                     <?php foreach ($projects as $project) {
                                         ?>     
                                         <p><input type="text" name="e_project_names" id="e_project_names" class="textfield width300px" value="<?php echo htmlentities($project['lead_title'], ENT_QUOTES) ?>"/>
-                                            <input type="hidden" name="e_project_id" id="e_project_id" class="textfield width300px" 
-                                                   value="<?php echo htmlentities($project['lead_title'], ENT_QUOTES) ?>"  />
+                                           
             <?php } ?>
-                                    </p>              
+                                    </p>        
+                                     <input type="hidden" name="e_project_names_hidden" id="e_project_names_hidden" class="textfield width300px" 
+                                                   value="<?php echo htmlentities($project['lead_title'], ENT_QUOTES) ?>"  />
                                     <p><label>Asset Owner</label></p>
                                     <?php
                                     $edit_owner_arr = array(0);
@@ -1950,6 +1951,10 @@ if (!isset($view_quotation)) {
                 // getUserForLeadAssign(regId,cntryId,stId,locId);
             }
         });
+        function getval(sel)
+        {
+            alert(sel.value);
+        }
 
 <?php
 if (isset($existing_lead) && isset($lead_customer)) {
@@ -2043,6 +2048,16 @@ if (!isset($view_quotation)) {
         $("#as_location").hide();
     });
 
+
+$(document).on("change","#asset_type", function(){
+//   / alert('hi');return false;
+    var dropDownVal = $("#asset_type").val();
+    
+    if(dropDownVal == "Hardware"){
+      $('#storage_mode option[value=Hardcopy]').attr('selected','selected');
+    }
+    
+});
 
 </script>
 <?php require (theme_url() . '/tpl/footer.php'); ?>
