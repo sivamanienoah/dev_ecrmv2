@@ -31,6 +31,7 @@ class hosting_cron extends crm_controller {
 		$this->email->subject($subject);
 		$data['failmail'] = 0;
 		$data['successmail'] = 0;
+                echo '<pre>';print_r($data['members']);exit;
 	if (!empty($data['members'])) {
 		foreach($data['members'] as $member) {
 			$hostid = $member['hostingid'];
@@ -40,7 +41,7 @@ class hosting_cron extends crm_controller {
                         $sub_owner = $member['created_by'];
 			$owner = $this->db->query("select first_name, last_name, username, email from ".$this->cfg['dbpref']."users where userid = $sub_owner");
 			$data['sub_holder'] = $owner->row_array();
-                       // echo '<pre>';print_r($data['sub_holder']);exit;
+                       // 
 			$cust_name = $data['sub_holder']['first_name'] . " " . $data['sub_holder']['last_name'] ;
 			$cust_email = $data['sub_holder']['email'];
 
