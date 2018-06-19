@@ -17,8 +17,10 @@ $usernme = $this->session->userdata('logged_in_user');
         display:none;
     }
 </style>
+<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
+<script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
 <input type="hidden" class="hiddenUrl"/>
 <div id="content">
     <div class="inner">
@@ -143,8 +145,8 @@ $usernme = $this->session->userdata('logged_in_user');
 
                     </tr>
                      <tr>
-                        <td>Subscription Owner</td>
-                        <?php echo $edit_sub_owner.'asd'; ?>
+                        <td class="project-stake-members">Subscription Owner</td>
+                      
                         <td><select  class="chzn-select" data-placeholder="Select Owners"  id="sub_owner" name="sub_owner">
                                 <?php
                                 if (!empty($all_users)):
