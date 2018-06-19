@@ -51,7 +51,7 @@ class Hosting extends crm_controller {
         $data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
        
         $data['subscription_types'] = $this->hosting_model->get_subscription_types(); // Mani.S
-      //  $data['all_users'] = $this->hosting_model->get_users_list();
+       $data['all_users'] = $this->hosting_model->get_users_list();
 
 
         $rules['customer_id'] = "required|integer|callback_is_valid_customer";
