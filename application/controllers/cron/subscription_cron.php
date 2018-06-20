@@ -30,7 +30,7 @@ class subscription_cron extends crm_controller {
 		//echo $this->db->last_query(); exit;
 		//$data['members'] = $hosting_exp->result_array();
                 
-                $hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, domain_status,domain_expiry, DATEDIFF(domain_expiry, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where domain_expiry <='".$endDate."' AND domain_status != 3  AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
+                $hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, domain_status,ssl,domain_expiry, DATEDIFF(domain_expiry, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where domain_expiry <='".$endDate."' AND domain_status != 3  AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
 		//echo $this->db->last_query(); exit;
 		$data['members'] = $hosting_exp->result_array();
               //  echo '<pre>';print_r($data['members']);exit;
@@ -53,6 +53,7 @@ class subscription_cron extends crm_controller {
 			$exp_dt = $member['domain_expiry'];
 			$domainName = $member['domain_name'];
 			$domainStatus = $member['domain_status'];
+			$ssl = $member['ssl'];
                        // print_r($domainStatus);exit;
                        
                         foreach ($this->login_model->cfg['domain_status'] as $key => $value) {
@@ -60,7 +61,14 @@ class subscription_cron extends crm_controller {
                                      $dom_status = $value;
                                 }
                                   
-                        }     
+                        }   
+                        
+                        foreach ($this->login_model->cfg['domain_ssl_status'] as $key => $value) {
+                                if($ssl == $key){
+                                     $ssl_name = $value;
+                                }
+                                  
+                        }  
                        // echo $dom_status;exit;
                        
                                
@@ -126,6 +134,10 @@ class subscription_cron extends crm_controller {
                                                   <tr>
 							<td style="border-right:1px #CCC solid;">Domain Status</td>
 							<td style="border-right:1px #CCC solid;">'.$dom_status.'</td>
+						  </tr>
+                                                   <tr>
+							<td style="border-right:1px #CCC solid;">SSL</td>
+							<td style="border-right:1px #CCC solid;">'.$ssl_name.'</td>
 						  </tr>
 						  <tr>
 							<td style="border-right:1px #CCC solid;">Client</td>
@@ -201,7 +213,7 @@ class subscription_cron extends crm_controller {
 		}
 		
 
-		$hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, expiry_date, DATEDIFF(expiry_date, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where expiry_date <='".$endDate."' AND domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
+		$hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name,domain_status, expiry_date, DATEDIFF(expiry_date, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where expiry_date <='".$endDate."' AND domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
 		// echo $this->db->last_query(); exit;
 		$data['members'] = $hosting_exp->result_array();
 		//echo '<pre>';print_r($data['members']);die;
@@ -219,6 +231,15 @@ class subscription_cron extends crm_controller {
 		$this->email->subject($subject);
 		$data['failmail'] = 0;
 		$data['successmail'] = 0;
+                $domainStatus = $member['domain_status'];
+                       // print_r($domainStatus);exit;
+                       
+                        foreach ($this->login_model->cfg['domain_status'] as $key => $value) {
+                                if($domainStatus == $key){
+                                     $dom_status = $value;
+                                }
+                                  
+                        }     
 		//print_r($data['members']);exit;
 	
 			$hostid = $member['hostingid'];
