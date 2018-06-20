@@ -179,8 +179,8 @@ class subscription_cron extends crm_controller {
 		}
 		
 
-		$hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, expiry_date, DATEDIFF(expiry_date, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where expiry_date >='".$endDate."' AND domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
-		 echo $this->db->last_query(); exit;
+		$hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, expiry_date, DATEDIFF(expiry_date, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where expiry_date <='".$endDate."' AND domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
+		// echo $this->db->last_query(); exit;
 		$data['members'] = $hosting_exp->result_array();
 		//echo '<pre>';print_r($data['members']);die;
                 if (!empty($data['members'])) {
