@@ -44,7 +44,7 @@ class subscription_cron extends crm_controller {
 		$this->email->subject($subject);
 		$data['failmail'] = 0;
 		$data['successmail'] = 0;
-               
+              //  echo '<pre>';print_r($data['members']);exit;
 	
 			$hostid = $member['hostingid'];
 			$cust_id = $member['custid_fk'];
@@ -56,23 +56,20 @@ class subscription_cron extends crm_controller {
                        // 
 			$cust_name = $data['sub_holder']['first_name'] . " " . $data['sub_holder']['last_name'] ;
 			$cust_email = $data['sub_holder']['email'];
-                        if(!empty($member['alt_users'])){
-                            $alt_users_id = $member['alt_users'];
-                            $alt_owners = $this->db->query("select first_name, last_name, username, email from " . $this->cfg['dbpref'] . "users where userid in ($alt_users_id)");
-                            $send_alerts_to = $alt_owners->result_array();
-                            $cc_alert = array();
-                            foreach($send_alerts_to as $cc_alert_users){
-                                $cc_alert[] = $cc_alert_users['email'];
-                            }
-                                $cc_alert = implode(',', $cc_alert);
-                                
-                            }else{
-                                $cc_alert = '';
-                            }
+                        
+                        $alt_users_id = $member['alt_users'];
+                        $alt_owners = $this->db->query("select first_name, last_name, username, email from ".$this->cfg['dbpref']."users where userid in ($alt_users_id)");
+                        $send_alerts_to = $alt_owners->result_array();
+                        $cc_alert = array();
+                        
+                        foreach($send_alerts_to as $cc_alert_users){
+                            
+                          $cc_alert[] = $cc_alert_users['email'];
+                          
+                        }
+                            $cc_alert = implode(',', $cc_alert);
 
-
-
-                    $log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+			$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				<html xmlns="http://www.w3.org/1999/xhtml">
 				<head>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -142,7 +139,6 @@ class subscription_cron extends crm_controller {
 				</table>
 				</body>
 				</html>';
-                                                  print_r($cc_alert).'asdf';exit;
 			$this->email->to($cust_email);	
                          $this->email->cc($cc_alert);
 			$this->email->message($log_email_content);
@@ -172,7 +168,6 @@ class subscription_cron extends crm_controller {
 	//For Hosting
     function hosting_reminder()
 	{
-        echo 'hi';exit;
 		$today = date('Y-m-d'); 
 		// $days_check = $this->db->select('days_check')->get('crm_hosting')->row()->days_check;
 		$days_query = $this->db->query("SELECT hostingid, custid_fk, domain_name, days_check FROM ".$this->cfg['dbpref']."hosting where  domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
@@ -191,7 +186,7 @@ class subscription_cron extends crm_controller {
 		foreach($data['members'] as $member) {
                    
             if($member['date_diff'] % 2 == 1 && $member['date_diff'] > 0):
-       //   echo '<pre>';print_r($member);exit;
+         //  echo '<pre>';print_r($member);
 		$user_name = "Webmaster";
 		
 		$from='webmaster@enoahprojects.com';
