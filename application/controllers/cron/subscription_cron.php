@@ -14,7 +14,7 @@ class subscription_cron extends crm_controller {
     }
     
     function index($limit = 0, $search = false)
-	{	//echo 'hi';exit;
+	{	echo 'hi';exit;
 		$today = date('Y-m-d'); 
 //                $days_query = $this->db->query("SELECT hostingid, custid_fk, domain_expiry,domain_name, days_check FROM ".$this->cfg['dbpref']."hosting where  domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
                 $days_query = $this->db->query("SELECT hostingid, custid_fk, domain_expiry,domain_name, days_check FROM ".$this->cfg['dbpref']."hosting where  domain_status != 3 AND  (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
