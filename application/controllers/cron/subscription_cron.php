@@ -182,7 +182,7 @@ class subscription_cron extends crm_controller {
 		$hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, expiry_date, DATEDIFF(expiry_date, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where expiry_date <='".$endDate."' AND domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
 		// echo $this->db->last_query(); exit;
 		$data['members'] = $hosting_exp->result_array();
-		echo '<pre>';print_r($data['members']);die;
+		//echo '<pre>';print_r($data['members']);die;
                 if (!empty($data['members'])) {
 		foreach($data['members'] as $member) {
                    
@@ -208,7 +208,7 @@ class subscription_cron extends crm_controller {
 			$data['sub_holder'] = $owner->row_array();
 			$cust_name = $data['sub_holder']['first_name'] . " " . $data['sub_holder']['last_name'] ;
 			$cust_email = $data['sub_holder']['email'];
-                        
+                        if(isset($member['alt_users'])):
                         $alt_users_id = $member['alt_users'];
                         $alt_owners = $this->db->query("select first_name, last_name, username, email from ".$this->cfg['dbpref']."users where userid in ($alt_users_id)");
                         $send_alerts_to = $alt_owners->result_array();
@@ -219,7 +219,7 @@ class subscription_cron extends crm_controller {
                           
                         }
                             $cc_alert = implode(',', $cc_alert);
-                   
+                        endif;
 
 			$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				<html xmlns="http://www.w3.org/1999/xhtml">
