@@ -9,6 +9,7 @@ class subscription_cron extends crm_controller {
 		//$this->login_model->check_login();
 		//$this->userdata = $this->session->userdata('logged_in_user');
         $this->load->model('customer_model');
+         $this->load->model('hosting_model');
         $this->load->library('validation');
 		$this->load->library('email');
     }
@@ -29,8 +30,8 @@ class subscription_cron extends crm_controller {
 		//echo $this->db->last_query(); exit;
 		//$data['members'] = $hosting_exp->result_array();
                 
-                $hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, domain_expiry, DATEDIFF(domain_expiry, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where expiry_date <='".$endDate."' AND domain_status != 3  AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
-		// echo $this->db->last_query(); exit;
+                $hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, domain_status,domain_expiry, DATEDIFF(domain_expiry, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where domain_expiry <='".$endDate."' AND domain_status != 3  AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
+		//echo $this->db->last_query(); exit;
 		$data['members'] = $hosting_exp->result_array();
                 if (!empty($data['members'])) {
 		foreach($data['members'] as $member) {
@@ -44,19 +45,32 @@ class subscription_cron extends crm_controller {
 		$this->email->subject($subject);
 		$data['failmail'] = 0;
 		$data['successmail'] = 0;
-              //  echo '<pre>';print_r($data['members']);exit;
-	
+            //   echo '<pre>';print_r($member);exit;
+                        $package = $this->hosting_model->get_row_bycond('package', 'status', 'active');
 			$hostid = $member['hostingid'];
 			$cust_id = $member['custid_fk'];
 			$exp_dt = $member['domain_expiry'];
 			$domainName = $member['domain_name'];
+			$domainStatus = $member['domain_status'];
+                       // print_r($domainStatus);exit;
+                       
+                        foreach ($this->login_model->cfg['domain_status'] as $key => $value) {
+                                if($domainStatus == $key){
+                                     $dom_status = $value;
+                                }
+                                  
+                        }     
+                       // echo $dom_status;exit;
+                       
+                               
+                        
                         $sub_owner = $member['created_by'];
 			$owner = $this->db->query("select first_name, last_name, username, email from ".$this->cfg['dbpref']."users where userid = $sub_owner");
 			$data['sub_holder'] = $owner->row_array();
                        // 
 			$cust_name = $data['sub_holder']['first_name'] . " " . $data['sub_holder']['last_name'] ;
 			$cust_email = $data['sub_holder']['email'];
-                        
+                        if(isset($member['alt_users'])):
                         $alt_users_id = $member['alt_users'];
                         $alt_owners = $this->db->query("select first_name, last_name, username, email from ".$this->cfg['dbpref']."users where userid in ($alt_users_id)");
                         $send_alerts_to = $alt_owners->result_array();
@@ -68,6 +82,7 @@ class subscription_cron extends crm_controller {
                           
                         }
                             $cc_alert = implode(',', $cc_alert);
+                        endif;    
 
 			$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				<html xmlns="http://www.w3.org/1999/xhtml">
@@ -107,6 +122,10 @@ class subscription_cron extends crm_controller {
 							<td style="border-right:1px #CCC solid;">Domain</td>
 							<td style="border-right:1px #CCC solid;">'.$domainName.'</td>
 						  </tr>
+                                                  <tr>
+							<td style="border-right:1px #CCC solid;">Domain Status</td>
+							<td style="border-right:1px #CCC solid;">'.$dom_status.'</td>
+						  </tr>
 						  <tr>
 							<td style="border-right:1px #CCC solid;">Client</td>
 							<td style="border-right:1px #CCC solid;">'.$cust_name.'</td>
@@ -140,7 +159,9 @@ class subscription_cron extends crm_controller {
 				</body>
 				</html>';
 			$this->email->to($cust_email);	
+                           if(isset($member['alt_users'])):
                          $this->email->cc($cc_alert);
+                           endif;
 			$this->email->message($log_email_content);
 			//$this->email->send();
 			
