@@ -1,4 +1,5 @@
-<?php
+<?php //print_r($all_users);die;
+
 require (theme_url() . '/tpl/header.php');
 $p = array();
 if (!empty($packageid_fk)) {
@@ -11,6 +12,7 @@ $usernme = $this->session->userdata('logged_in_user');
 
 //echo '<pre>'; print_r($subscription_types);
 ?>
+<link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
 <style type="text/css">
     #domain-expiry-date 
     {
@@ -25,6 +27,7 @@ $usernme = $this->session->userdata('logged_in_user');
 <div id="content">
     <div class="inner">
         <?php if (($this->session->userdata('add') == 1 && $this->uri->segment(3) != 'update') || (($this->session->userdata('edit') == 1) && ($this->uri->segment(3) == 'update' && is_numeric($this->uri->segment(4))))) { ?>
+
             <form action="<?php echo $this->uri->uri_string() ?>" method="post">
 
                 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
@@ -149,11 +152,14 @@ $usernme = $this->session->userdata('logged_in_user');
                       
                         <td><select  class="chzn-select" data-placeholder="Select Owners"  id="sub_owner" name="sub_owner">
                                 <?php
+                                 $all_users = get_users_list();
+
                                 if (!empty($all_users)):
                                     $usid = $this->session->userdata('logged_in_user');
                                     ?>
-                                    <!--option value=""></option-->
+                                    <option value=""></option>
                                     <?php
+                                        
                                     foreach ($all_users as $pms):
                                         $selected = '';
                                         if($edit_sub_owner == $pms['userid']){
@@ -171,7 +177,59 @@ $usernme = $this->session->userdata('logged_in_user');
                             </select>
                         </td>
                     </tr>
-
+                        <tr>
+                        <td class="project-stake-members">cc alert</td>
+                        <?php ?>
+                        <td><select multiple="multiple" class="chzn-select" data-placeholder="Select Owners"  id="cc_sub_owners" name="cc_sub_owners[]">
+                                <?php
+                                 $all_users = get_users_list();
+                             //    print_r($all_users);exit;
+                                if (!empty($all_users)):
+                                    $usid = $this->session->userdata('logged_in_user');
+                                    ?>
+                                    <!--option value=""></option-->
+                                    <?php
+                                      foreach ($all_users as $pms){
+                                       $selected = '';
+                                       if(in_array($pms['userid'],$edit_alt_users)){
+                                      //     print_r($pms['userid']);
+                                             echo $selected = 'selected="selected"';
+                                        }else{
+                                            echo $selected = '';
+                                        }
+                                          ?>
+                                        <option <?php echo $selected; ?> value="<?php echo $pms['userid'] ?>"><?php echo $pms['first_name'] . ' ' . $pms['last_name'] . '-' . $pms['emp_id']; ?></option>
+                                    <?php 
+                                    
+                                    }?>
+                                <?php endif; ?>
+                            </select>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td class="project-stake-members">Tracking Status</td>
+                      
+                        <td><select  class="chzn-select" data-placeholder="Select Status"  id="track_status" name="track_status">
+                                 <option value="">Select Status</option>
+                                    <!--option value=""></option-->
+                                    <?php
+                                        
+                                    foreach ($tracking_status as $key => $value):
+                              // print_r($key);
+                                      $selected = '';
+                                       if($edit_tracking_status == $key){
+                                        //  print_r($edit_tracking_status);
+                                             echo $selected = 'selected="selected"';
+                                        }else{
+                                            echo $selected = '';
+                                        }
+                                        ?>
+                                        <option <?php echo $selected ?> value="<?php echo $key?>" title="<?php echo $value?>"><?php echo $value ?></option>
+                                    <?php endforeach; ?>
+                               
+                            </select>
+                        </td>
+                    </tr>
                    
                     <tr>
                         <td>&nbsp;</td>
