@@ -33,7 +33,7 @@ class subscription_cron extends crm_controller {
                 $hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, domain_status,domain_expiry, DATEDIFF(domain_expiry, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where domain_expiry <='".$endDate."' AND domain_status != 3  AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
 		//echo $this->db->last_query(); exit;
 		$data['members'] = $hosting_exp->result_array();
-                echo '<pre>';print_r($data['members']);exit;
+              //  echo '<pre>';print_r($data['members']);exit;
                 if (!empty($data['members'])) {
 		foreach($data['members'] as $member) {
                 if($member['date_diff'] % 2 == 1 && $member['date_diff'] > 0):
@@ -46,7 +46,7 @@ class subscription_cron extends crm_controller {
 		$this->email->subject($subject);
 		$data['failmail'] = 0;
 		$data['successmail'] = 0;
-            //   echo '<pre>';print_r($member);exit;
+              echo '<pre>';print_r($member);exit;
                         $package = $this->hosting_model->get_row_bycond('package', 'status', 'active');
 			$hostid = $member['hostingid'];
 			$cust_id = $member['custid_fk'];
