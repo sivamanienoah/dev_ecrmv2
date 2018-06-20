@@ -56,20 +56,23 @@ class subscription_cron extends crm_controller {
                        // 
 			$cust_name = $data['sub_holder']['first_name'] . " " . $data['sub_holder']['last_name'] ;
 			$cust_email = $data['sub_holder']['email'];
-                        
-                        $alt_users_id = $member['alt_users'];
-                        $alt_owners = $this->db->query("select first_name, last_name, username, email from ".$this->cfg['dbpref']."users where userid in ($alt_users_id)");
-                        $send_alerts_to = $alt_owners->result_array();
-                        $cc_alert = array();
-                        
-                        foreach($send_alerts_to as $cc_alert_users){
-                            
-                          $cc_alert[] = $cc_alert_users['email'];
-                          
-                        }
-                            $cc_alert = implode(',', $cc_alert);
+                        if(isset($member['alt_users'])){
+                            $alt_users_id = $member['alt_users'];
+                            $alt_owners = $this->db->query("select first_name, last_name, username, email from " . $this->cfg['dbpref'] . "users where userid in ($alt_users_id)");
+                            $send_alerts_to = $alt_owners->result_array();
+                            $cc_alert = array();
+                            foreach($send_alerts_to as $cc_alert_users){
+                                $cc_alert[] = $cc_alert_users['email'];
+                            }
+                                $cc_alert = implode(',', $cc_alert);
+                                
+                            }else{
+                                $cc_alert = '';
+                            }
 
-			$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+                    $log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				<html xmlns="http://www.w3.org/1999/xhtml">
 				<head>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
