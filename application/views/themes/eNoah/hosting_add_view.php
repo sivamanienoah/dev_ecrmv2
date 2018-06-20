@@ -20,7 +20,9 @@ $usernme = $this->session->userdata('logged_in_user');
     }
 </style>
 <link rel="stylesheet" href="assets/css/chosen.css" type="text/css" />
+<script type="text/javascript" src="assets/js/jquery.form.js"></script>
 <script type="text/javascript" src="assets/js/jquery.blockUI.js"></script>
+<script type="text/javascript" src="assets/js/jq.livequery.min.js"></script>
 <script type="text/javascript" src="assets/js/crm.js?q=13"></script>
 <script type="text/javascript" src="assets/js/chosen.jquery.js"></script>
 <input type="hidden" class="hiddenUrl"/>
@@ -209,7 +211,7 @@ $usernme = $this->session->userdata('logged_in_user');
                      <tr>
                         <td class="project-stake-members">Tracking Status</td>
                       
-                        <td><select  class="chzn-select" data-placeholder="Select Status"  id="track_status" name="track_status">
+                        <td><select  data-placeholder="Select Status"  id="track_status" name="track_status">
                                  <option value="">Select Status</option>
                                     <!--option value=""></option-->
                                     <?php
@@ -230,6 +232,7 @@ $usernme = $this->session->userdata('logged_in_user');
                             </select>
                         </td>
                     </tr>
+                 
                    
                     <tr>
                         <td>&nbsp;</td>
@@ -270,4 +273,88 @@ $usernme = $this->session->userdata('logged_in_user');
             return false;
         }
     }
+	
+	$(function () {
+
+        $('#drag-item-list').draggable({handle: $('.handle', $(this))});
+
+        $('#drag-item-list .close').click(function () {
+            $(this).parent().hide(400);
+            $('#drag-item-list-opener').show();
+        });
+
+
+        $.fn.__tabs = $.fn.tabs;
+        $.fn.tabs = function (a, b, c, d, e, f) {
+            var base = location.href.replace(/#.*$/, '');
+            $('ul>li>a[href^="#"]', this).each(function () {
+                var href = $(this).attr('href');
+                $(this).attr('href', base + href);
+            });
+            $(this).__tabs(a, b, c, d, e, f);
+        };
+
+        $('#drag-item-list .item-inventory').tabs();
+
+        $('#drag-item-list .item-inventory div ul li').hover(
+                function () {
+                    $(this).addClass('over');
+                },
+                function () {
+                    $(this).removeClass('over');
+                }
+        );
+
+        $('#drag-item-list .item-inventory div ul li').click(function () {
+            var the_text = '\n';
+            the_text += $('.desc', $(this)).text();
+            $('#item_desc').val(the_text);
+            $('#item_price').val($('.hidden', $(this)).text());
+            addItem();
+            return false;
+        });
+
+        $('#item_desc').keyup(function () {
+            var desc_len = $(this).val();
+
+            if (desc_len.length > 600) {
+                $(this).focus().val(desc_len.substring(0, 600));
+            }
+
+            var remain_len = 600 - desc_len.length;
+            if (remain_len < 0)
+                remain_len = 0;
+
+            $('#desc-countdown').text(remain_len);
+        });
+
+        $('#quote_item_edit_form textarea').livequery(function () {
+            $(this).keyup(function () {
+                var desc_len = $(this).val();
+
+                if (desc_len.length > 600) {
+                    $(this).val(desc_len.substring(0, 600));
+                }
+
+                var remain_len = 600 - desc_len.length;
+                if (remain_len < 0)
+                    remain_len = 0;
+
+                $('#desc-edit-countdown').text(remain_len);
+            });
+        });
+
+        //for lead assign
+        var config = {
+            '.chzn-select': {},
+            '.chzn-select-deselect': {allow_single_deselect: true},
+            '.chzn-select-no-single': {disable_search_threshold: 10},
+            '.chzn-select-no-results': {no_results_text: 'Oops, nothing found!'},
+            '.chzn-select-width': {width: "95%"}
+        }
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
+        }
+
+    });
 </script>
