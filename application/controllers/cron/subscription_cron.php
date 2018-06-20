@@ -16,14 +16,27 @@ class subscription_cron extends crm_controller {
     function index($limit = 0, $search = false)
 	{	//echo 'hi';exit;
 		$today = date('Y-m-d'); 
-		$endDate = date('Y-m-d', strtotime("+15 days"));
+//                $days_query = $this->db->query("SELECT hostingid, custid_fk, domain_expiry,domain_name, days_check FROM ".$this->cfg['dbpref']."hosting where  domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
+                $days_query = $this->db->query("SELECT hostingid, custid_fk, domain_expiry,domain_name, days_check FROM ".$this->cfg['dbpref']."hosting where  domain_status != 3 AND  (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
+		$daysDiff = $days_query->result_array();
+		foreach ($daysDiff as $key => $value) {
+			$dead_line = ($value['days_check'] > 0)?$value['days_check']:15;
+			$endDate = date('Y-m-d', strtotime("+".$dead_line." days"));
+		}
+		//$endDate = date('Y-m-d', strtotime("+15 days"));
 		// $hosting_exp = $this->db->query(" SELECT hostingid, domain_expiry, domain_name, DATEDIFF(domain_expiry, '".$today."') as date_diff, custid_fk FROM ".$this->cfg['dbpref']."hosting where domain_expiry between '".$today."' AND '".$endDate."' ");
-		$hosting_exp = $this->db->query(" SELECT hostingid, domain_name, domain_expiry, DATEDIFF(domain_expiry, '".$today."') as date_diff, custid_fk,created_by FROM ".$this->cfg['dbpref']."hosting where domain_expiry <='".$endDate."' AND domain_status != 3 order by hostingid ");
+		//$hosting_exp = $this->db->query(" SELECT hostingid, domain_name, domain_expiry, DATEDIFF(domain_expiry, '".$today."') as date_diff, custid_fk,created_by FROM ".$this->cfg['dbpref']."hosting where domain_expiry <='".$endDate."' AND domain_status != 3 order by hostingid ");
 		//echo $this->db->last_query(); exit;
+		//$data['members'] = $hosting_exp->result_array();
+                
+                $hosting_exp = $this->db->query("SELECT hostingid, custid_fk, domain_name, domain_expiry, DATEDIFF(domain_expiry, '".$today."') as date_diff,created_by,alt_users  FROM ".$this->cfg['dbpref']."hosting where expiry_date <='".$endDate."' AND domain_status != 3  AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
+		// echo $this->db->last_query(); exit;
 		$data['members'] = $hosting_exp->result_array();
+                if (!empty($data['members'])) {
+		foreach($data['members'] as $member) {
+                if($member['date_diff'] % 2 == 1 && $member['date_diff'] > 0):
 		
 		$user_name = "Webmaster";
-
 		$from='webmaster@enoahprojects.com';
 		$subject='Domain Renewal Reminder';
 		$this->email->set_newline("\r\n");
@@ -32,8 +45,7 @@ class subscription_cron extends crm_controller {
 		$data['failmail'] = 0;
 		$data['successmail'] = 0;
               //  echo '<pre>';print_r($data['members']);exit;
-	if (!empty($data['members'])) {
-		foreach($data['members'] as $member) {
+	
 			$hostid = $member['hostingid'];
 			$cust_id = $member['custid_fk'];
 			$exp_dt = $member['domain_expiry'];
@@ -44,6 +56,18 @@ class subscription_cron extends crm_controller {
                        // 
 			$cust_name = $data['sub_holder']['first_name'] . " " . $data['sub_holder']['last_name'] ;
 			$cust_email = $data['sub_holder']['email'];
+                        
+                        $alt_users_id = $member['alt_users'];
+                        $alt_owners = $this->db->query("select first_name, last_name, username, email from ".$this->cfg['dbpref']."users where userid in ($alt_users_id)");
+                        $send_alerts_to = $alt_owners->result_array();
+                        $cc_alert = array();
+                        
+                        foreach($send_alerts_to as $cc_alert_users){
+                            
+                          $cc_alert[] = $cc_alert_users['email'];
+                          
+                        }
+                            $cc_alert = implode(',', $cc_alert);
 
 			$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				<html xmlns="http://www.w3.org/1999/xhtml">
@@ -115,16 +139,23 @@ class subscription_cron extends crm_controller {
 				</table>
 				</body>
 				</html>';
-			$this->email->to($cust_email);		
+			$this->email->to($cust_email);	
+                         $this->email->cc($cc_alert);
 			$this->email->message($log_email_content);
 			//$this->email->send();
 			
 			if ($this->email->send())
 			{
 				$data['successmail']++;
+                                if($dead_line >= 3):
+					$updata  = array('tracking_status'=>1,'days_check'=>($dead_line-2));
+					$this->db->where('hostingid', $hostid);
+	        		$this->db->update($this->cfg['dbpref'] . 'hosting', $updata);
+	        	endif;
 			} else {
 				$data['failmail']++;
-			}	
+			}
+                         endif;	
 		}
 		$data['res'] = "E-Mail Sent";
 	}
@@ -139,7 +170,7 @@ class subscription_cron extends crm_controller {
 	{
 		$today = date('Y-m-d'); 
 		// $days_check = $this->db->select('days_check')->get('crm_hosting')->row()->days_check;
-		$days_query = $this->db->query(" SELECT hostingid, custid_fk, domain_name, days_check FROM ".$this->cfg['dbpref']."hosting where  domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
+		$days_query = $this->db->query("SELECT hostingid, custid_fk, domain_name, days_check FROM ".$this->cfg['dbpref']."hosting where  domain_status != 3 AND (tracking_status = 1 OR tracking_status = 0) order by hostingid ");
 		$daysDiff = $days_query->result_array();
 		foreach ($daysDiff as $key => $value) {
 			$dead_line = ($value['days_check'] > 0)?$value['days_check']:15;
@@ -187,14 +218,7 @@ class subscription_cron extends crm_controller {
                           
                         }
                             $cc_alert = implode(',', $cc_alert);
-                     //    print_r($cc_alert);
-                     //   $alert_users = implode(',', $send_alerts_to['']);
-                     //   echo '<pre>';  print_r($send_alerts_to);
-// echo $this->db->last_query(); exit;
-//$cust = $this->db->query("select first_name, last_name, company, email_1 from ".$this->cfg['dbpref']."customers where custid = $cust_id");
-			//$data['customer'] = $cust->row_array();
-			//$cust_name = $data['customer']['first_name'] . " " . $data['customer']['last_name'] . " - " . $data['customer']['company'];
-			//$cust_email = $data['customer']['email_1'];
+                   
 
 			$log_email_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				<html xmlns="http://www.w3.org/1999/xhtml">
