@@ -292,7 +292,9 @@ class subscription_cron extends crm_controller {
 				</body>
 				</html>';
 			$this->email->to($cust_email);	
+                         if(isset($member['alt_users'])):
                         $this->email->cc($cc_alert);
+                    endif;
 			$this->email->message($log_email_content);
 			//$this->email->send();
 			
