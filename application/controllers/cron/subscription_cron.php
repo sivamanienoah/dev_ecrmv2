@@ -186,7 +186,7 @@ class subscription_cron extends crm_controller {
 		foreach($data['members'] as $member) {
                    
             if($member['date_diff'] % 2 == 1 && $member['date_diff'] > 0):
-         //  echo '<pre>';print_r($member);
+          echo '<pre>';print_r($member);exit;
 		$user_name = "Webmaster";
 		
 		$from='webmaster@enoahprojects.com';
