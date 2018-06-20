@@ -43,15 +43,21 @@ class Hosting extends crm_controller {
             redirect('hosting');
         }
     }
+    function add_account1() {
+        // echo "meee";die;
+        $data['all_users'] = $this->hosting_model->get_users_list();
+         $this->load->view('hosting_add_view', $data);
+    }
 
     function add_account($update = false, $id = false) {
-// print_r($_POST);exit;
+
+//print_r($_POST);exit;
 
       $data['packageid_fk'] = $this->hosting_model->get_row_bycond('hosting_package', 'hostingid_fk', $id);
         $data['package'] = $this->hosting_model->get_row_bycond('package', 'status', 'active');
        
         $data['subscription_types'] = $this->hosting_model->get_subscription_types(); // Mani.S
-       $data['all_users'] = $this->hosting_model->get_users_list();
+      
 
 
         $rules['customer_id'] = "required|integer|callback_is_valid_customer";
@@ -79,8 +85,12 @@ class Hosting extends crm_controller {
             $this->validation->domain_name = 'www.';
         $this->validation->set_error_delimiters('<p class="form-error">', '</p>');
         $data['test_data'] = '';
+        $data['tracking_status'] = $this->cfg['payment_tracking'];
+    //  print_r($update_data['tracking_status']);exit;
         if ($update == 'update' && preg_match('/^[0-9]+$/', $id) && !isset($_POST['update_account'])) {
+           // echo 'hi';exit;
             $account = $this->hosting_model->get_account($id); 
+          // print_r($account);exit;
             if (is_array($account) && count($account) > 0)
                 foreach ($account[0] as $k => $v) {
              
@@ -100,8 +110,19 @@ class Hosting extends crm_controller {
                         $data['edit_sub_owner'] = $v;
                      // print_r($v);exit;
                     }
+                    if($k == 'alt_users'){
+                         $cc_users = $v;
+                        $data['edit_alt_users'] = explode(",", $v);
+                 //  print_r($data['edit_alt_users']);exit;
+                    }
+                     if($k == 'tracking_status'){
+                        $data['edit_tracking_status'] = $v;
+                     //print_r($v);exit;
+                    }
+                    
                 }
         }
+       // print_r($data);exit;
         if ($this->validation->run() == false) {
 
             $this->load->view('hosting_add_view', $data);
@@ -124,8 +145,15 @@ class Hosting extends crm_controller {
                 $update_data['domain_expiry'] = NULL;
             }
             $update_data['created_by'] = $this->input->post('sub_owner');
+          //   $update_data['tracking_status'] = $this->cfg['payment_tracking'];
+    //  print_r($update_data['tracking_status']);exit;
+         //   $update_data['alt_users'] = $this->input->post('sub_owner');
+             $alt_owners =  $this->input->post('cc_sub_owners');
+            $update_data['alt_users'] = implode(',', $alt_owners);
+             $update_data['tracking_status'] = $this->input->post('track_status');
+            
             if ($update == 'update' && preg_match('/^[0-9]+$/', $id)) {
-              //  print_r($update_data);exit;
+//            / print_r($update_data);exit;
                 if ($this->hosting_model->update_account($id, $update_data)) {
                     //delete and again inserting into hosting_package - Starts here
                     $this->hosting_model->delete_row('hosting_package', 'hostingid_fk', $id);
@@ -146,6 +174,7 @@ class Hosting extends crm_controller {
                     redirect('hosting/');
                 }
             } else {
+               // print_r($update_data);exit;
                 if ($newid = $this->hosting_model->insert_account($update_data)) {
                     //inserting into hosting_package - Starts here
                     $packageid_fk = $this->input->post('packageid_fk');
