@@ -46,7 +46,7 @@ class subscription_cron extends crm_controller {
 		$this->email->subject($subject);
 		$data['failmail'] = 0;
 		$data['successmail'] = 0;
-              echo '<pre>';print_r($member);exit;
+            //  echo '<pre>';print_r($member);exit;
                         $package = $this->hosting_model->get_row_bycond('package', 'status', 'active');
 			$hostid = $member['hostingid'];
 			$cust_id = $member['custid_fk'];
