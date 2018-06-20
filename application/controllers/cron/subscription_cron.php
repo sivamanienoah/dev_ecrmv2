@@ -56,7 +56,7 @@ class subscription_cron extends crm_controller {
                        // 
 			$cust_name = $data['sub_holder']['first_name'] . " " . $data['sub_holder']['last_name'] ;
 			$cust_email = $data['sub_holder']['email'];
-                        if(isset($member['alt_users'])){
+                        if(!empty($member['alt_users'])){
                             $alt_users_id = $member['alt_users'];
                             $alt_owners = $this->db->query("select first_name, last_name, username, email from " . $this->cfg['dbpref'] . "users where userid in ($alt_users_id)");
                             $send_alerts_to = $alt_owners->result_array();
