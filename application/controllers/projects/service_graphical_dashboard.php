@@ -69,7 +69,7 @@ class Service_graphical_dashboard extends crm_controller
 		
 		$data['fiscal_year_status'] = $curFiscalYear;
                 $data['last_year'] = $lastFiscalYear;
-               //print_r($data['last_year']);exit;
+               print_r($data['last_year']);exit;
 		$data['fy_year']  = $this->service_graphical_dashboard_model->get_records($tbl='financial_year', $wh_condn=array(), $order=array('id'=>'desc'));
 
 		$data['page_heading'] = "IT Service Graphical Dashboard";
