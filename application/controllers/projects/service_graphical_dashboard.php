@@ -148,8 +148,9 @@ class Service_graphical_dashboard extends crm_controller
                    }else{
                        $data['array_lastyr'] = '-';
                    }
+                     print_r($data['array_lastyr']);
                 }
-//            /   print_r($value['ytd_utilization_cost']);
+
                 
                  //Get an array of just the app_subject_id colu mn
           // $data['uc_lastyr_cost_graph_val'] = implode(',', $array_lastyr);
