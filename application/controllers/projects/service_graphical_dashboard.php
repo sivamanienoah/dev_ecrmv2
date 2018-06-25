@@ -132,7 +132,7 @@ class Service_graphical_dashboard extends crm_controller
 
 		//practice
 		$data['practice_arr'] = $this->service_graphical_dashboard_model->get_practices();
-                echo "<pre>"; print_r($data['practice_arr']); exit;
+               
 		// $data['practice_arr']['practice_array']; //normal practice array
 		// $data['practice_arr']['practice_arr']; //key value practice array
 		
@@ -146,7 +146,7 @@ class Service_graphical_dashboard extends crm_controller
                 $data['array_cur'] = array_column( $data['uc_curcost_graph_val'], 'ytd_utilization_cost'); //Get an array of just the app_subject_id colu mn
              //   $data['uc_curyr_graph_val'] = implode(',', $array_cur);
                 
-  
+   echo "<pre>"; print_r($data['uc_graph_val']); exit;
 
                 foreach($data['uc_cost_graph_val'] as $key => $value){
                   
