@@ -1135,6 +1135,7 @@
 										</div>
 										<?php } ?>
 										<input type="hidden" name="sp_form_jobid" id="sp_form_jobid" value="<?php echo $quote_data['lead_id']; ?>" />
+                                                                                <input type="hidden" name="sp_form_custid_fk" id="sp_form_custid_fk" value="<?php echo $quote_data['custid']; ?>" />
 										<input type="hidden" name="sp_form_invoice_total" id="sp_form_invoice_total" value="0" />
 									</td>
 								</tr>
