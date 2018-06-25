@@ -146,7 +146,7 @@ class Service_graphical_dashboard extends crm_controller
                    if($value['ytd_utilization_cost'] != '-'){
                        $data['array_lastyr'] = array_column($data['uc_cost_graph_val'], 'ytd_utilization_cost');
                    }else{
-                       $data['array_lastyr'] = '-';
+                       $data['array_lastyr'][] = '-';
                    }
                 }
                print_r($value['ytd_utilization_cost']);
