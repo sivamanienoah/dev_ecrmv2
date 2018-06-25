@@ -60,7 +60,7 @@ class Service_graphical_dashboard_model extends crm_model {
 				$uc_graph_val[$graph_id] = $val;
 			}
 		}
-                print_r($uc_graph_val);exit;
+              //  print_r($uc_graph_val);exit;
 		return $uc_graph_val;
     }
     
