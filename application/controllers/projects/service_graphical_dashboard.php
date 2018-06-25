@@ -132,39 +132,18 @@ class Service_graphical_dashboard extends crm_controller
 
 		//practice
 		$data['practice_arr'] = $this->service_graphical_dashboard_model->get_practices();
-               
 		// $data['practice_arr']['practice_array']; //normal practice array
 		// $data['practice_arr']['practice_arr']; //key value practice array
 		
 		//get utilization cost values from service graphical dashboard table
 		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'cost', $data['fiscal_year_status']);
-                
                 $data['uc_cost_graph_val'] = $this->service_graphical_dashboard_model->getUcCostRecords($uc_filter_by = 'cost',$data['last_year']);
-		
-                foreach($data['uc_cost_graph_val'] as $key => $value){
-                   $ytd_utilization_cost = $value['ytd_utilization_cost'];
-                   if($value['ytd_utilization_cost'] != '-'){
-                       $data['array_lastyr'] = array_column($data['uc_cost_graph_val'], $ytd_utilization_cost);
-                   }else{
-                       $data['array_lastyr'] = '-';
-                   }
-                    //
-                }
-
-                
-                 //Get an array of just the app_subject_id colu mn
+		$data['array_lastyr'] = array_column( $data['uc_cost_graph_val'], 'ytd_utilization_cost'); //Get an array of just the app_subject_id colu mn
           // $data['uc_lastyr_cost_graph_val'] = implode(',', $array_lastyr);
                
                 $data['uc_curcost_graph_val'] = $this->service_graphical_dashboard_model->getUcCurYrRecords($uc_filter_by = 'cost', $data['fiscal_year_status']);
-              echo "<pre>"; print_r($data['uc_curcost_graph_val']); exit;
-                foreach($data['uc_curcost_graph_val'] as $key => $value){
-                          $ytd_utilization_cost = $value['ytd_utilization_cost'];
-                       //   $data['array_cur'] = array_column($data['uc_curcost_graph_val'],$ytd_utilization_cost); //Get an array of just the app_subject_id colu mn
-                  
-                 }
-               print_r($ytd_utilization_cost);
-                
-//   $data['uc_curyr_graph_val'] = implode(',', $array_cur);
+                $data['array_cur'] = array_column( $data['uc_curcost_graph_val'], 'ytd_utilization_cost'); //Get an array of just the app_subject_id colu mn
+             //   $data['uc_curyr_graph_val'] = implode(',', $array_cur);
                 
   
 
