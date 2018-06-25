@@ -156,9 +156,10 @@ class Service_graphical_dashboard extends crm_controller
           // $data['uc_lastyr_cost_graph_val'] = implode(',', $array_lastyr);
                
                 $data['uc_curcost_graph_val'] = $this->service_graphical_dashboard_model->getUcCurYrRecords($uc_filter_by = 'cost', $data['fiscal_year_status']);
-               print_r($data['uc_curcost_graph_val']);
+              
                 $data['array_cur'] = array_column( $data['uc_curcost_graph_val'], 'ytd_utilization_cost'); //Get an array of just the app_subject_id colu mn
-             //   $data['uc_curyr_graph_val'] = implode(',', $array_cur);
+                 print_r($data['array_cur']);
+//   $data['uc_curyr_graph_val'] = implode(',', $array_cur);
                 
   
 
