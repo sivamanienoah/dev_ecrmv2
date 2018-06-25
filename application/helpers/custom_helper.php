@@ -444,6 +444,25 @@ function get_hoilday_hours_by_user($usename=false,$year=false,$month=false)
 
 
 
+if ( ! function_exists('getLastFiscalYearForDate'))
+{
+	function getLastFiscalYearForDate($inputDate, $fyStart, $fyEnd)
+	{
+		$date = strtotime($inputDate);
+		$inputyear = strftime('%Y',$date);
+	 
+		$fystartdate = strtotime($fyStart.'/'.$inputyear);
+		$fyenddate = strtotime($fyEnd.'/'.$inputyear);
+	 
+		if($date <= $fyenddate) {
+			$fy = intval($inputyear);
+		} else {
+			$fy = intval(intval($inputyear));
+		}
+		return $fy;
+	}
+}
+
 if ( ! function_exists('getFiscalYearForDate'))
 {
 	function getFiscalYearForDate($inputDate, $fyStart, $fyEnd)
