@@ -145,8 +145,8 @@ class Service_graphical_dashboard extends crm_controller
                     }
                     
                 }
-                print_r($data['array_lastyr']);
-                $data['array_lastyr'] = array_column( $data['uc_cost_graph_val'], 'ytd_utilization_cost'); //Get an array of just the app_subject_id colu mn
+                //print_r($data['array_lastyr']);
+               // $data['array_lastyr'] = array_column( $data['uc_cost_graph_val'], 'ytd_utilization_cost'); //Get an array of just the app_subject_id colu mn
               
 // $data['uc_lastyr_cost_graph_val'] = implode(',', $array_lastyr);
                
