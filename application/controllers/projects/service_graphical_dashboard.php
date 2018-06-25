@@ -140,7 +140,7 @@ class Service_graphical_dashboard extends crm_controller
 		$data['uc_graph_val'] = $this->service_graphical_dashboard_model->getUcRecords($uc_filter_by = 'cost', $data['fiscal_year_status']);
                 
                 $data['uc_cost_graph_val'] = $this->service_graphical_dashboard_model->getUcCostRecords($uc_filter_by = 'cost',$data['last_year']);
-		echo "<pre>"; print_r($data['uc_cost_graph_val']['ytd_utilization_cost']); exit;
+		echo "<pre>"; print_r($data['uc_cost_graph_val']->uc_cost_graph_val); exit;
                 if(isset($data['uc_cost_graph_val']['ytd_utilization_cost'])){
                     $data['array_lastyr'] = array_column($data['uc_cost_graph_val'], 'ytd_utilization_cost');
                 }else{
