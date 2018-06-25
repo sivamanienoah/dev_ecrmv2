@@ -160,7 +160,7 @@ class Service_graphical_dashboard extends crm_controller
                 foreach($data['uc_curcost_graph_val'] as $key => $value){
                     echo '<pre>';print_r($value);
                           $data['array_cur'] = array_column($data['uc_curcost_graph_val'],'ytd_utilization_cost'); //Get an array of just the app_subject_id colu mn
-                    echo "<pre>"; print_r($data['array_cur']); exit;
+                   //echo "<pre>"; print_r($data['array_cur']); exit;
                  }
                
                 
