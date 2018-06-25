@@ -11,6 +11,8 @@
 }
 </style>
 <?php
+// print_r($prat_rev_inv_compare['practic_val']);die;
+// echo json_encode($prat_rev_inv_compare['practic_val']);exit;
 //for total inv bar value charts
 $inv_tot_arr_val = '['.round($inv_compare['curr_yr']['tot_inv_value']).','.'"Current Year"'.'],['.round($inv_compare['last_yr']['tot_inv_value']).','.'"Last Year"'.']';
 ?>
@@ -26,6 +28,14 @@ $inv_tot_arr_val = '['.round($inv_compare['curr_yr']['tot_inv_value']).','.'"Cur
 <script type="text/javascript" src="assets/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.highlighter.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jqplot.pointLabels.min.js"></script>
+<script type="text/javascript" src="assets/js/projects/canvasjs.min.js"></script>
+<script type="text/javascript" src="assets/js/projects/"></script>
+
+
+<script src="assets/js/plugins/highcharts.js"></script>
+<script src="assets/js/plugins/exporting.js"></script>
+<script src="assets/js/plugins/export-data.js"></script>
+
 
 <script type="text/javascript">
 var default_currency_name = '<?php echo $this->default_cur_name; ?>';
@@ -37,8 +47,25 @@ var inv_tot_arr_val 	= [<?php echo $inv_tot_arr_val; ?>];
 var prac_inv_practic_val = <?php echo json_encode($prat_inv_compare['practic_val']); ?>;
 var prac_inv_curr_yr_val = <?php echo json_encode($prat_inv_compare['curr_yr_val']); ?>;
 var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val']); ?>;
-</script>
 
+
+var prat_rev_inv_compare = <?php echo json_encode($prat_rev_inv_compare['practic_val']); ?>;
+var prac_inv_curr_yr_val = <?php echo json_encode($prat_inv_compare['curr_yr_val']); ?>;
+var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val']); ?>;
+
+var uc_cost_graph_val = <?php echo json_encode($uc_cost_graph_val['practic_cost_val']); ?>;
+
+var uc_lastyr_cost_graph_val = <?php echo json_encode($uc_lastyr_cost_graph_val); ?>;
+var uc_curyr_graph_val = <?php echo json_encode($uc_curyr_graph_val); ?>;
+var array_lastyr = <?php echo json_encode($array_lastyr,JSON_NUMERIC_CHECK ); ?>;
+var array_curyr = <?php echo json_encode($array_cur,JSON_NUMERIC_CHECK ); ?>;
+
+
+
+</script>
+<?php //echo json_encode($uc_cost_graph_val['practic_cost_val']);exit;
+
+?>
 <div id="content">
     <div class="inner">
         <?php if($this->session->userdata('viewPjt')==1) { ?>
@@ -230,12 +257,30 @@ var prac_inv_last_yr_val = <?php echo json_encode($prat_inv_compare['last_yr_val
 						<h5 class="dash-tlt"><?php echo "Entity Wise - Revenue (".$this->default_cur_name.")"; ?></h5>
 						<div id="revenue_entity_pie" class="plot"></div>
 					</div>
+					
 					<div class="pull-right revenue_chlid_container clearfix" style="margin-top: 10px;">
 						<h5 class="revenue_compare_head_bar">
 							<span class="forecast-heading">Practice Wise Revenue Comparison</span>
 						</h5>
 						<div id="revenue_practice_compare_bar" class="plot" style="position: relative; height: 320px; padding-bottom:22px;"></div>
 					</div>
+
+                    <div class="pull-left revenue_chlid_container clearfix" id="inv_filter">
+                        <h5 class="revenue_compare_head_bar">
+                                <span class="forecast-heading">Revenue Vs Cost Comparison</span>
+                            </h5>
+                         <div id="chartContainer" style="height: 300px; width: 100%;">
+                    </div>
+<!--                                            <div class="pull-right revenue_chlid_container clearfix" style="margin-top: 10px;">
+                                                <h5 class="revenue_compare_head_bar">
+                                                    <span class="forecast-heading">Revenue Wise Revenue Comparison</span>
+                                                </h5>
+                                                <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+                                        </div>
+						-->
+					</div>
+					
+                                        
 				</div>
 			</div>
 			<!--Revenue Share Dashboard Container - End -->
@@ -294,6 +339,7 @@ var con_pra_month_value = [];
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_pie.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_entity_pie.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_practice_compare_bar.js"></script>
+<script type="text/javascript" src="assets/js/projects/service_graphical_revenue_cost_practice_compare_bar.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_revenue_practice_month_line.js"></script>
 <script type="text/javascript" src="assets/js/projects/service_graphical_contrib_practice_month_line.js"></script>
 
@@ -303,5 +349,112 @@ var con_pra_month_value = [];
         service_graph_dashboard.submit();
     });
 </script>
+
+ <script type="text/javascript">
+     
+    window.onload = function () {
+  console.log(array_lastyr)
+ console.log(prac_inv_last_yr_val);
+ console.log(array_curyr);
+ console.log(prac_inv_curr_yr_val);
+    /*var i;
+    var CurrentArr = [];
+    var CurrentYr = '';
+    var LastYr = '';
+    var LastYrArr =  [];
+    console.log(prat_rev_inv_compare);
+    console.log(uc_cost_graph_val);
+  
+    // CurrentArr = [CurrentYr];
+    // LastYrArr = [LastYr];
+   
+     //   var title = "Revenue vs Cost";
+        var chart = new CanvasJS.Chart("chartContainer",
+        {
+             data: [{
+                    type: "stackedColumn",
+                    dataPoints:prat_rev_inv_compare
+
+                    },{
+                        type: "stackedColumn",
+                         dataPoints: uc_cost_graph_val,uc_cost_graph_val
+                      },
+                      {
+                    type: "stackedColumn",
+                    dataPoints:prat_rev_inv_compare
+
+                    },
+                      {
+                        type: "stackedColumn",
+                         dataPoints: uc_cost_graph_val,uc_cost_graph_val
+                      }
+
+                ]
+                
+
+        });
+
+        chart.render();
+      }*/
+
+
+Highcharts.chart('chartContainer', {
+
+    chart: {
+        type: 'column'
+    },
+
+    title: {
+        text: 'Revenue and Cost for Current year and previous year'
+    },
+
+    xAxis: {
+//        categories: ['Web', 'Microsoft', 'QAD', 'SAP', 'Others', 'BD','eXenia']
+        categories: prac_inv_practic_val
+    },
+
+    yAxis: {
+        allowDecimals: false,
+        min: 0,
+        title: {
+            text: 'Revenue and Cost'
+        }
+    },
+
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.x + '</b><br/>' +
+                this.series.name + ': ' + this.y + '<br/>' +
+                'Total: ' + this.point.stackTotal;
+        }
+    },
+
+    plotOptions: {
+        column: {
+            stacking: 'normal'
+        }
+    },
+
+    series: [{
+        name: 'Previous year cost',
+        data: array_lastyr,
+        stack: 'previous'
+    }, {
+        name: 'Previous year revenue',
+        data: prac_inv_last_yr_val,
+        stack: 'previous'
+    }, {
+        name: 'Current year cost',
+        data: array_curyr,
+        stack: 'current'
+    }, {
+        name: 'Current year revenue',
+        data: prac_inv_curr_yr_val,
+        stack: 'current'	
+    }]
+}); 
+}     
+  </script>
+
 
 <?php require (theme_url().'/tpl/footer.php'); ?>
