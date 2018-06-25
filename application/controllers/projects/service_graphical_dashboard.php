@@ -142,9 +142,14 @@ class Service_graphical_dashboard extends crm_controller
                 $data['uc_cost_graph_val'] = $this->service_graphical_dashboard_model->getUcCostRecords($uc_filter_by = 'cost',$data['last_year']);
 		//echo "<pre>"; print_r($data['uc_cost_graph_val']); exit;
                 foreach($data['uc_cost_graph_val'] as $key => $value){
-                   print_r($value['ytd_utilization_cost']);
+                   
+                   if($value['ytd_utilization_cost'] != '-'){
+                       $data['array_lastyr'] = array_column($data['uc_cost_graph_val'], 'ytd_utilization_cost');
+                   }else{
+                       $data['array_lastyr'] = '-';
+                   }
                 }
-               $data['array_lastyr'] = array_column($data['uc_cost_graph_val'], 'ytd_utilization_cost');
+               print_r($value['ytd_utilization_cost']);
                 
                  //Get an array of just the app_subject_id colu mn
           // $data['uc_lastyr_cost_graph_val'] = implode(',', $array_lastyr);
