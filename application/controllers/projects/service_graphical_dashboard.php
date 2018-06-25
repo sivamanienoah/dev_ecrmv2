@@ -158,11 +158,11 @@ class Service_graphical_dashboard extends crm_controller
                 $data['uc_curcost_graph_val'] = $this->service_graphical_dashboard_model->getUcCurYrRecords($uc_filter_by = 'cost', $data['fiscal_year_status']);
               //  echo "<pre>"; print_r($data['uc_curcost_graph_val']); exit;
                 foreach($data['uc_curcost_graph_val'] as $key => $value){
-                          $data['array_cur'] = $value['ytd_utilization_cost'];
+                          $ytd_utilization_cost = $value['ytd_utilization_cost'];
                        //   $data['array_cur'] = array_column($data['uc_curcost_graph_val'],$ytd_utilization_cost); //Get an array of just the app_subject_id colu mn
                   
                  }
-               print_r(data['array_cur']);
+               print_r($ytd_utilization_cost);
                 
 //   $data['uc_curyr_graph_val'] = implode(',', $array_cur);
                 
