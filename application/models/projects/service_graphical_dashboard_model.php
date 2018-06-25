@@ -48,7 +48,7 @@ class Service_graphical_dashboard_model extends crm_model {
 		// echo'<pre>';print_r($sql->result_array());exit;
 		// print_r($this->db->last_query());exit;
 		$uc_graph_res = $sql->result_array();
-		
+	//	print_r($uc_graph_res);exit;
 		$uc_graph_val = array();
 		if(!empty($uc_graph_res)){
 			foreach($uc_graph_res as $key=>$val) {
@@ -62,6 +62,72 @@ class Service_graphical_dashboard_model extends crm_model {
 		}
 		return $uc_graph_val;
     }
+    
+    public function getUcCurYrRecords($uc_filter_by, $fiscal_year_status)
+	{
+		// echo'<pre>';print_r($fiscal_year_status);
+		$month_status = 1;
+			//get values from services dashboard table
+			$this->db->select('practice_name, billing_month, ytd_billing, ytd_utilization_cost, billable_month, ytd_billable, effort_variance, contribution_month, ytd_contribution');
+			$this->db->from($this->cfg['dbpref']. 'services_dashboard_beta');
+			$this->db->where("month_status",$month_status);
+                         $this->db->where('practice_name !=', 'Total');
+			$sql = $this->db->get();
+                        //print_r($this->db->last_query());exit;
+                        $dashboard_details = $sql->result_array();
+//                      /  print_r($dashboard_details);exit;
+			$dashboard_det = array();
+                        $uc_graph_val = array();
+                        
+			if(!empty($dashboard_details)){
+				foreach($dashboard_details as $key=>$val) {
+                                     if($val['practice_name'] == 'Infra Services' || $val['practice_name'] == 'Testing'){
+                                                continue;
+                                        }
+                                        $graph_id = strtolower($val['practice_name']);
+                                        $graph_id = str_replace(' ', '_', $graph_id);
+					$dashboard_det[$val['practice_name']] = $val;
+				}
+                                
+			}
+                       
+			$data['dashboard_det'] = $dashboard_det;
+                    //    echo '<pre>';print_r($data['dashboard_det']);exit;
+                        return $data['dashboard_det'];
+    }
+    
+    public function getUcCostRecords($uc_filter_by, $fiscal_year_status)
+	{
+		//echo'<pre>';print_r($fiscal_year_status);
+		//$month_status = 1;
+			//get values from services dashboard table
+			$this->db->select('practice_name, billing_month, ytd_billing, ytd_utilization_cost, billable_month, ytd_billable, effort_variance, contribution_month, ytd_contribution');
+			$this->db->from($this->cfg['dbpref']. 'services_dashboard');
+		//	$this->db->where("month_status",$month_status);
+                         $this->db->where('practice_name !=', 'Total');
+			$sql = $this->db->get();
+                        //print_r($this->db->last_query());exit;
+                        $dashboard_details = $sql->result_array();
+//                      /  print_r($dashboard_details);exit;
+			$dashboard_det = array();
+                        $uc_graph_val = array();
+                        
+			if(!empty($dashboard_details)){
+				foreach($dashboard_details as $key=>$val) {
+                                     if($val['practice_name'] == 'Infra Services' || $val['practice_name'] == 'Testing'){
+                                                continue;
+                                        }
+                                        $graph_id = strtolower($val['practice_name']);
+                                        $graph_id = str_replace(' ', '_', $graph_id);
+					$dashboard_det[$val['practice_name']] = $val;
+				}
+                                
+			}
+                       
+			$data['dashboard_det'] = $dashboard_det;
+                    //    echo '<pre>';print_r($data['dashboard_det']);exit;
+                        return $data['dashboard_det'];
+    }
 	
 	/*
 	*@Get invoices Records
@@ -70,6 +136,8 @@ class Service_graphical_dashboard_model extends crm_model {
 	*/
 	public function getInvoiceRecords($start_date, $end_date)
 	{
+//           / print_r($start_date - 1);exit;
+           
 		$job_ids = array();
 	
 		//LEVEL BASED RESTIRCTION
@@ -154,7 +222,7 @@ class Service_graphical_dashboard_model extends crm_model {
 		$this->db->where('DATE(sfv.for_month_year) >=', date('Y-m-d', strtotime($start_date)));
 		$this->db->where('DATE(sfv.for_month_year) <=', date('Y-m-t', strtotime($end_date)));
 		$query = $this->db->get();
-		// echo $this->db->last_query(); exit;
+	//	echo $this->db->last_query(); 
 		return $query->result_array();
     }
 	
