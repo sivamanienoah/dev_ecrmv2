@@ -304,7 +304,7 @@ class Welcome extends crm_controller {
 
         $data['log_html'] = '';
         $getLogsData = $this->welcome_model->get_logs($id);
-        // echo "<pre>"; print_r($getLogsData); exit;
+      //  echo "<pre>"; print_r($getLogsData); exit;
         $data['log_html'] .= '<table width="100%" id="lead_log_list" class="log-container logstbl">';
         $data['log_html'] .= '<thead><tr><th>&nbsp;</th></tr></thead><tbody>';
 
@@ -823,7 +823,7 @@ class Welcome extends crm_controller {
     function ajax_edit_quote() {
 
         $data = real_escape_array($this->input->post());
-     //print_r($data);exit;
+     print_r($data);exit;
         if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_service']))) {
             echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
         } else if (!preg_match('/^[0-9]+$/', trim($data['jobid_edit']))) {
