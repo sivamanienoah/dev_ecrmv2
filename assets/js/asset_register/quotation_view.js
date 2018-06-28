@@ -26,7 +26,7 @@ if (viewlead == 1) {
 }
 //for ie ajax loading issue appending random number
 if (query_type == 'load_proposal_expect_end') {
-    //  alert('if');return false;
+    // alert('if');return false;
     var sturl = site_base_url + "asset_register/advance_filter_search/load_proposal_expect_end/?" + Math.random();
     $('#advance_search_results').load(sturl);
 } else {
