@@ -1004,8 +1004,9 @@ if (!isset($view_quotation)) {
                             <table class="table websiteBrd data-tbl dashboard-heads dataTable" id="document_tbl" >
                                 <thead>
                                     <tr class="bg-blue">
-                                        <td>choose Location<span class='mandatory_asterick'>*</span></td>
-                                        <td>Location</td>
+                                      
+                                        <td>Other Location Type<span class='mandatory_asterick'>*</span></td>
+                                        <td>Enter Location</td>
                                         <td>Action</td>
 
 
@@ -1100,7 +1101,7 @@ if (!isset($view_quotation)) {
                                           <option value="<?php echo $pms['userid'] ?>"<?php echo (in_array($pms['userid'], $edit_owner_arr) ) ? ' selected="selected"' : '' ?>><?php echo $pms['first_name'] . ' ' . $pms['last_name'] . '-' . $pms['emp_id']; ?></option>
             <?php } ?>
                                     </select>
-                                    <input type="hidden" value="<?php echo $pms['userid']; ?>" id="userid_hidden" name="userid_hidden" />
+                                    <input type="hidden" value="<?php echo $ass['asset_owner']; ?>" id="userid_hidden" name="userid_hidden[]" />
             <!--                        <p><input type="text" name="project_names" id="project_names" class="textfield width300px" placeholder="please type the name of the project to search" />
             <input type="hidden" name="project_id" id="project_id" class="textfield width300px" />
             </p>-->
