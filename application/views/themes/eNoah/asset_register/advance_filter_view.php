@@ -90,13 +90,13 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                 <td><a target="_blank" href="<?php echo $view_url;?>"><?php echo $filter_result['asset_name']; ?></a> </td>
                                                   <td><?php  
                                                    $department_name = $this->asset_model->get_department_by_id($filter_result['department_id']);
-                                                    echo $department_name['department_name'];
+                                                    echo $department_name[0]['department_name'];
                                                    
                                                  ?></td>
                                                   <td><?php  
                                                    $projects = $this->asset_model->get_project_by_id($filter_result['project_id']);
                                                   // print_r($projectslead_title);exit;
-                                                   echo $projects['lead_title'];
+                                                   echo $projects[0]['lead_title'];
                                                   ?></td>
 						  <td><?php echo  $filter_result['asset_type']; ?></td>
                                                 <td><?php echo  $filter_result['storage_mode']; ?></td>
