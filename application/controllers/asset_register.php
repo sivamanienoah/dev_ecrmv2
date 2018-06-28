@@ -105,7 +105,7 @@ class Asset_register extends crm_controller {
         $this->session->unset_userdata('load_proposal_expect_end');
 
         if ($search_type == 'search' && $search_id == false) {
-         //  echo 'if';exit;
+            //  echo 'if';exit;
             $filt = real_escape_array($this->input->post()); //echo'<pre>filt1=>';print_r($filt);
             $this->session->set_userdata("lead_search_by_default", 0);
             $this->session->set_userdata("lead_search_by_id", 0);
@@ -173,7 +173,7 @@ class Asset_register extends crm_controller {
        $data['filter_results'] = $filter_results;
        $data['departments'] = $this->asset_model->get_department_by_id($filter_results[0]['department_id']);
        $data['projects'] = $this->asset_model->get_project_by_id($filter_results[0]['project_id']);
-//         //echo '<pre>';print_r($data['filter_results']);exit;
+//echo '<pre>';print_r($data['filter_results']);exit;
 //        $data['department_id'] = $department_id;
 //        //  echo '<pre>';print_r($data['department_id']);exit;
 //        $data['project_id'] = $project_id;
