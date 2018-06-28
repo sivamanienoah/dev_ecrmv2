@@ -173,6 +173,14 @@ class Asset_model extends crm_model {
              //     echo $this->db->last_query(); exit;
 		return $user->result_array();
 	}
+         function get_users_name_by_id($ld) {
+            // echo $id;
+		
+                 $this->db->where_in('userid',$ld);
+		$user = $this->db->get($this->cfg['dbpref'] . 'users');
+            // echo $this->db->last_query(); exit;
+		return $user->result_array();
+	}
         function get_department_details() {
            $this->db->select('d.department_id, d.department_name,d.active');
 	    $this->db->from($this->cfg['dbpref'] . 'department as d');
@@ -1538,14 +1546,45 @@ class Asset_model extends crm_model {
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+	function clean($string) {
+   		$string = str_replace(' ', '$', $string); // Replaces all spaces with hyphens.
+                
+   		return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+	}
    //check asset name already in asset table      
         public function checkAssetName($assetName) {
-        $this->db->select('asset_name');
-        $this->db->from($this->cfg['dbpref'] . 'asset_register');
-        $this->db->like("asset_name", $assetName);
-        $sql = $this->db->get();
+          // echo $assetName;exit;
+           
+        	$this->db->select('asset_name');
+        	$this->db->from($this->cfg['dbpref'] . 'asset_register');
+        	// $this->db->like("asset_name", $assetName);
+        	$sql = $this->db->get();
 // echo $this->db->last_query(); exit;
-        return $sql->result_array();
+        $assets = $sql->result_array();
+        foreach ($assets as $key => $value) {
+          
+        	$asset_value[] = $this->clean($value['asset_name']);
+    	}
+       // print_r($asset_value);exit;
+           if(in_array($assetName,$asset_value)){
+               
+               return false;
+           }else{
+               return true;
+           }
+       // echo $asset_value;
+        // $asset_value = array_map('strval',$asset_value);
+//        foreach ($asset_value as $value) {
+//        	//$val = implode(" ",$value);
+//          //print_r((string)$assetName) ;
+//	// print_r((string)$value);
+//        	if( (string)$assetName ==  (string)$value){
+//        		
+//        	}else{
+//        		return true;
+//        	}
+//        };
+
     }
     
     public function get_asset_detail($id){
