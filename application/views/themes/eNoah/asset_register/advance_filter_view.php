@@ -90,7 +90,7 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                 <td><a target="_blank" href="<?php echo $view_url;?>"><?php echo $filter_result['asset_name']; ?></a> </td>
                                                   <td><?php  
                                                    $department_name = $this->asset_model->get_department_by_id($filter_result['department_id']);
-                                                   echo $department_name['department_name'];
+                                                    echo $department_name['department_name'];
                                                    
                                                  ?></td>
                                                   <td><?php  
