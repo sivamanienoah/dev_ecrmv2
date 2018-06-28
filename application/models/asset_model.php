@@ -1546,6 +1546,7 @@ class Asset_model extends crm_model {
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+        
 	function clean($string) {
    		$string = str_replace(' ', '$', $string); // Replaces all spaces with hyphens.
                 
