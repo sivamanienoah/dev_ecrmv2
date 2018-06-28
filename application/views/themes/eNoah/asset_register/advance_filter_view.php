@@ -1,7 +1,7 @@
 <?php 
 $cfg = $this->config->item('crm');
 $userdata = $this->session->userdata('logged_in_user');
-
+//print_r($userdata);exit;
 $td_chk = false;
 $td_style = '';
 $custom_width = 'width:1650px !important;';
@@ -43,9 +43,9 @@ if(!empty($db_fields) && count($db_fields)>0){
                         <th>Labelling</th>
                         <th>Confidentiality</th>
                         <th>Availability</th>
-                        <th>Asset Created Date</th>
+<!--                        <th>Asset Created Date</th>
                         <th>Asset Modified Date</th>
-                        <th>Asset Location</th>
+                        <th>Asset Location</th>-->
                 </tr>
 		</tr>
 		</thead>
@@ -58,7 +58,7 @@ if(!empty($db_fields) && count($db_fields)>0){
                             
                                     foreach($filter_results as $filter_result) 
 				{
-                                    // echo '<pre>'; print_r($filter_result);    
+                                  //  echo '<pre>'; print_r($filter_result);    exit;
                                     $view_url = base_url().'asset_register/view_asset/'.$filter_result['asset_id'];
 					
 					$get_user_details = get_lead_assigne_names($filter_result['asset_owner']);
@@ -77,23 +77,27 @@ if(!empty($db_fields) && count($db_fields)>0){
 							<?php
 								$lead_assign_arr = array(0);
 								$lead_assign_arr = @explode(',',$filter_result['lead_assign']);
-							if (( $userdata['role_id'] == 1 || $userdata['role_id'] == 2)) { ?>				
+							if (( $userdata['role_id'] == 1 || $userdata['role_id'] == 2 || $userdata['role_id'] == 3)) { ?>				
 								<a target="_blank" href="<?php echo base_url(); ?>asset_register/edit_asset/<?php echo $filter_result['asset_id'] ?>" title='Edit'>
 									<img src="assets/img/edit.png" alt='edit' >
 								</a>
 							<?php } ?> 
 							<?php
-							if (( $userdata['role_id'] == 1|| $userdata['role_id'] == 2) ) { ?>
+							if (( $userdata['role_id'] == 1|| $userdata['role_id'] == 2 || $userdata['role_id'] == 3) ) { ?>
 								<a href="javascript:void(0)" onclick="return deleteAsset(<?php echo $filter_result['asset_id']; ?>); return false; " title="Delete" ><img src="assets/img/trash.png" alt='delete' ></a> 
 							<?php } ?>
 						</td>
                                                 <td><a target="_blank" href="<?php echo $view_url;?>"><?php echo $filter_result['asset_name']; ?></a> </td>
-                                                  <td><?php  foreach ($departments as $department){
-                                                    echo $department['department_name'];
-                                                } ?></td>
-                                                  <td><?php  foreach ($projects as $project){
-                                                    echo $project['lead_title'];
-                                                } ?></td>
+                                                  <td><?php  
+                                                   $department_name = $this->asset_model->get_department_by_id($filter_result['department_id']);
+                                                   echo $department_name['department_name'];
+                                                   
+                                                 ?></td>
+                                                  <td><?php  
+                                                   $projects = $this->asset_model->get_project_by_id($filter_result['project_id']);
+                                                  // print_r($projectslead_title);exit;
+                                                   echo $projects['lead_title'];
+                                                  ?></td>
 						  <td><?php echo  $filter_result['asset_type']; ?></td>
                                                 <td><?php echo  $filter_result['storage_mode']; ?></td>
                                                 <td><?php echo  $filter_result['location']; ?></td>
@@ -107,9 +111,9 @@ if(!empty($db_fields) && count($db_fields)>0){
                                                 <td><?php echo  $filter_result['labelling']; ?></td>
                                                 <td><?php echo  $filter_result['confidentiality']; ?></td>
                                                 <td><?php echo  $filter_result['availability']; ?></td>
-                                                <td><?php echo  $filter_result['created_on']; ?></td>
+<!--                                                <td><?php echo  $filter_result['created_on']; ?></td>
                                                 <td><?php echo  $filter_result['modified_on']; ?></td>
-                                                <td><?php echo  $filter_result['asset_position']; ?></td>
+                                                <td><?php echo  $filter_result['asset_position']; ?></td>-->
 						
 					</tr> 
 		<?php 
