@@ -439,14 +439,14 @@ class Asset_register extends crm_controller {
         $asset_name =$this->asset_model->clean($data['asset_name']);
        // print_r($asset_name);exit;
         $chkAssetName = $this->asset_model->checkAssetName($asset_name);
-     // print_r($chkAssetName);exit;
-        if ($chkAssetName === false) {
+   //print_r($chkAssetName);exit;
+        if ($chkAssetName == 0) {
             $json['error'] = false;
             $json['errormsg'] = 'Asset already registered';
             echo json_encode($json);
         } else {
 //              / echo 'else';
-            $ins['asset_name'] = strtolower($data['asset_name']);
+            $ins['asset_name'] = $data['asset_name'];
             $ins['department_id'] = $data['department'];
             $ins['project_id'] = $data['project_id'];
              $department = $this->asset_model->get_department_by_id($ins['department_id']);
@@ -508,7 +508,7 @@ class Asset_register extends crm_controller {
 //balaji    
     function ajax_edit_asset() {
          $data = real_escape_array($this->input->post()); //
-   // echo '<pre>';print_r($data);exit;
+//echo '<pre>';print_r($data);exit;
         $sql = "SELECT * FROM crm_leads  WHERE `lead_title` LIKE '%{$data['e_project_names']}%' ";
           $q = $this->db->query($sql);
             //echo $this->db->last_query();
@@ -516,7 +516,7 @@ class Asset_register extends crm_controller {
          
         $usid = $this->session->userdata('logged_in_user');
         
-        $ins['asset_name'] = strtolower($data['edit_asset_name']);
+        $ins['asset_name'] = $data['edit_asset_name'];
         $ins['department_id'] = $data['department_edit'];
       $ins['project_id'] = $result['lead_id'];
       //changed project name
@@ -538,12 +538,20 @@ class Asset_register extends crm_controller {
         $ins['asset_location'] = implode(",", $asset_location);       
         $position = $data['position'];
         $ins['asset_position'] = implode(",", $position);
+        $position_hidden =  $data['position'];
         $ins['created_by'] = $usid['username'];
         $updt_asset = $this->asset_model->update_row_asset('asset_register', $ins, $data['asset_id']);
         $res = array();
        //  $new_asset_owner_names = implode(',', $asset_owner);
             //$old_asset_owner = $ins['asset_owner'];
-        $old_names = '';
+       
+    if(!array_intersect($position,$position_hidden)){
+        echo 'hi';exit;
+    }
+        
+       if(array_diff($asset_owners,$in['asset_hidden_owner']) || array_diff($in['asset_hidden_owner'],$asset_owners) ){
+           
+       $old_names = '';
         foreach ($in['asset_hidden_owner']  as $key => $value) {
             $old_asset_owner_name = $this->asset_model->get_users_name_by_id($value);
             
@@ -564,17 +572,18 @@ class Asset_register extends crm_controller {
                $new_name .= $name['first_name'] . '' . $name['last_name'] . '-' . $name['emp_id'].',';    
                 //$fruitList .= $prefix . '"' . $fruit . '"';
                 //$prefix = ', ';
-             }
-          
-            
+             }    
         }
-        if(array_diff($new_name,$old_names)){
-            $inser['log_content'] = "Asset Owner has changed from ' " . $old_names. " ' to ' " . $new_name . " '";
+               $inser['log_content'] = "Asset Owner has changed from ' " . $old_names. " ' to ' " . $new_name . " '";
                 $inser['jobid_fk'] = $data['asset_id'];
                 $inser['userid_fk'] = $this->userdata['userid'];
                 $inser['log_type'] = 'asset_log';
                 $insert_log = $this->welcome_model->insert_row('logs', $inser);
-        }
+       }
+    
+   
+     
+    
           
       
         
