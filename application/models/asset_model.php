@@ -1555,7 +1555,7 @@ class Asset_model extends crm_model {
    //check asset name already in asset table      
         public function checkAssetName($assetName) {
           // echo $assetName;exit;
-           
+                $asset = strtolower($assetName);
         	$this->db->select('asset_name');
         	$this->db->from($this->cfg['dbpref'] . 'asset_register');
         	// $this->db->like("asset_name", $assetName);
@@ -1564,14 +1564,16 @@ class Asset_model extends crm_model {
         $assets = $sql->result_array();
         foreach ($assets as $key => $value) {
           
-        	$asset_value[] = $this->clean($value['asset_name']);
+        	$asset_value[] = strtolower($this->clean($value['asset_name']));
     	}
-       // print_r($asset_value);exit;
-           if(in_array($assetName,$asset_value)){
+          //  print_r($asset_value);exit;
+           if(in_array($asset,$asset_value)){
+              // echo"ifhere";exit;
                
-               return false;
+               return 0;
            }else{
-               return true;
+            //   echo"elsehere";exit;
+               return 1;
            }
        // echo $asset_value;
         // $asset_value = array_map('strval',$asset_value);
