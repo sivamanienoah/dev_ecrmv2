@@ -422,21 +422,21 @@ class Request extends crm_controller {
 				} //check_permission
 			}
 		}	
-
+// echo '<pre>'; print_r($get_files); die;
 		if(!empty($get_files)) {
 			foreach($get_files as $files) {
-				$file_array[] = $files['lead_files_name']."<=>".$files['lead_files_created_on']."<=>File<=>".$files['first_name']." ".$files['last_name']."<=>".$files['file_id'];
+				$file_array[] = $files['lead_files_name']."<=>".$files['lead_files_created_on']."<=>File<=>".$files['first_name']." ".$files['last_name']."<=>".$files['file_id']."<=>".$files['tag_names'];
 			}
 		}		
 		
-		// echo '<pre>'; print_r($file_array); die
+		// echo '<pre>'; print_r($file_array); die;
 		$jobs_files_html = '';
 		$jobs_files_html .= '<table id="list_file_tbl-no-need" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl-no-need dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Tags</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th></tr></thead>';
 		//<th>Permissions</th>
 		if(!empty($file_array)) {
 			$jobs_files_html .= '<tbody>';
 			foreach($file_array as $fi) {
-				list($fname, $fcreatedon, $ftype, $fcreatedby, $file_id) = explode('<=>',$fi);
+				list($fname, $fcreatedon, $ftype, $fcreatedby, $file_id, $tag_names) = explode('<=>',$fi);
 					$jobs_files_html .= '<tr>';
 					if($ftype == 'File') {
 						$file_sz = '';
@@ -458,7 +458,7 @@ class Request extends crm_controller {
 						
 						// $file_dir = UPLOAD_PATH.'files/'.$job_id.'/'.$fname;
 						
-						$jobs_files_html .= '<a onclick="download_files_id('.$job_id.','.$file_id.'); return false;">'.$fname.'</a>';
+						$jobs_files_html .= '<a onclick="download_files_id('.$job_id.','.$file_id.'); return false;" title="'.$tag_names.'">'.$fname.'</a>';
 						
 						$jobs_files_html .= '</td>';
 						$jobs_files_html .= '<td><a href="javascript:void(0)" onclick="add_tags('.$job_id.','.$file_id.'); return false;">Add Tags</a></td>';
@@ -484,6 +484,7 @@ class Request extends crm_controller {
 			}
 		}
 		$jobs_files_html .= '</tbody></table>';
+		// echo'<pre>';print_r($jobs_files_html);exit;
 		echo $jobs_files_html;
 	}
 	

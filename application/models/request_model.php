@@ -99,7 +99,7 @@ class Request_model extends crm_model {
 	 * @param $job_id - lead id, $f_id - file id
 	 */
 	public function getFiles($job_id, $f_id) {
-		$this->db->select('f.file_id,f.lead_files_name,u.first_name,u.last_name,f.lead_files_created_on,f.folder_id');
+		$this->db->select('f.file_id,f.lead_files_name,u.first_name,u.last_name,f.lead_files_created_on,f.folder_id,f.tag_names');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS f');
 		$this->db->join($this->cfg['dbpref'].'users AS u', 'u.userid = f.lead_files_created_by', 'LEFT');
 	    $this->db->where("f.lead_id", $job_id);

@@ -597,8 +597,9 @@ function add_tags(lead_id, file_id)
 $(function(){ // DOM ready
 	$("#tags_input").on({
 		focusout : function() {
-		var txt= this.value.replace(/[^a-z0-9\+\-\.\#]/ig,''); // allowed characters
+		var txt= this.value.replace(/[^a-z0-9\+\ -\.\#]/ig,''); // allowed characters
 		//get the ajax call
+		// alert(txt);
 		saveTags($('#tag_lead_id').val(), $('#tag_file_id').val());
 		if(txt){
 			$("#tags").append( "<span>"+txt.toLowerCase()+"</span>");
