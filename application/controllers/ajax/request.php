@@ -457,8 +457,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= '<td><input type="hidden" id="file_'.$file_id.'" value="'.$fname.'">';
 						
 						// $file_dir = UPLOAD_PATH.'files/'.$job_id.'/'.$fname;
-						
-						$jobs_files_html .= '<a onclick="download_files_id('.$job_id.','.$file_id.'); return false;" title="'.$tag_names.'">'.$fname.'</a>';
+						$jobs_files_html .= '<a onclick="download_files_id('.$job_id.','.$file_id.'); return false;" id="'.$job_id.'_'.$file_id.'" class="tag_title" title="'.$tag_names.'">'.$fname.'</a>';
 						
 						$jobs_files_html .= '</td>';
 						$jobs_files_html .= '<td><a href="javascript:void(0)" onclick="add_tags('.$job_id.','.$file_id.'); return false;">Add Tags</a></td>';
@@ -3403,7 +3402,9 @@ EOD;
 		$updt = array('tag_names'=>$tag_names);
 		
 		$res   = $this->request_model->update_row('lead_files', $updt, $condn);
-		$res = array('status'=>true);
+		$res_data   = $this->request_model->get_selected_record('lead_files', $condn);//echo '<pre>'; print_r($res_data); die;
+		$res_tags   = $res_data->tag_names;
+		$res = array('status'=>true,'tag_names'=>$res_tags,'lead_id'=>$condn['lead_id'],'file_id'=>$condn['file_id']);
 		echo json_encode($res);
 		exit;
 	}

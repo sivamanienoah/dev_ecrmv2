@@ -641,7 +641,11 @@ function saveTags(lead_id, file_id)
 			}
 		})
 		.done(function (res, status) {
-			console.info(res);
+			var lead_id = res.lead_id;
+			var file_id = res.file_id;
+			var tag_id = lead_id+'_'+file_id;
+			 $('#' + tag_id).attr('title', res.tag_names);
+
 			// return;
             /* ht = 50;
 			$.blockUI({

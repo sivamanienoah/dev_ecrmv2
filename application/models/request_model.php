@@ -75,6 +75,15 @@ class Request_model extends crm_model {
 		return $sql->row_array();
 	}
 	
+	/* Get selected fields from table*/
+	public function get_selected_record($tbl,$condn)
+	{
+		$this->db->select('tag_names');
+		$this->db->where($condn);
+		$sql = $this->db->get($this->cfg['dbpref'] . $tbl);
+		return $sql->row();
+	}
+	
 	/*
 	 * @method getParentData()
 	 * @access public
