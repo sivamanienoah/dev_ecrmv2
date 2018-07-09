@@ -2725,8 +2725,8 @@ $(function(){
 
 
 </script>
-<script type="text/javascript" src="assets/js/request/request.js"></script>
-<script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
+<script type="text/javascript" src="assets/js/request/request.js?v=v1"></script>
+<script type="text/javascript" src="assets/js/projects/welcome_view_project.js?v=v1"></script>
 <script type="text/javascript" src="assets/js/tinymce4.5.1/tinymce.min.js"></script>
 
 

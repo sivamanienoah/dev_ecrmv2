@@ -1497,5 +1497,5 @@ function logsDataTable() {
 		setTimeout('timerfadeout()', 2000);
 	}
 </script>	
-<script type="text/javascript" src="assets/js/request/request.js"></script>
+<script type="text/javascript" src="assets/js/request/request.js?v=v1"></script>
 <?php require (theme_url().'/tpl/footer.php'); ?>
