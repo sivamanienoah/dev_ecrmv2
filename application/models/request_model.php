@@ -207,7 +207,25 @@ class Request_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users AS u', 'u.userid = f.created_by', 'LEFT');
 		$this->db->where("f.lead_id", $lead_id);
 		$this->db->like("f.parent", $parent_folder_id);
-		$this->db->like("f.folder_name", $search_name);
+		if(!empty($search_name)) {
+			$srch_arr = @explode(',',$search_name);
+			if(!empty($srch_arr) && count($srch_arr)>0) {
+				$find_wh = '(';
+				$i = 0;
+				foreach($srch_arr as $srch) {
+					if($i==0) {
+						$find_wh .= "(f.folder_name LIKE '%".$srch."%')";
+					} else {
+						$find_wh .= " OR (f.folder_name LIKE '%".$srch."%' )";
+					}
+					$i++;
+				}
+				$find_wh .= ')';
+			}
+		}
+		// echo $find_wh; die;
+		// $this->db->like("f.folder_name", $search_name);
+		$this->db->where($find_wh, NULL, FALSE);
 		$this->db->order_by("f.parent");
 	    $sql = $this->db->get();
 		// echo $this->db->last_query(); exit;
@@ -223,7 +241,7 @@ class Request_model extends crm_model {
 	public function getInfo($lead_id, $fold_id){
 		$this->db->select('f.folder_id,f.folder_name,f.parent,u.first_name,u.last_name,f.created_on');
 	    $this->db->from($this->cfg['dbpref'] . 'file_management AS f');
-		$this->db->join($this->cfg['dbpref'].'users AS u', 'u.userid = f.created_by', 'LEFT');
+		$this->db->join($this->cfg['dbpref'].'3 AS u', 'u.userid = f.created_by', 'LEFT');
 		$this->db->where("f.lead_id", $lead_id);
 		$this->db->like("f.folder_id", $fold_id);
 	    $sql = $this->db->get();
@@ -253,12 +271,42 @@ class Request_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users AS us', 'us.userid = lf.lead_files_created_by', 'LEFT');
 	    $this->db->where("lf.lead_id", $lead_id);
 		if($folder_id)	$this->db->where("lf.folder_id", $folder_id);
-	    $this->db->like("lf.lead_files_name", $search_name);
+		if($search_name) {
+			$srch_val = @explode(',',$search_name);
+			$find_wh = '(';
+			if(count($srch_val)>0) {
+				$i = 0;
+				foreach($srch_val as $srch) {
+					if($i==0) {
+						$find_wh .= "FIND_IN_SET('".$srch."', lf.tag_names)";
+					} else {
+						$find_wh .= " OR FIND_IN_SET('".$srch."', lf.tag_names)";
+					}
+					$i++;
+				}
+			}
+			$find_wh .= ')';
+			$this->db->where($find_wh);
+		}
 		$this->db->order_by("lf.lead_files_created_on");
 	    $sql = $this->db->get();
 		// echo $this->db->last_query(); exit;
 	    return $sql->result_array();
 	}
+	
+	public function get_tags_by_id($job_id, $f_id) {
+		$result = array();
+		$this->db->select('f.tag_names');
+	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS f');
+	    $this->db->where("f.lead_id", $job_id);
+	    $this->db->where("f.file_id", $f_id);
+	    $sql = $this->db->get();
+	    $res = $sql->row_array();
+		if(!empty($res) && count($res)>0) {
+			$result = $res['tag_names'];
+		}
+		return $result;
+    }
 	
 	/*
 	*@method getBreadCrumbDet

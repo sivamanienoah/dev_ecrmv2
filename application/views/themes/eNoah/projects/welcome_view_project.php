@@ -1391,7 +1391,7 @@
 		<div>
 			<div class="pull-left pad-right">
 				<form id="file_search">
-					<label>Search File or Folder</label> <input type="text" class="textfield" id="search_input" value="" />
+					<label class="xtra-widt">Search File or Folder or Tags(Multiple - comma separated)</label> <input type="text" class="textfield" id="search_input" value="" />
 					<button class="positive" onclick="searchFileFolder(); return false;" style="margin:0 0 0 5px;" type="submit">Search</button>
 				</form>
 			</div>
@@ -1408,7 +1408,7 @@
 						</div>
 					</form>
 					<div class="pull-left pad-right">
-						<a title="Add Folder" href='javascript:void(0)'  onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folders.png" class="icon-width" alt="Add Folder" ></a>
+						<a title="Add Folder" href='javascript:void(0)' onclick="create_folder(<?php echo $quote_data['lead_id']; ?>,<?php echo $ff_id; ?>); return false;"><img src="assets/img/add_folders.png" class="icon-width" alt="Add Folder" ></a>
 					</div>
 					<div class="pull-left pad-right">
 						<a title="Move All" onclick="moveAllFiles(); return false;" ><img src="assets/img/document_move.png" class="icon-width" alt="Move All"></a>
@@ -1617,6 +1617,22 @@
 					</td>
 				</tr>
 			</table>
+		</form>
+		<form id="add-tags" onsubmit="return false;">
+			<!-- edit file -->
+			<div id='af_successerrmsg' class='succ_err_msg'></div>
+			<strong><h3 style="text-align:center;">View Tags</h3></strong>
+			<input type="hidden" value="" id="tag_lead_id" />
+			<input type="hidden" value="" id="tag_file_id" />
+			<div class="file-tabs-close-project close_icon" id=""></div>
+			<div id="tags" style="width:400px; min-height: 30px;">
+				
+			</div>
+			<div class="pull-left" style="margin: 5px 0px;">
+				<label>Add Tag:</label>
+				<input type="text" class="textfield" id="tags_input" value="" autocomplete="off" placeholder="Add a tag" />
+			</div>
+			<!-- edit end -->
 		</form>
 	</div>
 	<!--id: jv-tab-3 end -->
@@ -2709,8 +2725,8 @@ $(function(){
 
 
 </script>
-<script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/request/request.js"></script>
+<script type="text/javascript" src="assets/js/projects/welcome_view_project.js"></script>
 <script type="text/javascript" src="assets/js/tinymce4.5.1/tinymce.min.js"></script>
 
 

@@ -2011,7 +2011,7 @@ button.positive:hover, .pjt-btn a.positive:hover, input.positive:hover{
 #project-tabs .chzn-container .chzn-results {
 	max-height: 150px !important;
 }
-#move-file, #create-folder,#assign-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, #folderAccessRights, #projectConfirmationToMove, .comments-log-container, #edit_sales_forecast_container, #view-log-container, #check-permissions, #popup-filter-section, #oc_map_add_file {
+#move-file, #create-folder,#assign-folder, #moveallfile, #show-tree-struct, #map_add_file , #add_newfile, #folderAccessRights, #projectConfirmationToMove, .comments-log-container, #edit_sales_forecast_container, #view-log-container, #check-permissions, #popup-filter-section, #oc_map_add_file, #add-tags {
 	display: none;
 }
 /* file_breadcrumb */
@@ -3078,7 +3078,7 @@ padding-bottom:15px !important;
     background: rgba(0, 0, 0, 0) url("../images/sort_asc.png") no-repeat scroll 100% 35%;
 }
 .adv_filter_it_service{
-	    background-color: #fff;
+	background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
     margin: -5px 10px;
@@ -3101,3 +3101,49 @@ padding-bottom:15px !important;
 }
 .tas-flw { padding: 0 5px 10px 5px; vertical-align: top;}
 .task-add-follow { width: 500px; }
+/*tags design*/
+.tags_header {
+	text-align:left;
+	font-size: 14px; 
+	font-weight:bold;
+	margin:5px 0px;
+}
+#tags{
+	float:left;
+	border:1px solid #ccc;
+	padding:5px;
+	font-family:Arial;
+}
+#tags > span{
+	cursor:pointer;
+	display:block;
+	float:left;
+	color:#fff;
+	background:#789;
+	padding:5px;
+	padding-right:25px;
+	margin:4px;
+}
+#tags > span:hover{
+	opacity:0.7;
+}
+#tags > span:after{
+	position: absolute;
+    content: "×";
+    border: 1px solid;
+    padding: 0px 2px;
+	margin-left: 10px;
+    font-size: 10px;
+}
+#tags > input{
+	background:#eee;
+	border:0;
+	margin:4px;
+	padding:7px;
+	width:auto;
+	float: left;
+}
+.xtra-widt {
+	width:335px !important;
+}
+/*tags design*/

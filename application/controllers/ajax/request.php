@@ -424,22 +424,14 @@ class Request extends crm_controller {
 		}	
 
 		if(!empty($get_files)) {
-		
 			foreach($get_files as $files) {
-			
-				// CHECK ACCESS PERMISSIONS START HERE //		
-				// $check_permissions =  $this->check_access_permissions($job_id, 'file_id', $files['file_id'], 'read'); //check_permission
-					
-				// if($check_permissions == 1 || $userdata['role_id'] == 1) {
-				
-					$file_array[] = $files['lead_files_name']."<=>".$files['lead_files_created_on']."<=>File<=>".$files['first_name']." ".$files['last_name']."<=>".$files['file_id'];
-				// }
+				$file_array[] = $files['lead_files_name']."<=>".$files['lead_files_created_on']."<=>File<=>".$files['first_name']." ".$files['last_name']."<=>".$files['file_id'];
 			}
 		}		
 		
-		//echo '<pre>'; print_r($file_array);
+		// echo '<pre>'; print_r($file_array); die
 		$jobs_files_html = '';
-		$jobs_files_html .= '<table id="list_file_tbl-no-need" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl-no-need dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th></tr></thead>';
+		$jobs_files_html .= '<table id="list_file_tbl-no-need" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl-no-need dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Tags</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th></tr></thead>';
 		//<th>Permissions</th>
 		if(!empty($file_array)) {
 			$jobs_files_html .= '<tbody>';
@@ -469,6 +461,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= '<a onclick="download_files_id('.$job_id.','.$file_id.'); return false;">'.$fname.'</a>';
 						
 						$jobs_files_html .= '</td>';
+						$jobs_files_html .= '<td><a href="javascript:void(0)" onclick="add_tags('.$job_id.','.$file_id.'); return false;">Add Tags</a></td>';
 						// $jobs_files_html .= '<td><a onclick=download_files('.$job_id.'); return false;>'.$fname.'</a></td>';	
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$file_ext.'</td>';
@@ -480,6 +473,7 @@ class Request extends crm_controller {
 						// $jobs_files_html .= "<input type='hidden' name='current_folder_parent_id' id='current_folder_parent_id' value='".$file_id."'>";
 						$jobs_files_html .= "<td><input type='hidden' value='folder'><input type='checkbox' file-type='folder' class='file_chk' value='".$file_id."'></td>";
 						$jobs_files_html .= '<td><a class=edit onclick="getFolderdata('.$file_id.'); return false;" ><img src="assets/img/directory.png" alt=directory>&nbsp;'.$fname.'</a></td>';
+						$jobs_files_html .= '<td></td>';
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$ftype.'</td>';
 						$jobs_files_html .= '<td></td>';
@@ -813,7 +807,7 @@ class Request extends crm_controller {
 		//echo '<pre>'; print_r($file_array);; exit;
 		
 		$jobs_files_html = '';
-			$jobs_files_html .= '<table id="list_file_tbl" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th></tr></thead>';
+			$jobs_files_html .= '<table id="list_file_tbl" border="0" cellpadding="0" cellspacing="0" style="width:100%" class="data-tbl dashboard-heads dataTable"><thead><tr><th><input type="checkbox" id="file_chkall" value="checkall"></th><th>File Name</th><th>Tags</th><th>Created On</th><th>Type</th><th>Size</th><th>Created By</th></tr></thead>';
 			$jobs_files_html .= '<tbody>';
 		
 		if(!empty($file_array)) {
@@ -839,6 +833,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
 						// $jobs_files_html .= '<td><a target="_blank" href='.base_url().'crm_data/files/'.$job_id.'/'.$fname.'>'.$fname.'</a></td>';
 						$jobs_files_html .= '<td><input type="hidden" id="file_'.$file_id.'" value="'.$fname.'"><a onclick="download_files_id('.$job_id.','.$file_id.'); return false;">'.$fname.'</a></td>';
+						$jobs_files_html .= '<td><a href="javascript:void(0)" onclick="add_tags('.$job_id.','.$file_id.'); return false;">Add Tags</a></td>';
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$file_ext.'</td>';
 						$jobs_files_html .= '<td>'.$file_sz.'</td>';
@@ -846,6 +841,7 @@ class Request extends crm_controller {
 					} else {
 						$jobs_files_html .= "<td><input type='hidden' value='folder'><input type='checkbox' file-type='folder' class='file_chk' value='".$file_id."'></td>";
 						$jobs_files_html .= '<td><a class=edit onclick="getFolderdata('.$file_id.'); return false;" ><img src="assets/img/directory.png" alt=directory>&nbsp;'.$fname.'</a></td>';
+						$jobs_files_html .= '<td></td>';
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$ftype.'</td>';
 						$jobs_files_html .= '<td></td>';
@@ -3378,6 +3374,37 @@ EOD;
 		$task_det = array();
 		$task_det = $this->request_model->get_task_info_by_id($this->input->post('taskid'));
 		echo json_encode($task_det); exit;
+	}
+	
+	/**
+	 * @method get_folder_tree_struct()
+	 * 
+	 */
+	public function add_tags() {
+		$data    		= real_escape_array($this->input->post());
+		$res     		= array();
+		$res['tag_names'] 	= $this->request_model->get_tags_by_id($data['lead_id'], $data['file_id']);
+		$res['lead_id'] 	= $data['lead_id'];
+		$res['file_id'] 	= $data['file_id'];
+		echo json_encode($res);
+		exit;
+	}
+
+	public function save_tags() {
+		$data    		= real_escape_array($this->input->post());
+		// echo '<pre>'; print_r($data); die;
+		$condn     			= array();
+		$condn['lead_id'] 	= $data['lead_id'];
+		$condn['file_id'] 	= $data['file_id'];
+		
+		$tag_names = @implode(",",$data['tags']);
+		
+		$updt = array('tag_names'=>$tag_names);
+		
+		$res   = $this->request_model->update_row('lead_files', $updt, $condn);
+		$res = array('status'=>true);
+		echo json_encode($res);
+		exit;
 	}
 	
 }

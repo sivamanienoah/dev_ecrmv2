@@ -553,4 +553,116 @@ function isPaymentVal(evt) {
 	return false;
 	else
 	return true;
-}	
+}
+
+function add_tags(lead_id, file_id)
+{
+	var params				= {'lead_id':lead_id, 'file_id':file_id};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	$.ajax({
+		type: 'POST',
+		url: site_base_url+'ajax/request/add_tags',
+		dataType: 'json',
+		data: params,
+		beforeSend:function(){
+			$('#tags').html();
+		},
+		success: function(data) {
+			console.info(data);
+			$('#tags').html("");
+			$('#tag_lead_id').val(data.lead_id);
+			$('#tag_file_id').val(data.file_id);
+			var ht = 50;
+			$.blockUI({
+				message: $('#add-tags'),
+				css: { border: '2px solid #999',color:'#333',padding:'8px',top:  ($(window).height() - ht) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '450px',height: ht+'px'} 
+			});
+			$( "#add-tags" ).parent().addClass( "folder-scroll no-scroll" );
+			var tag_array = data.tag_names.split(',');
+			// var tag_array = ;
+			$.each(tag_array, function( index, value ) {
+				// alert(value)
+				if(value) {
+					$("#tags").append( "<span>"+value+"</span>");
+				}
+			});
+		}
+	});
+	return false;
+}
+
+$(function(){ // DOM ready
+	$("#tags_input").on({
+		focusout : function() {
+			var txt= this.value.replace(/[^a-z0-9\+\-\.\#]/ig,''); // allowed characters
+			//get the ajax call
+			saveTags($('#tag_lead_id').val(), $('#tag_file_id').val());
+			// if(txt) $("<span/>",{text:txt.toLowerCase(), insertBefore:this});
+			if(txt){
+				$("#tags").append( "<span>"+txt.toLowerCase()+"</span>");
+			}
+			this.value="";
+		},
+		keyup : function(ev) {
+			// if: comma|enter (delimit more keyCodes with | pipe)
+			if(/(188|13|9)/.test(ev.which)) $(this).focusout();
+		}
+	});
+	$('#tags').on('click', 'span', function() {
+		if(confirm("Remove "+ $(this).text() +"?")) {
+			$(this).remove();
+			saveTags($('#tag_lead_id').val(), $('#tag_file_id').val());
+		}
+	});
+	
+});
+
+function saveTags(lead_id, file_id)
+{
+	var arr = [];
+	$("#tags span").each(function(index, elem){
+		arr.push( $(this).text() );
+	});
+	
+	var params				= {'lead_id':lead_id, 'file_id':file_id, 'tags':arr};
+	params[csrf_token_name] = csrf_hash_token;
+	
+	var currentRequest = $.ajax({
+			url: site_base_url+'ajax/request/save_tags',
+			data: params,
+			type: "POST",
+			dataType: "json",
+			beforeSend: function () {
+				if (currentRequest != null) {
+					currentRequest.abort();
+				}
+			}
+		})
+		.done(function (res, status) {
+			console.info(res);
+			// return;
+            /* ht = 50;
+			$.blockUI({
+				message: $('#add-tags'),
+				css: { border: '2px solid #999',color:'#333',padding:'8px',top:  ($(window).height() - ht) /2 + 'px',left: ($(window).width() - 400) /2 + 'px',width: '450px',height: ht+'px'} 
+			});
+			$( "#add-tags" ).parent().addClass( "folder-scroll" ); */
+			// return false;
+
+		})
+		.fail(function (xhr, status, errorThrown) {
+			if (xhr.status == 403) {
+				window.location.reload();
+			} else {
+				alert('Fail');
+				return;
+			}
+		})
+	return false;
+}
+
+$(document).on('click','.close_icon',function(){
+	$.unblockUI();
+	return false;
+});
