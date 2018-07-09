@@ -595,24 +595,24 @@ function add_tags(lead_id, file_id)
 
 
 $(function(){ // DOM ready
-  
-  $("#tags_input").on({
-    focusout : function() {
-      var txt= this.value.replace(/[^a-z0-9\+\-\.\#]/ig,''); // allowed characters
-      if(txt){
-				$("#tags").append( "<span>"+txt.toLowerCase()+"</span>");
-			}
-      this.value="";
+	$("#tags_input").on({
+		focusout : function() {
+		var txt= this.value.replace(/[^a-z0-9\+\-\.\#]/ig,''); // allowed characters
+		//get the ajax call
+		saveTags($('#tag_lead_id').val(), $('#tag_file_id').val());
+		if(txt){
+			$("#tags").append( "<span>"+txt.toLowerCase()+"</span>");
+		}
+		this.value="";
     },
-    keyup : function(ev) {
-      // if: comma|enter (delimit more keyCodes with | pipe)
-      if(/(188|13)/.test(ev.which)) $(this).focusout(); 
+		keyup : function(ev) {
+			// if: comma|enter (delimit more keyCodes with | pipe)
+			if(/(188|13)/.test(ev.which)) $(this).focusout(); 
     }
-  });
-  $('#tags').on('click', 'span', function() {
-    if(confirm("Remove "+ $(this).text() +"?")) $(this).remove(); 
-  });
-
+	});
+	$('#tags').on('click', 'span', function() {
+		if(confirm("Remove "+ $(this).text() +"?")) $(this).remove(); 
+	});
 });
 
 function saveTags(lead_id, file_id)
