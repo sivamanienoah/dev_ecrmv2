@@ -611,7 +611,10 @@ $(function(){ // DOM ready
     }
 	});
 	$('#tags').on('click', 'span', function() {
-		if(confirm("Remove "+ $(this).text() +"?")) $(this).remove(); 
+		if(confirm("Remove "+ $(this).text() +"?")) {
+			$(this).remove(); 
+			saveTags($('#tag_lead_id').val(), $('#tag_file_id').val());
+		}
 	});
 });
 
