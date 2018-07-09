@@ -16,7 +16,7 @@
 		
 				<form name="dmssearch" id="dmssearch"  method="post">
 				
-				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 				
 					<table cellspacing="0" cellpadding="0" border="0" class="search-table">
 						<tbody><tr>
@@ -25,6 +25,13 @@
 							</td>
 							<td>
 								<input type="text" class="textfield width200px" value="<?php echo $keyword;?>" id="keyword" name="keyword" style="color: rgb(119, 119, 119);">
+							</td>
+							
+							<td>
+								Tag Name:
+							</td>
+							<td>
+								<input type="text" class="textfield width200px" value="<?php echo $keyword;?>" id="tag_keyword" name="tag_keyword" style="color: rgb(119, 119, 119);">
 							</td>
 							<!--<td>
 								<div class="buttons">
@@ -99,6 +106,7 @@
                 <tr>
 					<th>Created On</th>
                     <th>File Name</th>
+                    <th>Tags</th>
                     <th>Client</th>
                     <th>Lead/Project</th>
 					<th>Folder</th>					
@@ -109,7 +117,7 @@
             </thead>
             <tbody>
 			<?php
-			//echo '<pre>';print_r($files);exit;
+			// echo '<pre>';print_r($files);exit;
 			if (is_array($files) && count(files) > 0) { 
 				foreach ($files as $file) {?>
 				 
@@ -128,6 +136,7 @@
 									echo $file['lead_files_name'];
 								} ?>
 						</td>
+						<td><?php echo $file['tag_names'];?></td>
 						<td><?php echo $file['company'].' - '.$file['cust_firstname'].' '.$file['cust_lastname'];?></td>
 						<td><?php echo $file['lead_title'];?></td>
 						<td><?php echo is_numeric($file['folder_name'])?"Root":$file['folder_name'];?></td>

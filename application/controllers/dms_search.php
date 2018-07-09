@@ -66,13 +66,14 @@ class Dms_search extends crm_controller {
 		
 		
 		$keyword = $this->input->post('keyword');
+		$tag_keyword = $this->input->post('tag_keyword');
 		$customers = $this->input->post('customers');
 		$projects = $this->input->post('projects');
 		$extension = $this->input->post('extension');
 		$from_date = $this->input->post('from_date');
 		$to_date = $this->input->post('to_date');
 		$data['keyword'] = $keyword;
-		$data['files'] = $this->dms_search_model->search_files($keyword,$customers,$projects,$extension,$from_date,$to_date);
+		$data['files'] = $this->dms_search_model->search_files($keyword,$tag_keyword,$customers,$projects,$extension,$from_date,$to_date);
 		if(count($data['files']>0))		$this->load->view('dms_view_search', $data);		
 	}
 	

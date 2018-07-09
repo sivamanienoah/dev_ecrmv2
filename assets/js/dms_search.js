@@ -50,12 +50,13 @@ function download_files(job_id,f_name){
 			 $('#default_view').html('');
 			 $('#default_view').hide()
 			 var keyword = $("#keyword").val();			 
+			 var tag_keyword = $("#tag_keyword").val();			 
 			 var customers = $("#customers").val();			 
 			 var projects = $("#projects").val();			 
 			 var extension = $("#extension").val();			 
 			 var from_date = $("#from_date").val();			 
 			 var to_date = $("#to_date").val();
-			 var params = {'keyword':keyword,'customers':customers,'projects':projects,'extension':extension,'from_date':from_date,'to_date':to_date};
+			 var params = {'keyword':keyword,'tag_keyword':tag_keyword,'customers':customers,'projects':projects,'extension':extension,'from_date':from_date,'to_date':to_date};
 			params[csrf_token_name] = csrf_hash_token;
 		    
 			$.ajax({

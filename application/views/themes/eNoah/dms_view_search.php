@@ -4,6 +4,7 @@
                 <tr>
 					<th>Created On</th>
                     <th>File Name</th>
+					<th>Tags</th>
                     <th>Client</th>
                     <th>Lead/Project</th>
 					<th>Folder</th>					
@@ -30,6 +31,7 @@
 									echo $file['lead_files_name'];
 								} ?>
 						</td>
+						<td><?php echo $file['tag_names'];?></td>
 						<td><?php echo $file['company'].' - '.$file['cust_firstname'].' '.$file['cust_lastname'];?></td>
 						<td><?php echo $file['lead_title'];?></td>
 						<td><?php echo is_numeric($file['folder_name'])?"Root":$file['folder_name'];?></td>

@@ -10,7 +10,7 @@ class Dms_search_model extends crm_model {
 		$this->level = $user_details['level'];			
     }
 		
-	public function search_files($search_name = null,$customers = null,$projects = null,$extension = null,$from_date = null,$to_date = null){
+	public function search_files($search_name = null,$tag_keyword = null,$customers = null,$projects = null,$extension = null,$from_date = null,$to_date = null){
 	
 		$user_id = $this->user_id;
 		
@@ -24,7 +24,7 @@ class Dms_search_model extends crm_model {
 			$st = implode(",",$stake_arr);
 		}		
 		 
-		$this->db->select('f.folder_name, cc.company, cus.customer_name as cust_firstname, le.lead_title, lf.file_id, lf.lead_id, lf.lead_files_name, lf.folder_id,us.first_name,us.last_name,lf.lead_files_created_on');
+		$this->db->select('f.folder_name, cc.company, cus.customer_name as cust_firstname, le.lead_title, lf.file_id, lf.lead_id, lf.lead_files_name, lf.folder_id,us.first_name,us.last_name,lf.lead_files_created_on,lf.tag_names');
 	    $this->db->from($this->cfg['dbpref'] . 'lead_files AS lf');
 		$this->db->join($this->cfg['dbpref'].'users AS us', 'us.userid = lf.lead_files_created_by', 'LEFT');
 		$this->db->join($this->cfg['dbpref'].'leads AS le', 'le.lead_id = lf.lead_id', 'join');
@@ -62,6 +62,24 @@ class Dms_search_model extends crm_model {
 			$this->db->where("lead_files_created_on <=",$td);
 		}
 		if($search_name)	$this->db->like("lf.lead_files_name", $search_name);
+		// if($tag_keyword)	$this->db->like("lf.lead_files_name", $tag_keyword);
+		if($tag_keyword) {
+			$srch_val = @explode(',',$tag_keyword);
+			$find_wh = '(';
+			if(count($srch_val)>0) {
+				$i = 0;
+				foreach($srch_val as $srch) {
+					if($i==0) {
+						$find_wh .= "FIND_IN_SET('".$srch."', lf.tag_names)";
+					} else {
+						$find_wh .= " OR FIND_IN_SET('".$srch."', lf.tag_names)";
+					}
+					$i++;
+				}
+			}
+			$find_wh .= ')';
+			$this->db->where($find_wh);
+		}
 		//	$this->db->order_by("lf.lead_files_created_on",'DESC');
 		$this->db->order_by("cc.company",'ASC');
 	    $sql = $this->db->get();
