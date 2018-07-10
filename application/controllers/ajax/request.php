@@ -460,7 +460,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= '<a onclick="download_files_id('.$job_id.','.$file_id.'); return false;" id="'.$job_id.'_'.$file_id.'" class="tag_title" title="'.$tag_names.'">'.$fname.'</a>';
 						
 						$jobs_files_html .= '</td>';
-						$jobs_files_html .= '<td><a href="javascript:void(0)" onclick="add_tags('.$job_id.','.$file_id.'); return false;">Add Tags</a></td>';
+						$jobs_files_html .= '<td><a href="javascript:void(0)" onclick="add_tags('.$job_id.','.$file_id.'); return false;">Edit Tags</a></td>';
 						// $jobs_files_html .= '<td><a onclick=download_files('.$job_id.'); return false;>'.$fname.'</a></td>';	
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$file_ext.'</td>';
@@ -833,7 +833,7 @@ class Request extends crm_controller {
 						$jobs_files_html .= "<td class='td_filechk'><input type='hidden' value='file'><input type='checkbox' class='file_chk' file-type='file' value='".$file_id."'></td>";
 						// $jobs_files_html .= '<td><a target="_blank" href='.base_url().'crm_data/files/'.$job_id.'/'.$fname.'>'.$fname.'</a></td>';
 						$jobs_files_html .= '<td><input type="hidden" id="file_'.$file_id.'" value="'.$fname.'"><a onclick="download_files_id('.$job_id.','.$file_id.'); return false;">'.$fname.'</a></td>';
-						$jobs_files_html .= '<td><a href="javascript:void(0)" onclick="add_tags('.$job_id.','.$file_id.'); return false;">Add Tags</a></td>';
+						$jobs_files_html .= '<td><a href="javascript:void(0)" onclick="add_tags('.$job_id.','.$file_id.'); return false;">Edit Tags</a></td>';
 						$jobs_files_html .= '<td>'.date('d-m-Y',strtotime($fcreatedon)).'</td>';
 						$jobs_files_html .= '<td>'.$file_ext.'</td>';
 						$jobs_files_html .= '<td>'.$file_sz.'</td>';
