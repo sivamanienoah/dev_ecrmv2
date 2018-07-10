@@ -48,7 +48,7 @@ function download_files(job_id,f_name){
 			 $('#load').show();
 			 $('#ajax_loader').show();
 			 // $('#default_view').html('');
-			 $('#default_view').hide()
+			 // $('#default_view').hide()
 			 var keyword = $("#keyword").val();			 
 			 var tag_keyword = $("#tag_keyword").val();			 
 			 var customers = $("#customers").val();			 
