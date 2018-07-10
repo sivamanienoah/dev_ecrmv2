@@ -61,8 +61,7 @@ class Dms_search_model extends crm_model {
 			$td= date("Y-m-d H:i:s",strtotime($to_date));
 			$this->db->where("lead_files_created_on <=",$td);
 		}
-		if($search_name)	$this->db->like("lf.lead_files_name", $search_name);
-		if($search_name)	$this->db->like("lf.tag_names", $search_name);
+		if($search_name)	$this->db->like("lf.lead_files_name", $search_name);$this->db->or_like('lf.tag_names', $search_name); //$this->db->like("lf.tag_names", $search_name);
 		if($tag_keyword) {
 			$srch_val = @explode(',',$tag_keyword);
 			$find_wh = '(';
