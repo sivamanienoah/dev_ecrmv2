@@ -64,9 +64,9 @@ function download_files(job_id,f_name){
 		        url: site_base_url+'dms_search/search',
 		        data: params,
 		        success: function(data) {					
-					$('#load').hide();
-					 $('#advance').show();
-					$('#ajax_loader').hide();					
+					// $('#load').hide();
+					 // $('#advance').show();
+					// $('#ajax_loader').hide();					
 					$('#default_view').html(data);						
 					$('.data-tbl').dataTable();
 					$('#default_view').show();
