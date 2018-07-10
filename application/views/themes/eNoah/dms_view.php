@@ -101,7 +101,7 @@
 				Loading Content.<br><img alt="wait" src="<?php echo base_url().'assets/images/ajax_loader.gif'; ?>"><br>Thank you for your patience!
 			</div>	
 			<div id="default_view">
-			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl1 dashboard-heads dataTable" style="width:100%;">
+			<table border="0" cellpadding="0" cellspacing="0" class="data-tbl dashboard-heads dataTable" style="width:100%;">
             <thead>
                 <tr>
 					<th>Created On</th>
