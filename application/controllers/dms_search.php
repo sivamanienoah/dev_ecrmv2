@@ -74,7 +74,7 @@ class Dms_search extends crm_controller {
 		$to_date = $this->input->post('to_date');
 		$data['keyword'] = $keyword;
 		$data['files'] = $this->dms_search_model->search_files($keyword,$tag_keyword,$customers,$projects,$extension,$from_date,$to_date);
-		if(count($data['files']>0))		$this->load->view('dms_view_search', $data);		
+		/* if(count($data['files']>0)) */		$this->load->view('dms_view_search', $data);		
 	}
 	
     public function send_email() {
