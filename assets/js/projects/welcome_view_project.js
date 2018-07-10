@@ -2495,7 +2495,7 @@ function addURLtoJob()
 //		}
 
 		function timerfadeout()
-		{alert(123)
+		{//alert(123)
 			$('#paymentfadeout').fadeOut();
 			$('#rec_paymentfadeout').fadeOut();
 			$('#pjt_lead_errormsg').fadeOut();
