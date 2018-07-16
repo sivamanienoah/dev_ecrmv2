@@ -640,9 +640,12 @@ class Request extends crm_controller {
 		$htm = array();
 		$htm['err'] = "false";
 		
+		// check stackholder access to give permission to create folder in files root
+		$stake_holder_access = $this->request_model->get_stakeholder_access($af_data['aflead_id'], $this->userdata['userid']);
+		
 		$this->load->helper('lead_helper'); 
 
-		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2) {
+		if ($this->userdata['role_id'] == 1 || $this->userdata['role_id'] == 2 || $this->userdata['role_id'] == 3 || $stake_holder_access == 1) {
 			$chge_access = 1;
 		} else {
 			$chge_access = get_del_access($job_id, $this->userdata['userid']);
