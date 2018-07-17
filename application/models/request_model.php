@@ -84,8 +84,7 @@ class Request_model extends crm_model {
 		return $sql->row();
 	}
 	
-	/*
-	 * @method getParentData()
+	/* @method getParentData()
 	 * @access public
 	 * @param $job_id - Table name
 	 */
@@ -216,6 +215,7 @@ class Request_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users AS u', 'u.userid = f.created_by', 'LEFT');
 		$this->db->where("f.lead_id", $lead_id);
 		$this->db->like("f.parent", $parent_folder_id);
+		//$this->db->like("f.folder_name", $search_name);
 		if(!empty($search_name)) {
 			$srch_arr = @explode(',',$search_name);
 			if(!empty($srch_arr) && count($srch_arr)>0) {
@@ -280,16 +280,18 @@ class Request_model extends crm_model {
 		$this->db->join($this->cfg['dbpref'].'users AS us', 'us.userid = lf.lead_files_created_by', 'LEFT');
 	    $this->db->where("lf.lead_id", $lead_id);
 		if($folder_id)	$this->db->where("lf.folder_id", $folder_id);
-		if($search_name) {
+	    if($search_name) {
 			$srch_val = @explode(',',$search_name);
 			$find_wh = '(';
 			if(count($srch_val)>0) {
 				$i = 0;
 				foreach($srch_val as $srch) {
 					if($i==0) {
-						$find_wh .= "FIND_IN_SET('".$srch."', lf.tag_names)";
+						// $find_wh .= "FIND_IN_SET(LIKE '%".$srch."%', lf.tag_names)";
+						$find_wh .= "(lf.tag_names LIKE '%".$srch."%')";
 					} else {
-						$find_wh .= " OR FIND_IN_SET('".$srch."', lf.tag_names)";
+						// $find_wh .= " OR FIND_IN_SET('".$srch."', lf.tag_names)";
+						$find_wh .= " OR (lf.tag_names LIKE '%".$srch."%' )";
 					}
 					$i++;
 				}
@@ -316,7 +318,6 @@ class Request_model extends crm_model {
 		}
 		return $result;
     }
-	
 	/*
 	*@method getBreadCrumbDet
 	*@param lead_id, parentid

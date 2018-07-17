@@ -61,7 +61,7 @@ class Dms_search_model extends crm_model {
 			$td= date("Y-m-d H:i:s",strtotime($to_date));
 			$this->db->where("lead_files_created_on <=",$td);
 		}
-		if($search_name)	$this->db->like("lf.lead_files_name", $search_name);$this->db->or_like('lf.tag_names', $search_name); //$this->db->like("lf.tag_names", $search_name);
+		if($search_name)	$this->db->like("lf.lead_files_name", $search_name);$this->db->or_like('lf.tag_names', $search_name);
 		if($tag_keyword) {
 			$srch_val = @explode(',',$tag_keyword);
 			$find_wh = '(';
@@ -69,9 +69,11 @@ class Dms_search_model extends crm_model {
 				$i = 0;
 				foreach($srch_val as $srch) {
 					if($i==0) {
-						$find_wh .= "FIND_IN_SET('".$srch."', lf.tag_names)";
+						// $find_wh .= "FIND_IN_SET('".$srch."', lf.tag_names)";
+						$find_wh .= "(lf.tag_names LIKE '%".$srch."%')";
 					} else {
-						$find_wh .= " OR FIND_IN_SET('".$srch."', lf.tag_names)";
+						// $find_wh .= " OR FIND_IN_SET('".$srch."', lf.tag_names)";
+						$find_wh .= " OR (lf.tag_names LIKE '%".$srch."%' )";
 					}
 					$i++;
 				}
@@ -79,10 +81,10 @@ class Dms_search_model extends crm_model {
 			$find_wh .= ')';
 			$this->db->where($find_wh);
 		}
-			// $this->db->order_by("lf.lead_files_created_on",'DESC');
+		//	$this->db->order_by("lf.lead_files_created_on",'DESC');
 		$this->db->order_by("cc.company",'ASC');
 	    $sql = $this->db->get();
-		// echo $this->db->last_query();exit;
+		//echo $this->db->last_query();exit;
 	    return $sql->result_array();
 	}
 	
