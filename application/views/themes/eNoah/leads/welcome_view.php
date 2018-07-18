@@ -1124,7 +1124,7 @@ h3 .small {
 							<script>
 								$(document).ready(function() {
 									var assign_hidden = $('#lead_assign_edit').val();
-									//alert(assign_hidden);
+									alert(assign_hidden);
 									$('#lead_assign_edit_hidden').val(assign_hidden);
 								});
 							</script>
