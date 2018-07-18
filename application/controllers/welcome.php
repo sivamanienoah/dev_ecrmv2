@@ -865,7 +865,7 @@ class Welcome extends crm_controller {
 
 		$data = real_escape_array($this->input->post());
 		
-		echo "<pre>"; print_r($data); exit;
+		// echo "<pre>"; print_r($data); exit;lead_assign_edit
 		
         if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_service']))) {
 			echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
