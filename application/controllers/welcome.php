@@ -957,7 +957,7 @@ class Welcome extends crm_controller {
 			$lead_id = $data['jobid_edit'];
 			// echo "<pre>"; print_r($ins); exit;
 			$updt_job = $this->welcome_model->update_row('leads', $ins, $data['jobid_edit']);
-			echo "<pre>"; print_r($this->db->last_query()); die;
+			// echo "<pre>"; print_r($this->db->last_query()); die;
 			
 			if($data['customer_id'] != $data['customer_id_old']){
 				$inser['log_content']  = "Customer has changed from ' ".$data['customer_company_name_old']." ' to ' ".$data['customer_company_name']." '";
