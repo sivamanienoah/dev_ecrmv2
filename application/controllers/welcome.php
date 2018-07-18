@@ -865,7 +865,7 @@ class Welcome extends crm_controller {
 
 		$data = real_escape_array($this->input->post());
 		
-		echo "<pre>"; print_r($data); exit;
+		// echo "<pre>"; print_r($data); exit;
 		
         if (trim($data['lead_title']) == '' || !preg_match('/^[0-9]+$/', trim($data['lead_service']))) {
 			echo "{error:true, errormsg:'Title and Lead Service are required fields!'}";
@@ -888,12 +888,13 @@ class Welcome extends crm_controller {
 			if($data['actual_worth'] != $data['expect_worth_amount_dup']) {			
 				$ins['proposal_adjusted_date'] = date('Y-m-d H:i:s');
 			}
+			
 			if($data['lead_assign_edit_hidden'] == null || $data['lead_assign_edit_hidden'] == 0) {
 				$ins['lead_assign'] = @implode(",",$data['lead_assign_edit']);
 			} else {
 				$ins['lead_assign'] = @implode(",",$data['lead_assign_edit_hidden']);
 			}
-			
+			echo "<pre>"; print_r($ins); exit;
 			// $ins['lead_assign']     = @implode(",",$data['lead_assign_edit_hidden']);
 
 			/* $lead_assign = $data['lead_assign_edit'];
