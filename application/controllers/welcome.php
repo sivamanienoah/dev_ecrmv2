@@ -889,7 +889,7 @@ class Welcome extends crm_controller {
 				$ins['proposal_adjusted_date'] = date('Y-m-d H:i:s');
 			}
 			
-			if($data['lead_assign_edit_hidden'] == null || $data['lead_assign_edit_hidden'] == 0) {
+			if(empty($data['lead_assign_edit_hidden'])) {
 				$ins['lead_assign'] = @implode(",",$data['lead_assign_edit']);
 			} else {
 				$ins['lead_assign'] = @implode(",",$data['lead_assign_edit_hidden']);
