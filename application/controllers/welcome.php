@@ -890,9 +890,9 @@ class Welcome extends crm_controller {
 			}
 			
 			if(empty($data['lead_assign_edit_hidden'])) {
-				$ins['lead_assign'] = @implode(",",$data['lead_assign_edit']);
+				$ins['lead_assign'] = @explode(",",$data['lead_assign_edit']);
 			} else {
-				$ins['lead_assign'] = @implode(",",$data['lead_assign_edit_hidden']);
+				$ins['lead_assign'] = @explode(",",$data['lead_assign_edit_hidden']);
 			}
 			echo "<pre>"; print_r($ins); exit;
 			// $ins['lead_assign']     = @implode(",",$data['lead_assign_edit_hidden']);
